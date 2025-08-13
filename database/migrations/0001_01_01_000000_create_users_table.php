@@ -18,7 +18,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
 
-             // 🔹 Additional fields for your app
+            // 🔹 Additional fields for your app
             $table->string('phone')->nullable();
             $table->enum('role_id', ['customer', 'provider', 'admin','multi'])->default('customer');
             $table->enum('user_type', ['customer', 'provider', 'admin','multi'])->default('customer');
@@ -41,7 +41,7 @@ return new class extends Migration
             $table->string('apple_id')->nullable();
 
             $table->integer('otp')->nullable();
-
+            $table->boolean('is_guest')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });

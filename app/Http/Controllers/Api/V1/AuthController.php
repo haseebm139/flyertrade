@@ -9,51 +9,15 @@ use App\Http\Requests\Api\Auth\LoginRequest;
 use App\Http\Requests\Api\Auth\SocialRequest;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Api\BaseController;
-
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 class AuthController extends BaseController
 {
     public function register(RegisterRequest $request)
     {
-        $checkUser = User::where('email', $request->email)->first();
-        if ($checkUser) {
-            $hasRole = $checkUser->roles()->where('name', $request->role)->exists();
-            if ($hasRole) {
-                // Same email + same role → Error
-                return $this->sendError('User already registered with this role.', [], 409);
-            }
-            if (!$hasRole) {
-            // Assign the new role
-            $checkUser->assignRole($request->role);
-
-                // If now has more than one role, mark as multi
-                if ($checkUser->roles()->count() > 1) {
-                    $checkUser->update([
-                        'role_id'   => 'multi',
-                        'user_type' => 'multi',
-                    ]);
-                }
-
-                    $message = $checkUser->roles()->count() > 1
-                        ? 'Now registered with both roles'
-                        : 'Registration successful';
-            } else {
-                // Already has this role
-                $message = $checkUser->roles()->count() > 1
-                    ? 'Already registered with both roles'
-                    : 'Already registered with this role';
-            }
-            return $this->sendResponse([], $message);
-        }
-        $user = User::create([
-            'name'          => $request->name,
-            'email'         => $request->email,
-            'phone'         => $request->phone,
-            'role_id'          => $request->role,
-            'user_type'          => $request->role,
-            'password'      => Hash::make($request->password),
-        ]);
-        $user->assignRole($request->role);
+        $user = User::where('email', $request->email)->first();
+         $this->createOrUpdateUserWithRole($user, $request, $request->role);
         return $this->sendResponse([], 'Registration successful');
     }
 
@@ -77,7 +41,7 @@ class AuthController extends BaseController
         }
         return $this->sendResponse([
             'token' => $user->createToken('auth_token')->plainTextToken,
-            'user'  => $user->load('roles'), // Load roles for response
+            'user'  => $user, // Load roles for response
         ], 'Login successful');
     }
 
@@ -86,32 +50,23 @@ class AuthController extends BaseController
         $providerField = $provider . '_id';
 
         $user = User::where('email', $request->email)->first();
-        $data = [
-            $providerField      => $request->social_id,
-            'name'              => $request->name,
-            'password'          =>Hash::make($request->social_id),
-            'role_id'           => $request->role,
-            'user_type'         => $request->role,
-            'latitude'          => $user->latitude ?? null,
-            'longitude'         => $user->longitude  ?? null,
-            'country'           => $user->country  ?? null,
-            'city'              => $user->city  ?? null,
-            'state'             => $user->state  ?? null,
-            'zip'               => $user->zip  ?? null,
-            'address'           => $user->address  ?? null,
-
-        ];
         if ($user) {
-            $user->update($data);
-             return $this->sendResponse([
-            'token' => $user->createToken('guest_token')->plainTextToken,
-            'user'  => $user
-        ], 'Login successful');
-        }
-        $data['email'] = $request->email;
-        $user = User::create($data);
+            $user->update([
+                $providerField => $request->social_id,
+                'name'         => $request->name,
+                'password'     => Hash::make($request->social_id),
+                'latitude'     => $request->latitude ?? $user->latitude ?? null,
+                'longitude'    => $request->longitude ?? $user->longitude ?? null,
+                'country'      => $request->country ?? $user->country ?? null,
+                'city'         => $request->city ?? $user->city ?? null,
+                'state'        => $request->state  ?? $user->state ?? null,
+                'zip'          => $request->zip     ?? $user->zip ?? null,
+                'address'      => $request->address ?? $user->address ?? null,
 
-        $user->assignRole($request->role); // roles should be 'customer' or 'provider'
+            ]);
+        }
+        // Create or update user with role
+        $user = $this->createOrUpdateUserWithRole($user, $request, $request->role);
 
         return $this->sendResponse([
             'token' => $user->createToken('guest_token')->plainTextToken,
@@ -120,12 +75,54 @@ class AuthController extends BaseController
 
     }
 
+    /**
+ * Create a new user or assign a new role to an existing user.
+ */
+    private function createOrUpdateUserWithRole($user, $request, $role)
+    {
+        if ($user) {
+            // Already has this role → just return user
+            if ($user->roles()->where('name', $role)->exists()) {
+                return $user;
+            }
+
+            // Assign new role
+            $user->assignRole($role);
+
+            // If user now has multiple roles, mark as multi
+            if ($user->roles()->count() > 1) {
+                $user->update([
+                    'role_id'   => 'multi',
+                    'user_type' => 'multi',
+                ]);
+            }
+
+            return $user;
+        }
+
+        // New user creation
+        $data = [
+            'name'      => $request->name,
+            'email'     => $request->email,
+            'role_id'   => $role,
+            'user_type' => $role,
+            'password'  => Hash::make($request->password ?? $request->social_id),
+        ];
+
+        $user = User::create($data);
+        $user->assignRole($role);
+
+        return $user;
+    }
     public function guestLogin()
     {
+        $username = 'Guest_' . Str::upper(Str::random(5));
+        $email    = strtolower($username) . '@flyertrade.com';
         $user = User::create([
-            'name'        => 'Guest',
-            'role'        => 'customer',
-            'is_verified' => false
+            'name'      => $username,
+            'email'     => $email,
+            'password'  => Hash::make(Str::random(16)), // Random password
+            'is_guest'  => true,
         ]);
 
         return $this->sendResponse([
@@ -134,16 +131,45 @@ class AuthController extends BaseController
         ], 'Guest mode enabled');
     }
 
+
+    public function sendCodeToEmail(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first());
+        }
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return $this->sendError('Invalid Email Address');
+        }
+
+        $otp = rand(10000, 99999);
+
+
+        // Send email (assuming helper function works)
+        sendVerificationMail($otp, $data['email']);
+
+        return $this->sendResponse(['otp' => $otp], 'Code sent successfully');
+    }
     public function updateLocation(Request $request)
     {
         $request->validate([
+            'country' => 'nullable|string',
+            'city' => 'nullable|string',
+            'state' => 'nullable|string',
+            'zip'   => 'nullable|string',
             'address' => 'nullable|string',
             'lat'     => 'nullable|numeric',
             'lng'     => 'nullable|numeric',
         ]);
 
         $user = auth()->user();
-        $user->update($request->only('address', 'lat', 'lng'));
+        $user->update($request->only('address', 'latitude', 'longitude', 'country', 'city', 'state', 'zip'));
 
         return $this->sendResponse($user, 'Location updated successfully');
     }
