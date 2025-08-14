@@ -8,3 +8,4 @@ Route::get('/', function () {
 
 
 Route::middleware(['web', 'auth', 'role:admin'])->get('/admin/dashboard', [DashboardController::class, 'index']);
+require __DIR__.'/admin.php';

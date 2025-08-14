@@ -12,12 +12,25 @@ use App\Http\Controllers\Api\BaseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OtpCodeMail;
+
 class AuthController extends BaseController
 {
     public function register(RegisterRequest $request)
     {
         $user = User::where('email', $request->email)->first();
-         $this->createOrUpdateUserWithRole($user, $request, $request->role);
+
+        if ($user) {
+            return $this->sendError('Email already registered');
+        }
+
+        try {
+            $this->createOrUpdateUserWithRole($user, $request, $request->role);
+        } catch (\Exception $e) {
+            return $this->sendError('Error creating user: ' . $e->getMessage());
+        }
+
         return $this->sendResponse([], 'Registration successful');
     }
 
@@ -26,11 +39,13 @@ class AuthController extends BaseController
 
         $user = User::where('email', $request->email)->first();
 
-
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return $this->sendError('Invalid credentials');
+        if (!$user) {
+            return $this->sendError('User not found');
         }
 
+        if (!Hash::check($request->password, $user->password)) {
+            return $this->sendError('Invalid password');
+        }
 
         if ($request->filled('role')) {
             $hasRole = $user->roles()->where('name', $request->role)->exists();
@@ -39,8 +54,15 @@ class AuthController extends BaseController
                 return $this->sendError('Role mismatch');
             }
         }
+
+        try {
+            $token = $user->createToken('auth_token')->plainTextToken;
+        } catch (\Exception $e) {
+            return $this->sendError('Error generating token: ' . $e->getMessage());
+        }
+
         return $this->sendResponse([
-            'token' => $user->createToken('auth_token')->plainTextToken,
+            'token' => $token,
             'user'  => $user, // Load roles for response
         ], 'Login successful');
     }
@@ -152,7 +174,7 @@ class AuthController extends BaseController
 
 
         // Send email (assuming helper function works)
-        sendVerificationMail($otp, $data['email']);
+        $this->sendResetPasswordMail($otp, $user['email']);
 
         return $this->sendResponse(['otp' => $otp], 'Code sent successfully');
     }
@@ -179,6 +201,29 @@ class AuthController extends BaseController
         auth()->user()->tokens()->delete();
         return $this->sendResponse([], 'Logged out successfully');
     }
+
+    protected function sendResetPasswordMail($otp, $email)
+    {
+        $mailData = [
+            'title' => 'Reset Password OTP',
+            'body' => 'Use the OTP below to reset your password.',
+            'email' => $email,
+            'otp' => $otp,
+            'logo' => asset('assets/logos/email_logo.png') // this will make it absolute
+        ];
+
+        Mail::to($email)->queue(new OtpCodeMail($mailData));
+        return true;
+
+    }
+    // protected function sendVerificationMail($otp, $email)
+    // {
+    //     // Send Email
+    //     Mail::send('emails.reset-password-email', ['otp' => $otp], function ($message) use ($email) {
+    //         $message->to($email, 'Verification Code From FlyerTrade');
+    //         $message->subject('You have received Verification Code');
+    //     });
+    // }
 
 
 }

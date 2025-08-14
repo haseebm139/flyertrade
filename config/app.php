@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'http://127.0.0.1:8181'),
 
     /*
     |--------------------------------------------------------------------------
@@ -117,6 +117,7 @@ return [
     | Supported drivers: "file", "cache"
     |
     */
+
 
     'maintenance' => [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),

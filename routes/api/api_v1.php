@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\HomeController;
 
 
 
@@ -21,7 +22,12 @@ Route::prefix('v1')->group(function () {
             Route::post('logout', [AuthController::class, 'logout']);
         });
     });
+    Route::middleware('auth:sanctum')->group(function () {
 
+        Route::controller(HomeController::class)->group(function () {
+            Route::get('/services', 'services');
+        });
+    });
     Route::middleware(['auth:sanctum', 'role:customer'])->get('/customer/profile', [CustomerController::class, 'profile']);
 
 
