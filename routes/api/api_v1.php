@@ -9,7 +9,21 @@ use App\Http\Controllers\Api\V1\HomeController;
 
 Route::prefix('v1')->group(function () {
 
-    Route::prefix('auth')->group(function () {
+    Route::prefix('auth/customer')->group(function () {
+        Route::post('register', [AuthController::class, 'register']);
+        Route::post('login', [AuthController::class, 'login']);
+        Route::post('guest', [AuthController::class, 'guestLogin']);
+        Route::post('{proverder}/login', [AuthController::class, 'socialLogin']);
+        Route::post('facebook_login', [AuthController::class, 'facebookLogin']);
+        Route::post('apple_login', [AuthController::class, 'appleLogin']);
+        Route::post('send-code-to-email', [AuthController::class, 'sendCodeToEmail']);
+        Route::middleware('auth:sanctum')->group(function () {
+            Route::post('location', [AuthController::class, 'updateLocation']);
+            Route::post('logout', [AuthController::class, 'logout']);
+        });
+    });
+
+    Route::prefix('auth/provider')->group(function () {
         Route::post('register', [AuthController::class, 'register']);
         Route::post('login', [AuthController::class, 'login']);
         Route::post('guest', [AuthController::class, 'guestLogin']);
