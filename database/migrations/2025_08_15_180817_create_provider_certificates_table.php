@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('provider_profile_id')->constrained()->onDelete('cascade');
-
+            $table->foreignId('provider_service_id')->constrained()->onDelete('cascade');
             $table->string('title')->nullable(); // e.g. "Plumbing License"
             $table->string('file_path')->nullable(); // stored file location
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');

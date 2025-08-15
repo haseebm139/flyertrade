@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('provider_service_media', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('provider_profile_id')->constrained()->onDelete('cascade');
             $table->foreignId('provider_service_id')->constrained()->onDelete('cascade');
             $table->string('file_path');
             $table->enum('type', ['photo', 'video']);

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->unsignedInteger('number_of_staff')->nullable();
             $table->decimal('rate_min', 10, 2)->nullable();
             $table->decimal('rate_max', 10, 2)->nullable();
+            $table->unique(['user_id', 'service_id']);
 
             $table->timestamps();
         });

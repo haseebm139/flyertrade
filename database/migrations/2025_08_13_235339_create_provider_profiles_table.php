@@ -18,7 +18,6 @@ return new class extends Migration
             // Basic info
             $table->text('about_me')->nullable();
             $table->string('profile_photo')->nullable();
-
             // Location info
             $table->string('country')->nullable();
             $table->string('city')->nullable();
@@ -28,6 +27,10 @@ return new class extends Migration
             $table->decimal('latitude', 10, 7)->nullable();
             $table->decimal('longitude', 10, 7)->nullable();
 
+            // Documents
+            $table->string('id_photo')->nullable();
+            $table->string('passport')->nullable();
+            $table->string('work_permit')->nullable();
             // Document verification statuses
             $table->enum('id_photo_status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->enum('passport_status', ['pending', 'approved', 'rejected'])->default('pending');

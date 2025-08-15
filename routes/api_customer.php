@@ -3,7 +3,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Customer\{AuthController,ProfileController,BookingController,ChatController,ReviewController,PaymentController};
 use App\Http\Controllers\Api\Shared\MediaController;
 
-Route::prefix('api/customer')->group(function () {
+Route::prefix('customer')->group(function () {
 
   Route::post('auth/register', [AuthController::class,'register']);
   Route::post('auth/login',    [AuthController::class,'login']);

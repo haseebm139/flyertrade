@@ -1,16 +1,15 @@
 <?php
-use App\Http\Controllers\Api\Provider\{AuthController,ProfileController,BookingController,ChatController,PayoutController};
+use App\Http\Controllers\Api\Provider\{ProfileController,BookingController,ChatController,PayoutController};
 
-Route::prefix('api/provider')->group(function () {
-  Route::post('auth/register', [AuthController::class,'register']);
-  Route::post('auth/login',    [AuthController::class,'login']);
+Route::prefix('provider')->group(function () {
+
 
   Route::middleware('auth:sanctum')->group(function () {
-    Route::get('me', [AuthController::class,'me']);
-    Route::put('profile', [ProfileController::class,'update']);
-    Route::post('devices', [AuthController::class, 'storeDeviceToken']);
-    Route::post('location', [ProfileController::class,'updateLocation']); // live tracking
 
+    Route::controller(ProfileController::class)->group(function () {
+        Route::get('/profile/{id}', 'show');
+        Route::post('/profile', 'store');
+    });
     // Booking actions
     Route::get('bookings', [BookingController::class,'index']); // available + my bookings
     Route::post('bookings/{booking}/accept', [BookingController::class,'accept']);
