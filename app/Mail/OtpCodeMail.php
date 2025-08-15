@@ -19,6 +19,7 @@ class OtpCodeMail extends Mailable implements ShouldQueue
      */
     public function __construct($mailData)
     {
+
         $this->mailData = $mailData;
     }
 
@@ -37,6 +38,7 @@ class OtpCodeMail extends Mailable implements ShouldQueue
      */
     public function content(): Content
     {
+
         return new Content(
             view: 'emails.reset-password-email',
             with: [

@@ -1,18 +1,21 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\BaseController;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
+
 use App\Http\Requests\Api\Auth\RegisterRequest;
 use App\Http\Requests\Api\Auth\LoginRequest;
 use App\Http\Requests\Api\Auth\SocialRequest;
-use Illuminate\Support\Facades\Hash;
-use App\Http\Controllers\Api\BaseController;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
+
 use App\Models\User;
-use Illuminate\Support\Facades\Mail;
 use App\Mail\OtpCodeMail;
 
 class AuthController extends BaseController
@@ -211,6 +214,7 @@ class AuthController extends BaseController
             'otp' => $otp,
             'logo' => asset('assets/logos/email_logo.png') // this will make it absolute
         ];
+
 
         Mail::to($email)->queue(new OtpCodeMail($mailData));
         return true;
