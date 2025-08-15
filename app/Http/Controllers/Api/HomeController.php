@@ -21,7 +21,7 @@ class HomeController extends BaseController
             $data = Service::where('status', 1)->get();
             return $this->sendResponse($data, 'Services');
         } catch (\Throwable $th) {
-            //throw $th;
+
             return $this->sendError($th->getMessage());
         }
 

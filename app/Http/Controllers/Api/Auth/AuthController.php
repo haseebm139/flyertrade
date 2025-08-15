@@ -178,8 +178,29 @@ class AuthController extends BaseController
 
         // Send email (assuming helper function works)
         $this->sendResetPasswordMail($otp, $user['email']);
-
+        $user->update(['otp' => $otp]);
         return $this->sendResponse(['otp' => $otp], 'Code sent successfully');
+    }
+    public function updatePassword(Request $request){
+         $validator = Validator::make($request->all(), [
+            'email' => 'required|email|exists:users,email',
+            'code' => 'required|numeric',
+            'password' => 'required|string|confirmed',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first());
+        }
+        $checkOtp = User::where('email', $request->email)->where('otp', $request->code)->first();
+
+        if (!$checkOtp) {
+            return $this->sendError('Invalid Code');
+        }
+        $user = User::where('email', $request->email)->first();
+        $user->update(['password' => Hash::make($request->password), 'otp' => null]);
+        return $this->sendResponse([], 'Password updated successfully');
+
+
     }
     public function updateLocation(Request $request)
     {
