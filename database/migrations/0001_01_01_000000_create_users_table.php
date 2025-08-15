@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email');
+            $table->string('name')->nullable();
+            $table->string('email')->nullable();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-
+            $table->string('password')->nullable();
+            $table->string('avatar')->nullable()->default('assets/images/avatar/default.png');
             // 🔹 Additional fields for your app
             $table->string('phone')->nullable();
             $table->enum('role_id', ['customer', 'provider', 'admin','multi'])->default('customer');
@@ -42,6 +42,12 @@ return new class extends Migration
 
             $table->integer('otp')->nullable();
             $table->boolean('is_guest')->default(false);
+
+            $table->string('fcm_token')->nullable();
+            $table->boolean('is_booking_notification')->default(true);
+            $table->boolean('is_promo_option_notification')->default(false);
+
+
             $table->rememberToken();
             $table->timestamps();
         });

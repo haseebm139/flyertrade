@@ -15,15 +15,15 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // provider
             $table->foreignId('service_id')->constrained('services')->onDelete('cascade');
+            $table->foreignId('provider_profile_id')->constrained()->onDelete('cascade');
             $table->boolean('is_primary')->default(false);
+            $table->string('service_title');
+            $table->longText('about')->nullable();
+            $table->longText('service_description')->nullable();
+            $table->unsignedInteger('number_of_staff')->nullable();
+            $table->decimal('rate_min', 10, 2)->nullable();
+            $table->decimal('rate_max', 10, 2)->nullable();
 
-            $table->string('title')->nullable();            // service title
-            $table->text('description')->nullable();        // description
-            $table->unsignedInteger('staff_count')->nullable();
-            $table->json('service_photos')->nullable();     // store array of file paths
-            $table->string('service_video')->nullable();    // single video path or url
-            $table->decimal('rate_min', 8, 2)->nullable();
-            $table->decimal('rate_max', 8, 2)->nullable();
             $table->timestamps();
         });
     }
