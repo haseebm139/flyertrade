@@ -9,6 +9,10 @@ Route::prefix('provider')->group(function () {
     Route::controller(ProfileController::class)->group(function () {
         Route::get('/profile/{id}', 'show');
         Route::post('/profile', 'store');
+        Route::get('me','getProfile');
+        Route::get('working-hours','getWorkingHours');
+        Route::post('working-hours','createWorkingHours');
+        Route::post('/change-availibily-status','changeAvailibilityStatus');
     });
     // Booking actions
     Route::get('bookings', [BookingController::class,'index']); // available + my bookings

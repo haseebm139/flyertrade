@@ -21,6 +21,7 @@ use App\Http\Controllers\Api\HomeController;
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('location', [AuthController::class,'updateLocation']);
         Route::post('logout', [AuthController::class,'logout']);
+        Route::post('/change-password', [AuthController::class,'changePassword']); 
     });
 
 

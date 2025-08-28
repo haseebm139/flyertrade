@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\Api\Auth\RegisterRequest;
 use App\Http\Requests\Api\Auth\LoginRequest;
 use App\Http\Requests\Api\Auth\SocialRequest;
-
+use App\Models\ProviderWorkingHour;
 use App\Models\User;
 use App\Mail\OtpCodeMail;
 
@@ -136,7 +136,8 @@ class AuthController extends BaseController
 
         $user = User::create($data);
         $user->assignRole($role);
-
+        $profile = $user->providerProfile()->create([]); 
+        ProviderWorkingHour::seedDefaultHours($user->id, $profile->id);
         return $user;
     }
     public function guestLogin()
@@ -249,6 +250,42 @@ class AuthController extends BaseController
     //         $message->subject('You have received Verification Code');
     //     });
     // }
+
+    public function changePassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'current_password'      => 'required',
+            'new_password'          => 'required|min:8|confirmed', // confirmation required
+            'new_password_confirmation' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error'   => true,
+                'message' => $validator->errors()->first(),
+            ], 422);
+        }
+
+        $user = auth()->user();
+
+        // ✅ Check current password
+        if (!Hash::check($request->current_password, $user->password)) {
+            return $this->sendError("Your current password is incorrect.",400); 
+        }
+
+        // ✅ Prevent same password reuse
+        if (Hash::check($request->new_password, $user->password)) {
+            return $this->sendError("New password cannot be the same as the current password.",400);
+            
+        }
+
+        // ✅ Update password
+        $user->update([
+            'password' => Hash::make($request->new_password),
+        ]);
+        return $this->sendResponse([], 'Password changed successfully.',200);
+         
+    }
 
 
 }

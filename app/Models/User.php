@@ -8,7 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
-
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -64,15 +65,26 @@ class User extends Authenticatable
     }
 
 
-    public function providerServices()
+
+     public function providerProfile(): HasOne
+{
+    return $this->hasOne(ProviderProfile::class);
+}
+
+    public function providerServices(): HasMany
     {
-        return $this->hasMany(\App\Models\ProviderService::class);
+        return $this->hasMany(ProviderService::class);
     }
 
-    public function services()
+    public function providerCertificates(): HasMany
     {
-        return $this->belongsToMany(\App\Models\Service::class, 'provider_services')
-                    ->withPivot(['id','is_primary','title','description','staff_count','service_photos','service_video','rate_min','rate_max'])
-                    ->withTimestamps();
+        return $this->hasMany(ProviderCertificate::class);
     }
+
+    public function providerServiceMedia(): HasMany
+    {
+        return $this->hasMany(ProviderServiceMedia::class);
+    }
+
+      
 }

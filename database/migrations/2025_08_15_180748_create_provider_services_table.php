@@ -17,10 +17,11 @@ return new class extends Migration
             $table->foreignId('service_id')->constrained('services')->onDelete('cascade');
             $table->foreignId('provider_profile_id')->constrained()->onDelete('cascade');
             $table->boolean('is_primary')->default(false);
-            $table->string('service_title');
+            $table->boolean('show_certificate')->default(true);
+            $table->string('title')->nullable();
             $table->longText('about')->nullable();
-            $table->longText('service_description')->nullable();
-            $table->unsignedInteger('number_of_staff')->nullable();
+            $table->longText('description')->nullable();
+            $table->unsignedInteger('staff_count')->nullable();
             $table->decimal('rate_min', 10, 2)->nullable();
             $table->decimal('rate_max', 10, 2)->nullable();
             $table->unique(['user_id', 'service_id']);

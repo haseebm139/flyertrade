@@ -6,7 +6,8 @@ use App\Models\ProviderProfile;
 use App\Models\ProviderService;
 use App\Models\ProviderCertificate;
 use Illuminate\Support\Facades\Storage;
-
+use App\Http\Resources\Shared\UserResource;
+use DB;
 class ProviderProfileService
 {
     public function createOrUpdateProfile(array $data, $user)
@@ -51,9 +52,9 @@ class ProviderProfileService
                 'service_id'          => $data['services']['service_id'],
                 'provider_profile_id' => $profile->id,
                 'is_primary'          => $data['services']['is_primary'] ?? false,
-                'service_title'       => $data['services']['service_title'],
-                'service_description' => $data['services']['service_description'] ?? null,
-                'number_of_staff'     => $data['services']['number_of_staff'] ?? null,
+                'title'       => $data['services']['title'],
+                'description' => $data['services']['description'] ?? null,
+                'staff_count'     => $data['services']['staff_count'] ?? null,
                 'rate_min'            => $data['services']['rate_min'] ?? null,
                 'rate_max'            => $data['services']['rate_max'] ?? null,
             ]);
@@ -105,9 +106,81 @@ class ProviderProfileService
                 }
             }
         }
+         
+        return $user->load(
+            'providerProfile',
+            'providerProfile.services',
+            'providerProfile.services.media',
+            'providerProfile.services.certificates' 
+        );
+    }
 
-        // ✅ Save certificates
+    public function getProfile($user)
+    {
+         
+        $user->load(
+            'providerProfile',
+            'providerProfile.services',
+            'providerProfile.services.service',
+            'providerProfile.services.media',
+            'providerProfile.services.certificates' 
+        );
+        return new UserResource($user);
+    }
 
-        return $profile->load('services.media', 'services.certificates');
+    public function changeAvailibilityStatus($data, $user)
+    {
+        
+        $provider = ProviderProfile::where('user_id', $user->id)->first();
+
+        if (!$provider) {
+            return false;
+        }
+
+        $provider->update([
+            'availability_status' => $data['availability_status']
+        ]);
+
+        return $provider; // return the updated model instead of just true/false
+        
+    }
+
+    public function workingHours($user)
+    {
+        $workingHours = $user->providerProfile->workingHours;
+        return $workingHours;
+    }
+
+    public function createOrUpdateWorkingHours($data, $user)
+    { 
+        DB::beginTransaction(); 
+        
+        try {
+             
+            foreach ($data['working_hours'] as $dayData) {
+                $user->providerProfile->workingHours()->updateOrCreate(
+                    ['user_id' => $user->id, 'day' => $dayData['day']],
+                    [
+                        'start_time' => $dayData['start_time'] ?? null,
+                        'end_time' => $dayData['end_time'] ?? null,
+                        'is_active' => $dayData['is_active'],
+                    ]
+                );
+            }
+            DB::commit(); 
+                return [
+                'error' => false,
+                'message' => 'Working hours saved successfully.',
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return [
+                'error' => true,
+                'message' => $e->getMessage(),
+            ];
+        }
+        
+         
     }
 }
