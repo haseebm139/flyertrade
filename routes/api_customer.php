@@ -1,21 +1,41 @@
 <?php
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\Customer\{AuthController,ProfileController,BookingController,ChatController,ReviewController,PaymentController};
+use App\Http\Controllers\Api\Customer\{AuthController,ProviderController,ProfileController,BookingController,ChatController,ReviewController,PaymentController};
 use App\Http\Controllers\Api\Shared\MediaController;
 
 Route::prefix('customer')->group(function () {
 
-  Route::post('auth/register', [AuthController::class,'register']);
-  Route::post('auth/login',    [AuthController::class,'login']);
-  Route::post('auth/logout',   [AuthController::class,'logout'])->middleware('auth:sanctum');
 
-  Route::middleware('auth:sanctum')->group(function () {
-    Route::get('me', [AuthController::class,'me']);
-    Route::put('profile', [ProfileController::class,'update']);
-    Route::post('devices', [AuthController::class, 'storeDeviceToken']);
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::controller(ProviderController::class)->group(function () {
+            Route::get('/providers', 'providers');
+            Route::get('/providers/{provider}', 'show');
+            Route::get('/bookmarks', 'bookmarks');
+            Route::post('/bookmarks', 'toggle');
+        });
 
-    Route::get('categories', [ProfileController::class,'categories']);    // browse
-    Route::get('services',   [ProfileController::class,'services']);
+
+        // Route::get('me', [AuthController::class,'me']);
+        // Route::put('profile', [ProfileController::class,'update']);
+        // Route::post('devices', [AuthController::class, 'storeDeviceToken']);
+
+    // Route::get('categories', [ProfileController::class,'categories']);    // browse
+    // Route::get('services',   [ProfileController::class,'services']);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // Bookings
     Route::apiResource('bookings', BookingController::class)->only(['index','store','show']);

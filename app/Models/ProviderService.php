@@ -11,9 +11,9 @@ class ProviderService extends Model
 {
      protected $guarded = [];
 
-     
 
-     
+
+
 
     public function user(): BelongsTo
     {

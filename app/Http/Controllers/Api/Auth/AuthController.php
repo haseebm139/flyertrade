@@ -66,7 +66,7 @@ class AuthController extends BaseController
 
         return $this->sendResponse([
             'token' => $token,
-            'user'  => $user, // Load roles for response
+            'user'  => $user->load('providerProfile'), // Load roles for response
         ], 'Login successful');
     }
 
@@ -136,8 +136,10 @@ class AuthController extends BaseController
 
         $user = User::create($data);
         $user->assignRole($role);
-        $profile = $user->providerProfile()->create([]); 
-        ProviderWorkingHour::seedDefaultHours($user->id, $profile->id);
+        if ($role == 'provider') {
+            $profile = $user->providerProfile()->create([]);
+            ProviderWorkingHour::seedDefaultHours($user->id, $profile->id);
+        }
         return $user;
     }
     public function guestLogin()
@@ -270,13 +272,13 @@ class AuthController extends BaseController
 
         // ✅ Check current password
         if (!Hash::check($request->current_password, $user->password)) {
-            return $this->sendError("Your current password is incorrect.",400); 
+            return $this->sendError("Your current password is incorrect.",400);
         }
 
         // ✅ Prevent same password reuse
         if (Hash::check($request->new_password, $user->password)) {
             return $this->sendError("New password cannot be the same as the current password.",400);
-            
+
         }
 
         // ✅ Update password
@@ -284,7 +286,7 @@ class AuthController extends BaseController
             'password' => Hash::make($request->new_password),
         ]);
         return $this->sendResponse([], 'Password changed successfully.',200);
-         
+
     }
 
 

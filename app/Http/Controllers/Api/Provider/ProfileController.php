@@ -33,6 +33,7 @@ class ProfileController extends BaseController
     public function store(CreateProviderProfileRequest $request)
     {
         // return $this->sendResponse($request->validated(), 'Provider profile saved successfully.');
+
         $result = $this->profileService->createOrUpdateProfile($request->validated(), auth()->user());
         if (isset($result['error']) && $result['error'] === true) {
             return $this->sendError($result['message']);
@@ -43,10 +44,11 @@ class ProfileController extends BaseController
     public function getProfile()
     {
         $result = $this->profileService->getProfile(auth()->user());
-        return $this->sendResponse($result, 'Provider profile.'); 
+        return $this->sendResponse($result, 'Provider profile.');
     }
     public function changeAvailabilityStatus(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
             'availability_status' => 'required|in:fully_booked,available,not_available',
         ]);

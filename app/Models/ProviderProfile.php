@@ -23,7 +23,7 @@ class ProviderProfile extends Model
 
     public function workingHours(): HasMany
     {
-        return $this->hasMany(ProviderWorkingHour::class) 
+        return $this->hasMany(ProviderWorkingHour::class)
             ->orderBy('day');
     }
 

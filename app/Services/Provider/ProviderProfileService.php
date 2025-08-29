@@ -16,9 +16,8 @@ class ProviderProfileService
         $existingService = ProviderService::where('user_id', $user->id)
         ->where('service_id', $data['services']['service_id'])
         ->first();
-
         if ($existingService) {
-                return [
+            return [
                 'error'   => true,
                 'message' => 'This service is already assigned to your profile.'
             ];
@@ -35,7 +34,8 @@ class ProviderProfileService
 
             $profileData['profile_photo'] = $profileImg;
         }
-        $profileData['about_me'] = $data['services'][0]['about'] ?? null;
+        $profileData['about_me'] = $data['services']['about'] ?? null;
+
         $user->update([
             'avatar' => $profileImg
         ]);
@@ -43,9 +43,9 @@ class ProviderProfileService
             ['user_id' => $user->id],
             $profileData
         );
-
         // ✅ Save services
         if (!empty($data['services'])) {
+
 
             $service = ProviderService::create([
                 'user_id'             => $user->id,
@@ -106,31 +106,31 @@ class ProviderProfileService
                 }
             }
         }
-         
+
         return $user->load(
             'providerProfile',
             'providerProfile.services',
             'providerProfile.services.media',
-            'providerProfile.services.certificates' 
+            'providerProfile.services.certificates'
         );
     }
 
     public function getProfile($user)
     {
-         
+
         $user->load(
             'providerProfile',
             'providerProfile.services',
             'providerProfile.services.service',
             'providerProfile.services.media',
-            'providerProfile.services.certificates' 
+            'providerProfile.services.certificates'
         );
         return new UserResource($user);
     }
 
-    public function changeAvailibilityStatus($data, $user)
+    public function changeAvailabilityStatus($data, $user)
     {
-        
+
         $provider = ProviderProfile::where('user_id', $user->id)->first();
 
         if (!$provider) {
@@ -142,7 +142,7 @@ class ProviderProfileService
         ]);
 
         return $provider; // return the updated model instead of just true/false
-        
+
     }
 
     public function workingHours($user)
@@ -152,11 +152,11 @@ class ProviderProfileService
     }
 
     public function createOrUpdateWorkingHours($data, $user)
-    { 
-        DB::beginTransaction(); 
-        
+    {
+        DB::beginTransaction();
+
         try {
-             
+
             foreach ($data['working_hours'] as $dayData) {
                 $user->providerProfile->workingHours()->updateOrCreate(
                     ['user_id' => $user->id, 'day' => $dayData['day']],
@@ -167,7 +167,7 @@ class ProviderProfileService
                     ]
                 );
             }
-            DB::commit(); 
+            DB::commit();
                 return [
                 'error' => false,
                 'message' => 'Working hours saved successfully.',
@@ -180,7 +180,7 @@ class ProviderProfileService
                 'message' => $e->getMessage(),
             ];
         }
-        
-         
+
+
     }
 }

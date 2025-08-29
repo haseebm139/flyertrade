@@ -39,8 +39,9 @@ class UserResource extends JsonResource
             'is_guest'           => $this->is_guest,
             'fcm_token'           => $this->fcm_token,
             'is_booking_notification'           => $this->is_booking_notification,
-            'is_promo_option_notification'           => $this->is_promo_option_notification, 
+            'is_promo_option_notification'           => $this->is_promo_option_notification,
             'profile'  => new ProviderProfileResource($this->whenLoaded('providerProfile')) ,
+            'is_bookmarked' => $this->is_bookmarked ?? false
         ];
     }
 }

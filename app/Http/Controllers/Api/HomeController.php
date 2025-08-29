@@ -14,17 +14,23 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Service;
 class HomeController extends BaseController
 {
-    public function services()
+    public function services(Request $request)
     {
         try {
+            $query = Service::query()->where('status', 1);
 
-            $data = Service::where('status', 1)->get();
-            return $this->sendResponse($data, 'Services');
+            // 🔹 Search by service name
+            if ($request->has('search') && !empty($request->search)) {
+                $search = $request->search;
+                $query->where('name', 'like', '%' . $search . '%');
+            }
+
+            $data = $query->get();
+
+            return $this->sendResponse($data, 'Services fetched successfully.');
         } catch (\Throwable $th) {
-
             return $this->sendError($th->getMessage());
         }
-
 
     }
 }

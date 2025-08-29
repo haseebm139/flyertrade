@@ -1,5 +1,5 @@
 <?php
-use App\Http\Controllers\Api\Provider\{ProfileController,BookingController,ChatController,PayoutController};
+use App\Http\Controllers\Api\Provider\{ProfileController,ProviderServiceController,BookingController,ChatController,PayoutController};
 
 Route::prefix('provider')->group(function () {
 
@@ -12,8 +12,34 @@ Route::prefix('provider')->group(function () {
         Route::get('me','getProfile');
         Route::get('working-hours','getWorkingHours');
         Route::post('working-hours','createWorkingHours');
-        Route::post('/change-availibily-status','changeAvailibilityStatus');
+        Route::post('/change-availibily-status','changeAvailabilityStatus');
     });
+    Route::controller(ProviderServiceController::class)->prefix('service')->group(function () {
+        Route::get('/','index');
+        Route::post('/','store');
+        Route::post('update/{id}','update');
+        Route::delete('/{id}','destroy');
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // Booking actions
     Route::get('bookings', [BookingController::class,'index']); // available + my bookings
     Route::post('bookings/{booking}/accept', [BookingController::class,'accept']);
@@ -28,4 +54,3 @@ Route::prefix('provider')->group(function () {
     Route::post('payouts/request', [PayoutController::class,'requestPayout']);
   });
 });
-

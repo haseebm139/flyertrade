@@ -46,7 +46,7 @@ return new class extends Migration
             $table->string('fcm_token')->nullable();
             $table->boolean('is_booking_notification')->default(true);
             $table->boolean('is_promo_option_notification')->default(false);
-
+            $table->string('referral_code')->unique()->nullable();
 
             $table->rememberToken();
             $table->timestamps();
