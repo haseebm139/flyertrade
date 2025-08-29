@@ -88,6 +88,10 @@ class User extends Authenticatable
 
         return $code;
     }
+    public function workingHours()
+    {
+        return $this->hasMany(ProviderWorkingHour::class, 'user_id');
+    }
     public function providerProfileId(): HasOne
     {
         return $this->hasOne(ProviderProfile::class);

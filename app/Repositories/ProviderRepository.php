@@ -41,7 +41,7 @@ class ProviderRepository
     {
          $query = User::query()
             ->where('role_id', 'provider')
-            ->with(['providerProfile', 'providerServices.service']); // eager load
+            ->with(['providerProfile', 'providerServices.service', 'providerServices.media', 'providerServices.certificates','providerProfile.workingHours']); // eager load
 
             // , 'ratings'
         // 🔹 Filter by Provider Name
@@ -114,6 +114,7 @@ class ProviderRepository
 
         $user = User::with([
             'providerProfile',
+            'workingHours',
             'providerProfile.services',
             'providerProfile.services.service',
             'providerProfile.services.media',
