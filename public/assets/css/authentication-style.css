@@ -1,0 +1,187 @@
+body,
+html {
+    margin: 0;
+    font-family: "Clash Display", sans-serif;
+    background-color: #fff;
+}
+
+.section {
+    height: 100vh;
+    padding: 0;
+}
+.swal-title {
+    font-family: "Clash Display", sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+.swal-text {
+    font-family: "Clash Display", sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: #444;
+}
+.row-about {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.left-img {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+.left-img img {
+    max-width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 20px;
+}
+
+.login-form-wrapper {
+    width: 80%;
+
+    margin: auto;
+    padding: 40px 20px;
+}
+
+.login-form-wrapper h4 {
+    font-weight: 400;
+    color: #999;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.login-form-wrapper h2 {
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    position: relative;
+}
+
+.form-control {
+    border-radius: 12px;
+    padding: 14px 45px 14px 14px;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 70% !important;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #888;
+    z-index: 5;
+    font-size: 16px;
+}
+
+.btn-submit {
+    background-color: #014d42;
+    color: #fff;
+    border-radius: 8px;
+    padding: 12px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.forgot {
+    text-align: right;
+    font-size: 16px;
+    color: #aaa;
+    margin-top: 5px;
+    text-decoration: none;
+}
+
+.error-msg {
+    color: red;
+    font-size: 13px;
+    margin-top: 5px;
+}
+.btn-submit:hover {
+    color: white !important;
+}
+
+.text-reset {
+    font-size: 22px;
+    color: #888 !important;
+    font-weight: 400;
+    text-align: center;
+}
+
+.form-control:focus {
+    color: #212529;
+    background-color: #fff;
+    border-color: #ffffff;
+    outline: 1;
+    box-shadow: none;
+}
+
+@media (max-width: 767px) {
+    .left-img {
+        display: none;
+    }
+
+    .section {
+        padding: 35px 20px;
+    }
+}
+label.form-label {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.password-wrapper {
+    position: relative;
+}
+
+.password-wrapper input {
+    padding-right: 40px; /* space for eye icon */
+}
+
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%); /* always vertical center */
+    cursor: pointer;
+    color: #888;
+    font-size: 16px;
+}
+
+.error-msg {
+    color: red;
+    font-size: 10px;
+    position: absolute;
+    bottom: -26px; /* place error under input */
+    left: 0;
+}
+
+@media (max-width: 981px) {
+    .login-form-wrapper {
+        width: 100%;
+        margin: auto;
+        padding: 40px 20px;
+    }
+    label.form-label {
+        font-size: 14px;
+        font-weight: 500;
+    }
+    .text-reset {
+        font-size: 12px;
+        color: #888 !important;
+        font-weight: 400;
+        text-align: center;
+    }
+}

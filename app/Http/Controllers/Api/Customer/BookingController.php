@@ -113,7 +113,7 @@ class BookingController extends Controller
         return Booking::create($data);
     }
 
-    public function createBooking($customerId, $providerId, $startDate, $endDate, $startTime, $endTime)
+    public function createBooking1($customerId, $providerId, $startDate, $endDate, $startTime, $endTime)
     {
         return DB::transaction(function () use ($customerId, $providerId, $startDate, $endDate, $startTime, $endTime) {
 
@@ -187,10 +187,10 @@ class BookingController extends Controller
 
     protected $repo;
 
-    public function __construct(BookingRepository $repo)
-    {
-        $this->repo = $repo;
-    }
+    // public function __construct(BookingRepository $repo)
+    // {
+    //     $this->repo = $repo;
+    // }
 
     // Customer creates booking
     public function create(Request $request)
