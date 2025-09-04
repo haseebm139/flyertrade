@@ -1,6 +1,6 @@
 <?php
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\Customer\{AuthController,ProviderController,ProfileController,BookingController,ChatController,ReviewController,PaymentController};
+use App\Http\Controllers\Api\Customer\{AuthController,ProviderController,ProfileController,BookingController as CustomerBookingController,ChatController,ReviewController,PaymentController};
 use App\Http\Controllers\Api\Shared\MediaController;
 
 Route::prefix('customer')->group(function () {
@@ -14,13 +14,13 @@ Route::prefix('customer')->group(function () {
             Route::post('/bookmarks', 'toggle');
         });
 
+        Route::controller(CustomerBookingController::class)->prefix('booking')->group(function () {
+            Route::post('/', 'store');          // create & pay
+            Route::get('{booking}','show');    // show one
+        });  
 
-        // Route::get('me', [AuthController::class,'me']);
-        // Route::put('profile', [ProfileController::class,'update']);
-        // Route::post('devices', [AuthController::class, 'storeDeviceToken']);
 
-    // Route::get('categories', [ProfileController::class,'categories']);    // browse
-    // Route::get('services',   [ProfileController::class,'services']);
+        
 
 
 
@@ -58,3 +58,4 @@ Route::prefix('customer')->group(function () {
   Route::post('webhooks/stripe', [PaymentController::class,'webhook'])->name('webhooks.stripe');
 });
 
+ 

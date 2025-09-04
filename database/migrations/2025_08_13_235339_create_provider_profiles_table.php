@@ -35,7 +35,7 @@ return new class extends Migration
             $table->enum('id_photo_status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->enum('passport_status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->enum('work_permit_status', ['pending', 'approved', 'rejected'])->default('pending');
-            $table->enum('availability_status', ['fully_booked', 'avaialable', 'not_available'])->default('avaialable');
+            $table->enum('availability_status', ['fully_booked', 'available', 'not_available'])->default('available');
 
             // Completion tracking
             $table->boolean('is_completed')->default(false);

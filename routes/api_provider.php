@@ -1,5 +1,5 @@
 <?php
-use App\Http\Controllers\Api\Provider\{ProfileController,ProviderServiceController,BookingController,ChatController,PayoutController};
+use App\Http\Controllers\Api\Provider\{ProfileController,ProviderServiceController,BookingController as ProviderBookingActionController,ChatController,PayoutController};
 
 Route::prefix('provider')->group(function () {
 
@@ -19,6 +19,13 @@ Route::prefix('provider')->group(function () {
         Route::post('/','store');
         Route::post('update/{id}','update');
         Route::delete('/{id}','destroy');
+    });
+
+    Route::controller(ProviderBookingActionController::class)->prefix('booking')->group(function () {
+        Route::post('{booking}/accept', 'accept');
+        Route::post('{booking}/reject', 'reject');
+        Route::post('{booking}/complete', 'complete');
+        Route::post('{booking}/start', 'start'); 
     });
 
 
