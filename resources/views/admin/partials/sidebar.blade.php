@@ -4,7 +4,7 @@
     <!-- Brand / Logo -->
     <div class="brand">
         <a
-            href="dashboard.html"
+            href="{{ route('dashboard') }}"
             class="logo-link"
         >
             <img
@@ -18,8 +18,8 @@
     <!-- Navigation -->
     <nav>
         <a
-            href="#"
-            class="nav-link active"
+            href="{{ route('dashboard') }}"
+            class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"
         >
             <span><img
                     src="{{ asset('assets/images/icons/home-icon.png') }}"
@@ -31,11 +31,11 @@
 
         <!-- User Management with Dropdown -->
         <a
-            class="nav-link dropdown-toggle"
+            class="nav-link dropdown-toggle {{ request()->routeIs('user-management.*') ? 'active' : '' }}"
             data-bs-toggle="collapse"
             href="#userManagementMenu"
             role="button"
-            aria-expanded="false"
+            aria-expanded="{{ request()->routeIs('user-management.*') ? 'true' : 'false' }}"
             aria-controls="userManagementMenu"
         >
             <span><img
@@ -46,22 +46,22 @@
             User management
         </a>
         <div
-            class="collapse"
+            class="collapse {{ request()->routeIs('user-management.*') ? 'show' : '' }}"
             id="userManagementMenu"
         >
             <a
-                href="user-details.php"
-                class="nav-sublink"
+                href="{{ route('user-management.service.users.index') }}"
+                class="nav-sublink {{ request()->routeIs('user-management.service.users.*') ? 'active' : '' }}"
             >Service Users</a>
             <a
-                href="user-providers.php"
-                class="nav-sublink"
+                href="{{ route('user-management.service.providers.index') }}"
+                class="nav-sublink {{ request()->routeIs('user-management.service.providers.*') ? 'active' : '' }}"
             >Service Providers</a>
         </div>
 
         <a
-            href="service-categories.php"
-            class="nav-link"
+            href="{{ route('service-category.index') }}"
+            class="nav-link {{ request()->routeIs('service-category.*') ? 'active' : '' }}"
         >
             <span><img
                     src="{{ asset('assets/images/icons/service-catogrey-icon.png') }}"
@@ -71,8 +71,8 @@
             Service category
         </a>
         <a
-            href="bookings.php"
-            class="nav-link"
+            href="{{ route('booking.index') }}"
+            class="nav-link {{ request()->routeIs('booking.*') ? 'active' : '' }}"
         >
             <span><img
                     src="{{ asset('assets/images/icons/booking-icon.png') }}"

@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('booking_reschedules', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('booking_id')->constrained()->onDelete('cascade');
+            $table->foreignId('requested_by')->constrained('users')->onDelete('cascade'); // who initiated
+            $table->json('old_slots');   // previous booking slots
+            $table->json('new_slots');   // proposed slots
+            $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
+            $table->timestamp('responded_at')->nullable();
             $table->timestamps();
         });
     }

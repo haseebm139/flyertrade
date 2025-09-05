@@ -16,15 +16,19 @@ return new class extends Migration
             $table->string('booking_ref')->unique(); // FT-20250904-ABC123
             $table->foreignId('customer_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('provider_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('service_id')->constrained('services')->cascadeOnDelete();
+            $table->foreignId('provider_service_id')->constrained('provider_services')->cascadeOnDelete(); 
 
             $table->string('booking_address');
             $table->text('booking_description')->nullable();
             
             $table->enum('status', [
-                'awaiting_provider', 'confirmed','in_progress','rejected', 'completed', 'cancelled', 'refunded'
-            ])->default('awaiting_provider');        // awaiting_provider, confirmed, in_progress, rejected, completed, cancelled, refunded
+                'awaiting_provider', 'confirmed','in_progress','rejected', 'completed', 'cancelled', 'refunded','reschedule_pending_provider','reschedule_pending_customer'
+            ])->default('awaiting_provider');        // awaiting_provider, confirmed, in_progress, rejected, completed, cancelled, refunded, reschedule_pending_provider, reschedule_pending_customer
             
-
+            $table->enum('booking_type', ['custom', 'hourly'])->default('hourly');
+                
+            
             $table->unsignedInteger('booking_working_minutes')->default(0);
             $table->decimal('total_price', 10, 2);     // amount customer paid
             $table->decimal('service_charges', 10, 2)->default(0); // platform fee or tax if you need

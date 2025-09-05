@@ -5,9 +5,12 @@ use App\Models\User;
 use App\Models\Booking;
 use App\Models\BookingSlot;
 use App\Models\ProviderWorkingHour;
-use Carbon\Carbon;
-use Illuminate\Support\Str;
+use App\Models\BookingReschedule;
+use App\Models\ProviderService;
 
+use Carbon\Carbon;
+use Illuminate\Support\Str; 
+use Illuminate\Support\Facades\Auth;
 use App\Services\Payment\StripeService;
 use Illuminate\Support\Facades\DB; 
 
@@ -23,6 +26,9 @@ class BookingService
         $workingHour = ProviderWorkingHour::where('user_id', $providerId)
             ->where('day', $dayName)
             ->first();
+            
+            
+        
         if (!$workingHour || !$workingHour->is_active) {
             return 'not_available';
         }       
@@ -32,7 +38,7 @@ class BookingService
             $slot['start_time'] < $workingHour->start_time ||
             $slot['end_time'] > $workingHour->end_time
         ) {
-            
+             
             return 'not_available';
         }
 
@@ -45,45 +51,61 @@ class BookingService
         return 'available';
     }
 
+    public function providerHasService($providerId, $serviceId): bool
+    {
+        return ProviderService::where('user_id', $providerId)
+            ->where('service_id', $serviceId)
+            ->first() ;
+    }
     public function create(array $data) 
     {
          
         $totalMinutes = 0;
 
-        // $providerIsAvailable = $this->providerIsAvailable(
-        //     $data['provider_id']
-        // );
-        // if ($providerIsAvailable == false) {
-        //     return [
-        //         'error' => true,
-        //         'message' => 'Provider is not available.'
-        //     ];
-        // }   
+        $providerIsAvailable = $this->providerIsAvailable(
+            $data['provider_id']
+        );
+        $providerHasService = $this->providerHasService($data['provider_id'], $data['service_id']);
+        if (!$providerHasService) {
+            return [
+                'error' => true,
+                'message' => 'Provider does not offer this service.'
+            ];
+            
+        }
+        if ($providerIsAvailable == false) {
+            return [
+                'error' => true,
+                'message' => 'Provider is not available.'
+            ];
+        }   
 
 
 
         foreach ($data['slots'] as $slot) {
             $status = $this->checkAvailability($slot, $data['provider_id']);
+             
             if ($status !== 'available') {
                 return [
                     'error' => true,
                     'message' => "Provider already booked on {$slot['service_date']} between {$slot['start_time']} - {$slot['end_time']}."
                 ]; 
             }  
-            $duration = $this->minutesBetween($slot['start_time'], $slot['end_time']);
              
+            $duration = $this->minutesBetween($slot['start_time'], $slot['end_time']);
+              
             if ($duration <= 0) {
                 return [
                     'error' => true,
                     'message' => 'Invalid slot duration.'
                 ];   
             }
+            
             $totalMinutes += $duration;
              
              
              
-        }
-        
+        }         
         // Stripe charge (in cents)
         $amountCents = (int) round($data['total_price'] * 100);
          
@@ -104,13 +126,15 @@ class BookingService
                 'message' => 'Payment could not be confirmed'
             ];  
         }
-         
+        
         // Persist booking + slots
         return DB::transaction(function () use ($data, $totalMinutes, $intent) {
             $booking = Booking::create([
                 'booking_ref' => $this->makeRef(),
                 'customer_id' => auth()->user()->id,
                 'provider_id' => $data['provider_id'],
+                'service_id' => $data['service_id'],
+                'provider_service_id' => $providerHasService->id,
                 'booking_address' => $data['booking_address'],
                 'booking_description' => $data['booking_description'] ?? null,
                 'status' => 'awaiting_provider',
@@ -189,6 +213,113 @@ class BookingService
         return $booking->fresh('slots');
     }
 
+    public function requestReschedule(Booking $booking, array $newSlots): array
+    {
+         
+        if ($booking->status !== 'confirmed') {
+             
+            return [
+                'error' => true,
+                'message' => 'Only confirmed bookings can be rescheduled.'
+            ];  
+        }
+        
+        if (BookingReschedule::where('booking_id', $booking->id)->where('status', 'pending')->exists()) {
+            return [
+                'error' => true,
+                'message' => 'A reschedule request is already pending.'
+            ]; 
+        }
+
+        $reschedule = BookingReschedule::create([
+            'booking_id'   => $booking->id,
+            'requested_by' => Auth::id(),
+            'old_slots'    => $booking->slots->toArray(),
+            'new_slots'    => $newSlots,            
+            'status'       => 'pending',
+        ]);
+
+        $isCustomer = Auth::id() === $booking->customer_id;
+        $booking->update([
+            'status' => $isCustomer ? 'reschedule_pending_provider' : 'reschedule_pending_customer',
+        ]);
+        
+        return [
+            'error' => false, 
+            'reschedule' => $reschedule,
+            'booking'    => $booking
+        ];
+    }
+
+    public function respondReschedule(Booking $booking, string $response): array
+    {
+        $totalMinutes = 0;
+        $reschedule = BookingReschedule::where('booking_id', $booking->id)
+            ->where('status', 'pending')
+            ->latest()
+            ->first();
+         
+        if (!$reschedule) {
+            return [
+                'error' => true,
+                'message' => 'No pending reschedule request found.'
+            ] ;
+        }
+        if ($response === 'accept') {
+            foreach ($reschedule->new_slots as $slot) {
+                 
+                $status = $this->checkAvailability($slot, $booking['provider_id']);
+                 
+                if ($status !== 'available') {
+                    return [
+                        'error' => true,
+                        'message' => "Provider already booked on {$slot['service_date']} between {$slot['start_time']} - {$slot['end_time']}."
+                    ]; 
+                }  
+                 
+                $duration = $this->minutesBetween($slot['start_time'], $slot['end_time']);
+                  
+                if ($duration <= 0) {
+                    return [
+                        'error' => true,
+                        'message' => 'Invalid slot duration.'
+                    ];   
+                }
+                
+                $totalMinutes += $duration;
+                 
+                 
+                 
+            }         
+              
+            $booking->slots()->delete();
+            foreach ($reschedule->new_slots as $slot) {
+                $duration = $this->minutesBetween($slot['start_time'], $slot['end_time']);
+                $slot['duration_minutes'] = $duration;
+                $booking->slots()->create($slot);
+            }
+            
+             
+            $booking->update(['status' => 'confirmed']);
+            $reschedule->update(['status' => 'accepted']);
+
+        } elseif ($response === 'reject') {
+            $booking->update(['status' => 'confirmed']);
+            $reschedule->update(['status' => 'rejected']);
+
+        } else {
+            return [
+                'error' => true,
+                'message' => 'Invalid response option.'
+            ]; 
+        }
+
+        return [
+            'error' => false, 
+            'reschedule' => $reschedule,
+            'booking'    => $booking
+        ];
+    }
     public function autoRejectExpired(): int
     {
         $query = Booking::query()

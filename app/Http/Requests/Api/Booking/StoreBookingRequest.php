@@ -24,6 +24,7 @@ class StoreBookingRequest extends FormRequest
     {
         return [
             'provider_id' => 'required|exists:users,id',
+            'service_id' => 'required|exists:services,id',
             'booking_address' => 'required|string|max:255',
             'booking_description' => 'nullable|string',
             'total_price' => 'required|numeric|min:0',

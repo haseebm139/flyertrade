@@ -1,6 +1,12 @@
 <?php
 use App\Http\Controllers\Api\Provider\{ProfileController,ProviderServiceController,BookingController as ProviderBookingActionController,ChatController,PayoutController};
 
+Route::middleware('auth:sanctum')->controller(ProviderBookingActionController::class)->prefix('booking')->group(function () {
+    Route::post('{booking}/accept', 'accept');
+    Route::post('{booking}/reject', 'reject');
+    Route::post('{booking}/complete', 'complete');
+    Route::post('{booking}/start', 'start'); 
+});
 Route::prefix('provider')->group(function () {
 
 
@@ -21,37 +27,14 @@ Route::prefix('provider')->group(function () {
         Route::delete('/{id}','destroy');
     });
 
-    Route::controller(ProviderBookingActionController::class)->prefix('booking')->group(function () {
-        Route::post('{booking}/accept', 'accept');
-        Route::post('{booking}/reject', 'reject');
-        Route::post('{booking}/complete', 'complete');
-        Route::post('{booking}/start', 'start'); 
-    });
+     
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // Booking actions
-    Route::get('bookings', [BookingController::class,'index']); // available + my bookings
-    Route::post('bookings/{booking}/accept', [BookingController::class,'accept']);
-    Route::post('bookings/{booking}/status', [BookingController::class,'updateStatus']); // en_route, in_progress, completed
-
+     
     // Chat
     Route::get('bookings/{booking}/messages', [ChatController::class,'index']);
     Route::post('bookings/{booking}/messages', [ChatController::class,'store']);

@@ -355,13 +355,13 @@
 
                     <!-- Pagination -->
                     <!-- <div class="pagination-controls">
-                                            <button class="btn btn-light btn-sm me-1 rounded-circle border">
-                                            <i class="bi bi-chevron-left"></i>
-                                            </button>
-                                            <button class="btn btn-light btn-sm rounded-circle border">
-                                            <i class="bi bi-chevron-right"></i>
-                                            </button>
-                                        </div> -->
+                                                <button class="btn btn-light btn-sm me-1 rounded-circle border">
+                                                <i class="bi bi-chevron-left"></i>
+                                                </button>
+                                                <button class="btn btn-light btn-sm rounded-circle border">
+                                                <i class="bi bi-chevron-right"></i>
+                                                </button>
+                                            </div> -->
                 </div>
             </div>
         </div>
