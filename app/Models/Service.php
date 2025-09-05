@@ -10,6 +10,7 @@ class Service extends Model
     protected $fillable = ['name','slug', 'description', 'icon', 'status'];
 
 
+
     // Automatically generate slug on create
     protected static function boot()
     {
@@ -35,6 +36,7 @@ class Service extends Model
 
         return $slug;
     }
+     
     public function providerServices()
     {
         return $this->hasMany(ProviderService::class);
@@ -43,7 +45,8 @@ class Service extends Model
     public function providers()
     {
         return $this->belongsToMany(User::class, 'provider_services')
-                    ->withPivot(['id','is_primary','title','description','staff_count','service_photos','service_video','rate_min','rate_max'])
+                    ->withPivot(['id','is_primary','title','description','staff_count','rate_min','rate_max'])
+                    // ->withPivotCount()
                     ->withTimestamps();
     }
 }

@@ -105,26 +105,48 @@ document.addEventListener('DOMContentLoaded', function () {
 // add user
 
 // Add User Modal
-document.getElementById("openAddUserModal").onclick = () => {
-    document.getElementById("addUserModal").style.display = "flex";
-};
-document.getElementById("closeAddUserModal").onclick = () => {
-    document.getElementById("addUserModal").style.display = "none";
-};
-document.querySelector(".cancel-btn").onclick = () => {
-    document.getElementById("addUserModal").style.display = "none";
-};
+const addUserModal = document.getElementById("addUserModal");
+const openAddUserBtn = document.getElementById("openAddUserModal");
+const closeAddUserBtn = document.getElementById("closeAddUserModal");
+const cancelBtn = document.querySelector(".cancel-btn");
 
-// Filter Modal
-document.getElementById("openFilterModal").onclick = () => {
-    document.getElementById("filterModal").style.display = "flex";
-};
-document.getElementById("closeFilterModal").onclick = () => {
-    document.getElementById("filterModal").style.display = "none";
-};
-document.querySelector(".reset-btn").onclick = () => {
-    document.getElementById("filterModal").style.display = "none";
-};
+if (openAddUserBtn && addUserModal) {
+    openAddUserBtn.onclick = () => {
+        addUserModal.style.display = "flex";
+    };
+}
+
+if (closeAddUserBtn && addUserModal) {
+    closeAddUserBtn.onclick = () => {
+        addUserModal.style.display = "none";
+    };
+}
+
+if (cancelBtn && addUserModal) {
+    cancelBtn.onclick = () => {
+        addUserModal.style.display = "none";
+    };
+}
+
+const openFilterBtn = document.getElementById("openFilterModal");
+const closeFilterBtn = document.getElementById("closeFilterModal");
+const resetBtn = document.querySelector(".reset-btn");
+const filterModal = document.getElementById("filterModal");
+if (openFilterBtn && filterModal) {
+    openFilterBtn.onclick = () => {
+        filterModal.style.display = "flex";
+    };
+}
+if (closeFilterBtn && filterModal) {
+    closeFilterBtn.onclick = () => {
+        filterModal.style.display = "none";
+    };
+}
+if (resetBtn && filterModal) {
+    resetBtn.onclick = () => {
+        filterModal.style.display = "none";
+    };
+}
 
 // Close modals on outside click
 window.onclick = (e) => {
@@ -214,27 +236,27 @@ function closeModal(modalId) {
     document.getElementById(modalId).style.display = 'none';
 }
 
-// Position and show the delete popover
-function openDeletePopover(button) {
-    const popover = document.getElementById('deletePopover');
-    const rect = button.getBoundingClientRect();
-    popover.style.display = 'block';
-    popover.style.top = (rect.bottom + window.scrollY + 5) + 'px';
-    popover.style.left = (rect.left + window.scrollX - 20) + 'px';
-}
+// // Position and show the delete popover
+// function openDeletePopover(button) {
+//     const popover = document.getElementById('deletePopover');
+//     const rect = button.getBoundingClientRect();
+//     popover.style.display = 'block';
+//     popover.style.top = (rect.bottom + window.scrollY + 5) + 'px';
+//     popover.style.left = (rect.left + window.scrollX - 20) + 'px';
+// }
 
-// Close the delete popover
-function closeDeletePopover() {
-    document.getElementById('deletePopover').style.display = 'none';
-}
+// // Close the delete popover
+// function closeDeletePopover() {
+//     document.getElementById('deletePopover').style.display = 'none';
+// }
 
-// Hide popover if clicked outside
-window.addEventListener('click', function (event) {
-    const popover = document.getElementById('deletePopover');
-    if (popover.style.display === 'block' && !popover.contains(event.target) && !event.target.closest('.delete-btn')) {
-        closeDeletePopover();
-    }
-});
+// // Hide popover if clicked outside
+// window.addEventListener('click', function (event) {
+//     const popover = document.getElementById('deletePopover');
+//     if (popover.style.display === 'block' && !popover.contains(event.target) && !event.target.closest('.delete-btn')) {
+//         closeDeletePopover();
+//     }
+// });
 
 
 

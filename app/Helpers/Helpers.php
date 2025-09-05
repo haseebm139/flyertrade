@@ -7,6 +7,13 @@ if (!function_exists('sendVerificationMail')) {
 
     }
 }
+
+if (!function_exists('dateFormat')) {
+    function dateFormat($value)
+    {
+        return \Carbon\Carbon::parse($value)->format('M d, Y');
+    }
+}
 if (!function_exists('calculateProfileCompletion')) {
     function calculateProfileCompletion($profile)
     {
