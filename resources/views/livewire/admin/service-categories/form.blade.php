@@ -38,6 +38,7 @@
                             class="cancel-btn"
                         >Cancel</button>
                         <button
+                            wire:click="save"
                             type="submit"
                             class="submit-btn"
                         >+ {{ $categoryId ? 'Save Changes' : 'Add Service' }}</button>

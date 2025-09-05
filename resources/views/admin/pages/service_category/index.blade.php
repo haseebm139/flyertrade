@@ -78,51 +78,5 @@
 
 
 
-    <!-- Filter Modal -->
-    <div
-        id="filterModal"
-        class="modal"
-        style="display:none;"
-    >
-        <div class="modal-content filter-modal">
-            <span
-                id="closeFilterModal"
-                class="close-modal"
-            >&times;</span>
-            <h3>Filter</h3>
-            <label>Select Date</label>
-            <div class="date-range">
-                <div>
-                    <span>From:</span>
-                    <input
-                        type="date"
-                        class="form-input"
-                    >
-                </div>
-                <div>
-                    <span>To:</span>
-                    <input
-                        type="date"
-                        class="form-input"
-                    >
-                </div>
-            </div>
-            <label>Status</label>
-            <select class="form-input">
-                <option value="">Select status</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-            </select>
-            <div class="form-actions">
-                <button
-                    type="button"
-                    class="reset-btn"
-                >Reset</button>
-                <button
-                    type="submit"
-                    class="submit-btn"
-                >Apply Now</button>
-            </div>
-        </div>
-    </div>
+
 @endsection

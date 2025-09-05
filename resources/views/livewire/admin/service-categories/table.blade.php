@@ -20,11 +20,12 @@
                 type="text"
                 class="search-user"
                 placeholder="Search Category"
-                wire:model.debounce.500ms="search"
+                wire:model.live.debounce.500ms="search"
             >
             <button
                 class="filter-btn"
                 id="openFilterModal"
+                wire:click="openFilterModal"
             > <span class="download-icon"><img
                         src="{{ asset('assets/images/icons/button-icon.png') }}"
                         alt=""
@@ -81,7 +82,8 @@
                                 alt="User"
                                 class="avatar"
                             >
-                            <span>{{ $item->providers[0]->name ?? '' }} {{ $item->providers_count }}</span>
+                            <span>{{ $item->providers[0]->name ?? '' }}</span> <span>+{{ $item->providers_count - 1 }}
+                                more</span>
                         </div>
                     </td>
                     <td></td>
@@ -121,10 +123,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td
-                        colspan="4"
-                        class="text-center"
-                    >No categories found.</td>
+                    <td>No categories found.</td>
                 </tr>
             @endforelse
         </tbody>
@@ -133,5 +132,59 @@
 
     {{ $categories->links('vendor.pagination.custom') }}
 
+    @if ($showFilterModal)
+        <div
+            class="modal"
+            style="display: flex;"
+        >
+            <div class="modal-content filter-modal">
+                <span
+                    class="close-modal"
+                    wire:click="closeFilterModal"
+                >&times;</span>
+                <h3>Filter</h3>
+                <label>Select Date</label>
+                <div class="date-range">
+                    <div>
+                        <span>From:</span>
+                        <input
+                            type="date"
+                            class="form-input"
+                            wire:model="fromDate"
+                        >
+                    </div>
+                    <div>
+                        <span>To:</span>
+                        <input
+                            type="date"
+                            class="form-input"
+                            wire:model="toDate"
+                        >
+                    </div>
+                </div>
+                <label>Status</label>
+                <select
+                    class="form-input"
+                    wire:model="status"
+                >
+                    <option value="">Select status</option>
+                    <option value="1">Active</option>
+                    <option value="0">Inactive</option>
+                </select>
+                <div class="form-actions">
+                    <button
+                        type="button"
+                        class="reset-btn"
+                        wire:click="resetFilters"
+                    >Reset</button>
+                    <button
+                        type="button"
+                        class="submit-btn"
+                        wire:click="applyFilters"
+                    >Apply Now</button>
+                </div>
+            </div>
+        </div>
+    @endif
 
 </div>

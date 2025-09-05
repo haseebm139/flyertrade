@@ -41,10 +41,10 @@ class Form extends Component
     public function save()
     {
         $this->validate([
-            'name' => 'required|string|max:255|unique:service_categories,name,' . $this->categoryId,
+            'name' => 'required|string|max:255|unique:services,name,' . $this->categoryId,
             'description' => 'nullable|string|max:500',
         ]);
-
+         
         Service::updateOrCreate(
             ['id' => $this->categoryId],
             ['name' => $this->name, 'description' => $this->description]
