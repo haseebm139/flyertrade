@@ -17,7 +17,6 @@ class Form extends Component
     ];
     public function open($id = null)
     {
-        
         $this->resetValidation();
         $this->resetForm();
 
@@ -44,12 +43,13 @@ class Form extends Component
             'name' => 'required|string|max:255|unique:services,name,' . $this->categoryId,
             'description' => 'nullable|string|max:500',
         ]);
-         
+
         Service::updateOrCreate(
             ['id' => $this->categoryId],
             ['name' => $this->name, 'description' => $this->description]
         );
-
+        $this->dispatch('showToastr', 'success', 'Service ' . ($this->categoryId ? 'updated' : 'created') . ' successfully.', 'Success');
+         
         // notify the table to refresh
         $this->dispatch('categoryUpdated');
 

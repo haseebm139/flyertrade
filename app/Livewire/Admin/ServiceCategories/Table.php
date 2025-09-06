@@ -25,10 +25,21 @@ class Table extends Component
     public function updatingToDate() { $this->resetPage(); } 
      
 
+    public function testToastr()
+    {
+        $this->dispatch('toastrNotification', [
+        'type' => 'success',
+        'message' => 'Direct event — no middleman!',
+        'title' => 'Success'
+    ]);
+    }
+
     public function delete($id)
     {
         Service::findOrFail($id)->delete();
-        session()->flash('success', 'Category deleted successfully.');
+        $this->dispatch('showToastr', 'success', 'Service category deleted successfully.', 'Success');
+
+        
     }
 
     public function edit($id)
@@ -87,8 +98,8 @@ class Table extends Component
             ->withCount('providers')
             ->with(['providers' => fn($q) => $q->select('users.id','users.name','users.avatar')->limit(1)])
             ->latest()
-            ->paginate($this->perPage);
-            
+            ->paginate($this->perPage); 
+
         return view('livewire.admin.service-categories.table', compact('categories'));
     } 
 }

@@ -10,35 +10,34 @@
                     wire:click="close"
                 >&times;</span>
                 <h3 class="adfa">{{ $categoryId ? 'Edit Service Category' : 'Add Service Category' }}</h3>
-                <form>
+                <form wire:submit.prevent="save">
                     <label>Service Name</label>
                     <input
                         type="text"
                         class="form-input"
-                        wire:model.defer="name"
+                        wire:model="name"
                         placeholder="Enter name"
                     >
                     @error('name')
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
-                    <label>Descrption</label>
+                    <label>Description</label>
                     <input
                         type="text"
                         class="form-input"
-                        placeholder="add descrption"
-                        wire:model.defer="description"
+                        placeholder="Add description"
+                        wire:model="description"
                     >
                     @error('description')
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
                     <div class="form-actions">
                         <button
-                            wire:click="close"
                             type="button"
+                            wire:click="close"
                             class="cancel-btn"
                         >Cancel</button>
                         <button
-                            wire:click="save"
                             type="submit"
                             class="submit-btn"
                         >+ {{ $categoryId ? 'Save Changes' : 'Add Service' }}</button>

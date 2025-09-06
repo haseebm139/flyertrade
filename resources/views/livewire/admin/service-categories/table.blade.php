@@ -1,5 +1,5 @@
 <div>
-
+    <button wire:click="testToastr">Test Toastr</button>
     <!-- Begin::Toolbar -->
     <div class="users-toolbar">
         <div class="toolbar-left">
@@ -75,16 +75,18 @@
                     <td><input type="checkbox"></td>
                     <td>{{ $item->name }}</td>
                     <td>
-
-                        <div class="user-info">
-                            <img
-                                src="{{ asset($item->providers[0]->avatar ?? 'assets/images/icons/person-one.png') }}"
-                                alt="User"
-                                class="avatar"
-                            >
-                            <span>{{ $item->providers[0]->name ?? '' }}</span> <span>+{{ $item->providers_count - 1 }}
-                                more</span>
-                        </div>
+                        @if ($item->providers_count > 0)
+                            <div class="user-info">
+                                <img
+                                    src="{{ asset($item->providers[0]->avatar ?? 'assets/images/icons/person-one.png') }}"
+                                    alt="User"
+                                    class="avatar"
+                                >
+                                <span>{{ $item->providers[0]->name ?? '' }}</span>
+                                <span>+{{ $item->providers_count - 1 }}
+                                    more</span>
+                            </div>
+                        @endif
                     </td>
                     <td></td>
                     <td><span class="date">{{ dateFormat($item->created_at) }}</span></td>
