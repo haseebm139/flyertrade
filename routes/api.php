@@ -32,10 +32,7 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
             Route::get('/services', 'services');
         });
     });
-    Route::middleware(['auth:sanctum', 'role:customer'])->get('/customer/profile', [CustomerController::class, 'profile']);
 
-
-    Route::middleware(['auth:sanctum', 'role:provider'])->get('/provider/profile', [ProviderController::class, 'profile']);
 // require __DIR__ .'/auth.php';
 require __DIR__.'/api_customer.php';
 require __DIR__.'/api_provider.php';

@@ -9,7 +9,7 @@ Route::middleware('auth:sanctum')->controller(CustomerBookingController::class)-
     Route::get('{booking}','show');    // show one
     Route::post('{booking}/reschedule/request','requestReschedule');    // show one
     Route::post('{booking}/reschedule/respond','respondReschedule');    // show one
-});  
+});
 Route::prefix('customer')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::controller(ProviderController::class)->group(function () {
@@ -20,7 +20,7 @@ Route::prefix('customer')->group(function () {
         });
 
 
-     
+
 
         // Chat
         Route::get('bookings/{booking}/messages', [ChatController::class,'index']);
@@ -38,4 +38,3 @@ Route::prefix('customer')->group(function () {
   Route::post('webhooks/stripe', [PaymentController::class,'webhook'])->name('webhooks.stripe');
 });
 
- 
