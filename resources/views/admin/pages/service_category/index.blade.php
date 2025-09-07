@@ -15,7 +15,7 @@
 
 
     <!-- table modal -->
-
+ 
 
     <div
         class="modal fade "
@@ -77,6 +77,6 @@
 
 
 
-
+ 
 
 @endsection

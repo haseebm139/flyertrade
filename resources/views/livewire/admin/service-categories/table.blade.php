@@ -35,7 +35,7 @@
     <!-- End::Toolbar -->
 
     <!-- Begin::Table -->
-    <table class="users-table">
+    <table class="theme-table">
         <thead>
             <tr>
                 <th><input type="checkbox"></th>
@@ -51,27 +51,26 @@
                         class="sort-icon"
                     >
                 </th>
-                <th></th>
+                 
                 <th class="sortable">Date created
                     <img
                         src="{{ asset('assets/images/icons/sort.png') }}"
                         class="sort-icon"
                     >
                 </th>
-                <th></th>
-                <th></th>
+                
                 <th class="sortable">Description
                     <img
                         src="{{ asset('assets/images/icons/sort.png') }}"
                         class="sort-icon"
                     >
                 </th>
-                <th></th>
+                <th>Action </th>
             </tr>
         </thead>
         <tbody>
             @forelse ($categories as $item)
-                <tr {{-- onclick="openUserModal('Johnbosco Davies', 'johnboscodavies@gmail.com', '{{ asset('assets/images/icons/person-one.png') }}')" --}}>
+                <tr >
                     <td><input type="checkbox"></td>
                     <td>{{ $item->name }}</td>
                     <td>
@@ -88,10 +87,9 @@
                             </div>
                         @endif
                     </td>
-                    <td></td>
+                     
                     <td><span class="date">{{ dateFormat($item->created_at) }}</span></td>
-                    <td></td>
-                    <td></td>
+                     
                     <td>
                         <span class="desf">
                             {{ $item->description }}
@@ -109,20 +107,39 @@
                             >
                         </button>
                         <button
-                            class="delete-btn"
-                            wire:click="delete({{ $item->id }})"
+                        data-id="{{ $item->id }}"
+                            class="delete-btn showDeleteModal"
+                            wire:click="confirmDelete({{ $item->id }})"
                         >
                             <img
                                 src="{{ asset('assets/images/icons/delete-icon.png') }}"
                                 alt="Delete"
                                 class="action-icon"
                             >
+                            
                         </button>
+                        @if($confirmingId === $item->id)                            
+
+                            <div class="deleteModal delete-card" id="global-delete-modal"  >
+                                <div class="delete-card-header">
+                                    <h3 class="delete-title">Delete Service</h3>
+                                    <span class="delete-close" wire:click="$set('confirmingId', null)">&times;</span>
+                                </div>
+                                <p class="delete-text">Are you sure you want to delete this service?</p>
+                                <div class="delete-actions">
+                                    <button class="confirm-delete-btn" wire:click="delete({{ $item->id }})">Delete</button>
+                                    <button class="cancel-delete-btn" wire:click="$set('confirmingId', null)">Cancel</button>
+                                </div>
+                            </div>
+
+                        @endif
 
                         <!-- Delete Popover -->
-
+                        
                     </td>
+                    
                 </tr>
+                
             @empty
                 <tr>
                     <td>No categories found.</td>
@@ -131,7 +148,7 @@
         </tbody>
     </table>
     <!-- End::Table -->
-
+ 
     {{ $categories->links('vendor.pagination.custom') }}
 
     @if ($showFilterModal)
@@ -188,5 +205,8 @@
             </div>
         </div>
     @endif
+
+ 
+     
 
 </div>
