@@ -1,7 +1,7 @@
 <!-- ========== Begin::Header (always open) ========== -->
 
 <div class="top-row">
-    <div class="page-title">Dashboard</div>
+    <div class="page-title">@yield('header', 'Dashboard')</div>
     <div class="d-flex gap-3">
         <!-- Search Input -->
         <input

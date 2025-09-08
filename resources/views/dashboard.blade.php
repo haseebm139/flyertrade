@@ -1,5 +1,6 @@
 @extends('admin.layouts.app')
 @section('title', 'Dashboard')
+@section('header', 'Dashboard')
 @section('content')
     <!-- top stat cards -->
     <div class="dashboard-grid">

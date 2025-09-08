@@ -1,7 +1,7 @@
 @extends('admin.layouts.app')
 
 @section('title', 'Service Category')
-
+@section('header', 'Service Category Management')
 @section('content')
 
     <div class="container">
@@ -11,8 +11,8 @@
 
     <livewire:admin.service-categories.table />
     <livewire:admin.service-categories.form />
-
-
+    <livewire:admin.service-categories.user-providers-modal />
+    
  
 
 

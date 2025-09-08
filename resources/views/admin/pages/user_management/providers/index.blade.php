@@ -1,7 +1,7 @@
 @extends('admin.layouts.app')
 
 @section('title', 'Service Providers')
-
+@section('header', 'User Management')
 @section('content')
 
     <!-- Top Stat Cards -->

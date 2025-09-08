@@ -1,6 +1,7 @@
 @extends('admin.layouts.app')
 
 @section('title', 'Service Users')
+@section('header', 'User Management')
 
 @section('content')
 
@@ -79,7 +80,7 @@
     </div>
 
     <!-- Users Table -->
-    <table class="users-table">
+    <table class="theme-table">
         <thead>
             <tr>
                 <th><input type="checkbox"></th>
