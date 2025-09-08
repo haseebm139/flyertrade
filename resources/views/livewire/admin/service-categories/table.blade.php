@@ -74,8 +74,9 @@
                     <td><input type="checkbox"></td>
                     <td>{{ $item->name }}</td>
                     <td>
+                        
                         @if ($item->providers_count > 0)
-                            <div class="user-info">
+                            <div   class="user-info"  >
                                 <img
                                     src="{{ asset($item->providers[0]->avatar ?? 'assets/images/icons/person-one.png') }}"
                                     alt="User"
@@ -207,6 +208,60 @@
     @endif
 
  
-     
+     <div class="modal "  style="display: flex;" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered jusoio">
+                    <div class="modal-content  rounded-3">
+                        <div class="modal-header border-0">
+                            <h5 class="modal-title moddal" id="userModalLabel">AC repair</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                             
+                            <div id="userList" class="list-group">
+                                <div class="list-group-item d-flex align-items-center">
+          <img src="{{ asset('assets/images/icons/four.png') }}" class="rounded-circle me-3" style="width:35px; height:35px; object-fit:cover;" alt="User">
+          <div>
+            <h6 class="mb-0">DOLO</h6>
+            <small class="text-muted">Dolo@gmail.com</small>
+          </div>
+        </div>
+
+        <div id="userList" class="list-group">
+                                <div class="list-group-item d-flex align-items-center">
+          <img src="{{ asset('assets/images/icons/four.png') }}" class="rounded-circle me-3" style="width:35px; height:35px; object-fit:cover;" alt="User">
+          <div>
+            <h6 class="mb-0">DOLO</h6>
+            <small class="text-muted">Dolo@gmail.com</small>
+          </div>
+        </div>
+        <div id="userList" class="list-group">
+                                <div class="list-group-item d-flex align-items-center">
+          <img src="{{ asset('assets/images/icons/four.png') }}" class="rounded-circle me-3" style="width:35px; height:35px; object-fit:cover;" alt="User">
+          <div>
+            <h6 class="mb-0">DOLO</h6>
+            <small class="text-muted">Dolo@gmail.com</small>
+          </div>
+        </div>
+        <div id="userList" class="list-group">
+                                <div class="list-group-item d-flex align-items-center">
+          <img src="{{ asset('assets/images/icons/four.png') }}" class="rounded-circle me-3" style="width:35px; height:35px; object-fit:cover;" alt="User">
+          <div>
+            <h6 class="mb-0">DOLO</h6>
+            <small class="text-muted">Dolo@gmail.com</small>
+          </div>
+        </div>
+        <div id="userList" class="list-group">
+                                <div class="list-group-item d-flex align-items-center">
+          <img src="{{ asset('assets/images/icons/four.png') }}" class="rounded-circle me-3" style="width:35px; height:35px; object-fit:cover;" alt="User">
+          <div>
+            <h6 class="mb-0">DOLO</h6>
+            <small class="text-muted">Dolo@gmail.com</small>
+          </div>
+        </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 </div>

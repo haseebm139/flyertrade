@@ -40,7 +40,7 @@ class Table extends Component
 
     public function delete($id)
     {
-        // Service::findOrFail($id)->delete();
+        Service::findOrFail($id)->delete();
          $this->confirmingId = null;
         $this->dispatch('showToastr', 'success', 'Service category deleted successfully.', 'Success');
         
