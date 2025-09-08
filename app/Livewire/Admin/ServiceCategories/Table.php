@@ -9,13 +9,14 @@ use Livewire\Attributes\On;
 class Table extends Component
 {
      use WithPagination;
-
+     
+    public $confirmingId ;
     public $search = '';
     public $perPage = 10;  
     public $status = '';   // active/inactive
     public $fromDate = '';
     public $toDate = ''; 
-    public $showFilterModal = false;
+    public $showFilterModal = false; 
     protected $listeners = [
         'categoryUpdated' => '$refresh', // refresh table when category is saved
     ];
@@ -24,7 +25,10 @@ class Table extends Component
     public function updatingFromDate() { $this->resetPage(); }
     public function updatingToDate() { $this->resetPage(); } 
      
-
+    public function confirmDelete($id)
+    {
+          $this->confirmingId = $id;
+    }
     public function testToastr()
     {
         $this->dispatch('toastrNotification', [
@@ -37,8 +41,8 @@ class Table extends Component
     public function delete($id)
     {
         Service::findOrFail($id)->delete();
+         $this->confirmingId = null;
         $this->dispatch('showToastr', 'success', 'Service category deleted successfully.', 'Success');
-
         
     }
 

@@ -261,31 +261,7 @@ function closeModal(modalId) {
 
 
 
-function openUserModal(name, email, image) {
-    // Main user info
-    document.getElementById('userName').textContent = name;
-    document.getElementById('userEmail').textContent = email;
-    document.getElementById('userImage').src = image;
-
-    // Populate user list
-    const userList = document.getElementById('userList');
-    userList.innerHTML = '';
-    for (let i = 0; i < 10; i++) {
-        userList.innerHTML += `
-        <div class="list-group-item d-flex align-items-center">
-          <img src="${image}" class="rounded-circle me-3" style="width:35px; height:35px; object-fit:cover;" alt="User">
-          <div>
-            <h6 class="mb-0">${name}</h6>
-            <small class="text-muted">${email}</small>
-          </div>
-        </div>`;
-    }
-
-    // Show modal
-    const modal = new bootstrap.Modal(document.getElementById('userModal'));
-    modal.show();
-}
-
+ 
 
 
 

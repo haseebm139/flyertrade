@@ -90,61 +90,61 @@
     </div>
 
     @include('admin.partials.foot')
-    <livewire:components.toastr-notifier />
+    {{-- <livewire:components.toastr-notifier /> --}}
     @stack('scripts')
     @livewireScripts
 
     <script>
-        Swal.fire({
-            title: 'Success!',
-            position: 'top-end',
-            text: 'Service category deleted successfully.',
-            icon: 'success',
+        // Swal.fire({
+        //     title: 'Success!',
+        //     position: 'top-end',
+        //     text: 'Service category deleted successfully.',
+        //     icon: 'success',
 
-            toast: true,
-            background: '#FFFFFF',
-            position: 'top-end',
-
-
+        //     toast: true,
+        //     background: '#FFFFFF',
+        //     position: 'top-end',
 
 
 
 
-            customClass: {
-                icon: 'swal2-success-animate'
-            },
 
 
-        });
-
-        document.addEventListener('livewire:init', () => {
-            Livewire.on('toastrNotification', (data) => {
-                // console.log("Toastr data:", data);
-
-                // unwrap if Livewire wraps in array
-                if (Array.isArray(data) && data.length > 0) {
-                    data = data[0];
-                }
-
-                const validTypes = ['success', 'error', 'info', 'warning'];
-                const type = validTypes.includes(data.type) ? data.type : 'info';
-
-                // toastr[type](data.message, data.title);
+        //     customClass: {
+        //         icon: 'swal2-success-animate'
+        //     },
 
 
-                Swal.fire({
-                    toast: true,
-                    background: '#FFFFFF',
-                    position: 'top-end',
-                    icon: data.type, // success | error | info | warning
-                    title: data.title,
-                    text: data.message,
-                    showConfirmButton: false,
+        // });
 
-                    timerProgressBar: false,
-                });
-            });
-        });
+        // document.addEventListener('livewire:init', () => {
+        //     Livewire.on('toastrNotification', (data) => {
+        //         // console.log("Toastr data:", data);
+
+        //         // unwrap if Livewire wraps in array
+        //         if (Array.isArray(data) && data.length > 0) {
+        //             data = data[0];
+        //         }
+
+        //         const validTypes = ['success', 'error', 'info', 'warning'];
+        //         const type = validTypes.includes(data.type) ? data.type : 'info';
+
+        //         // toastr[type](data.message, data.title);
+
+
+        //         Swal.fire({
+        //             toast: true,
+        //             background: '#FFFFFF',
+        //             position: 'top-end',
+        //             icon: data.type, // success | error | info | warning
+        //             title: data.title,
+        //             text: data.message,
+        //             showConfirmButton: false,
+
+        //             timerProgressBar: false,
+        //         });
+        //     });
+        // });
     </script>
 
 </body>
