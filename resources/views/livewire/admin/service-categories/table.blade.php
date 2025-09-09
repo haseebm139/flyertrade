@@ -1,62 +1,48 @@
 <div>
-    {{-- <button wire:click="testToastr">Test Toastr</button> --}}
-    <!-- Begin::Toolbar -->
-    <div class="users-toolbar">
-        <div class="toolbar-left">
-            <button class="export-btn" wire:click="exportCsv" style="cursor: pointer;">
-                <span class="download-icon"><img src="{{ asset('assets/images/icons/download.png') }}"
-                        alt=""></span> Export CSV
-            </button>
-            <button class="add-user-btn" id="openAddUserModal" wire:click="$dispatch('openModal')">+ New service categories
-            </button>
-        </div>
-        <div class="toolbar-right">
-            <input type="text" class="search-user" placeholder="Search Category"
-                wire:model.live.debounce.500ms="search">
-            <button class="filter-btn" id="openFilterModal" wire:click="openFilterModal"> <span
-                    class="download-icon"><img src="{{ asset('assets/images/icons/button-icon.png') }}"
-                        alt=""></span>Filter</button>
-        </div>
-    </div>
-    <!-- End::Toolbar -->
 
+    <livewire:admin.components.toolbar label="service providers" />
     <!-- Begin::Table -->
     <table class="theme-table">
         <thead>
             <tr>
                 <th><input type="checkbox" wire:model.live="selectAll"></th>
-                
+
                 <th class="sortable">Service category
-                    <img src="{{ asset('assets/images/icons/sort.png') }}" wire:click="sortBy('name')"  class="sort-icon" {{ $sortField === 'name' ? $sortDirection : '' }}>
+                    <img src="{{ asset('assets/images/icons/sort.png') }}" wire:click="sortBy('name')" class="sort-icon"
+                        {{ $sortField === 'name' ? $sortDirection : '' }}>
                 </th>
                 <th class="sortable">Registered providers
-                    <img src="{{ asset('assets/images/icons/sort.png') }}" wire:click="sortBy('providers_count')" class="sort-icon"  {{ $sortField === 'providers_count' ? $sortDirection : '' }}>
+                    <img src="{{ asset('assets/images/icons/sort.png') }}" wire:click="sortBy('providers_count')"
+                        class="sort-icon" {{ $sortField === 'providers_count' ? $sortDirection : '' }}>
                 </th>
 
                 <th class="sortable">Date created
-                    <img src="{{ asset('assets/images/icons/sort.png') }}" wire:click="sortBy('created_at')" class="sort-icon"  {{ $sortField === 'created_at' ? $sortDirection : '' }}>
+                    <img src="{{ asset('assets/images/icons/sort.png') }}" wire:click="sortBy('created_at')"
+                        class="sort-icon" {{ $sortField === 'created_at' ? $sortDirection : '' }}>
                 </th>
 
                 <th class="sortable">Description
-                    <img src="{{ asset('assets/images/icons/sort.png') }}" wire:click="sortBy('description')" class="sort-icon {{ $sortField === 'description' ? $sortDirection : '' }}">
+                    <img src="{{ asset('assets/images/icons/sort.png') }}" wire:click="sortBy('description')"
+                        class="sort-icon {{ $sortField === 'description' ? $sortDirection : '' }}">
                 </th>
                 <th>Action </th>
             </tr>
         </thead>
         <tbody>
-            @forelse ($categories as $item)
+            @forelse ($data as $item)
                 <tr>
                     <td><input type="checkbox" value="{{ $item->id }}" wire:model.live="selected"></td>
                     <td>{{ $item->name }}</td>
-                    <td  style="cursor:pointer;"
-                       wire:click="$dispatch('open-user-providers-modal', { serviceId: {{ $item->id }} })"> 
+                    <td style="cursor:pointer;"
+                        @if ($item->providers_count > 0) wire:click="$dispatch('open-user-providers-modal', { serviceId: {{ $item->id }} })" @endif>
                         @if ($item->providers_count > 0)
                             <div class="user-info">
                                 <img src="{{ asset($item->providers[0]->avatar ?? 'assets/images/icons/person-one.png') }}"
                                     alt="User" class="avatar">
                                 <span>{{ $item->providers[0]->name ?? '' }}</span>
-                                <span>+{{ $item->providers_count - 1 }}
-                                    more</span>
+                                @if ($item->providers_count > 1)
+                                    <span class="more"> {{ $item->providers_count - 1 }}</span>
+                                @endif
                             </div>
                         @endif
                     </td>
@@ -110,7 +96,7 @@
     </table>
     <!-- End::Table -->
 
-    {{ $categories->links('vendor.pagination.custom') }}
+    {{ $data->links('vendor.pagination.custom') }}
 
     @if ($showFilterModal)
         <div class="modal" style="display: flex;">
@@ -143,6 +129,6 @@
     @endif
 
 
-    
+
 
 </div>

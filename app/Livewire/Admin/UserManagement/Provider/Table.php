@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Livewire\Admin\ServiceCategories;
+namespace App\Livewire\Admin\UserManagement\Provider;
 
 use Livewire\Component;
-use Livewire\WithPagination;
-use App\Models\Service; 
+use App\Models\User;
+use Livewire\WithPagination; 
 use Symfony\Component\HttpFoundation\StreamedResponse;
 class Table extends Component
 {
-     use WithPagination;
+    use WithPagination;
      
     public $confirmingId ;
     public $search = '';
@@ -21,7 +21,7 @@ class Table extends Component
     public $selected = [];  
     public $selectAll = false;    
     public $showFilterModal = false; 
-    
+
     protected $listeners = [
         'categoryUpdated' => '$refresh',  
         'exportCsvRequested' => 'exportCsv',
@@ -30,7 +30,6 @@ class Table extends Component
         'addItemRequested'   => 'openAddModal',
     ];
 
-     
     # -------------------- SEARCH + FILTER --------------------
     public function updatingSearch($value) {  
         $this->search = $value;
@@ -40,11 +39,12 @@ class Table extends Component
     public function updatingFromDate() { $this->resetPage(); }
     public function updatingToDate() { $this->resetPage(); }  
 
+
     # -------------------- SELECT ALL --------------------
     public function updatedSelectAll($value)
     {
         if ($value) {
-            $this->selected = Service::pluck('id')->toArray();  
+            $this->selected = User::pluck('id')->toArray();  
         } else {
             $this->selected = [];
         }
@@ -68,6 +68,7 @@ class Table extends Component
         }
     }
 
+
     # -------------------- CRUD --------------------
     public function confirmDelete($id)
     {
@@ -84,7 +85,7 @@ class Table extends Component
 
     public function delete($id)
     {
-        Service::findOrFail($id)->delete();
+        User::findOrFail($id)->delete();
          $this->confirmingId = null;
         $this->dispatch('showToastr', 'success', 'Service category deleted successfully.', 'Success');
         
@@ -101,7 +102,8 @@ class Table extends Component
         $this->perPage = (int) $value;  
         $this->resetPage();  
     }
-    
+
+
     # -------------------- FILTER MODAL --------------------
     public function openFilterModal() {  $this->showFilterModal = true;   }
 
@@ -123,14 +125,20 @@ class Table extends Component
         $this->reset(['status', 'fromDate', 'toDate']);
         $this->resetPage();
     }
-
+    
 
     # -------------------- QUERY --------------------
     private function getDataQuery()
     {
-        return Service::query()
-            ->when($this->search, fn($q) => $q->where('name', 'like', "%{$this->search}%"))
-            ->when($this->fromDate && $this->toDate, fn($q) =>
+        return User::query()
+            ->where('user_type', 'provider')
+            ->when($this->search, fn($q) =>
+                $q->where(function($sub) {
+                    $sub->where('name', 'like', "%{$this->search}%")
+                        ->orWhere('email', 'like', "%{$this->search}%")
+                        ->orWhere('phone', 'like', "%{$this->search}%");
+                })
+            )->when($this->fromDate && $this->toDate, fn($q) =>
                 $q->whereBetween('created_at', [
                     $this->fromDate.'00:00:00',
                     $this->toDate.'23:59:59'
@@ -139,26 +147,24 @@ class Table extends Component
              
             ->when($this->status !== '', fn($q) =>
                 $q->where('status', $this->status)
-            )
-            ->withCount('providers')
-            ->orderBy($this->sortField, $this->sortDirection)
-            ->with(['providers' => fn($q) => $q->select('users.id','users.name','users.avatar')->limit(1)]);
+            ) 
+            ->with(['providerServices.provider'])
+            ->withCount('providerServices')
+            ->orderBy($this->sortField, $this->sortDirection);
             
     }
-
     public function render()
     {
-        $data = $this->getDataQuery()
-        ->latest()
-        ->paginate($this->perPage);
+        $data = $this->getDataQuery()->paginate($this->perPage);
          
-        
-        return view('livewire.admin.service-categories.table', compact('data'));
-    } 
+        return view('livewire.admin.user-management.provider.table',compact('data'));
+    }  
 
+    # -------------------- Export -------------------- 
+     
     public function exportCsv(): StreamedResponse
     {
-        $fileName = 'services.csv';
+        $fileName = 'service_providers.csv';
         $headers = [
             "Content-Type" => "text/csv",
             "Content-Disposition" => "attachment; filename=$fileName",
@@ -168,19 +174,20 @@ class Table extends Component
             $handle = fopen('php://output', 'w');
 
             // CSV Header row
-            fputcsv($handle, ['ID', 'Name', 'Description', 'Status', 'Providers Count','ImageUrl', 'Created At']);
+            fputcsv($handle, ['USER ID', 'PROVIDER Name','PROVIDER Email', 'Home Address', 'Phone Number','Verification Status','Status', 'Created At']);
 
             // Fetch your data
             $data = $this->getDataQuery()->get();
-            
+
             foreach ($data as $item) {
                 fputcsv($handle, [
-                    $item->id??'',
-                    $item->name??'',
-                    $item->description??'',
-                    $item->status??'',
-                    $item->providers_count??'',
-                    env('APP_URL').'/'.$item->icon??'',
+                    $item->id,
+                    $item->name, 
+                    $item->email,
+                    $item->address,
+                    $item->phone,
+                    $item->is_verified,
+                    $item->status,                   
                     $item->created_at->format('Y-m-d H:i:s'),
                 ]);
             }
@@ -190,4 +197,5 @@ class Table extends Component
 
         return response()->stream($callback, 200, $headers);
     }
+    
 }

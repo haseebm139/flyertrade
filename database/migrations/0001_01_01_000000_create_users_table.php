@@ -22,10 +22,11 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->enum('role_id', ['customer', 'provider', 'admin','multi'])->default('customer');
             $table->enum('user_type', ['customer', 'provider', 'admin','multi'])->default('customer');
-            // $table->string('provider_type')->nullable(); // email, google, apple
-            // $table->string('provider_id')->nullable();   // Social login ID
-            $table->boolean('is_verified')->default(false);
+             
+             
 
+            $table->enum ('is_verified', ['pending', 'verified', 'declined'])->default('pending');
+            $table->enum ('status', ['active', 'inactive'])->default('active');
             // 🔹 Location fields
             $table->string('country')->nullable();
             $table->string('city')->nullable();

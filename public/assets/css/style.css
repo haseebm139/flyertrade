@@ -1623,7 +1623,10 @@ small.time {
   color: red;
   border: 1px solid red;
 }
-
+.status.pending {
+  color: goldenrod;
+  border: 1px solid goldenrod;
+}
 .more {
   color: #777;
   font-size: 0.625vw;
