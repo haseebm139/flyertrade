@@ -1,4 +1,4 @@
-name: Deploy Flytrade to EC2
+name: Deploy Laravel to EC2
 
 on:
   push:
@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.2.2
@@ -25,12 +25,5 @@ jobs:
             sudo git pull origin main
             sudo composer install --no-dev --optimize-autoloader
             sudo php artisan migrate --force
-            sudo php artisan config:cache 
-
-            sudo php artisan config:clear
-            sudo php artisan cache:clear
-            sudo php artisan route:clear
-            sudo php artisan view:clear
-             
-            sudo systemctl reload php8.3-fpm
+            sudo php artisan config:cache
             sudo systemctl reload nginx
