@@ -1,0 +1,36 @@
+name: Deploy Flytrade to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.HOST_DNS }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
+            cd /var/www/flyertrade
+            sudo git pull origin main
+            sudo composer install --no-dev --optimize-autoloader
+            sudo php artisan migrate --force
+            sudo php artisan config:cache 
+
+            sudo php artisan config:clear
+            sudo php artisan cache:clear
+            sudo php artisan route:clear
+            sudo php artisan view:clear
+             
+            sudo systemctl reload php8.3-fpm
+            sudo systemctl reload nginx
