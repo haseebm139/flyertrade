@@ -181,7 +181,7 @@ class Table extends Component
                     $item->status??'',
                     $item->providers_count??'',
                     env('APP_URL').'/'.$item->icon??'',
-                    $item->created_at->format('Y-m-d H:i:s'),
+                    $item->created_at?->format('Y-m-d H:i:s') ?? ''
                 ]);
             }
 

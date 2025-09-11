@@ -82,8 +82,8 @@
             Bookings
         </a>
         <a
-            href="#"
-            class="nav-link"
+            href="{{ route('transaction.index') }}"
+            class="nav-link {{ request()->routeIs('transaction.*') ? 'active' : '' }}"
         >
             <span><img
                     src="{{ asset('assets/images/icons/transition-icon.png') }}"

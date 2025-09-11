@@ -50,7 +50,7 @@
                         <div class="actions-dropdown">
                             <button class="actions-btn">⋮</button>
                             <div class="actions-menu">
-                                <a href="#" ><i class="fa fa-eye"></i> View user</a>
+                                <a href="{{ route('user-management.service.users.view', ['id' => $item->id]) }}" ><i class="fa fa-eye"></i> View user</a>
                                 <a href="#" wire:click="edit({{ $item->id }}) "><i class="fa fa-pen"></i> Edit user</a>
                                 <a href="#"><i class="fa fa-trash"></i> Delete user</a>
                             </div>
