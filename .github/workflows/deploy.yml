@@ -45,11 +45,5 @@ jobs:
             sudo chown -R ubuntu:www-data storage bootstrap/cache
             sudo chmod -R 775 storage bootstrap/cache
 
-            echo "👉 Checking Pail package..."
-            if ! composer show laravel/pail > /dev/null 2>&1; then
-              echo "📦 Installing missing Laravel Pail..."
-              sudo composer require laravel/pail --update-with-dependencies
-            fi
-
-            echo "👉 Reloading Nginx..."
+             
             sudo systemctl reload nginx
