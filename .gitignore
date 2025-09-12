@@ -24,7 +24,16 @@ Homestead.yaml
 Thumbs.db
 
 
-/bootstrap/cache/*
-/storage/app/*
-/storage/framework/*
-/storage/logs/*
+ 
+
+
+bootstrap/cache/.gitignore
+storage/app/.gitignore
+storage/app/private/.gitignore
+storage/app/public/.gitignore
+storage/framework/.gitignore
+storage/framework/cache/.gitignore
+storage/framework/sessions/.gitignore
+storage/framework/testing/.gitignore
+storage/framework/views/.gitignore
+storage/logs/.gitignor
