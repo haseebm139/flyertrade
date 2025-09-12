@@ -1,29 +1,31 @@
-name: Deploy Laravel to EC2
+- name: Test DNS
+        run: nslookup ${{ secrets.HOST_DNS }}
+# name: Deploy Laravel to EC2
 
-on:
-  push:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v4
+#     steps:
+#       - name: Checkout Repo
+#         uses: actions/checkout@v4
 
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1.2.2
-        with:
-          host: ${{ secrets.HOST_DNS }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          port: 22
-          script: |
-            cd /var/www/flyertrade
-            sudo git pull origin main
-            sudo composer install --no-dev --optimize-autoloader
-            sudo php artisan migrate --force
-            sudo php artisan config:cache
-            sudo systemctl reload nginx
+#       - name: Deploy via SSH
+#         uses: appleboy/ssh-action@v1.2.2
+#         with:
+#           host: ${{ secrets.HOST_DNS }}
+#           username: ${{ secrets.USERNAME }}
+#           key: ${{ secrets.EC2_SSH_KEY }}
+#           port: 22
+#           script: |
+#             cd /var/www/flyertrade
+#             sudo git pull origin main
+#             sudo composer install --no-dev --optimize-autoloader
+#             sudo php artisan migrate --force
+#             sudo php artisan config:cache
+#             sudo systemctl reload nginx
