@@ -12,6 +12,7 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
+
       - name: Test DNS
         run: nslookup ${{ secrets.HOST_DNS }}
 
@@ -24,8 +25,31 @@ jobs:
           port: 22
           script: |
             cd /var/www/flyertrade
-            sudo git pull origin main
+
+            echo "👉 Pulling latest code..."
+            sudo git fetch origin main
+            sudo git reset --hard origin/main
+
+            echo "👉 Installing dependencies..."
             sudo composer install --no-dev --optimize-autoloader
+
+            echo "👉 Running migrations..."
             sudo php artisan migrate --force
+
+            echo "👉 Clearing and caching config..."
+            sudo php artisan config:clear
+            sudo php artisan cache:clear
             sudo php artisan config:cache
+
+            echo "👉 Fixing permissions..."
+            sudo chown -R ubuntu:www-data storage bootstrap/cache
+            sudo chmod -R 775 storage bootstrap/cache
+
+            echo "👉 Checking Pail package..."
+            if ! composer show laravel/pail > /dev/null 2>&1; then
+              echo "📦 Installing missing Laravel Pail..."
+              sudo composer require laravel/pail --update-with-dependencies
+            fi
+
+            echo "👉 Reloading Nginx..."
             sudo systemctl reload nginx
