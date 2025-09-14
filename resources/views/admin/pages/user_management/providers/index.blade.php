@@ -3,7 +3,7 @@
 @section('title', 'Service Providers')
 @section('header', 'Booking Management')
 @section('content')
-
+    
      <livewire:admin.user-stats mode="providers"/>
     <br>
     <div class="container">

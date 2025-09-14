@@ -104,19 +104,19 @@
             Reviews & Ratings
         </a>
         <a
-            href="#"
+            href="{{ route('dispute.index') }}"
             class="nav-link"
         >
             <span><img
                     src="{{ asset('assets/images/icons/dispute.png') }}"
                     alt="Disputes & Complaints"
-                    class="nav-icon"
+                    class="nav-icon {{ request()->routeIs('dispute.*') ? 'active' : '' }}"
                 ></span>
             Disputes & complaints
         </a>
         <a
             href="#"
-            class="nav-link"
+            class="nav-link "
         >
             <span><img
                     src="{{ asset('assets/images/icons/roles.png') }}"

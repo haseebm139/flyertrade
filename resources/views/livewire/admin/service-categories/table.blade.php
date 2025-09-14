@@ -25,7 +25,7 @@
                     <img src="{{ asset('assets/images/icons/sort.png') }}" wire:click="sortBy('description')"
                         class="sort-icon {{ $sortField === 'description' ? $sortDirection : '' }}">
                 </th>
-                <th>Action </th>
+                <th> </th>
             </tr>
         </thead>
         <tbody>
@@ -34,14 +34,16 @@
                     <td><input type="checkbox" value="{{ $item->id }}" wire:model.live="selected"></td>
                     <td>{{ $item->name }}</td>
                     <td style="cursor:pointer;"
+                        
                         @if ($item->providers_count > 0) wire:click="$dispatch('open-user-providers-modal', { serviceId: {{ $item->id }} })" @endif>
                         @if ($item->providers_count > 0)
                             <div class="user-info">
                                 <img src="{{ asset($item->providers[0]->avatar ?? 'assets/images/icons/person-one.png') }}"
                                     alt="User" class="avatar">
                                 <span>{{ $item->providers[0]->name ?? '' }}</span>
+                                <span class="more"> + 30 more</span>
                                 @if ($item->providers_count > 1)
-                                    <span class="more"> {{ $item->providers_count - 1 }}</span>
+                                    {{-- <span class="more"> + {{ $item->providers_count - 1 }} more</span> --}}
                                 @endif
                             </div>
                         @endif

@@ -148,7 +148,7 @@ class Table extends Component
             ->when($this->status !== '', fn($q) =>
                 $q->where('status', $this->status)
             ) 
-            ->with(['providerServices.provider'])
+            ->with(['providerServices'])
             ->withCount('providerServices')
             ->orderBy($this->sortField, $this->sortDirection);
             

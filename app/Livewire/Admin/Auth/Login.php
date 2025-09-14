@@ -7,10 +7,10 @@ use Illuminate\Support\Facades\Auth;
 
 class Login extends Component
 {
-    // public $email = 'admin@admin.com';
-    // public $password = 'password';
-    public $email = '';
-    public $password = '';
+    public $email = 'admin@admin.com';
+    public $password = 'password';
+    // public $email = '';
+    // public $password = '';
 
     public function login()
     {

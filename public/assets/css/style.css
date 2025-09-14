@@ -7,14 +7,18 @@
   --muted: #6c757d;
   --accent: #0b5f4b;
   --accent-soft: #e9f6f3;
-  --bg: #f6f7f8;
+  --bacckground: white;
   --border: #e6e9ea;
   --panel-bg: #ffffff;
+   --bg:#f8faf9; --card:#ffffff; --ink:#1d2026; --muted:#6b7280;
+  --green:#0b4d40; --green-2:#0e6a59; --line:#e5e7eb;
+  --radius:0.9vw; --pad:1.0vw; --gap:0.8vw; --shadow:0 0.4vw 1vw rgba(0,0,0,.05);
+  font-size: clamp(12px, .9vw, 16px);
 }
 
 body {
   font-family: "Clash Display", sans-serif;
-  background: var(--bg);
+  background: var(--bacckground);
   color: #111827;
   margin: 0;
 }
@@ -45,6 +49,12 @@ img.nav-icon {
   /* 22px 18px */
   z-index: 1000;
   overflow-y: auto;
+      height: 38.902vw;
+    border-bottom: 0.0625vw solid var(--border);
+}
+img.btn-icons {
+    height: 1.042vw;
+    width: 1.042vw;
 }
 
 .brand {
@@ -79,10 +89,11 @@ img.nav-icon {
 
 .sidebar .nav-link.active {
   background: var(--accent-soft);
-  border-left: 0.1875vw solid var(--accent);
+
   /* 3px */
   color: var(--accent);
 }
+
 
 /* ---------- Main content ---------- */
 .main {
@@ -105,7 +116,7 @@ img.nav-icon {
 }
 
 .page-title {
-  font-size: 1.75vw;
+  font-size:1.458vw;
   /* 28px */
   font-weight: 500;
 }
@@ -130,15 +141,16 @@ img.nav-icon {
 
 /* Search box */
 .search-box {
-  padding: 0.5625vw 0.8125vw;
-  /* 9px 13px */
-  border: 0.0625vw solid #ccc;
-  /* 1px */
-  border-radius: 1.25vw;
-  /* 20px */
-  width: 17.5vw;
-  /* 280px */
-  font-size: 0.9rem;
+  width: 15vw;
+  padding: 0.6vw 1vw 0.6vw 2.5vw; 
+  font-size: 0.9vw;
+  border-radius: 1.5625vw;
+
+  border: 0.1vw solid #ddd;
+  background: url("/assets/images/icons/search-icon.png") no-repeat 0.8vw center;
+  background-size: 1vw; 
+  outline: none;
+  background-color: #F1F1F1;
 }
 
 /* Icons */
@@ -161,7 +173,7 @@ img.nav-icon {
   align-items: center;
   padding: 0.9375vw 1.25vw;
   /* 15px 20px */
-  background: #f8f9fa;
+
   border-bottom: 0.0625vw solid #ddd;
   /* 1px */
 }
@@ -176,15 +188,7 @@ img.nav-icon {
   /* 15px */
 }
 
-/* Search box */
-.search-box {
-  padding: 0.375vw 0.625vw;
-  /* 6px 10px */
-  border: 0.0625vw solid #ccc;
-  /* 1px */
-  border-radius: 1.5625vw;
-  /* 25px */
-}
+
 
 /* Icon buttons */
 .icon-btn img {
@@ -593,10 +597,45 @@ table.dataTable thead th {
   /* 14px */
 }
 
+.nav-sublink {
+  position: relative;
+  padding-left: 1.042vw; 
+  color: #000; 
+  display: flex;
+  align-items: center;
+}
+
+.nav-sublink::before {
+  content: "";
+  position: absolute;
+  left: 0.313vw;
+  width: 0.365vw;
+  height: 0.365vw;
+  border-radius: 50%;
+  background: transparent; /* default no dot */
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Hover state */
 .nav-sublink:hover {
   background: #f8f8f8;
-  color: #000;
+  color: #0b5f4b;
 }
+
+.nav-sublink:hover::before {
+  background: #0b5f4b;
+}
+
+/* Active state */
+.nav-sublink.active {
+  color: #0b5f4b;
+}
+
+.nav-sublink.active::before {
+  background: #0b5f4b;
+}
+
 
 .popup {
   display: none;
@@ -807,13 +846,14 @@ table.dataTable thead th {
   /* 10px */
   padding: 0.6875vw;
   /* 11px */
+  width: 13.4vw;
   background-color: #fff;
   height: 8vw;
   /* 128px */
 }
 
 .dashboard-card h6 {
-  font-size: 0.833vw;
+  font-size: 0.733vw;
   font-weight: 400;
   margin-bottom: 0.5vw;
   color: #000000;
@@ -958,6 +998,7 @@ table.dataTable thead th {
   /* 1px */
   border-radius: 0.625vw;
   /* 10px */
+  width: 25vw;
   background-color: #fff;
   overflow: hidden;
   height: 100%;
@@ -973,8 +1014,8 @@ table.dataTable thead th {
 
 .recent-dispute-header h5 {
   margin: 0;
-  font-weight: 600;
-  font-size: 0.8vw;
+  font-weight: 500;
+  font-size: 1.25vw;
 }
 
 .recent-dispute-header a {
@@ -1025,6 +1066,8 @@ table.dataTable thead th {
   padding: 1.5625vw;
   /* 25px */
   width: 22%;
+  margin-left: 4vw;
+  height:44vw;
   margin-top: -8.8vw;
 }
 
@@ -1072,9 +1115,14 @@ table.dataTable thead th {
 .activity-text .title {
   font-weight: 600;
   margin-bottom: 0.1875vw;
-  font-size: 0.8vw;
+  font-size: 0.733vw;
+  letter-spacing: 0.042vw;
 }
+.logo-placeholder .admin-img{
+    width: 2.083vw;
+    height: 2.083vw;
 
+}
 .activity-text span {
   font-weight: 400;
   font-size: 0.8vw;
@@ -1109,13 +1157,13 @@ table.dataTable thead th {
 }
 
 .user-table-card .card-title {
-  font-weight: 600;
-  font-size: 0.9vw;
+  font-weight: 500;
+  font-size: 1vw;
 }
 
 .user-table-card .muted-text {
   color: #777;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   cursor: pointer;
 }
 
@@ -1142,17 +1190,20 @@ table.dataTable thead th {
   /* 40px */
   object-fit: cover;
 }
+td.user-data.id-number {
+  font-size: 0.9vw;
+}
 
 .name {
   font-weight: 500 !important;
   color: #676767;
-  font-size: 0.8vw;
+  font-size: 0.9vw;
 }
 
 .name-2 {
   font-weight: 400;
   color: #676767;
-  font-size: 0.6vw;
+  font-size: 0.8vw;
 }
 
 @media (min-width: 1400px) {
@@ -1235,11 +1286,15 @@ table.dataTable thead th {
 }
 
 .search-user {
-  padding: 0.6vw;
+  width: 15vw;
+  padding: 0.6vw 1vw 0.6vw 2.5vw; 
   font-size: 0.9vw;
   border-radius: 0.4vw;
   border: 0.1vw solid #ddd;
-  width: 15vw;
+  background: url("/assets/images/icons/search-icon.png") no-repeat 0.8vw center;
+  background-size: 1vw; 
+  outline: none;
+  background-color: #F1F1F1;
 }
 
 .theme-table th {
@@ -1265,12 +1320,13 @@ table.dataTable thead th {
   padding: 0.6vw 1.2vw;
   font-size: 0.9vw;
   border-radius: 0.4vw;
+  background-color: white;
   border: none;
   cursor: pointer;
 }
 
 .export-btn {
-  background: #f8f9fa;
+
   border: 0.1vw solid #ccc;
 }
 
@@ -1281,7 +1337,7 @@ table.dataTable thead th {
 }
 
 .filter-btn {
-  background: #f8f9fa;
+ 
   border: 0.1vw solid #ccc;
 }
 
@@ -1295,6 +1351,7 @@ table.dataTable thead th {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
+
   font-size: 14px;
   background: #fff;
   border: 1px solid #eee;
@@ -1302,23 +1359,34 @@ table.dataTable thead th {
 }
 
 .theme-table thead {
-  background: #fafafa;
+
   height: 5vw;
 }
 
 .theme-table th {
-  padding: 1.2vw;
+  padding: 1vw;
   border-bottom: 1px solid #eee;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
   font-weight: 400;
   text-align: left;
   font-size: 0.9vw;
 }
+
+.table.theme-table.roles th{
+    padding: 0.2vw !important;
+}
 .theme-table td {
-  padding: 1vw 1vw 1vw 0vw;
+  padding: 1vw;
   border-bottom: 1px solid #eee;
   font-weight: 400;
   text-align: left;
-  font-size: 0.9vw;
+  font-size: 0.8vw;
+
+
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 
 .theme-table th:first-child,
@@ -1341,14 +1409,18 @@ table.dataTable thead th {
 .user-name {
   margin: 0;
   font-weight: 500;
-  font-size: 0.9vw;
+  font-size:0.833vw;
 }
 
-.user-email {
-  margin: 0;
 
-  color: #888;
+ .user-email {
+    margin: 0;
+    color: #888;
+    font-size: 0.729vw;
+    font-weight: 400;
+
 }
+
 
 .status {
   padding: 0.26vw 0.625vw;
@@ -1508,7 +1580,7 @@ table.dataTable thead th {
     border-radius: 0.6vw;
     width: 48vw;
     position: relative;
-    height: 34vw;
+    height: auto;
 }
 .modal-content  h3{
     font-size: 1.2vw;
@@ -1636,8 +1708,9 @@ small.time {
 }
 
 .more {
-  color: #777;
-  font-size: 0.625vw;
+    color: #777;
+    font-size: 0.825vw;
+    font-weight: 500;
 }
 
 .date {
@@ -2009,8 +2082,8 @@ img.download-icon {
   box-shadow: 0px 0.5vw 2vw rgba(0, 0, 0, 0.1);
   animation: fadeIn 0.3s ease-in-out;
   position: relative;
-  left: -42vw;
-  top: 1vw;
+  left: -41vw;
+  top: 0.5vw;
 }
 
 .deleteModal {
@@ -2297,13 +2370,17 @@ button.btn-close {
 .stars {
   color: gold;
 }
-
+input[type="checkbox"] {
+  height: 0.9vw;
+  width: 0.9vw;
+  accent-color: #004e42; 
+}
 .tabs-section {
   display: flex;
 
   align-items: center;
   margin: 2vw 0px;
-
+gap: 1.042vw;
   border: 1px solid #dddddd;
   padding: 1vw;
   border-radius: 15px;
@@ -2671,3 +2748,17 @@ body.cm-lock {
     border-color:#0b63c9;
     box-shadow:0 0 0.3vw rgba(11,99,201,0.4);
   }
+
+  .viw-parent a {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-right: 8px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+
+/* chat */

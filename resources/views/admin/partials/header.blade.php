@@ -186,9 +186,8 @@
             id="profileBtn"
         >
             <div
-                class="logo-placeholder "
-                style="width:2.5vw; height:2.5vw; border-radius:50%; background:url('{{ asset('assets/images/icons/main-group.png') }}') no-repeat center center;"
-            >
+                class="logo-placeholder ">
+                <img src="{{ asset('assets/images/icons/person.png') }}" alt="" class="admin-img ">
             </div>
             <div>
                 <div style="font-weight:500; font-size:0.8vw;">Flyertrade</div>

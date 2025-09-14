@@ -30,6 +30,10 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::get('transactions',function(){
         return view('admin.pages.transaction.index');
     })->name('transaction.index');
+
+    Route::get('dispute',function(){
+        return view('admin.pages.dispute.index');
+    })->name('dispute.index');
     // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
