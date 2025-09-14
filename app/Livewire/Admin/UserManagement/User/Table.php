@@ -186,13 +186,14 @@ class Table extends Component
                     $item->address,
                     $item->phone,
                     $item->status,                   
-                    $item->created_at?->format('Y-m-d H:i:s') ?? ''Y-m-d H:i:s'),
+                    $item->created_at?->format('Y-m-d H:i:s') ?? ('Y-m-d H:i:s'),
                 ]);
             }
 
             fclose($handle);
         };
 
+        
         return response()->stream($callback, 200, $headers);
     }
 }
