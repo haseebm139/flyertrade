@@ -23,8 +23,6 @@ Homestead.json
 Homestead.yaml
 Thumbs.db
 
-
- 
 /storage/app/.gitignore
 /storage/app/private/.gitignore
 /storage/app/public/.gitignore
