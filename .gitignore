@@ -25,15 +25,15 @@ Thumbs.db
 
 
  
+/storage/app/.gitignore
+/storage/app/private/.gitignore
+/storage/app/public/.gitignore
+/storage/framework/.gitignore
+/storage/framework/cache/.gitignore
+/storage/framework/sessions/.gitignore
+/storage/framework/testing/.gitignore
+/storage/framework/views/.gitignore
+/storage/logs/.gitignore
+/bootstrap/cache/.gitignore
 
-
-bootstrap/cache/.gitignore
-storage/app/.gitignore
-storage/app/private/.gitignore
-storage/app/public/.gitignore
-storage/framework/.gitignore
-storage/framework/cache/.gitignore
-storage/framework/sessions/.gitignore
-storage/framework/testing/.gitignore
-storage/framework/views/.gitignore
-storage/logs/.gitignor
+ 
