@@ -13,9 +13,6 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
-      - name: Test DNS
-        run: nslookup ${{ secrets.HOST_DNS }}
-
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.2.2
         with:
@@ -25,9 +22,10 @@ jobs:
           port: 22
           script: |
             cd /var/www/flyertrade
-
             sudo git pull origin main
             sudo composer install --no-dev --optimize-autoloader
             sudo php artisan migrate --force
             sudo php artisan config:cache
             sudo systemctl reload nginx
+
+ 
