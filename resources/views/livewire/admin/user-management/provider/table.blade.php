@@ -85,7 +85,7 @@
     </table>
     {{ $data->links('vendor.pagination.custom') }}
     @if ($showFilterModal)
-        <div class="modal" style="display: flex;">
+        <div class="modal filter-theme-modal" style="display: flex;">
             <div class="modal-content filter-modal">
                 <span class="close-modal" wire:click="closeFilterModal">&times;</span>
                 <h3>Filter</h3>

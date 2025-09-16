@@ -123,7 +123,7 @@
     <!-- Filter Modal -->
     <div
         id="filterModal"
-        class="modal"
+        class="modal filter-theme-modal"
     >
         <div class="modal-content filter-modal">
             <span

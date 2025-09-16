@@ -93,7 +93,7 @@
                     <div class="user-info">
                         <img src="{{ asset('assets/images/icons/person-one.png') }}" alt="User">
                         <div>
-                            <p class="user-name">Johnbosco Davies</p>
+                            <span class="user-theme-name ">Johnbosco Davies</span>
 
                         </div>
                     </div>
@@ -105,13 +105,24 @@
                 </td>
 
 
-                <td><span class="status active">Active</span></td>
-                <td class="viw-parent">
-                    <button class="view-btn" onclick="openBookingModal()">
-                        ⋮
-
-                    </button>
-                </td>
+           <td>
+  <div class="status-dropdown">
+    <span class="status active" onclick="toggleDropdown(this)">Active</span>
+    <ul class="dropdown-menu">
+      <li onclick="setStatus(this, 'Resolved')">Resolved</li>
+      <li class="inactive" onclick="setStatus(this, 'Unresolved')">Unresolved</li>
+    </ul>
+  </div>
+</td>
+                <td>
+                        <div class="actions-dropdown">
+                            <button class="actions-btn">⋮</button>
+                            <div class="actions-menu">
+                                <a href="http://127.0.0.1:8000/admin/user-management/service-users/8"><i class="fa fa-eye"></i> View user</a>
+                               
+                            </div>
+                        </div>
+                    </td>
             </tr>
 
         </tbody>
@@ -220,7 +231,7 @@
     </div>
 
     <!-- Filter Modal -->
-    <div id="filterModal" class="modal">
+    <div id="filterModal" class="modal filter-theme-modal">
         <div class="modal-content filter-modal">
             <span class="close-modal" id="closeFilterModal">&times;</span>
             <h3>Filter</h3>
@@ -242,5 +253,37 @@
             </div>
         </div>
     </div>
+<script>
+function toggleDropdown(trigger) {
+  const menu = trigger.nextElementSibling;
+  menu.style.display = menu.style.display === "block" ? "none" : "block";
+}
 
+function setStatus(option, status) {
+  const dropdown = option.closest(".status-dropdown");
+  const statusEl = dropdown.querySelector(".status");
+
+
+  const statusClassMap = {
+    active: "active",
+    inactive: "inactive",
+    resolved: "resolved",
+    unresolved: "inactive" 
+  };
+
+
+  statusEl.classList.remove(...Object.values(statusClassMap));
+
+
+  statusEl.textContent = status;
+
+
+  const className = statusClassMap[status.toLowerCase()];
+  if (className) {
+    statusEl.classList.add(className);
+  }
+  dropdown.querySelector(".dropdown-menu").style.display = "none";
+}
+
+</script>
 @endsection

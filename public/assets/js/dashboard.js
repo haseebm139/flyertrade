@@ -90,8 +90,33 @@ $(document).ready(function() {
 // service
 
 
+const profileBtn = document.getElementById("profileBtn");
+const profilePopup = document.getElementById("profilePopup");
+const docModal = document.getElementById("docModal");
 
+// Toggle profile popup or doc modal
+profileBtn.addEventListener("click", function (e) {
+    e.stopPropagation(); // Prevent document click from immediately closing
+    // Toggle the desired popup:
+    profilePopup.style.display = "none"; // hide other popups if needed
+    docModal.style.display = docModal.style.display === "block" ? "none" : "block";
+});
 
+// Close any popup when clicking outside
+document.addEventListener("click", function (e) {
+    if (!e.target.closest("#profileBtn") && !e.target.closest(".popup")) {
+        profilePopup.style.display = "none";
+        docModal.style.display = "none";
+    }
+});
+
+// Close modal when clicking the close button
+document.querySelectorAll(".popup-close").forEach(btn => {
+    btn.addEventListener("click", function () {
+        const targetId = this.getAttribute("data-close");
+        document.getElementById(targetId).style.display = "none";
+    });
+});
 
 
 
@@ -181,22 +206,7 @@ if (!e.target.closest(".status-dropdown")) {
 });
 
 
-// pop ups
-
-
-document.getElementById("profileBtn").addEventListener("click", function (e) {
-  document.getElementById("profilePopup").style.display =
-      document.getElementById("profilePopup").style.display === "block" ? "none" : "block";
-  document.getElementById("notifPopup").style.display = "none";
-});
-
-// Close popups on outside click
-document.addEventListener("click", function (e) {
-  if (!e.target.closest("#notifBtn") && !e.target.closest("#profileBtn")) {
-      document.getElementById("notifPopup").style.display = "none";
-      document.getElementById("profilePopup").style.display = "none";
-  }
-});
+ 
 
 
 
@@ -496,23 +506,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // end of user profile js
 
 
-    // pop ups 
-
-
-    document.getElementById("profileBtn").addEventListener("click", function(e) {
-        document.getElementById("profilePopup").style.display =
-            document.getElementById("profilePopup").style.display === "block" ? "none" : "block";
-        document.getElementById("notifPopup").style.display = "none";
-    });
-
-    // Close popups on outside click
-    document.addEventListener("click", function(e) {
-        if (!e.target.closest("#notifBtn") && !e.target.closest("#profileBtn")) {
-            document.getElementById("notifPopup").style.display = "none";
-            document.getElementById("profilePopup").style.display = "none";
-        }
-    });
-     
+ 
 
 
 

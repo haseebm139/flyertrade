@@ -40,7 +40,7 @@
                             <div class="user-info">
                                 <img src="{{ asset($item->providers[0]->avatar ?? 'assets/images/icons/person-one.png') }}"
                                     alt="User" class="avatar">
-                                <span>{{ $item->providers[0]->name ?? '' }}</span>
+                                <span class="user-theme-name">{{ $item->providers[0]->name ?? '' }}</span>
                                 <span class="more"> + 30 more</span>
                                 @if ($item->providers_count > 1)
                                     {{-- <span class="more"> + {{ $item->providers_count - 1 }} more</span> --}}
@@ -101,7 +101,7 @@
     {{ $data->links('vendor.pagination.custom') }}
 
     @if ($showFilterModal)
-        <div class="modal" style="display: flex;">
+        <div class="modal filter-theme-modals" style="display: flex;">
             <div class="modal-content filter-modal">
                 <span class="close-modal" wire:click="closeFilterModal">&times;</span>
                 <h3>Filter</h3>
