@@ -49,6 +49,7 @@
     <script type="module">
         window.Echo.channel('notifications')
             .listen('.create', (e) => {
+                
                 console.log('Order status updated: ', e);
                 showToast(e.message);
             });
