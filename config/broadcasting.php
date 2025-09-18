@@ -37,12 +37,12 @@ return [
             'app_id' => env('REVERB_APP_ID'),
             'options' => [
                 'host' => env('REVERB_HOST','127.0.0.1'),
-                'port' => env('REVERB_PORT', 6001),
+                'port' => env('REVERB_PORT', 8080),
                 'scheme' => env('REVERB_SCHEME', 'https'),
                 'useTLS' => env('REVERB_SCHEME', 'https') === 'https',
             ],
             'client_options' => [
-                "verify" => false,
+                // "verify" => false,
                 // Guzzle client options: https://docs.guzzlephp.org/en/stable/request-options.html
             ],
         ],
