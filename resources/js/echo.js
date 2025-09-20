@@ -10,11 +10,8 @@ window.Echo = new Echo({
     wsPort: import.meta.env.VITE_REVERB_PORT ?? 443,
     wssPort: import.meta.env.VITE_REVERB_PORT ?? 443,
     forceTLS: true,
-    encrypted: true,
-    disableStats: true, 
     enabledTransports: ['ws', 'wss'],
  
-  
-   
+    
 });   
       
