@@ -42,7 +42,7 @@ return [
                 'useTLS' => true,
             ],
             'client_options' => [
-                "verify" => env('REVERB_TLS_CERT_PATH', true),
+                "verify" => env('REVERB_TLS_CA_PATH', true),
             ],
         ],
 
