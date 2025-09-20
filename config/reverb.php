@@ -28,30 +28,38 @@ return [
 
     'servers' => [
         'servers' => [
-        'reverb' => [
-            'host' => env('REVERB_SERVER_HOST', '127.0.0.1'),
-            'port' => env('REVERB_SERVER_PORT', 8080),
-            'hostname' => env('REVERB_HOST','flyertrade.com'),
-            'options' => [
-                'tls' => [
-                    'local_cert' => env('REVERB_TLS_CERT_PATH'),
-                    'local_pk' => env('REVERB_TLS_KEY_PATH'),
-                    'local_ca' => env('REVERB_TLS_CA_PATH'),
+            'reverb' => [
+                'host' => env('REVERB_SERVER_HOST', '127.0.0.1'),
+                'port' => env('REVERB_SERVER_PORT', 8080),
+                'hostname' => env('REVERB_HOST','flyertrade.com'),
+                'options' => [
+                    'tls' => [
+                        'local_cert' => env('REVERB_TLS_CERT_PATH'),
+                        'local_pk' => env('REVERB_TLS_KEY_PATH'),
+                        'local_ca' => env('REVERB_TLS_CA_PATH'),
+                    ],
                 ],
+                'max_request_size' => env('REVERB_MAX_REQUEST_SIZE', 10_000),
+                'scaling' => [
+                    'enabled' => env('REVERB_SCALING_ENABLED', false),
+                    'channel' => env('REVERB_SCALING_CHANNEL', 'reverb'),
+                    'server' => [
+                        'url' => env('REDIS_URL'),
+                        'host' => env('REDIS_HOST', '127.0.0.1'),
+                        'port' => env('REDIS_PORT', '6379'),
+                        'username' => env('REDIS_USERNAME'),
+                        'password' => env('REDIS_PASSWORD'),
+                        'database' => env('REDIS_DB', '0'),
+                    ],
+                ],
+                'pulse_ingest_interval' => env('REVERB_PULSE_INGEST_INTERVAL', 15),
+                'telescope_ingest_interval' => env('REVERB_TELESCOPE_INGEST_INTERVAL', 15),
             ],
-            
         ],
-    ],
         
 
     ],
 
-
-    'scaling' => [
-        'enabled' => env('REVERB_SCALING_ENABLED', false),
-        'driver' => env('REVERB_SCALING_DRIVER', 'redis'),
-        'connection' => env('REVERB_SCALING_CONNECTION', 'default'),
-    ],
     /*
     |--------------------------------------------------------------------------
     | Reverb Applications
