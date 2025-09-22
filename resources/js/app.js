@@ -9,18 +9,37 @@ function showToast(message) {
 }
 window.showToast = showToast;
 
-(function waitForEcho(attempt = 0) {
-  if (window.Echo) {
-    console.log('[app] Echo ready');
-    window.Echo.channel('notifications')
-      .subscribed(() => console.log('Subscribed to notifications'))
-      .listen('.create', e => {
-        console.log('Incoming event:', e);
-        showToast(e.message);
-      });
-  } else if (attempt < 50) {
-    setTimeout(() => waitForEcho(attempt + 1), 100);
-  } else {
-    console.log('Echo not ready');
+const attach = () => {
+  if (!window.Echo) {
+    console.log('[app] Echo missing');
+    return;
   }
-})();
+  console.log('[app] Echo ready');
+
+  const ch = window.Echo.channel('notifications');
+
+  ch.subscribed(() => console.log('Subscribed to notifications'));
+
+  // Your explicit broadcastAs name
+  ch.listen('.create', e => {
+    console.log('[event] .create', e);
+    showToast(e.message);
+  });
+
+  // Class-based names (catch-all)
+  ch.listen('UserNotification', e => {
+    console.log('[event] UserNotification', e);
+    showToast(e.message);
+  });
+
+  ch.listen('App\\Events\\UserNotification', e => {
+    console.log('[event] App\\Events\\UserNotification', e);
+    showToast(e.message);
+  });
+};
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', attach);
+} else {
+  attach();
+}
