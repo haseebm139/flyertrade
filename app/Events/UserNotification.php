@@ -14,34 +14,21 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 class UserNotification implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    public string $message;
-    /**
-     * Create a new event instance.
-     */
-    public function __construct(string $message)
+
+    public function __construct(public string $message) {}
+
+    public function broadcastOn(): Channel
     {
-        $this->message = $message;
+        return new Channel('notifications');
     }
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return array<int, \Illuminate\Broadcasting\Channel>
-     */
-    public function broadcastOn() 
-    {
-        return new Channel('notifications'); 
-    }
-
-    public function broadcastAs() 
+    public function broadcastAs(): string
     {
         return 'create';
     }
 
-    public function broadcastWith()
+    public function broadcastWith(): array
     {
-        return [
-            'message' => "[{ $this->message}] New Post Received with title Haseeb."
-        ];
+        return ['message' => $this->message];
     }
 }
