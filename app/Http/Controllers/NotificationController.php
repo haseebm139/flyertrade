@@ -6,8 +6,7 @@ use Illuminate\Http\Request;
 use App\Events\UserNotification;
 
 class NotificationController extends Controller
-{    
-
+{
     public function index()
     {
         return view('notifications.index');
