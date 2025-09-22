@@ -11,11 +11,11 @@ return [
     | framework when an event needs to be broadcast. You may set this to
     | any of the connections defined in the "connections" array below.
     |
-    | Supported: "reverb", "pusher", "ably", "redis", "log", "null"
+    | Supported: "pusher", "ably", "redis", "log", "null"
     |
     */
 
-    'default' => env('BROADCAST_DRIVER', 'reverb'),
+    'default' => env('BROADCAST_DRIVER', 'pusher'),
 
     /*
     |--------------------------------------------------------------------------
@@ -23,27 +23,25 @@ return [
     |--------------------------------------------------------------------------
     |
     | Here you may define all of the broadcast connections that will be used
-    | to broadcast events to other systems or over WebSockets. Samples of
+    | to broadcast events to other systems or over websockets. Samples of
     | each available type of connection are provided inside this array.
     |
     */
 
     'connections' => [
-
         'reverb' => [
             'driver' => 'reverb',
             'key' => env('REVERB_APP_KEY'),
             'secret' => env('REVERB_APP_SECRET'),
             'app_id' => env('REVERB_APP_ID'),
             'options' => [
-                'host' => env('REVERB_HOST', 'flyertrade.com'),
-                'port' => env('REVERB_PORT', 443),
-                'scheme' => env('REVERB_SCHEME', 'https'),
-                'useTLS' => env('REVERB_SCHEME', 'https') === 'https',
+                'host' => env('REVERB_HOST', '127.0.0.1'),
+                'port' => env('REVERB_PORT', 8080),
+                'scheme' => env('REVERB_SCHEME', 'http'),
+                'useTLS' => env('REVERB_SCHEME', 'http') === 'https',
             ],
             'client_options' => [
-                'verify' => env('REVERB_TLS_CA_PATH', true),
-                // Guzzle client options: https://docs.guzzlephp.org/en/stable/request-options.html
+                // Guzzle client options if needed
             ],
         ],
 
@@ -53,19 +51,24 @@ return [
             'secret' => env('PUSHER_APP_SECRET'),
             'app_id' => env('PUSHER_APP_ID'),
             'options' => [
-
-                'host' => env('PUSHER_HOST', 'flyertrade.com'),
-                'port' => env('PUSHER_PORT', 443),
-                'scheme' => env('PUSHER_SCHEME', 'https'),
-                'useTLS' => env('PUSHER_SCHEME', 'https') === 'https',
                 'cluster' => env('PUSHER_APP_CLUSTER'),
-                 
+                'useTLS' => filter_var(env('PUSHER_USE_TLS', true), FILTER_VALIDATE_BOOL),
+                'host'=>env('PUSHER_HOST'),
+                'port'=>env('PUSHER_PORT', 443),
+                'scheme'=>env('PUSHER_SCHEME', 'https'),
+                'encrypted' => true, // need on live
             ],
         ],
+
 
         'ably' => [
             'driver' => 'ably',
             'key' => env('ABLY_KEY'),
+        ],
+
+        'redis' => [
+            'driver' => 'redis',
+            'connection' => 'default',
         ],
 
         'log' => [
@@ -77,5 +80,6 @@ return [
         ],
 
     ],
+    'guards' => ['api'], // use token-based guard
 
 ];

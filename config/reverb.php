@@ -18,9 +18,10 @@ return [
 
     'servers' => [
         'reverb' => [
-            'host' => env('REVERB_SERVER_HOST', '127.0.0.1'), // local binding
-            'port' => env('REVERB_SERVER_PORT', 8080),        // Reverb internal port
-            'hostname' => env('REVERB_HOST', 'flyertrade.com'), // public hostname
+            'host' => env('REVERB_SERVER_HOST', '0.0.0.0'),
+            'port' => env('REVERB_SERVER_PORT', 8080),
+            'path' => env('REVERB_SERVER_PATH', ''),
+            'hostname' => env('REVERB_HOST', '127.0.0.1'),
             'options' => [
                 'tls' => [
                     'local_cert' => env('REVERB_TLS_CERT_PATH'),
@@ -64,12 +65,18 @@ return [
                 'secret' => env('REVERB_APP_SECRET'),
                 'app_id' => env('REVERB_APP_ID'),
                 'options' => [
-                    'host' => env('REVERB_HOST'),
-                    'port' => env('REVERB_PORT', 443),
-                    'scheme' => env('REVERB_SCHEME', 'https'),
-                    'useTLS' => true,
+                    'host' => env('REVERB_HOST', '127.0.0.1'),
+                    'port' => env('REVERB_PORT', 8080),
+                    'scheme' => env('REVERB_SCHEME', 'http'),
+                    'useTLS' => env('REVERB_SCHEME', 'http') === 'https',
                 ],
-                'allowed_origins' => ['*'],
+                'allowed_origins' => [
+                    'https://www.flyertrade.com',
+                    'https://flyertrade.com',
+                ],
+                'ping_interval' => env('REVERB_APP_PING_INTERVAL', 60),
+                'activity_timeout' => env('REVERB_APP_ACTIVITY_TIMEOUT', 30),
+                'max_message_size' => env('REVERB_APP_MAX_MESSAGE_SIZE', 10_000),
             ],
         ],
     ],
