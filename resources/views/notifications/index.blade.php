@@ -1,45 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="csrf-token" content="{{ csrf_token() }}">
-  <title>Realtime Notifications</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-  <style>
-    #toast { display:none; position:fixed; bottom:20px; right:20px; background:#16a34a; color:#fff; padding:12px 18px; border-radius:6px; }
-  </style>
-  @vite('resources/js/app.js')
+    <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Realtime Notifications</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        #toast {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #16a34a;
+            color: #fff;
+            padding: 12px 18px;
+            border-radius: 6px;
+        }
+    </style>
+    @vite('resources/js/app.js')
 </head>
+
 <body>
-  <h2>Realtime Notification Demo</h2>
-  <button id="notifyBtn">Click Me</button>
-  <div id="toast"></div>
+    <h2>Realtime Notification Demo</h2>
+    <button id="notifyBtn">Click Me</button>
+    <div id="toast"></div>
 
-  <script>
-    $('#notifyBtn').click(function () {
-      $.post("{{ route('notifications.send') }}", {
-        _token: document.querySelector('meta[name="csrf-token"]').content
-      });
-    });
-
-    function showToast(message) {
-      const toast = document.getElementById('toast');
-      toast.innerText = message;
-      toast.style.display = 'block';
-      setTimeout(() => { toast.style.display = 'none'; }, 3000);
-    }
-  </script>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      if (!window.Echo) { console.log('Echo missing'); return; }
-      window.Echo.channel('notifications')
-        .subscribed(() => console.log('Subscribed to notifications'))
-        .listen('.create', e => {
-          console.log('Incoming event:', e);
-          showToast(e.message);
+    <script>
+        $('#notifyBtn').click(function() {
+            $.post("{{ route('notifications.send') }}", {
+                _token: document.querySelector('meta[name="csrf-token"]').content
+            });
         });
-    });
-  </script>
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+
+    <script>
+        function initEcho() {
+            if (!window.Echo) {
+                console.log('Echo missing:', window.Echo);
+                return;
+            }
+            window.Echo.channel('notifications')
+                .subscribed(() => console.log('Subscribed to notifications'))
+                .listen('.create', e => {
+                    console.log('Incoming event:', e);
+                    showToast(e.message);
+                });
+        }
+
+        // Run now if DOM is ready; otherwise wait
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initEcho);
+        } else {
+            initEcho();
+        }
+    </script>
 </body>
+
 </html>
