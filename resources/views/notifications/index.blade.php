@@ -33,37 +33,20 @@
             });
         });
 
-        function showToast(message) {
+
+        window.showToast = function(message) {
             const toast = document.getElementById('toast');
             toast.innerText = message;
             toast.style.display = 'block';
             setTimeout(() => {
                 toast.style.display = 'none';
             }, 3000);
-        }
+        };
     </script>
 
-    <script>
-        function initEcho() {
-            if (!window.Echo) {
-                console.log('Echo missing:', window.Echo);
-                return;
-            }
-            window.Echo.channel('notifications')
-                .subscribed(() => console.log('Subscribed to notifications'))
-                .listen('.create', e => {
-                    console.log('Incoming event:', e);
-                    showToast(e.message);
-                });
-        }
 
-        // Run now if DOM is ready; otherwise wait
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initEcho);
-        } else {
-            initEcho();
-        }
-    </script>
+
+
 </body>
 
 </html>
