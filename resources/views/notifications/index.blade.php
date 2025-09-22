@@ -42,15 +42,21 @@
                 toast.style.display = "none";
             }, 3000);
         }
-    </script>    
+    </script>
 
-    <script type="module">
-        window.Echo.channel('notifications')
-            .subscribed(() => console.log('Subscribed to notifications'))
-            .listen('.create', (e) => {
-                console.log('Incoming event:', e);
-                showToast(e.message);
-            });
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!window.Echo) {
+                console.log('Echo missing:', window.Echo);
+                return;
+            }
+            window.Echo.channel('notifications')
+                .subscribed(() => console.log('Subscribed to notifications'))
+                .listen('.create', e => {
+                    console.log('Incoming event:', e);
+                    showToast(e.message);
+                });
+        });
     </script>
 </body>
 
