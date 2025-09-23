@@ -11,6 +11,7 @@ Route::get('/', function () {
 
 Route::get('/notifications', [NotificationController::class, 'index']);
 Route::post('/notifications/send', [NotificationController::class, 'send'])->name('notifications.send');
+Route::view('/notifications/debug', 'notifications.debug');
 Route::get('/clear-cache', function () {
     Artisan::call('optimize:clear');
 
