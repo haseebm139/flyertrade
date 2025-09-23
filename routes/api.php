@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\StripeWebhookController;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\HomeController;
+use App\Http\Controllers\Api\ConversationsController;
+use App\Http\Controllers\Api\MessagesController;
+use App\Http\Controllers\Api\OffersController;
 
 
 Route::post('stripe/webhook', [StripeWebhookController::class, 'handle']);
@@ -31,6 +34,22 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
         Route::controller(HomeController::class)->group(function () {
             Route::get('/services', 'services');
         });
+    });
+
+    // Chat & Offers API
+    Route::middleware('auth:sanctum')->group(function () {
+        // Conversations
+        Route::get('/conversations', [ConversationsController::class, 'index']);
+        Route::post('/conversations', [ConversationsController::class, 'store']);
+
+        // Messages
+        Route::get('/conversations/{conversationId}/messages', [MessagesController::class, 'index']);
+        Route::post('/conversations/{conversationId}/messages', [MessagesController::class, 'store']);
+
+        // Offers
+        Route::post('/conversations/{conversationId}/offers', [OffersController::class, 'create']);
+        Route::post('/offers/{offerId}/respond', [OffersController::class, 'respond']);
+        Route::post('/offers/{offerId}/finalize', [OffersController::class, 'finalize']);
     });
 
 // require __DIR__ .'/auth.php';
