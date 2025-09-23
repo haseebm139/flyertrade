@@ -1,7 +1,7 @@
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 
-Pusher.logToConsole = true;           // add
+// Pusher.logToConsole = true;           // add
 window.Pusher = Pusher;
 
 window.Echo = new Echo({
