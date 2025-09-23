@@ -1,9 +1,8 @@
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 
+Pusher.logToConsole = true;           // add
 window.Pusher = Pusher;
-
-const scheme = (import.meta.env.VITE_REVERB_SCHEME || 'https');
 
 window.Echo = new Echo({
   broadcaster: 'reverb',
@@ -11,6 +10,7 @@ window.Echo = new Echo({
   wsHost: import.meta.env.VITE_REVERB_HOST,
   wsPort: 80,
   wssPort: 443,
-  forceTLS: scheme === 'https',
+  forceTLS: (import.meta.env.VITE_REVERB_SCHEME || 'https') === 'https',
   enabledTransports: ['ws', 'wss'],
+  disableStats: true,                 // add
 });
