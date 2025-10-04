@@ -93,30 +93,30 @@
             Transactions
         </a>
         <a
-            href="#"
-            class="nav-link"
+            href="{{ route('reviews.index') }}"
+            class="nav-link {{ request()->routeIs('reviews.*') ? 'active' : '' }}"
         >
             <span><img
                     src="{{ asset('assets/images/icons/reviews.png') }}"
                     alt="Reviews & Ratings"
-                    class="nav-icon"
+                    class="nav-icon "
                 ></span>
             Reviews & Ratings
         </a>
         <a
             href="{{ route('dispute.index') }}"
-            class="nav-link"
+            class="nav-link {{ request()->routeIs('dispute.*') ? 'active' : '' }}"
         >
             <span><img
                     src="{{ asset('assets/images/icons/dispute.png') }}"
                     alt="Disputes & Complaints"
-                    class="nav-icon {{ request()->routeIs('dispute.*') ? 'active' : '' }}"
+                    class="nav-icon "
                 ></span>
             Disputes & complaints
         </a>
         <a
-            href="#"
-            class="nav-link "
+            href="{{ route('roles-and-permissions.index') }}"
+            class="nav-link {{ request()->routeIs('roles-and-permissions.*') ? 'active' : '' }}"
         >
             <span><img
                     src="{{ asset('assets/images/icons/roles.png') }}"

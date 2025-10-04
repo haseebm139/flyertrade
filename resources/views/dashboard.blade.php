@@ -9,7 +9,7 @@
 
          
 
-        <div class="dashboard-card">
+        {{-- <div class="dashboard-card">
             <div>
                 <h6>Active bookings</h6>
                 <h2>56</h2>
@@ -20,7 +20,7 @@
                     alt="Booking Icon"
                 >
             </div>
-        </div>
+        </div> --}}
 
          
     </div>

@@ -34,6 +34,19 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::get('dispute',function(){
         return view('admin.pages.dispute.index');
     })->name('dispute.index');
+
+    Route::get('reviews',function(){
+        return view('admin.pages.reviews.index');
+    })->name('reviews.index');
+
+
+    Route::get('roles-and-permissions',function(){
+        return view('admin.pages.roles_and_permissions.index');
+    })->name('roles-and-permissions.index');
+
+    Route::get('roles-and-permissions/show',function(){
+        return view('admin.pages.roles_and_permissions.show');
+    })->name('roles-and-permissions.show');
     // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

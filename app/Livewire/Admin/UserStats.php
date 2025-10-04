@@ -94,6 +94,11 @@ class UserStats extends Component
                         'icon' => 'assets/images/icons/new-provides.png'
                     ],
                     [
+                        'label' => 'Active bookings', 
+                        'value' => $counts->active,
+                        'icon' => 'assets/images/icons/active-booking.png'
+                    ],
+                    [
                         'label' => 'Total active users', 
                         'value' => $counts->active,
                         'icon' => 'assets/images/icons/active-members.png'
