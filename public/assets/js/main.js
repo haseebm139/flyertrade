@@ -1,166 +1,190 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const editBtn = document.getElementById("edit-btn");
-    const saveBtn = document.getElementById("save-btn");
-    const reviewText = document.getElementById("review-text");
-    const editReview = document.getElementById("edit-review");
-    const editDeleteBtns = document.getElementById("edit-delete-buttons");
+// Main JavaScript file for Flyertrade Admin Panel
+document.addEventListener('DOMContentLoaded', function () {
+    console.log('Main.js loaded - Flyertrade Admin Panel');
 
-    editBtn.addEventListener("click", function () {
-        // Show textarea
-        editReview.style.display = "block";
-        reviewText.style.display = "none";
+    // Initialize all components
+    initializeHeader();
+    initializeModals();
+    initializeDropdowns();
+    initializeTables();
 
-        // Hide edit + delete buttons
-        editDeleteBtns.style.display = "none";
-
-        // Show save button
-        saveBtn.style.display = "inline-block";
-
-        // Fill current text
-        editReview.value = reviewText.innerText.trim();
-    });
-
-    saveBtn.addEventListener("click", function () {
-        // Save updated text
-        reviewText.innerText = editReview.value.trim();
-
-        // Hide textarea, show review
-        editReview.style.display = "none";
-        reviewText.style.display = "block";
-
-        // Show buttons again
-        editDeleteBtns.style.display = "flex";
-        saveBtn.style.display = "none";
-    });
+    console.log('All components initialized');
 });
 
+// Header functionality (basic - detailed handling in header-fix.js)
+function initializeHeader() {
+    // Close popups when clicking outside
+    document.addEventListener("click", function (e) {
+        const profilePopup = document.getElementById("profilePopup");
+        const notifPopup = document.getElementById("notifPopup");
 
-// Select all functionality
-const selectAll = document.getElementById("selectAll");
-const userCheckboxes = document.querySelectorAll(".select-user");
+        // Close profile popup if clicking outside
+        if (profilePopup && !e.target.closest("#profileBtn") && !e.target.closest("#profilePopup")) {
+            profilePopup.style.display = "none";
+        }
 
-selectAll.addEventListener("change", function () {
-    userCheckboxes.forEach(cb => cb.checked = this.checked);
-});
-
-userCheckboxes.forEach(cb => {
-    cb.addEventListener("change", () => {
-        const allChecked = [...userCheckboxes].every(c => c.checked);
-        selectAll.checked = allChecked;
-    });
-});
-
-// Filter functionality
-const filterStatus = document.getElementById("filterStatus");
-filterStatus.addEventListener("change", function () {
-    const value = this.value;
-    const users = document.querySelectorAll(".user-list-item");
-
-    users.forEach(user => {
-        if (value === "all" || user.classList.contains(value)) {
-            user.style.display = "flex";
-        } else {
-            user.style.display = "none";
+        // Close notification popup if clicking outside
+        if (notifPopup && !e.target.closest("#notifBtn") && !e.target.closest("#notifPopup")) {
+            notifPopup.style.display = "none";
         }
     });
-});
 
-
-
-
-// message hide and show
-// ------------------- Send Message -------------------
-const sendBtn = document.getElementById('sendBtn');
-const chatInput = document.getElementById('chatInput');
-const chatBody = document.getElementById('chatBody');
-
-if (sendBtn && chatInput && chatBody) {
-    sendBtn.addEventListener('click', () => {
-        const msg = chatInput.value.trim();
-        if (msg === '') return;
-
-        const newMsg = document.createElement('div');
-        newMsg.classList.add('message', 'message-right');
-        newMsg.innerHTML =
-            `<p>${msg}</p>
-             <span class="timestamp">
-                 Message sent ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-             </span>`;
-
-        chatBody.appendChild(newMsg);
-        chatInput.value = '';
-        chatBody.scrollTop = chatBody.scrollHeight;
-    });
-
-    chatInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') sendBtn.click();
+    // Close buttons functionality
+    document.querySelectorAll(".popup-close").forEach(btn => {
+        btn.addEventListener("click", function () {
+            const targetId = this.getAttribute("data-close");
+            const targetElement = document.getElementById(targetId);
+            if (targetElement) {
+                targetElement.style.display = "none";
+            }
+        });
     });
 }
 
-// ------------------- Main Panels -------------------
-document.addEventListener("DOMContentLoaded", function () {
-    const contentPanel = document.querySelector(".content-panel");
-    const emailCompose = document.querySelector(".email-compose");
-    const viewEmail = document.querySelector(".view-email");
-    const messageChat = document.querySelector(".message-chat-theme");
+// Modal functionality
+function initializeModals() {
+    // Generic modal functions
+    window.openModal = function (modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = "flex";
+        }
+    };
 
-    const newMsgBtn = document.querySelector(".export-btn");
-    const userListItems = document.querySelectorAll(".user-list-item");
-    const tabButtons = document.querySelectorAll(".filter-btn");
+    window.closeModal = function (modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = "none";
+        }
+    };
 
-    // ✅ Select ALL buttons with class .new-email-btn (handles both)
-    const newEmailBtns = document.querySelectorAll(".new-email-btn");
+    // Close modals when clicking outside
+    window.addEventListener('click', function (event) {
+        if (event.target.classList.contains('modal')) {
+            event.target.style.display = 'none';
+        }
+    });
+}
 
-    // Hide all panels
-    function hideAll() {
-        [contentPanel, emailCompose, viewEmail, messageChat].forEach(el => {
-            if (el) el.style.display = "none";
+// Dropdown functionality
+function initializeDropdowns() {
+    // Actions dropdown functionality
+    document.querySelectorAll('.actions-btn').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            const menu = this.nextElementSibling;
+
+            // Close all other menus
+            document.querySelectorAll('.actions-menu').forEach(m => {
+                if (m !== menu) m.style.display = 'none';
+            });
+
+            // Toggle current menu
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
         });
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function () {
+        document.querySelectorAll('.actions-menu').forEach(menu => {
+            menu.style.display = 'none';
+        });
+    });
+}
+
+// Table functionality
+function initializeTables() {
+    // Search functionality
+    const searchInputs = document.querySelectorAll('.search-user, .search-input');
+    searchInputs.forEach(input => {
+        input.addEventListener('input', function () {
+            const searchTerm = this.value.toLowerCase();
+            const table = this.closest('.container').querySelector('.theme-table tbody');
+
+            if (table) {
+                const rows = table.querySelectorAll('tr');
+                rows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    const matches = text.includes(searchTerm);
+                    row.style.display = matches ? '' : 'none';
+                });
+            }
+        });
+    });
+
+    // Export to CSV functionality
+    const exportBtns = document.querySelectorAll('.export-btn');
+    exportBtns.forEach(btn => {
+        btn.addEventListener('click', function () {
+            exportToCSV();
+        });
+    });
+}
+
+// Export to CSV function
+function exportToCSV() {
+    const table = document.querySelector('.theme-table');
+    if (!table) return;
+
+    const rows = Array.from(table.querySelectorAll('tr'));
+    let csv = [];
+
+    rows.forEach(row => {
+        const cells = Array.from(row.querySelectorAll('td, th'));
+        const rowData = cells.map(cell => {
+            // Skip action cells and checkboxes
+            if (cell.querySelector('.actions-dropdown') || cell.querySelector('input[type="checkbox"]')) {
+                return '';
+            }
+            return '"' + cell.textContent.trim().replace(/"/g, '""') + '"';
+        }).filter(cell => cell !== '""'); // Remove empty cells
+
+        if (rowData.length > 0) {
+            csv.push(rowData.join(','));
+        }
+    });
+
+    const csvContent = csv.join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'export.csv';
+    a.click();
+    window.URL.revokeObjectURL(url);
+}
+
+// Utility functions
+function showToast(message, type = 'info') {
+    // Simple toast notification
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.textContent = message;
+    toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};
+        color: white;
+        padding: 12px 20px;
+        border-radius: 4px;
+        z-index: 10000;
+        animation: slideIn 0.3s ease;
+    `;
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
+}
+
+// Add CSS for animations
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
     }
-
-    // Show a specific panel
-    function show(el) {
-        hideAll();
-        if (el) el.style.display = "flex";
-    }
-
-    // Default view
-    show(contentPanel);
-
-    // 🟢 Open Compose Email on any new-email-btn click
-    newEmailBtns.forEach(btn => {
-        btn.addEventListener("click", () => {
-            show(emailCompose);
-        });
-    });
-
-    // 🟢 Open Chat on new message button
-    if (newMsgBtn) {
-        newMsgBtn.addEventListener("click", () => {
-            show(messageChat);
-        });
-    }
-
-    // 🟢 When user clicks an email list item → open email view
-    document.querySelectorAll("#emails .user-list-item").forEach(item => {
-        item.addEventListener("click", () => {
-            show(viewEmail);
-        });
-    });
-
-    // 🟢 When user clicks a chat list item → open chat
-    document.querySelectorAll("#chats .user-list-item").forEach(item => {
-        item.addEventListener("click", () => {
-            show(messageChat);
-        });
-    });
-
-    // 🟢 Filter buttons active state + show content panel
-    tabButtons.forEach(btn => {
-        btn.addEventListener("click", () => {
-            tabButtons.forEach(b => b.classList.remove("tab-active"));
-            btn.classList.add("tab-active");
-            show(contentPanel);
-        });
-    });
-});
+`;
+document.head.appendChild(style);

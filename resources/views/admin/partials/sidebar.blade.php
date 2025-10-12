@@ -75,7 +75,7 @@
             Settings
         </a>
         <a href="#" class="nav-link">
-            <div class="brand" id="profileBtn"
+            <div class="brand"  
                 style="display:flex; align-items:center; gap:0.8vw; cursor:pointer; position:relative;">
                 <div class="logo-placeholder">
                     <img src="{{ asset('assets/images/icons/person.png') }}" alt="" class="admin-img">
@@ -89,31 +89,7 @@
                 <!-- arrows -->
 
 
-                <!-- popup -->
-                <div class="popup" id="profilePopup">
-                    <div class="popup-header">
-                        <span class="popup-close" data-close="profilePopup">
-                            <img src="{{ asset('assets/images/icons/iconoir_cancel.png') }}" alt="">
-                        </span>
-                    </div>
-
-                    <div class="profile-card">
-                        <img src="{{ asset('assets/images/icons/person.png') }}" alt="User">
-                        <div style="font-weight:400; margin-top:5px; font-size:16px;">Flyertrade</div>
-                        <div class="muted small">flyertrade@example.com</div>
-
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                            @csrf
-                        </form>
-
-                        <button class="logout-btn"
-                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            <img src="{{ asset('assets/images/icons/Icon-logout.png') }}" class="img-log"
-                                alt="">
-                            Logout
-                        </button>
-                    </div>
-                </div>
+                 
             </div>
 
         </a>

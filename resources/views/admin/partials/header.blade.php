@@ -107,25 +107,27 @@
                 <div style="font-weight:500; font-size:0.8vw;">Flyertrade</div>
                 <div class="muted small " style=" font-size:0.8vw;">flyertrade@example.com</div>
             </div>
-            <div class="popup" id="profilePopup">
-                <div class="popup-header">
+        </div>
 
-                    <span class="popup-close" data-close="profilePopup"><img
-                            src="{{ asset('assets/images/icons/iconoir_cancel.png') }}" alt=""></span>
-                </div>
-                <div class="profile-card">
-                    <img src="{{ asset('assets/images/icons/person.png') }}" alt="User">
-                    <div style="font-weight:400; margin-top:5px; font-size:16px;">Flyertrade</div>
-                    <div class="muted small">flyertrade@example.com</div>
+        <!-- Profile Popup (moved outside profileBtn) -->
+        <div class="popup" id="profilePopup"
+            style="display: none; position: absolute; top: 100%; right: 0; background: white; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); z-index: 1000; min-width: 200px;">
+            <div class="popup-header">
+                <span class="popup-close" data-close="profilePopup"><img
+                        src="{{ asset('assets/images/icons/iconoir_cancel.png') }}" alt=""></span>
+            </div>
+            <div class="profile-card">
+                <img src="{{ asset('assets/images/icons/person.png') }}" alt="User">
+                <div style="font-weight:400; margin-top:5px; font-size:16px;">Flyertrade</div>
+                <div class="muted small">flyertrade@example.com</div>
 
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                        @csrf
-                    </form>
-                    <button class="logout-btn"
-                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> <img
-                            src="{{ asset('assets/images/icons/Icon-logout.png') }}" class="img-log"alt="">
-                        Logout</button>
-                </div>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                    @csrf
+                </form>
+                <button class="logout-btn"
+                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> <img
+                        src="{{ asset('assets/images/icons/Icon-logout.png') }}" class="img-log"alt="">
+                    Logout</button>
             </div>
         </div>
     </div>
