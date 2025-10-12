@@ -107,7 +107,27 @@ class UserStats extends Component
                      
                 ];
                 break;
-            default:
+            case 'transactions':
+                 
+                $this->stats = [
+                    [
+                        'label' => 'Total revenue', 
+                        'value' => '$' . number_format(824.00, 0),
+                        'icon' => 'assets/images/icons/payout-icon.png',
+                    ],
+                    [
+                        'label' => 'Total payout', 
+                        'value' => '$' . number_format(824.00, 0),
+                        'icon' => 'assets/images/icons/payout-icon.png'
+                    ],
+                    [
+                        'label' => 'Pending payout',
+                        'value' => '$' . number_format(824.00, 0),
+                        'icon' => 'assets/images/icons/payout-icon.png'                    
+                    ],
+                ];
+                break;
+                default:
                  $this->stats = [];
                 break;
         }

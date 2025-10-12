@@ -75,7 +75,7 @@
                             $statusClass = $statusClasses[$booking->status] ?? 'inactive';
                         @endphp
                         <span class="status {{ $statusClass }}">
-                            {{ ucfirst( $statusClass )?? '' }}
+                            {{ ucfirst($statusClass) ?? '' }}
                         </span>
                     </td>
                     <td>
@@ -83,8 +83,8 @@
                             <img src="{{ asset('assets/images/icons/eye-icon.png') }}" alt="View"
                                 class="action-icon">
                         </button>
-                         
-                         
+
+
                     </td>
                 </tr>
             @empty

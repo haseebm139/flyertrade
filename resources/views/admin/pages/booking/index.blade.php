@@ -156,12 +156,6 @@
             font-weight: 600;
             letter-spacing: 0.5px;
         }
-
-       
-
-
-
-       
     </style>
 @endpush
 
