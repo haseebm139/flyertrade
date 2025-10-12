@@ -1,7 +1,7 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Bookings')
-
+@section('title', 'Booking Management')
+@section('header', 'Booking Management')
 @section('content')
 
     <!-- Top Stat Cards -->

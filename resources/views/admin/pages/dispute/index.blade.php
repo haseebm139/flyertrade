@@ -105,15 +105,16 @@
                 </td>
 
 
-           <td>
-  <div class="status-dropdown">
-    <span class="status active" onclick="toggleDropdown(this)">Active</span>
-    <ul class="dropdown-menu">
-      <li onclick="setStatus(this, 'Resolved')">Resolved</li>
-      <li class="inactive" onclick="setStatus(this, 'Unresolved')">Unresolved</li>
-    </ul>
-  </div>
-</td>
+            <td>
+                        <div class="status-dropdown">
+                            <!-- Default: Publish -->
+                            <span class="status active" onclick="toggleDropdown(this)">Resolved</span>
+                            <ul class="dropdown-menu" style="display: none;">
+                                <li class="active" onclick="setStatus(this, 'Resolved')">Resolved</li>
+                                <li class="inactive" onclick="setStatus(this, 'Unresolved')">Unresolved</li>
+                            </ul>
+                        </div>
+                    </td>
                 <td>
                         <div class="actions-dropdown">
                             <button class="actions-btn">⋮</button>

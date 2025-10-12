@@ -38,35 +38,29 @@
             <thead>
                 <tr>
                     <th><input type="checkbox"></th>
-                    <th class="sortable" data-column="0">Booking ID <img
-                            src="{{ asset('assets/images/icons/sort.png') }}"
+                    <th class="sortable" data-column="0">Booking ID <img src="{{ asset('assets/images/icons/sort.png') }}"
                             class="sort-icon">
                     </th>
 
                     <th class="sortable">Date created
-                        <img src="{{ asset('assets/images/icons/sort.png') }}"
-                            class="sort-icon">
+                        <img src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon">
                     </th>
 
 
 
-                    <th class="sortable" data-column="1">Reviewer<img
-                            src="{{ asset('assets/images/icons/sort.png') }}"
+                    <th class="sortable" data-column="1">Reviewer<img src="{{ asset('assets/images/icons/sort.png') }}"
                             class="sort-icon">
                     </th>
                     <th class="sortable" data-column="1">Reviewer Provider<img
-                            src="{{ asset('assets/images/icons/sort.png') }}"
-                            class="sort-icon">
+                            src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon">
                     </th>
 
 
 
-                    <th class="sortable" data-column="6"> Review <img
-                            src="{{ asset('assets/images/icons/sort.png') }}"
+                    <th class="sortable" data-column="6"> Review <img src="{{ asset('assets/images/icons/sort.png') }}"
                             class="sort-icon">
                     </th>
-                    <th class="sortable" data-column="6"> Status <img
-                            src="{{ asset('assets/images/icons/sort.png') }}"
+                    <th class="sortable" data-column="6"> Status <img src="{{ asset('assets/images/icons/sort.png') }}"
                             class="sort-icon">
                     </th>
                     <th></th>
@@ -84,8 +78,7 @@
                     </td>
                     <td>
                         <div class="user-info" bis_skin_checked="1">
-                            <img src="{{ asset('assets/images/icons/person-one.png') }}"
-                                alt="User">
+                            <img src="{{ asset('assets/images/icons/person-one.png') }}" alt="User">
                             <div bis_skin_checked="1">
                                 <span class="user-theme-name ">Johnbosco Davies</span>
 
@@ -94,8 +87,7 @@
                     </td>
                     <td>
                         <div class="user-info" bis_skin_checked="1">
-                            <img src="{{ asset('assets/images/icons/person-one.png') }}"
-                                alt="User">
+                            <img src="{{ asset('assets/images/icons/person-one.png') }}" alt="User">
                             <div bis_skin_checked="1">
                                 <span class="user-theme-name ">Johnbosco Davies</span>
 
@@ -116,11 +108,11 @@
 
                     <td>
                         <div class="status-dropdown">
-                            <!-- Default Resolved -->
-                            <span class="status active" onclick="toggleDropdown(this)">Resolved</span>
+                            <!-- Default: Publish -->
+                            <span class="status active" onclick="toggleDropdown(this)">Publish</span>
                             <ul class="dropdown-menu" style="display: none;">
-                                <li class="active" onclick="setStatus(this, 'Resolved')">Resolved</li>
-                                <li class="inactive" onclick="setStatus(this, 'Unresolved')">Unresolved</li>
+                                <li class="active" onclick="setStatus(this, 'Publish')">Publish</li>
+                                <li class="inactive" onclick="setStatus(this, 'UnPublish')">UnPublish</li>
                             </ul>
                         </div>
                     </td>
@@ -129,13 +121,118 @@
                             <button class="actions-btn"><img src="{{ asset('assets/images/icons/three-dots.png') }}"
                                     class="dots-img" alt=""></button>
                             <div class="actions-menu" bis_skin_checked="1">
-                                <a href=""><img
-                                        src="{{ asset('assets/images/icons/eye.png') }}"
-                                        alt="">
+                                <a href=""><img src="{{ asset('assets/images/icons/eye.png') }}" alt="">
                                     View
                                     Details</a>
-                                <a href=""><img
-                                        src="{{ asset('assets/images/icons/delete-icon.png') }}"
+                                <a href=""><img src="{{ asset('assets/images/icons/delete-icon.png') }}"
+                                        alt="">
+                                    Deleted
+                                </a>
+
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
+    </div>
+
+    <div id="providers" class="tab-content ">
+
+        <table class="theme-table">
+            <thead>
+                <tr>
+                    <th><input type="checkbox"></th>
+                    <th class="sortable" data-column="0">Booking ID <img src="{{ asset('assets/images/icons/sort.png') }}"
+                            class="sort-icon">
+                    </th>
+
+                    <th class="sortable">Date created
+                        <img src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon">
+                    </th>
+
+
+
+                    <th class="sortable" data-column="1">Reviewer<img src="{{ asset('assets/images/icons/sort.png') }}"
+                            class="sort-icon">
+                    </th>
+                    <th class="sortable" data-column="1">Reviewer Provider<img
+                            src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon">
+                    </th>
+
+
+
+                    <th class="sortable" data-column="6"> Review <img src="{{ asset('assets/images/icons/sort.png') }}"
+                            class="sort-icon">
+                    </th>
+                    <th class="sortable" data-column="6"> Status <img src="{{ asset('assets/images/icons/sort.png') }}"
+                            class="sort-icon">
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>12345</td>
+
+                    <td><span class="date">Jan,2025-01-31</span>
+                        <br>
+                        <small class="time">12:00pm</small>
+
+                    </td>
+                    <td>
+                        <div class="user-info" bis_skin_checked="1">
+                            <img src="{{ asset('assets/images/icons/person-one.png') }}" alt="User">
+                            <div bis_skin_checked="1">
+                                <span class="user-theme-name ">Johnbosco Davies</span>
+
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="user-info" bis_skin_checked="1">
+                            <img src="{{ asset('assets/images/icons/person-one.png') }}" alt="User">
+                            <div bis_skin_checked="1">
+                                <span class="user-theme-name ">Johnbosco Davies</span>
+
+                            </div>
+                        </div>
+                    </td>
+
+
+                    <td>
+
+                        <div class="stars-rating"></div> Lorem ipsum dolor sit amet consectetur adipisicing
+                        elit. Non, voluptates? Lorem
+                        ipsum
+                        dolor sit amet.
+
+                    </td>
+
+
+                    <td>
+                        <div class="status-dropdown">
+                            <!-- Default: Publish -->
+                            <span class="status active" onclick="toggleDropdown(this)">Publish</span>
+                            <ul class="dropdown-menu" style="display: none;">
+                                <li class="inactive" onclick="setStatus(this, 'Pending')">Pending</li>
+                                <li class="active" onclick="setStatus(this, 'Publish')">Publish</li>
+                                <li class="inactive" onclick="setStatus(this, 'UnPublish')">UnPublish</li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="actions-dropdown" bis_skin_checked="1">
+                            <button class="actions-btn"><img src="{{ asset('assets/images/icons/three-dots.png') }}"
+                                    class="dots-img" alt=""></button>
+                            <div class="actions-menu" bis_skin_checked="1">
+                                <a href=""><img src="{{ asset('assets/images/icons/eye.png') }}" alt="">
+                                    View
+                                    Details</a>
+                                <a href=""><img src="{{ asset('assets/images/icons/delete-icon.png') }}"
                                         alt="">
                                     Deleted
                                 </a>
@@ -157,7 +254,7 @@
         for (let i = 0; i < rating; i++) {
             let img = document.createElement("img");
             img.src = "{{ asset('assets/images/icons/star.png') }}";
-            img.alt = "star"; 
+            img.alt = "star";
             img.style.width = "1vw";
             img.style.height = "1vw";
             img.style.marginRight = "0.1vw";

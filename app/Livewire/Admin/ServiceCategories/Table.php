@@ -8,7 +8,7 @@ use App\Models\Service;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 class Table extends Component
 {
-     use WithPagination;
+    use WithPagination;
      
     public $confirmingId ;
     public $search = '';

@@ -390,14 +390,14 @@
     <div id="view-booking" class="view-booking-modal">
         <div class="view-booking-content">
             <div class="modal-header">
-                <h2>Booking details</h2>
+                <h2 class="page-title">Booking details</h2>
                 <div class="header-actions">
 
                     <span class="close-btn" onclick="closeBookingModal()">&times;</span>
                 </div>
             </div>
             <div class="service-header-icons">
-                <h4>Service details</h4>
+                <h4 style="font-size: 1vw">Service details</h4>
                 <h5> <img src="{{ asset('assets/images/icons/download.png') }}" alt="Download" class="download-icon"> <small
                         style="color:grey;">Download </small></h5>
             </div>

@@ -11,6 +11,58 @@ $(document).ready(function () {
  
   });
 });
+document.addEventListener("DOMContentLoaded", () => {
+    const addUserModal = document.getElementById("addUserModal");
+    const openAddUserBtn = document.getElementById("openAddUserModal");
+    const closeAddUserBtn = document.getElementById("closeAddUserModal");
+    const cancelBtn = document.querySelector(".cancel-btn");
+
+    if (openAddUserBtn && addUserModal) {
+      openAddUserBtn.onclick = () => {
+        addUserModal.style.display = "flex";
+      };
+    }
+
+    if (closeAddUserBtn && addUserModal) {
+      closeAddUserBtn.onclick = () => {
+        addUserModal.style.display = "none";
+      };
+    }
+
+    if (cancelBtn && addUserModal) {
+      cancelBtn.onclick = () => {
+        addUserModal.style.display = "none";
+      };
+    }
+  });
+  
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  const modal = document.getElementById("addRoleModal");
+  const openBtn = document.getElementById("openaddRoleModal"); // <- Trigger button
+  const closeBtn = document.getElementById("closeaddRoleModal");
+
+  // Open modal
+  openBtn.addEventListener("click", function () {
+    modal.style.display = "flex";
+  });
+
+  // Close modal
+  closeBtn.addEventListener("click", function () {
+    modal.style.display = "none";
+  });
+
+  // Close modal if clicked outside the modal-content
+  window.addEventListener("click", function (e) {
+    if (e.target === modal) {
+      modal.style.display = "none";
+    }
+  });
+});
+
+
+
 document.addEventListener("DOMContentLoaded", function () {
 
   document.querySelectorAll(".tab").forEach(tab => {
@@ -330,28 +382,6 @@ document.addEventListener('DOMContentLoaded', function () {
 // add user
 
 // Add User Modal
-const addUserModal = document.getElementById("addUserModal");
-const openAddUserBtn = document.getElementById("openAddUserModal");
-const closeAddUserBtn = document.getElementById("closeAddUserModal");
-const cancelBtn = document.querySelector(".cancel-btn");
-
-if (openAddUserBtn && addUserModal) {
-  openAddUserBtn.onclick = () => {
-    addUserModal.style.display = "flex";
-  };
-}
-
-if (closeAddUserBtn && addUserModal) {
-  closeAddUserBtn.onclick = () => {
-    addUserModal.style.display = "none";
-  };
-}
-
-if (cancelBtn && addUserModal) {
-  cancelBtn.onclick = () => {
-    addUserModal.style.display = "none";
-  };
-}
 
 const openFilterBtn = document.getElementById("openFilterModal");
 const closeFilterBtn = document.getElementById("closeFilterModal");
@@ -437,7 +467,28 @@ document.addEventListener('click', () => {
     drop.classList.remove('active');
   });
 });
+  function toggleDropdown(element) {
+    const dropdown = element.nextElementSibling;
+    dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+  }
 
+  function setStatus(clickedItem, statusText) {
+    const dropdown = clickedItem.closest(".dropdown-menu");
+    const statusSpan = dropdown.previousElementSibling;
+
+    // Set status text
+    statusSpan.textContent = statusText;
+
+    // Toggle class for coloring
+    if (statusText === "UnPublish") {
+      statusSpan.classList.add("unpublished");
+    } else {
+      statusSpan.classList.remove("unpublished");
+    }
+
+    // Close dropdown
+    dropdown.style.display = "none";
+  }
 
 
 
