@@ -8,6 +8,7 @@ if (!function_exists('sendVerificationMail')) {
     }
 }
 
+
 if (!function_exists('dateFormat')) {
     function dateFormat($value)
     {

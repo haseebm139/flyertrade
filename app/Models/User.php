@@ -88,6 +88,22 @@ class User extends Authenticatable
 
         return $code;
     }
+
+    /**
+     * Scope for customer users (including multi).
+     */
+    public function scopeCustomers($query)
+    {
+        return $query->whereIn('user_type', ['customer', 'multi']);
+    }
+
+    /**
+     * Scope for provider users (including multi).
+     */
+    public function scopeProviders($query)
+    {
+        return $query->whereIn('user_type', ['provider', 'multi']);
+    }
     public function workingHours()
     {
         return $this->hasMany(ProviderWorkingHour::class, 'user_id');

@@ -1,0 +1,55 @@
+name: Deploy Laravel to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.HOST_DNS }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
+            cd /var/www/flyertrade
+
+            echo "👉 Fixing Git permissions..."
+            sudo chown -R ubuntu:ubuntu .git
+            sudo chown -R ubuntu:ubuntu .
+
+            echo "👉 Pulling latest code..."
+            git fetch origin main
+            git reset --hard origin/main
+
+            echo "👉 Installing dependencies..."
+            composer install --no-dev --optimize-autoloader
+
+            echo "👉 Running migrations..."
+            php artisan migrate --force
+
+            echo "👉 Clearing and caching config..."
+            php artisan config:clear
+            php artisan cache:clear
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+               
+            echo "👉 Fixing Laravel storage permissions..."
+            sudo chown -R ubuntu:www-data storage bootstrap/cache
+            sudo chmod -R 775 storage bootstrap/cache
+
+            echo "👉 Reloading services..."
+            sudo systemctl reload php8.3-fpm || true
+            sudo systemctl reload nginx || true
+
+ 

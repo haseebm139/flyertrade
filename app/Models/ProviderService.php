@@ -39,4 +39,9 @@ class ProviderService extends Model
     {
         return $this->belongsTo(Service::class, 'service_id');
     }
+
+     public function providers()
+    {
+        return $this->belongsToMany(User::class);
+    }
 }

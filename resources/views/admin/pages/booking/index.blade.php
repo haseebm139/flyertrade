@@ -1,574 +1,49 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Bookings')
-
+@section('title', 'Booking Management')
+@section('header', 'Booking Management')
 @section('content')
 
     <!-- Top Stat Cards -->
-    <div class=" combo-class">
-        <div class="dashboard-card">
-            <div>
-                <h6>Total Booking</h6>
-                <h2>1200</h2>
-            </div>
-            <div class="icon-box">
-                <img
-                    src="{{ asset('assets/images/icons/active-booking.png') }}"
-                    alt="User Icon"
-                >
-            </div>
-        </div>
-        <div class="dashboard-card">
-            <div>
-                <h6>Active Booking</h6>
-                <h2>1200</h2>
-            </div>
-            <div class="icon-box">
-                <img
-                    src="{{ asset('assets/images/icons/active-booking.png') }}"
-                    alt="User Icon"
-                >
-            </div>
-        </div>
-        <div class="dashboard-card">
-            <div>
-                <h6>Inactive Booking</h6>
-                <h2>1200</h2>
-            </div>
-            <div class="icon-box">
-                <img
-                    src="{{ asset('assets/images/icons/active-booking.png') }}"
-                    alt="User Icon"
-                >
-            </div>
-        </div>
-
+    <div id="statsContainer">
+        <livewire:admin.booking-stats mode="booking" />
     </div>
-    <br>
+
+    <!-- Back Button (Hidden by default) -->
+
     <div class="container">
-        <h1 class="page-title">All Booking</h1>
-    </div>
-    <div class="users-toolbar">
-        <div class="toolbar-left">
-            <button class="export-btn">
-                <span class="download-icon"><img
-                        src="{{ asset('assets/images/icons/download.png') }}"
-                        alt=""
-                    ></span> Export CSV
+        <div class="back-button-container" id="backButtonContainer" style="display: none;">
+            <button class="back-button" onclick="showAllBookings()">
+                <div class="back-icon">
+                    <img src="{{ asset('assets/images/icons/back_icon.png') }}" alt="Back">
+                </div>
+
+                <span class="page-title" id="pageTitle">All Bookings</span>
             </button>
-            <button
-                class="d-none add-user-btn"
-                id="openAddUserModal"
-            >+ Add User</button>
         </div>
-        <div class="toolbar-right">
-            <input
-                type="text"
-                class="search-user"
-                placeholder="Search user"
-            >
-            <button
-                class="filter-btn"
-                id="openFilterModal"
-            > <span class="download-icon"><img
-                        src="{{ asset('assets/images/icons/button-icon.png') }}"
-                        alt=""
-                    ></span>Filter</button>
-        </div>
+
     </div>
 
-    <!-- booking -table-->
-    <table class="users-table">
-        <thead>
-            <tr>
-                <th><input type="checkbox"></th>
-                <th
-                    class="sortable"
-                    data-column="0"
-                >Booking ID <img
-                        src="{{ asset('assets/images/icons/sort.png') }}"
-                        class="sort-icon"
-                    >
-                </th>
-                <th
-                    class="sortable"
-                    data-column="4"
-                >Service category <img
-                        src="{{ asset('assets/images/icons/sort.png') }}"
-                        class="sort-icon"
-                    ></th>
-                <th class="sortable">Date created
-                    <img
-                        src="{{ asset('assets/images/icons/sort.png') }}"
-                        class="sort-icon"
-                    >
-                </th>
-                <th
-                    class="sortable"
-                    data-column="1"
-                >Service User<img
-                        src="{{ asset('assets/images/icons/sort.png') }}"
-                        class="sort-icon"
-                    ></th>
 
-
-                <th
-                    class="sortable"
-                    data-column="1"
-                >Provider<img
-                        src="{{ asset('assets/images/icons/sort.png') }}"
-                        class="sort-icon"
-                    ></th>
-                <th
-                    class="sortable"
-                    data-column="2"
-                >Location <img
-                        src="{{ asset('assets/images/icons/sort.png') }}"
-                        class="sort-icon"
-                    ></th>
-                <th
-                    class="sortable"
-                    data-column="3"
-                >Amount Paid <img
-                        src="{{ asset('assets/images/icons/sort.png') }}"
-                        class="sort-icon"
-                    ></th>
-
-
-                <th
-                    class="sortable"
-                    data-column="6"
-                > Status <img
-                        src="{{ asset('assets/images/icons/sort.png') }}"
-                        class="sort-icon"
-                    ></th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><input type="checkbox"></td>
-                <td>12345</td>
-                <td>Plumbing <span class="more"> +2 more</span></td>
-                <td><span class="date">Jan,2025-01-31</span>
-                    <br>
-                    <small class="time">12:00pm</small>
-
-                </td>
-                <td>
-                    <div class="user-info">
-                        <img
-                            src="{{ asset('assets/images/icons/person-one.png') }}"
-                            alt="User"
-                        >
-                        <div>
-                            <p class="user-name">Johnbosco Davies</p>
-
-                        </div>
-                    </div>
-                </td>
-
-                <td>
-                    <div class="user-info">
-                        <img
-                            src="{{ asset('assets/images/icons/person-one.png') }}"
-                            alt="User"
-                        >
-                        <div>
-                            <p class="user-name">Johnbosco Davies</p>
-
-                        </div>
-                    </div>
-                </td>
-                <td>123, Abc Road, Dubai</td>
-                <td>$1200</td>
-
-
-                <td><span class="status active">Active</span></td>
-                <td class="viw-parent">
-                    <button
-                        class="view-btn"
-                        onclick="openBookingModal()"
-                    >
-                        <img
-                            src="{{ asset('assets/images/icons/eye-icon.png') }}"
-                            alt="View"
-                            class="eye-icon"
-                        >
-                        View
-                    </button>
-                </td>
-            </tr>
-            <tr>
-                <td><input type="checkbox"></td>
-                <td>12345</td>
-                <td>Cleaning <span class="more"> +2 more</span></td>
-                <td><span class="date">Jan,2025-01-31</span>
-                    <br>
-                    <small class="time">12:00pm</small>
-
-                </td>
-                <td>
-                    <div class="user-info">
-                        <img
-                            src="{{ asset('assets/images/icons/three.png') }}"
-                            alt="User"
-                        >
-                        <div>
-                            <p class="user-name">Johnbosco Davies</p>
-
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <div class="user-info">
-                        <img
-                            src="{{ asset('assets/images/icons/person-one.png') }}"
-                            alt="User"
-                        >
-                        <div>
-                            <p class="user-name">Johnbosco Davies</p>
-
-                        </div>
-                    </div>
-                </td>
-                <td>123, Abc Road, Dubai</td>
-                <td>$1200</td>
+    <livewire:admin.bookings.table />
 
 
 
-                <td><span class="status active">Active</span></td>
-                <td class="viw-parent">
-                    <button
-                        class="view-btn"
-                        onclick="openBookingModal()"
-                    >
-                        <img
-                            src="{{ asset('assets/images/icons/eye-icon.png') }}"
-                            alt="View"
-                            class="eye-icon"
-                        >
-                        View
-                    </button>
-                </td>
-            </tr>
-            <tr>
-                <td><input type="checkbox"></td>
-                <td>12345</td>
-                <td>Plumbing <span class="more"> +2 more</span></td>
-                <td><span class="date">Jan,2025-01-31</span>
-                    <br>
-                    <small class="time">12:00pm</small>
-
-                </td>
-                <td>
-                    <div class="user-info">
-                        <img
-                            src="{{ asset('assets/images/icons/four.png') }}"
-                            alt="User"
-                        >
-                        <div>
-                            <p class="user-name">Johnbosco Davies</p>
-
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <div class="user-info">
-                        <img
-                            src="{{ asset('assets/images/icons/person-one.png') }}"
-                            alt="User"
-                        >
-                        <div>
-                            <p class="user-name">Johnbosco Davies</p>
-
-                        </div>
-                    </div>
-                </td>
-                <td>123, Abc Road, Dubai</td>
-                <td>$1200</td>
 
 
-                <td><span class="status active">Active</span></td>
-                <td class="viw-parent">
-                    <button
-                        class="view-btn"
-                        onclick="openBookingModal()"
-                    >
-                        <img
-                            src="{{ asset('assets/images/icons/eye-icon.png') }}"
-                            alt="View"
-                            class="eye-icon"
-                        >
-                        View
-                    </button>
-                </td>
-            </tr>
-            <tr>
-                <td><input type="checkbox"></td>
-                <td>12345</td>
-                <td>Electric work</td>
-                <td><span class="date">Jan,2025-01-31</span>
-                    <br>
-                    <small class="time">12:00pm</small>
-
-                </td>
-                <td>
-                    <div class="user-info">
-                        <img
-                            src="{{ asset('assets/images/icons/five.png') }}"
-                            alt="User"
-                        >
-                        <div>
-                            <p class="user-name">Johnbosco Davies</p>
-
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <div class="user-info">
-                        <img
-                            src="{{ asset('assets/images/icons/person-one.png') }}"
-                            alt="User"
-                        >
-                        <div>
-                            <p class="user-name">Johnbosco Davies</p>
-
-                        </div>
-                    </div>
-                </td>
-                <td>123, Abc Road, Dubai</td>
-                <td>$1200</td>
-
-
-                <td><span class="status active">Active</span></td>
-                <td class="viw-parent">
-                    <button
-                        class="view-btn"
-                        onclick="openBookingModal()"
-                    >
-                        <img
-                            src="{{ asset('assets/images/icons/eye-icon.png') }}"
-                            alt="View"
-                            class="eye-icon"
-                        >
-                        View
-                    </button>
-                </td>
-            </tr>
-            <tr>
-                <td><input type="checkbox"></td>
-                <td>12345</td>
-                <td>Plumbing <span class="more"> +2 more</span></td>
-                <td><span class="date">Jan,2025-01-31</span>
-                    <br>
-                    <small class="time">12:00pm</small>
-
-                </td>
-                <td>
-                    <div class="user-info">
-                        <img
-                            src="{{ asset('assets/images/icons/person-one.png') }}"
-                            alt="User"
-                        >
-                        <div>
-                            <p class="user-name">Johnbosco Davies</p>
-
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <div class="user-info">
-                        <img
-                            src="{{ asset('assets/images/icons/person-one.png') }}"
-                            alt="User"
-                        >
-                        <div>
-                            <p class="user-name">Johnbosco Davies</p>
-
-                        </div>
-                    </div>
-                </td>
-                <td>123, Abc Road, Dubai</td>
-                <td>$1200</td>
-
-
-                <td><span class="status inactive">Inactive</span></td>
-                <td class="viw-parent">
-                    <button
-                        class="view-btn"
-                        onclick="openBookingModal()"
-                    >
-                        <img
-                            src="{{ asset('assets/images/icons/eye-icon.png') }}"
-                            alt="View"
-                            class="eye-icon"
-                        >
-                        View
-                    </button>
-                </td>
-            </tr>
-            <tr>
-                <td><input type="checkbox"></td>
-                <td>12345</td>
-                <td>Plumbing <span class="more"> +2 more</span></td>
-                <td><span class="date">Jan,2025-01-31</span>
-                    <br>
-                    <small class="time">12:00pm</small>
-
-                </td>
-                <td>
-                    <div class="user-info">
-                        <img
-                            src="{{ asset('assets/images/icons/seven.png') }}"
-                            alt="User"
-                        >
-                        <div>
-                            <p class="user-name">Johnbosco Davies</p>
-
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <div class="user-info">
-                        <img
-                            src="{{ asset('assets/images/icons/person-one.png') }}"
-                            alt="User"
-                        >
-                        <div>
-                            <p class="user-name">Johnbosco Davies</p>
-
-                        </div>
-                    </div>
-                </td>
-                <td>123, Abc Road, Dubai</td>
-                <td>$1200</td>
-
-
-                <td><span class="status active">Active</span></td>
-                <td class="viw-parent">
-                    <button
-                        class="view-btn"
-                        onclick="openBookingModal()"
-                    >
-                        <img
-                            src="{{ asset('assets/images/icons/eye-icon.png') }}"
-                            alt="View"
-                            class="eye-icon"
-                        >
-                        View
-                    </button>
-                </td>
-            </tr>
-
-            <tr>
-                <td><input type="checkbox"></td>
-                <td>12345</td>
-                <td>Plumbing <span class="more"> +2 more</span></td>
-                <td><span class="date">Jan,2025-01-31</span>
-                    <br>
-                    <small class="time">12:00pm</small>
-
-                </td>
-                <td>
-                    <div class="user-info">
-                        <img
-                            src="{{ asset('assets/images/icons/five.png') }}"
-                            alt="User"
-                        >
-                        <div>
-                            <p class="user-name">Johnbosco Davies</p>
-
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <div class="user-info">
-                        <img
-                            src="{{ asset('assets/images/icons/person-one.png') }}"
-                            alt="User"
-                        >
-                        <div>
-                            <p class="user-name">Johnbosco Davies</p>
-
-                        </div>
-                    </div>
-                </td>
-                <td>123, Abc Road, Dubai</td>
-                <td>$1200</td>
-
-
-                <td><span class="status inactive">Inactive</span></td>
-                <td class="viw-parent">
-                    <button
-                        class="view-btn"
-                        onclick="openBookingModal()"
-                    >
-                        <img
-                            src="{{ asset('assets/images/icons/eye-icon.png') }}"
-                            alt="View"
-                            class="eye-icon"
-                        >
-                        View
-                    </button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-
-    <!-- Pagination -->
-    <div class="pagination">
-        <button
-            class="page-btn prev"
-            disabled
-        >‹</button>
-        <button class="page-btn active">1</button>
-        <button class="page-btn">2</button>
-        <button class="page-btn">3</button>
-        <button class="page-btn">4</button>
-        <button class="page-btn">5</button>
-        <span class="dots">...</span>
-        <button class="page-btn">14</button>
-        <button class="page-btn next">›</button>
-
-        <div class="rows-control">
-            <label for="rows">Show</label>
-            <select id="rows">
-                <option>10 rows</option>
-                <option>25 rows</option>
-                <option>50 rows</option>
-                <option>100 rows</option>
-            </select>
-        </div>
-    </div>
-    </div>
-
-    <!-- view booking modal -->
-
-
-    <div
-        id="view-booking"
-        class="view-booking-modal"
-    >
+    <div id="view-booking" class="view-booking-modal">
         <div class="view-booking-content">
             <div class="modal-header">
                 <h2>Booking details</h2>
                 <div class="header-actions">
 
-                    <span
-                        class="close-btn"
-                        onclick="closeBookingModal()"
-                    >&times;</span>
+                    <span class="close-btn" onclick="closeBookingModal()">&times;</span>
                 </div>
             </div>
             <div class="service-header-icons">
                 <h4>Service details</h4>
-                <h5> <img
-                        src="{{ asset('assets/images/icons/download.png') }}"
-                        alt="Download"
-                        class="download-icon"
-                    > <small style="color:grey;">Download </small></h5>
+                <h5> <img src="{{ asset('assets/images/icons/download.png') }}" alt="Download" class="download-icon"> <small
+                        style="color:grey;">Download </small></h5>
             </div>
 
             <div class="modal-section">
@@ -609,96 +84,143 @@
 
 
 
-    <div
-        id="addUserModal"
-        class="modal"
-    >
-        <div class="modal-content add-user-modal">
-            <span
-                class="close-modal"
-                id="closeAddUserModal"
-            >&times;</span>
-            <h3>Add User</h3>
-            <form>
-                <label>Name</label>
-                <input
-                    type="text"
-                    class="form-input"
-                    placeholder="Enter name"
-                >
-                <label>Email</label>
-                <input
-                    type="email"
-                    class="form-input"
-                    placeholder="Enter email"
-                >
-                <label>Home Address</label>
-                <input
-                    type="text"
-                    class="form-input"
-                    placeholder="Enter home address"
-                >
-                <label>Phone Number</label>
-                <input
-                    type="text"
-                    class="form-input"
-                    placeholder="Enter phone number"
-                >
-                <div class="form-actions">
-                    <button
-                        type="button"
-                        class="cancel-btn"
-                    >Cancel</button>
-                    <button
-                        type="submit"
-                        class="submit-btn"
-                    > + Add User</button>
-                </div>
-            </form>
-        </div>
-    </div>
+
 
     <!-- Filter Modal -->
-    <div
-        id="filterModal"
-        class="modal"
-    >
+    <div id="filterModal" class="modal filter-theme-modal">
         <div class="modal-content filter-modal">
-            <span
-                class="close-modal"
-                id="closeFilterModal"
-            >&times;</span>
+            <span class="close-modal" id="closeFilterModal">&times;</span>
             <h3>Filter</h3>
             <label>Select Date</label>
             <div class="date-range">
                 <div>
                     <span>From:</span>
-                    <input
-                        type="date"
-                        class="form-input"
-                    >
+                    <input type="date" class="form-input">
                 </div>
                 <div>
                     <span>To:</span>
-                    <input
-                        type="date"
-                        class="form-input"
-                    >
+                    <input type="date" class="form-input">
                 </div>
             </div>
 
             <div class="form-actions">
-                <button
-                    type="button"
-                    class="reset-btn"
-                >Reset</button>
-                <button
-                    type="submit"
-                    class="submit-btn"
-                >Apply Now</button>
+                <button type="button" class="reset-btn">Reset</button>
+                <button type="submit" class="submit-btn">Apply Now</button>
             </div>
         </div>
     </div>
 
 
 @endsection
+
+@push('styles')
+    <style>
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            background: #ffffff;
+            border: 1px solid #ffffff;
+            border-radius: 12px;
+            color: #495057;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+
+        }
+
+
+
+        .back-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+        }
+
+        .back-icon img {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .back-button:hover .back-icon img {
+            transform: translateX(-2px);
+        }
+
+        .back-text {
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+    </style>
+@endpush
+
+@push('scripts')
+    <script>
+        function filterByStatus(status, title) {
+            // Hide stats container
+            document.getElementById('statsContainer').style.display = 'none';
+
+            // Show back button
+            document.getElementById('backButtonContainer').style.display = 'flex';
+
+            // Update page title
+            document.getElementById('pageTitle').textContent = title;
+            document.getElementById('backButtonText').textContent = '← ' + title;
+
+            // Dispatch Livewire event to filter the table
+            Livewire.dispatch('filterByStatus', {
+                status: status
+            });
+        }
+
+        function showAllBookings() {
+            // Show stats container
+            document.getElementById('statsContainer').style.display = 'flex';
+
+            // Hide back button
+            document.getElementById('backButtonContainer').style.display = 'none';
+
+            // Reset page title and back button text
+            document.getElementById('pageTitle').textContent = 'All Bookings';
+            document.getElementById('backButtonText').textContent = 'All Bookings';
+
+            // Dispatch Livewire event to show all bookings
+            Livewire.dispatch('filterByStatus', {
+                status: ''
+            });
+        }
+
+        function openBookingModal(bookingId = null) {
+            if (bookingId) {
+                // Fetch booking data and populate modal
+                fetch(`/admin/bookings/${bookingId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Populate modal with booking data
+                        console.log('Booking data:', data);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching booking data:', error);
+                    });
+            }
+            document.getElementById('view-booking').style.display = 'flex';
+        }
+
+        function closeBookingModal() {
+            document.getElementById('view-booking').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('view-booking');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+@endpush

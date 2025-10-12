@@ -11,9 +11,9 @@ class Form extends Component
     public $categoryId;
     public $name = '';
     public $description = '';
-
-    protected $listeners = [
-        'openModal' => 'open',
+     
+    protected $listeners = [        
+        'addItemRequested' => 'open',
     ];
     public function open($id = null)
     {

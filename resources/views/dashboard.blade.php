@@ -1,35 +1,15 @@
 @extends('admin.layouts.app')
 @section('title', 'Dashboard')
+@section('header', 'Dashboard')
 @section('content')
     <!-- top stat cards -->
     <div class="dashboard-grid">
-        <div class="dashboard-card">
-            <div>
-                <h6>Total service users</h6>
-                <h2>4650</h2>
-            </div>
-            <div class="icon-box">
-                <img
-                    src="{{ asset('assets/images/icons/service-providers.png') }}"
-                    alt="User Icon"
-                >
-            </div>
-        </div>
+        <livewire:admin.user-stats mode="users"/>
+         
 
-        <div class="dashboard-card">
-            <div>
-                <h6>Total service providers</h6>
-                <h2>3280</h2>
-            </div>
-            <div class="icon-box">
-                <img
-                    src="{{ asset('assets/images/icons/new-provides.png') }}"
-                    alt="Providers Icon"
-                >
-            </div>
-        </div>
+         
 
-        <div class="dashboard-card">
+        {{-- <div class="dashboard-card">
             <div>
                 <h6>Active bookings</h6>
                 <h2>56</h2>
@@ -40,20 +20,9 @@
                     alt="Booking Icon"
                 >
             </div>
-        </div>
+        </div> --}}
 
-        <div class="dashboard-card">
-            <div>
-                <h6>Total active users</h6>
-                <h2>7930</h2>
-            </div>
-            <div class="icon-box">
-                <img
-                    src="{{ asset('assets/images/icons/active-members.png') }}"
-                    alt="Active Users Icon"
-                >
-            </div>
-        </div>
+         
     </div>
 
     <!-- two-column area: left (finance + table) and right (recent activities) -->
