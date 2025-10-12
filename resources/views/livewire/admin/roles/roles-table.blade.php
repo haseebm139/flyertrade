@@ -44,7 +44,7 @@
                     <td><input type="checkbox" value="{{ $role->id }}" wire:model.live="selected"></td>
                     <td>
                         <div class="role-info">
-                            <span class="role-name">{{ $role->name }}</span>
+                            <span class="role-name">{{ ucfirst($role->name) ?? 'N/A' }}</span>
                         </div>
                     </td>
                     <td>
