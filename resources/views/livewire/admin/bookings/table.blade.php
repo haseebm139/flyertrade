@@ -36,7 +36,7 @@
             <tr>
                 <td><input type="checkbox"></td>
                 <td>12345</td>
-                <td>Plumbing <span class="more"> +2 more</span></td>
+                <td>Plumbing  </td>
                 <td><span class="date">Jan,2025-01-31</span>
                     <br>
                     <small class="time">12:00pm</small>
@@ -76,7 +76,7 @@
             <tr>
                 <td><input type="checkbox"></td>
                 <td>12345</td>
-                <td>Cleaning <span class="more"> +2 more</span></td>
+                <td>Cleaning  </td>
                 <td><span class="date">Jan,2025-01-31</span>
                     <br>
                     <small class="time">12:00pm</small>
@@ -105,7 +105,7 @@
 
 
 
-                <td><span class="status active">Active</span></td>
+                <td><span class="status inactive">Cancelled</span></td>
                 <td class="viw-parent">
                     <button class="view-btn" onclick="openBookingModal()">
                         <img src="{{ asset('assets/images/icons/eye-icon.png') }}" alt="View" class="eye-icon">
@@ -116,7 +116,7 @@
             <tr>
                 <td><input type="checkbox"></td>
                 <td>12345</td>
-                <td>Plumbing <span class="more"> +2 more</span></td>
+                <td>Plumbing</td>
                 <td><span class="date">Jan,2025-01-31</span>
                     <br>
                     <small class="time">12:00pm</small>
@@ -144,7 +144,7 @@
                 <td>$1200</td>
 
 
-                <td><span class="status active">Active</span></td>
+                <td><span class="status completed">Compeleted</span></td>
                 <td class="viw-parent">
                     <button class="view-btn" onclick="openBookingModal()">
                         <img src="{{ asset('assets/images/icons/eye-icon.png') }}" alt="View" class="eye-icon">
@@ -194,7 +194,7 @@
             <tr>
                 <td><input type="checkbox"></td>
                 <td>12345</td>
-                <td>Plumbing <span class="more"> +2 more</span></td>
+                <td>Plumbing  </td>
                 <td><span class="date">Jan,2025-01-31</span>
                     <br>
                     <small class="time">12:00pm</small>
@@ -233,7 +233,7 @@
             <tr>
                 <td><input type="checkbox"></td>
                 <td>12345</td>
-                <td>Plumbing <span class="more"> +2 more</span></td>
+                <td>Plumbing  </td>
                 <td><span class="date">Jan,2025-01-31</span>
                     <br>
                     <small class="time">12:00pm</small>
@@ -262,7 +262,7 @@
 
 
                 <td><span class="status active">Active</span></td>
-                <td class="viw-parent">
+                <td class="viw- ">
                     <button class="view-btn" onclick="openBookingModal()">
                         <img src="{{ asset('assets/images/icons/eye-icon.png') }}" alt="View" class="eye-icon">
                         View
@@ -273,7 +273,7 @@
             <tr>
                 <td><input type="checkbox"></td>
                 <td>12345</td>
-                <td>Plumbing <span class="more"> +2 more</span></td>
+                <td>Plumbing  </td>
                 <td><span class="date">Jan,2025-01-31</span>
                     <br>
                     <small class="time">12:00pm</small>
@@ -311,24 +311,27 @@
             </tr>
         </tbody>
     </table>
-</div>
-@if ($showFilterModal)
-<div class="modal filter-theme-modals" style="display: flex;">
-    <div class="modal-content filter-modal">
-        <span class="close-modal" wire:click="closeFilterModal">&times;</span>
-        <h3>Filter</h3>
-        <label>Select Date</label>
-        <div class="date-range">
-            <div>
-                <span>From:</span>
-                <input type="date" class="form-input" wire:model="fromDate">
-            </div>
-            <div>
-                <span>To:</span>
-                <input type="date" class="form-input" wire:model="toDate">
+     @if ($showFilterModal)
+        <div class="modal filter-theme-modal" style="display: flex;">
+            <div class="modal-content filter-modal">
+                <span class="close-modal" wire:click="closeFilterModal">&times;</span>
+                <h3>Filter</h3>
+                <label>Select Date</label>
+                <div class="date-range">
+                    <div>
+                        <span>From:</span>
+                        <input type="date" class="form-input" wire:model="fromDate">
+                    </div>
+                    <div>
+                        <span>To:</span>
+                        <input type="date" class="form-input" wire:model="toDate">
+                    </div>
+                </div> 
+                <div class="form-actions">
+                    <button type="button" class="reset-btn" wire:click="resetFilters">Reset</button>
+                    <button type="button" class="submit-btn" wire:click="applyFilters">Apply Now</button>
+                </div>
             </div>
         </div>
-         
-    </div>
+    @endif
 </div>
-  @endif
