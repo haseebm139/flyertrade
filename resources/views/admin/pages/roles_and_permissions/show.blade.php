@@ -9,31 +9,32 @@
 
     <div class="users-toolbar">
         <nav class="breadcrumb">
-            <a href="#">Roles</a>
+            <a href="{{ route('roles-and-permissions.index') }}">{{ $type ?? 'Users' }}</a>
             <span class="breadcrumb-separator">›</span>
-            <span class="breadcrumb-current">SubAdmin</span>
+            <span class="breadcrumb-current">{{ $title?? '' }}</span>
         </nav>
     </div>
 
     <!-- Toolbar -->
     <div class="users-toolbar">
         <div class="toolbar-left">
+            @if ($data)
+                <button class="export-btn" onclick="editItem()">
+                    <span class="download-icon"><img src="{{ asset('assets/images/icons/edit.png') }}" alt=""
+                            class="icons-btn"></span> Edit
+                    {{ $type === 'role' ? 'Role' : 'User' }}
+                </button>
 
-
-            <button class="export-btn" id="openAddUserModal">
-                <span class="download-icon"><img src="{{ asset('assets/images/icons/edit.png') }}" alt="" class="icons-btn"></span> Edit
-                Role
-            </button>
-
-            <button class="delete-btn">
-                <span class="download-icon"><img src="{{ asset('assets/images/icons/trash.png') }}" alt="" class="icons-btn"></span>
-                Delete user
-            </button>
+                <button class="delete-btn" onclick="deleteItem()">
+                    <span class="download-icon"><img src="{{ asset('assets/images/icons/trash.png') }}" alt=""
+                            class="icons-btn"></span>
+                    Delete {{ $type === 'role' ? 'Role' : 'User' }}
+                </button>
+            @endif
         </div>
 
         <div class="toolbar-right">
-            <h2 class="page-titles ">Sub Admin</h2>
-
+            <h2 class="page-titles">{{ $title }}</h2>
         </div>
     </div>
 
@@ -228,9 +229,11 @@
         <thead>
             <tr>
                 <th><input type="checkbox"></th>
-                <th class="sortable" data-column="0">User Type <img src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon">
+                <th class="sortable" data-column="0">User Type <img src="{{ asset('assets/images/icons/sort.png') }}"
+                        class="sort-icon">
                 </th>
-                <th class="sortable" data-column="4">User name<img src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon"></th>
+                <th class="sortable" data-column="4">User name<img src="{{ asset('assets/images/icons/sort.png') }}"
+                        class="sort-icon"></th>
                 <th class="sortable"> Last login
                     <img src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon">
                 </th>
@@ -240,7 +243,8 @@
 
 
 
-                <th class="sortable" data-column="6"> Date added<img src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon">
+                <th class="sortable" data-column="6"> Date added<img src="{{ asset('assets/images/icons/sort.png') }}"
+                        class="sort-icon">
                 </th>
                 <th></th>
             </tr>
@@ -458,4 +462,31 @@
         </div>
     </div>
     <!-- end-modal -->
+
+    <script>
+        function editItem() {
+            const type = '{{ $type }}';
+            const id = '{{ $data->id ?? '' }}';
+
+            if (type === 'role') {
+                // Redirect to edit role
+                window.location.href = '{{ route('roles-and-permissions.index') }}?edit_role=' + id;
+            } else {
+                // Redirect to edit user
+                window.location.href = '{{ route('roles-and-permissions.index') }}?edit_user=' + id;
+            }
+        }
+
+        function deleteItem() {
+            const type = '{{ $type }}';
+            const name = '{{ $data->name ?? '' }}';
+
+            if (confirm(`Are you sure you want to delete this ${type}?`)) {
+                // Here you would typically make an AJAX call to delete the item
+                alert(`${type} "${name}" would be deleted.`);
+                // For now, just redirect back
+                window.location.href = '{{ route('roles-and-permissions.index') }}';
+            }
+        }
+    </script>
 @endsection
