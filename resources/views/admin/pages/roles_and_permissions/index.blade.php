@@ -81,8 +81,7 @@
                     const userFormId = userFormElement.getAttribute('wire:id');
                     const userForm = Livewire.find(userFormId);
                     if (userForm) {
-                        userForm.call('mount', userId, mode === 'edit');
-                        userForm.set('showModal', true);
+                        userForm.call('openUserModal', userId, mode);
                     }
                 }
             });

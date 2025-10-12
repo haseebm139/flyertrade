@@ -205,9 +205,9 @@ class UsersTable extends Component
         }
     }
 
-    public function openUserModal()
+    public function openUserModal($userId = null, $mode = 'create')
     {
-        $this->showModal = true;
+        $this->dispatch('openUserModal', $userId, $mode);
     }
 
     public function closeUserModal()

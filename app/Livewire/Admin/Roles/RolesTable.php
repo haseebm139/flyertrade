@@ -40,6 +40,8 @@ class RolesTable extends Component
     public function render()
     {
         $roles = $this->getDataQuery()->paginate($this->perPage);
+
+         
         return view('livewire.admin.roles.roles-table', compact('roles'));
     }
 
@@ -48,7 +50,7 @@ class RolesTable extends Component
         // Ensure sortField is valid before using it
         $validFields = ['name', 'created_at', 'updated_at', 'users_count'];
         $sortField = in_array($this->sortField, $validFields) ? $this->sortField : 'name';
-        
+ 
         return Role::query()
             ->when($this->search, fn($q) => $q->where('name', 'like', "%{$this->search}%"))
             ->when($this->fromDate && $this->toDate, fn($q) =>
@@ -59,7 +61,7 @@ class RolesTable extends Component
             )
             ->withCount('users')
             ->with(['users' => function($query) {
-                $query->select('id', 'name', 'avatar', 'email')->limit(1);
+                $query->limit(1);
             }])
             ->orderBy($sortField, $this->sortDirection);
     }

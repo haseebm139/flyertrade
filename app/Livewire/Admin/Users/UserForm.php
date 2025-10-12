@@ -36,6 +36,10 @@ class UserForm extends Component
         'user_type.required' => 'User type is required.',
     ];
 
+    protected $listeners = [
+        'openUserModal' => 'openUserModal'
+    ];
+
     public function mount($userId = null, $isEdit = false)
     {
         
@@ -56,7 +60,7 @@ class UserForm extends Component
         $this->phone = $user->phone ?? '';
         $this->address = $user->address ?? '';
         $this->user_type = $user->user_type ?? 'customer';
-        $this->roles = $user->roles->pluck('id')->toArray();
+        $this->roles = $user->roles->pluck('name')->toArray();
     }
 
     public function save()
@@ -88,13 +92,14 @@ class UserForm extends Component
                     'user_type' => $this->user_type,
                     'password' => Hash::make('password123'), // Default password
                 ]);
-                $user->assignRole($this->roles);
+                 
+                $user->assignRole($this->user_type);
                 $message = 'User created successfully.';
             }
 
             $this->dispatch('showToastr', 'success', $message, 'Success');
             $this->dispatch('userSaved');
-            $this->resetForm();
+            $this->closeUserModal();
         } catch (\Exception $e) {
             $this->dispatch('showToastr', 'error', 'Error saving user: ' . $e->getMessage(), 'Error');
         }
@@ -110,7 +115,31 @@ class UserForm extends Component
         $this->roles = [];
         $this->userId = null;
         $this->isEdit = false;
+    }
+
+    public function openUserModal($userId = null, $mode = 'create')
+    {
+        $this->userId = $userId;
+        $this->isEdit = ($mode === 'edit');
+        $this->showModal = true;
+        
+        if ($this->isEdit && $userId) {
+            $this->loadUser();
+        } else {
+            // Reset form data but keep modal open
+            $this->name = '';
+            $this->email = '';
+            $this->phone = '';
+            $this->address = '';
+            $this->user_type = 'customer';
+            $this->roles = [];
+        }
+    }
+
+    public function closeUserModal()
+    {
         $this->showModal = false;
+        $this->resetForm();
     }
 
     public function render()

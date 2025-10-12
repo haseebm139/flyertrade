@@ -41,7 +41,6 @@ class RoleForm extends Component
 
     public function openModal($roleId = null, $mode = 'create')
     {
-        $this->dispatch('showToastr', 'info', 'RoleForm openModal called', 'Debug');
         $this->roleId = $roleId;
         $this->isEdit = ($mode === 'edit');
         $this->showModal = true;
@@ -57,7 +56,7 @@ class RoleForm extends Component
     {
         $role = Role::findOrFail($this->roleId);
         $this->name = $role->name;
-        $this->permissions = $role->permissions->pluck('id')->toArray();
+        $this->permissions = $role->permissions->pluck('name')->toArray();
     }
 
     public function updatedName()
@@ -99,7 +98,6 @@ class RoleForm extends Component
         $this->permissions = [];
         $this->roleId = null;
         $this->isEdit = false;
-        $this->showModal = false;
     }
 
     public function closeModal()

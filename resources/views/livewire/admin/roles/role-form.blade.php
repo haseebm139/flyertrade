@@ -1,5 +1,5 @@
 <div>
-    <button wire:click="openModal" style="background: red; color: white; padding: 10px;">Test Open Modal</button>
+    {{-- <button wire:click="openModal" style="background: red; color: white; padding: 10px;">Test Open Modal</button> --}}
     @if ($showModal)
         <div class="modal" style="display: flex;">
             <div class="modal-content role-add add-user-modal">
