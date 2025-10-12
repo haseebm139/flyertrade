@@ -5,79 +5,45 @@
 @section('content')
 
     <!-- Top Stat Cards -->
-    <div class=" combo-class">
-        <div class="dashboard-card" wire:click="filterByStatus(null)">
-            <div>
-                <h6>Total Booking</h6>
-                <h2>1200</h2>
-            </div>
-            <div class="icon-box">
-                <img
-                    src="{{ asset('assets/images/icons/active-booking.png') }}"
-                    alt="User Icon"
-                >
-            </div>
-        </div>
-        <div class="dashboard-card" wire:click="filterByStatus('active')" >
-            <div>
-                <h6>Active Booking</h6>
-                <h2>1200</h2>
-            </div>
-            <div class="icon-box">
-                <img
-                    src="{{ asset('assets/images/icons/active-booking.png') }}"
-                    alt="User Icon"
-                >
-            </div>
-        </div>
-        <div class="dashboard-card" wire:click="filterByStatus('inactive')">
-            <div>
-                <h6>Inactive Booking</h6>
-                <h2>1200</h2>
-            </div>
-            <div class="icon-box">
-                <img
-                    src="{{ asset('assets/images/icons/active-booking.png') }}"
-                    alt="User Icon"
-                >
-            </div>
-        </div>
-
+    <div id="statsContainer">
+        <livewire:admin.booking-stats mode="booking" />
     </div>
-    <br>
+
+    <!-- Back Button (Hidden by default) -->
+
     <div class="container">
-        <h1 class="page-title">All Booking</h1>
+        <div class="back-button-container" id="backButtonContainer" style="display: none;">
+            <button class="back-button" onclick="showAllBookings()">
+                <div class="back-icon">
+                    <img src="{{ asset('assets/images/icons/back_icon.png') }}" alt="Back">
+                </div>
+
+                <span class="page-title" id="pageTitle">All Bookings</span>
+            </button>
+        </div>
+
     </div>
-     
-     
-     <livewire:admin.bookings.table />
 
 
-    
+    <livewire:admin.bookings.table />
 
 
-    <div
-        id="view-booking"
-        class="view-booking-modal"
-    >
+
+
+
+    <div id="view-booking" class="view-booking-modal">
         <div class="view-booking-content">
             <div class="modal-header">
                 <h2>Booking details</h2>
                 <div class="header-actions">
 
-                    <span
-                        class="close-btn"
-                        onclick="closeBookingModal()"
-                    >&times;</span>
+                    <span class="close-btn" onclick="closeBookingModal()">&times;</span>
                 </div>
             </div>
             <div class="service-header-icons">
                 <h4>Service details</h4>
-                <h5> <img
-                        src="{{ asset('assets/images/icons/download.png') }}"
-                        alt="Download"
-                        class="download-icon"
-                    > <small style="color:grey;">Download </small></h5>
+                <h5> <img src="{{ asset('assets/images/icons/download.png') }}" alt="Download" class="download-icon"> <small
+                        style="color:grey;">Download </small></h5>
             </div>
 
             <div class="modal-section">
@@ -118,49 +84,149 @@
 
 
 
-     
+
 
     <!-- Filter Modal -->
-    <div
-        id="filterModal"
-        class="modal filter-theme-modal"
-    >
+    <div id="filterModal" class="modal filter-theme-modal">
         <div class="modal-content filter-modal">
-            <span
-                class="close-modal"
-                id="closeFilterModal"
-            >&times;</span>
+            <span class="close-modal" id="closeFilterModal">&times;</span>
             <h3>Filter</h3>
             <label>Select Date</label>
             <div class="date-range">
                 <div>
                     <span>From:</span>
-                    <input
-                        type="date"
-                        class="form-input"
-                    >
+                    <input type="date" class="form-input">
                 </div>
                 <div>
                     <span>To:</span>
-                    <input
-                        type="date"
-                        class="form-input"
-                    >
+                    <input type="date" class="form-input">
                 </div>
             </div>
 
             <div class="form-actions">
-                <button
-                    type="button"
-                    class="reset-btn"
-                >Reset</button>
-                <button
-                    type="submit"
-                    class="submit-btn"
-                >Apply Now</button>
+                <button type="button" class="reset-btn">Reset</button>
+                <button type="submit" class="submit-btn">Apply Now</button>
             </div>
         </div>
     </div>
 
 
 @endsection
+
+@push('styles')
+    <style>
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            background: #ffffff;
+            border: 1px solid #ffffff;
+            border-radius: 12px;
+            color: #495057;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+
+        }
+
+
+
+        .back-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+        }
+
+        .back-icon img {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .back-button:hover .back-icon img {
+            transform: translateX(-2px);
+        }
+
+        .back-text {
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+       
+
+
+
+       
+    </style>
+@endpush
+
+@push('scripts')
+    <script>
+        function filterByStatus(status, title) {
+            // Hide stats container
+            document.getElementById('statsContainer').style.display = 'none';
+
+            // Show back button
+            document.getElementById('backButtonContainer').style.display = 'flex';
+
+            // Update page title
+            document.getElementById('pageTitle').textContent = title;
+            document.getElementById('backButtonText').textContent = '← ' + title;
+
+            // Dispatch Livewire event to filter the table
+            Livewire.dispatch('filterByStatus', {
+                status: status
+            });
+        }
+
+        function showAllBookings() {
+            // Show stats container
+            document.getElementById('statsContainer').style.display = 'flex';
+
+            // Hide back button
+            document.getElementById('backButtonContainer').style.display = 'none';
+
+            // Reset page title and back button text
+            document.getElementById('pageTitle').textContent = 'All Bookings';
+            document.getElementById('backButtonText').textContent = 'All Bookings';
+
+            // Dispatch Livewire event to show all bookings
+            Livewire.dispatch('filterByStatus', {
+                status: ''
+            });
+        }
+
+        function openBookingModal(bookingId = null) {
+            if (bookingId) {
+                // Fetch booking data and populate modal
+                fetch(`/admin/bookings/${bookingId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Populate modal with booking data
+                        console.log('Booking data:', data);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching booking data:', error);
+                    });
+            }
+            document.getElementById('view-booking').style.display = 'flex';
+        }
+
+        function closeBookingModal() {
+            document.getElementById('view-booking').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('view-booking');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+@endpush
