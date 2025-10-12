@@ -10,6 +10,8 @@
 
 
     <livewire:admin.service-categories.table />
+
+    
     <livewire:admin.service-categories.form />
     <livewire:admin.service-categories.user-providers-modal />
     
