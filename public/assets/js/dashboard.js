@@ -64,38 +64,62 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-// Tab functionality
+// Tab functionality (scoped per tabs-wrapper/section)
 document.addEventListener("DOMContentLoaded", function () {
+    function getContainerFromTab(tab) {
+        const wrapper = tab.closest(".tabs-wrapper");
+        // Container is the element that contains both the wrapper and the contents
+        return wrapper ? (wrapper.parentElement || document) : (tab.closest(".permission-section") || document);
+    }
+
+    // Click handling
     document.querySelectorAll(".tab").forEach(tab => {
         tab.addEventListener("click", function () {
-            let targetId = tab.getAttribute("data-target");
-            let wrapper = tab.closest(".tabs-section")?.parentElement || document;
+            const container = getContainerFromTab(tab);
+            const targetId = tab.getAttribute("data-target");
+            if (!targetId) return;
 
-            wrapper.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-            wrapper.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+            // Prefer scoped lookup; fallback to global if needed
+            const targetContent = (container.querySelector(`#${CSS.escape(targetId)}`)) || document.getElementById(targetId);
+            if (!targetContent) return; // do nothing if no matching content exists
 
+            // Deactivate within this container only
+            container.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+            container.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+
+            // Activate current tab and content
             tab.classList.add("active");
-
-            let targetContent = document.getElementById(targetId);
-            if (targetContent) {
-                targetContent.classList.add("active");
-            }
+            targetContent.classList.add("active");
         });
     });
 
-    document.querySelectorAll(".tab.active").forEach(activeTab => {
-        let targetId = activeTab.getAttribute("data-target");
-        let targetContent = document.getElementById(targetId);
-        if (targetContent) {
-            targetContent.classList.add("active");
-        }
+    // Initialize per wrapper so each group shows its active content
+    document.querySelectorAll(".tabs-wrapper").forEach(wrapper => {
+        const container = wrapper.parentElement || document;
+        const activeTab = wrapper.querySelector(".tab.active") || wrapper.querySelector(".tab");
+        if (!activeTab) return;
+        const targetId = activeTab.getAttribute("data-target");
+        if (!targetId) return;
+
+        // Ensure only this group's contents are active
+        container.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+        activeTab.classList.add("active");
+        const targetContent = (container.querySelector(`#${CSS.escape(targetId)}`)) || document.getElementById(targetId);
+        if (targetContent) targetContent.classList.add("active");
     });
 });
 
-// Permission section toggle
-document.getElementById("showPermission").addEventListener("click", function () {
-    document.getElementById("permissionSection").style.display = "block";
-});
+// Permission section toggle (guard if missing on page)
+(() => {
+    const showBtn = document.getElementById("showPermission");
+    const section = document.getElementById("permissionSection");
+    if (showBtn && section) {
+        showBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            section.style.display = "block";
+        });
+    }
+})();
 
 // Tab navigation controls
 document.querySelectorAll(".tabs-wrapper").forEach(wrapper => {
@@ -104,13 +128,15 @@ document.querySelectorAll(".tabs-wrapper").forEach(wrapper => {
     const rightBtn = wrapper.querySelector(".tab-control.right");
 
     if (leftBtn && tabsNav) {
-        leftBtn.addEventListener("click", () => {
+        leftBtn.addEventListener("click", (e) => {
+            e.preventDefault();
             tabsNav.scrollBy({ left: -150, behavior: "smooth" });
         });
     }
 
     if (rightBtn && tabsNav) {
-        rightBtn.addEventListener("click", () => {
+        rightBtn.addEventListener("click", (e) => {
+            e.preventDefault();
             tabsNav.scrollBy({ left: 150, behavior: "smooth" });
         });
     }
