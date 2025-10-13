@@ -117,104 +117,11 @@ document.querySelectorAll(".tabs-wrapper").forEach(wrapper => {
 });
 
 // Check modal functionality
-(function () {
-    if (window.__CHECK_MODAL_INIT__) return;
-    window.__CHECK_MODAL_INIT__ = true;
 
-    const modal = document.getElementById('check-modal');
-    if (!modal) return;
-    const backdrop = modal.querySelector('.cm-backdrop');
-    const closeBt = modal.querySelector('.cm-close');
-    const titleEl = modal.querySelector('#cm-title');
-    const imgEl = modal.querySelector('#cm-img');
-    const phEl = modal.querySelector('#cm-ph');
-
-    function openCheckModal(title, src) {
-        titleEl.textContent = title || 'Document';
-        if (src) {
-            imgEl.hidden = false; imgEl.src = src;
-            phEl.hidden = true;
-            imgEl.onerror = () => { imgEl.hidden = true; phEl.hidden = false; };
-        } else {
-            imgEl.hidden = true; imgEl.removeAttribute('src'); phEl.hidden = false;
-        }
-        modal.classList.add('is-open');
-        document.body.classList.add('cm-lock');
-    }
-
-    function closeCheckModal() {
-        modal.classList.remove('is-open');
-        document.body.classList.remove('cm-lock');
-    }
-
-    document.addEventListener('click', (e) => {
-        const btn = e.target.closest('[data-check-modal]');
-        if (!btn) return;
-        e.preventDefault();
-        openCheckModal(btn.getAttribute('data-title'), btn.getAttribute('data-src'));
-    });
-
-    // Close controls
-    if (backdrop) backdrop.addEventListener('click', closeCheckModal);
-    if (closeBt) closeBt.addEventListener('click', closeCheckModal);
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('is-open')) closeCheckModal();
-    });
-})();
 
 // Toolbar actions
-const actions = document.querySelector('.toolbar-actions');
-const anyChecked = () => [...document.querySelectorAll('.row-check')].some(c => c.checked);
-const toggleActions = () => actions.hidden = !anyChecked();
-
-document.addEventListener('change', e => {
-    if (e.target.classList.contains('row-check')) toggleActions();
-});
-
-// Badge functionality
-function setBadge(badge, state) {
-    badge.classList.remove('badge-verified', 'badge-declined', 'badge-pending');
-    if (state === 'verified') { badge.classList.add('badge-verified'); badge.textContent = 'Verified'; }
-    if (state === 'declined') { badge.classList.add('badge-declined'); badge.textContent = 'Declined'; }
-    if (state === 'pending') { badge.classList.add('badge-pending'); badge.textContent = 'Pending'; }
-}
-
-document.addEventListener('click', e => {
-    const btn = e.target.closest('[data-action]');
-    if (!btn) return;
-    const state = btn.getAttribute('data-action');
-    document.querySelectorAll('.row-check:checked').forEach(chk => {
-        const badge = chk.closest('.doc-row').querySelector('[data-badge]');
-        setBadge(badge, state);
-        chk.checked = false;
-    });
-    toggleActions();
-});
 
 // Service details modal
-const serviceModal = document.getElementById("service-details-modal");
-const openServiceBtn = document.getElementById("openServiceDetails");
-const closeServiceBtn = document.getElementById("closeServiceDetails");
-
-if (openServiceBtn && serviceModal) {
-    openServiceBtn.onclick = () => {
-        serviceModal.style.display = "flex";
-    };
-}
-
-if (closeServiceBtn && serviceModal) {
-    closeServiceBtn.onclick = () => {
-        serviceModal.style.display = "none";
-    };
-}
-
-if (serviceModal) {
-    window.addEventListener('click', (e) => {
-        if (e.target === serviceModal) {
-            serviceModal.style.display = "none";
-        }
-    });
-}
 
 // Status dropdown functionality
 const statusBtn = document.querySelector(".status-btn");

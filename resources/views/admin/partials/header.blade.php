@@ -12,21 +12,20 @@
             <img src="{{ asset('assets/images/icons/notification.png') }}" alt="Notifications">
             <!-- Notification Popup -->
             <div class="popup ioioios" id="notifPopup">
-            <div class="popup-header" 
-     style="display: flex; align-items: center; justify-content: space-between; 
-            padding: 1vw 1.5vw; border-bottom: 0vw solid #ddd; background-color: #fff;">
-    
-    <span class="popup-title" 
-          style="font-size: 1.1vw; font-weight: 500; color: #333; letter-spacing: 0.05vw;">
-        Notification
-    </span>
-    
-    <span class="popup-close" data-close="notifPopup" 
-          style="cursor: pointer; display: flex; align-items: center;">
-        <img src="{{ asset('assets/images/icons/iconoir_cancel.png') }}" alt="" 
-             style="width: 1.2vw; height: auto; transition: transform 0.2s ease;">
-    </span>
-</div>
+                <div class="popup-header" style="display: flex; align-items: center; justify-content: space-between; 
+            padding: 1vw 1.5vw; border-bottom: 0vw solid #ddd; background-color: #fff;border-radius: 20px;">
+
+                    <span class="popup-title"
+                        style="font-size: 1.1vw; font-weight: 500; color: #333; letter-spacing: 0.05vw;">
+                        Notification
+                    </span>
+
+                    <span class="popup-close" 
+                        style="cursor: pointer; display: flex; align-items: center;">
+                        <img src="{{ asset('assets/images/icons/iconoir_cancel.png') }}" alt=""
+                            style="width: 1.2vw; height: auto; transition: transform 0.2s ease;">
+                    </span>
+                </div>
 
                 <div class="notification-item">
                     <img src="{{ asset('assets/images/icons/manage.png') }}" alt="">
@@ -45,7 +44,14 @@
                     </div>
                     <div class="notification-view">View</div>
                 </div>
+                <div style="padding: 0.8vw 1.5vw; text-align: left;">
+      <a href="#" style="color: #00796B; font-size: 0.95vw; font-weight: 500; text-decoration: none; display: flex; align-items: center; gap: 0.3vw;">
+        View all notifications 
+        <span style="font-size: 1vw;">&#8250;</span>
+      </a>
+    </div>
             </div>
+            
         </div>
 
         <!-- Provider Verification Modal -->
@@ -79,34 +85,7 @@
         </div>
 
         <!-- Provider Verification Popup -->
-        <div class="popup" id="docModal">
-            <div class="popup-header">
-                <span class="popup-close" data-close="docModal">
-                    <img src="{{ asset('assets/images/icons/iconoir_cancel.png') }}" alt="">
-                </span>
-            </div>
-            <div class="provider-popup">
-                <h6>
-
-                    3 New Providers Awaiting Document Verification.
-                </h6>
-                <div class="provider-item">
-                    <img src="{{ asset('assets/images/icons/person.png') }}" alt="">
-                    <span>Johnbosco Davies</span>
-                    <a href="#" class="view-profile">View profile</a>
-                </div>
-                <div class="provider-item">
-                    <img src="{{ asset('assets/images/icons/person.png') }}" alt="">
-                    <span>Jane Doe</span>
-                    <a href="#" class="view-profile">View profile</a>
-                </div>
-                <div class="provider-item">
-                    <img src="{{ asset('assets/images/icons/person.png') }}" alt="">
-                    <span>Michael Smith</span>
-                    <a href="#" class="view-profile">View profile</a>
-                </div>
-            </div>
-        </div>
+   
 
 
         <!-- Brand / Profile -->
@@ -137,7 +116,7 @@
                 </form>
                 <button class="logout-btn"
                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> <img
-                        src="{{ asset('assets/images/icons/Icon-logout.png') }}" class="img-log"alt="">
+                        src="{{ asset('assets/images/icons/Icon-logout.png') }}" class="img-log" alt="">
                     Logout</button>
             </div>
         </div>

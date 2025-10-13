@@ -177,7 +177,7 @@
 
 
 
-                    <td class="viw-parent">
+                    <td class="viw-parents">
                         <button class="view-btn" onclick="openBookingModal()">
                             <img src="{{ asset('assets/images/icons/eye-icon.png') }}" alt="View" class="eye-icon">
                             View
@@ -213,7 +213,7 @@
 
 
 
-                    <td class="viw-parent">
+                    <td class="viw-parents">
                         <button class="view-btn" onclick="openBookingModal()">
                             <img src="{{ asset('assets/images/icons/eye-icon.png') }}" alt="View" class="eye-icon">
                             View
@@ -249,7 +249,7 @@
 
 
 
-                    <td class="viw-parent">
+                    <td class="viw-parents">
                         <button class="view-btn" onclick="openBookingModal()">
                             <img src="{{ asset('assets/images/icons/eye-icon.png') }}" alt="View" class="eye-icon">
                             View
@@ -285,7 +285,7 @@
 
 
 
-                    <td class="viw-parent">
+                    <td class="viw-parents">
                         <button class="view-btn" onclick="openBookingModal()">
                             <img src="{{ asset('assets/images/icons/eye-icon.png') }}" alt="View" class="eye-icon">
                             View
@@ -593,7 +593,7 @@
 
 
 
-    <div id="view-booking" class="view-booking-modal">
+    <div id="view-booking" class="view-booking-modal add-user-modal">
         <div class="view-booking-content">
             <div class="modal-header">
                 <h2>Booking details</h2>

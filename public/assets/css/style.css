@@ -254,7 +254,7 @@ img.btn-icons {
   z-index: 100;
   width: 21.875vw;
   /* 350px */
-  height: 16.5625vw;
+  height: auto;
   /* 265px */
 }
 
@@ -2008,8 +2008,8 @@ img.download-icon {
   align-items: center;
   gap: 10px;
   position: relative;
-  top: 0.6vw !important;
-  border-bottom: 0.052vw solid #eee !important;
+
+  border-bottom: 0 solid #eee !important;
 }
 
 .details-grid div:nth-child(odd) {
@@ -2673,7 +2673,7 @@ input[type="checkbox"] {
   padding-right: 2.1vw;
 }
 .badge-pill::after {
-  content: "â–¾";
+  content: "";
   position: absolute;
   right: 0.8vw;
   top: 50%;
@@ -2928,7 +2928,7 @@ body.cm-lock {
 }
 .page-titles {
     font-size: 1.158vw;
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .users-toolbars {

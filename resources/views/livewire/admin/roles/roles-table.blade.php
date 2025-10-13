@@ -53,10 +53,10 @@
                                 <div class="user-avatar">
                                     <img src="{{ asset($role->users->first()->avatar) ?? asset('assets/images/icons/person-one.png') }}"
                                         alt="User" class="avatar-small">
-                                    <span class="users-count">+{{ $role->users_count - 1 }} users</span>
+                                    <span class="more">+{{ $role->users_count - 1 }} users</span>
                                 </div>
                             @else
-                                <span class="users-count">{{ $role->users_count }} users</span>
+                                <span class="users-count more">{{ $role->users_count }} users</span>
                             @endif
                         </div>
                     </td>
