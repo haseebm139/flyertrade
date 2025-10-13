@@ -50,12 +50,12 @@ img.nav-icon {
   top: 0;
   bottom: 0;
   width: var(--sidebar-width);
-  background: var(--panel-bg);
+
   border-right: 0.0625vw solid var(--border);
   /* 1px */
   padding: 1.375vw 1.125vw;
   /* 22px 18px */
-  z-index: 1000;
+
 
   height: 38.902vw;
   border-bottom: 0.0625vw solid var(--border);
@@ -100,6 +100,38 @@ img.btn-icons {
 
   /* 3px */
   color: var(--accent);
+}
+.form-input {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  color: #333;
+  appearance: none;
+  cursor: pointer;
+}
+
+/* Focused select */
+.form-input:focus {
+  border-color: #0b5f4b;
+  outline: none;
+}
+
+/* Style dropdown options (supported in Chrome/Edge/Safari) */
+.form-input option {
+  background-color: #ffffff;
+  color: #333;
+  padding: 10px;
+}
+
+/* Selected (highlighted) option */
+.form-input option:checked,
+.form-input option:focus,
+.form-input option:hover {
+  background-color: #dce9e6; /* same as var(--accent-soft) */
+  color: #0b5f4b;
 }
 
 /* ---------- Main content ---------- */
@@ -207,7 +239,7 @@ img.btn-icons {
 /* Popup */
 .popup {
   position: absolute;
-  top: 5.625vw;
+  top: 5.625vw !important;
   /* 90px */
   right: 1.25vw;
   /* 20px */
@@ -406,7 +438,7 @@ img.btn-icons {
 }
 
 div#notifPopup {
-  top: 3.4375vw;
+  top: 3.4375vw !important;
   /* 55px */
   right: -6.6875vw;
   /* -107px */
@@ -1277,9 +1309,9 @@ td.user-data.id-number {
   align-items: center;
   margin: 2vw 0px;
   flex-direction: row-reverse;
-  border: 1px solid #dddddd;
+  border:  0.052vw solid #dddddd;
   padding: 1vw;
-  border-radius: 15px;
+  border-radius: 0.781vw;
 }
 
 .toolbar-left,
@@ -1339,7 +1371,7 @@ td.user-data.id-number {
 }
 
 .filter-btn {
-  border: 0.1vw solid #ccc;
+  border: 0.1vw solid #ccc !important;
 }
 
 /* Download Icon */
@@ -1355,7 +1387,7 @@ td.user-data.id-number {
 
   font-size: 14px;
   background: #fff;
-  border: 1px solid #eee;
+  border:  0.052vw solid #eee;
   border-radius: 8px;
 }
 
@@ -1365,7 +1397,7 @@ td.user-data.id-number {
 
 .theme-table th {
   padding: 1vw;
-  border-bottom: 1px solid #eee;
+  border-bottom: 0.052vw solid #eee;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -1379,7 +1411,7 @@ td.user-data.id-number {
 }
 .theme-table td {
   padding: 1vw;
-  border-bottom: 1px solid #eee;
+  border-bottom:  0.052vw  solid #eee !important;
   font-weight: 400;
   text-align: left;
   font-size: 0.8vw;
@@ -1573,9 +1605,14 @@ td.user-data.id-number {
   display: none;
   position: fixed;
   inset: 0;
-
   justify-content: center;
   align-items: center;
+
+
+  background: rgba(0, 0, 0, 0.6); 
+  backdrop-filter: blur(1px); 
+  z-index: 999;                   
+
 }
 .add-user-modal .form-actions {
   justify-content: center !important;
@@ -1583,6 +1620,8 @@ td.user-data.id-number {
 .filter-theme-modal {
   top: 9vw;
   left: 7.5vw;
+  background: transparent;
+  backdrop-filter: blur(0px);
 }
 .filter-theme-modals {
   top: 0vw;
@@ -1614,16 +1653,6 @@ label {
   font-weight: 400;
 }
 
-.theme-table td:last-child {
-  display: flex;
-  /* justify-content: center; */
-  align-items: center;
-  gap: 0.5vw;
-
-  position: relative;
-  top: 0.5vw;
-  border: 0;
-}
 
 .theme-table td:last-child button {
   background: none;
@@ -1713,12 +1742,12 @@ small.time {
 
 .status.active {
   color: green;
-  border: 1px solid green;
+  border: 0.052vw solid green;
 }
 
 .status.inactive {
   color: red;
-  border: 1px solid red;
+  border: 0.052vw  solid red;
 }
 
 .more {
@@ -1736,7 +1765,7 @@ small.time {
 
 .pending {
   color: goldenrod;
-  border: 1px solid goldenrod;
+  border: 0.052vw solid goldenrod;
 }
 
 /* Delete Popover */
@@ -1912,7 +1941,7 @@ img.logo-img {
   row-gap: 1vw;
   column-gap: 2vw;
   font-size: 1vw;
-  border: 2px solid #c1c1c1;
+  border: 0.104vw solid #c1c1c1;
   padding: 1vw;
   border-radius: 1vw;
 }
@@ -1923,11 +1952,11 @@ img.logo-img {
 
 .status.completed {
   color: green;
-  border: 1px solid green;
+  border: 0.052 solid green;
   background-color: #e0f5e9;
   width: 7vw;
   padding: 0.3vw 1vw;
-  border-radius: 20px;
+  border-radius: 1.0416vw;
   font-size: 0.9vw;
   text-align: center;
 }
@@ -1980,7 +2009,7 @@ img.download-icon {
   gap: 10px;
   position: relative;
   top: 0.6vw !important;
-  border-bottom: 1px solid #eee !important;
+  border-bottom: 0.052vw solid #eee !important;
 }
 
 .details-grid div:nth-child(odd) {
@@ -2911,7 +2940,7 @@ body.cm-lock {
 
     border: 0px solid #dddddd;
     padding: 0.5vw;
-    border-radius: 15px;
+    border-radius: 0.781vw;
 }
 
 
@@ -2995,7 +3024,7 @@ body.cm-lock {
     gap: 1.042vw;
     border: 1px solid #dddddd;
     padding: 1vw;
-    border-radius: 15px;
+    border-radius: 0.781vw;
 }
 
 
@@ -3183,12 +3212,12 @@ span.timestamp-user {
 
     .filter-btn {
         padding: 0.3vw 0.6vw;
-        font-size: 0.7vw;
+        font-size: 0.9vw;
         background: transparent;
         border-radius: 0.3vw;
         border: none;
         cursor: pointer;
-        color: #004E42;
+        color: #696969;
         font-weight: 500;
         transition: background-color 0.3s;
     }

@@ -48,7 +48,7 @@
                     </td>
                     <td>
                         <div class="actions-dropdown">
-                            <button class="actions-btn">⋮</button>
+                            <button class="actions-btn">   <img src="{{ asset('assets/images/icons/three-dots.png') }}"   class="dots-img "></button>
                             <div class="actions-menu">
                                 <a href="{{ route('user-management.service.users.view', ['id' => $item->id]) }}" ><i class="fa fa-eye"></i> View user</a>
                                 <a href="#" wire:click="edit({{ $item->id }}) "><i class="fa fa-pen"></i> Edit user</a>

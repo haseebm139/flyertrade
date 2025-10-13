@@ -12,11 +12,22 @@
             <img src="{{ asset('assets/images/icons/notification.png') }}" alt="Notifications">
             <!-- Notification Popup -->
             <div class="popup ioioios" id="notifPopup">
-                <div class="popup-header">
-                    <span class="popup-close" data-close="notifPopup">
-                        <img src="{{ asset('assets/images/icons/iconoir_cancel.png') }}" alt="">
-                    </span>
-                </div>
+            <div class="popup-header" 
+     style="display: flex; align-items: center; justify-content: space-between; 
+            padding: 1vw 1.5vw; border-bottom: 0vw solid #ddd; background-color: #fff;">
+    
+    <span class="popup-title" 
+          style="font-size: 1.1vw; font-weight: 500; color: #333; letter-spacing: 0.05vw;">
+        Notification
+    </span>
+    
+    <span class="popup-close" data-close="notifPopup" 
+          style="cursor: pointer; display: flex; align-items: center;">
+        <img src="{{ asset('assets/images/icons/iconoir_cancel.png') }}" alt="" 
+             style="width: 1.2vw; height: auto; transition: transform 0.2s ease;">
+    </span>
+</div>
+
                 <div class="notification-item">
                     <img src="{{ asset('assets/images/icons/manage.png') }}" alt="">
                     <div class="notification-content">

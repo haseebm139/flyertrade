@@ -56,7 +56,8 @@
                             {{ $item->description }}
                         </span>
                     </td>
-                    <td>
+                    <td >
+                    <span class="desf d-flex">
                         <button class="edit-btn" wire:click="edit({{ $item->id }})">
                             <img src="{{ asset('assets/images/icons/edit-icon.png') }}" alt="Edit"
                                 class="action-icon">
@@ -84,7 +85,7 @@
                         @endif
 
                         <!-- Delete Popover -->
-
+</span>
                     </td>
 
                 </tr>

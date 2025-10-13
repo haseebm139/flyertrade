@@ -83,7 +83,7 @@
                 <td><span class="status pending">Pending</span></td>
                 <td>
                     <div class="actions-dropdown">
-                        <button class="actions-btn">⋮</button>
+                        <button class="actions-btn">   <img src="{{ asset('assets/images/icons/three-dots.png') }}"   class="dots-img "></button>
                         <div class="actions-menu">
                             <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.png') }}"
                                     alt=""> View
@@ -122,7 +122,7 @@
                 <td><span class="status active">Completed</span></td>
                 <td>
                     <div class="actions-dropdown">
-                        <button class="actions-btn">⋮</button>
+                        <button class="actions-btn">   <img src="{{ asset('assets/images/icons/three-dots.png') }}"   class="dots-img "></button>
                         <div class="actions-menu">
                             <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.png') }}"
                                     alt=""> View
@@ -163,7 +163,7 @@
                 <td><span class="status active">Completed</span></td>
                 <td>
                     <div class="actions-dropdown">
-                        <button class="actions-btn">⋮</button>
+                        <button class="actions-btn">   <img src="{{ asset('assets/images/icons/three-dots.png') }}"   class="dots-img "></button>
                         <div class="actions-menu">
                             <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.png') }}"
                                     alt=""> View
@@ -205,7 +205,7 @@
                 <td><span class="status active">Completed</span></td>
                 <td>
                     <div class="actions-dropdown">
-                        <button class="actions-btn">⋮</button>
+                        <button class="actions-btn">   <img src="{{ asset('assets/images/icons/three-dots.png') }}"   class="dots-img "></button>
                         <div class="actions-menu">
                             <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.png') }}"
                                     alt=""> View
@@ -245,7 +245,7 @@
                 <td><span class="status active">Completed</span></td>
                 <td>
                     <div class="actions-dropdown">
-                        <button class="actions-btn">⋮</button>
+                        <button class="actions-btn">   <img src="{{ asset('assets/images/icons/three-dots.png') }}"   class="dots-img "></button>
                         <div class="actions-menu">
                             <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.png') }}"
                                     alt=""> View
@@ -285,7 +285,7 @@
                 <td><span class="status active">Completed</span></td>
                 <td>
                     <div class="actions-dropdown">
-                        <button class="actions-btn">⋮</button>
+                        <button class="actions-btn">   <img src="{{ asset('assets/images/icons/three-dots.png') }}"   class="dots-img "></button>
                         <div class="actions-menu">
                             <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.png') }}"
                                     alt=""> View
@@ -325,7 +325,7 @@
                 <td><span class="status pending">Pending</span></td>
                 <td>
                     <div class="actions-dropdown">
-                        <button class="actions-btn">⋮</button>
+                        <button class="actions-btn">   <img src="{{ asset('assets/images/icons/three-dots.png') }}"   class="dots-img "></button>
                         <div class="actions-menu">
                             <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.png') }}"
                                     alt=""> View
