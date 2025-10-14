@@ -49,6 +49,29 @@
             transform: rotate(-45deg);
         }
 
+        /* Custom Toastr Styles */
+        .toast-success {
+            background-color: #17A55A !important;
+        }
+
+        .toast-error {
+            background-color: #dc3545 !important;
+        }
+
+        .toast-info {
+            background-color: #17a2b8 !important;
+        }
+
+        .toast-warning {
+            background-color: #ffc107 !important;
+            color: #212529 !important;
+        }
+
+        .toast-top-right {
+            top: 80px !important;
+            right: 20px !important;
+        }
+
         .swal2-success-line-tip,
         .swal2-success-line-long {
             background-color: #17A55A;
@@ -95,6 +118,9 @@
     {{-- <livewire:components.toastr-notifier /> --}}
     @stack('scripts')
     @livewireScripts
+
+    <!-- SweetAlert2 JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- Main JavaScript -->
     <script src="{{ asset('assets/js/main.js') }}"></script>
@@ -154,6 +180,61 @@
         //         });
         //     });
         // });
+
+        // Livewire event listeners for SweetAlert2 notifications
+        document.addEventListener('livewire:init', () => {
+            Livewire.on('showSweetAlert', (data) => {
+                console.log('SweetAlert event received:', data);
+
+                // Handle both old and new parameter formats
+                let type, message, title;
+
+                if (typeof data === 'object' && data.type) {
+                    // New format with named parameters
+                    type = data.type;
+                    message = data.message;
+                    title = data.title;
+                } else if (Array.isArray(data) && data.length >= 3) {
+                    // Old format with positional parameters
+                    type = data[0];
+                    message = data[1];
+                    title = data[2];
+                } else {
+                    console.error('Invalid SweetAlert data format:', data);
+                    return;
+                }
+
+                console.log('Showing SweetAlert:', {
+                    type,
+                    message,
+                    title
+                });
+
+                // Map toastr types to SweetAlert2 types
+                const alertType = type === 'error' ? 'error' :
+                    type === 'warning' ? 'warning' :
+                    type === 'info' ? 'info' : 'success';
+
+                Swal.fire({
+
+
+                    toast: true,
+                    background: '#FFFFFF',
+                    position: 'top-end',
+                    title: title,
+                    text: message,
+                    icon: alertType,
+                    toast: true, 
+                    showConfirmButton: false,
+                    timer: 5000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                });
+            });
+        });
     </script>
 
 </body>

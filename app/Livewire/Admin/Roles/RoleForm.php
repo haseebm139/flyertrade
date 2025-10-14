@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Roles;
 
 use Livewire\Component;
+use Livewire\Attributes\On;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Str;
@@ -25,9 +26,6 @@ class RoleForm extends Component
         'name.unique' => 'A role with this name already exists.',
     ];
 
-    protected $listeners = [
-        'openRoleModal' => 'openModal'
-    ];
 
     public function mount($roleId = null, $isEdit = false)
     {
@@ -39,6 +37,7 @@ class RoleForm extends Component
         }
     }
 
+    #[On('openRoleModal')]
     public function openModal($roleId = null, $mode = 'create')
     {
         $this->roleId = $roleId;
@@ -84,11 +83,18 @@ class RoleForm extends Component
                 $message = 'Role created successfully.';
             }
 
-            $this->dispatch('showToastr', 'success', $message, 'Success');
+            $this->dispatch('showSweetAlert', type: 'success', message: $message, title: 'Success');
             $this->dispatch('roleSaved');
-            $this->resetForm();
+            
+            // If editing a role, dispatch a specific event to refresh that role's data
+            if ($this->isEdit && $this->roleId) {
+                $this->dispatch('roleUpdated', $this->roleId);
+            }
+            
+            // Close the modal after successful save
+            $this->closeModal();
         } catch (\Exception $e) {
-            $this->dispatch('showToastr', 'error', 'Error saving role: ' . $e->getMessage(), 'Error');
+            $this->dispatch('showSweetAlert', type: 'error', message: 'Error saving role: ' . $e->getMessage(), title: 'Error');
         }
     }
 

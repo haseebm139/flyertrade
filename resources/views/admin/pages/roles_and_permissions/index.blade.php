@@ -56,36 +56,6 @@
 
         // Livewire event listeners
         document.addEventListener('livewire:init', () => {
-            // Listen for role modal events
-            Livewire.on('openRoleModal', (roleId = null, mode = 'create') => {
-                console.log('openRoleModal event received:', roleId, mode);
-                // Find the RoleForm component specifically
-                const roleFormElement = document.querySelector('[wire\\:id*="admin.roles.role-form"]');
-                console.log('RoleForm element found:', roleFormElement);
-                if (roleFormElement) {
-                    const roleFormId = roleFormElement.getAttribute('wire:id');
-                    console.log('RoleForm ID:', roleFormId);
-                    const roleForm = Livewire.find(roleFormId);
-                    console.log('RoleForm component:', roleForm);
-                    if (roleForm) {
-                        roleForm.call('openModal', roleId, mode);
-                    }
-                }
-            });
-
-            // Listen for user modal events
-            Livewire.on('openUserModal', (userId = null, mode = 'create') => {
-                // Find the UserForm component specifically
-                const userFormElement = document.querySelector('[wire\\:id*="admin.users.user-form"]');
-                if (userFormElement) {
-                    const userFormId = userFormElement.getAttribute('wire:id');
-                    const userForm = Livewire.find(userFormId);
-                    if (userForm) {
-                        userForm.call('openUserModal', userId, mode);
-                    }
-                }
-            });
-
             // Listen for role saved events
             Livewire.on('roleSaved', () => {
                 // Refresh the roles table

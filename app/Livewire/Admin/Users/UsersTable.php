@@ -167,7 +167,7 @@ class UsersTable extends Component
 
     public function viewUser($userId)
     {
-        return redirect()->route('roles-and-permissions.show', ['id' => $userId]);
+        return redirect()->route('roles-and-permissions.users.show', ['id' => $userId]);
     }
 
     public function editUser($userId)

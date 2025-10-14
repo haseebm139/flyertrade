@@ -1,7 +1,8 @@
 <div>
-    {{-- <button wire:click="openModal" style="background: red; color: white; padding: 10px;">Test Open Modal</button> --}}
+    {{-- Debug info removed for production --}}
     @if ($showModal)
-        <div class="modal" style="display: flex;">
+        <div class="modal"
+            style="display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999;">
 
 
 

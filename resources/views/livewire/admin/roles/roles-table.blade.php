@@ -70,8 +70,8 @@
                             <img src="{{ asset('assets/images/icons/edit.png') }}" alt="Edit" class="eye-icon">
                             Edit
                         </a>
-                        <a href="javascript:void(0);" class="view-btn" wire:click="deleteRole({{ $role->id }})"
-                            onclick="return confirm('Are you sure you want to delete this role?')">
+                        <a href="javascript:void(0);" class="view-btn"
+                            wire:click="openDeleteModal({{ $role->id }})">
                             <img src="{{ asset('assets/images/icons/trash_trash.png') }}" alt="Delete"
                                 class="eye-icon">
                             Delete
@@ -140,4 +140,21 @@
             color: #666;
         }
     </style>
+
+    <!-- Global Delete Modal -->
+    @if ($showDeleteModal)
+        <div class="deleteModal delete-card" id="global-delete-modal">
+            <div class="delete-card-header">
+                <h3 class="delete-title">Delete Role</h3>
+                <span class="delete-close" wire:click="closeDeleteModal">&times;</span>
+            </div>
+            <p class="delete-text">Are you sure you want to delete the role <strong>"{{ $deleteRoleName }}"</strong>?
+            </p>
+            <p class="delete-text text-danger">This action cannot be undone.</p>
+            <div class="delete-actions">
+                <button class="confirm-delete-btn" wire:click="deleteRole">Delete</button>
+                <button class="cancel-delete-btn" wire:click="closeDeleteModal">Cancel</button>
+            </div>
+        </div>
+    @endif
 </div>
