@@ -61,6 +61,14 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         
         return view('admin.pages.roles_and_permissions.show', compact('data', 'title', 'type', 'tab_type'));
     })->name('roles-and-permissions.users.show');
+
+    Route::get('messages',function(){
+        return view('admin.pages.messages.index');
+    })->name('messages.index');
+
+    Route::get('settings',function(){
+        return view('admin.pages.settings.index');
+    })->name('settings.index');
     // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

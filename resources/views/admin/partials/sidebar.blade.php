@@ -66,15 +66,15 @@
                     class="nav-icon"></span>
             Roles & permission
         </a>
-        <a href="#" class="nav-link">
+        <a href="{{ route('messages.index') }}" class="nav-link {{ request()->routeIs('messages.*') ? 'active' : '' }}">
             <span><img src="{{ asset('assets/images/icons/message.png') }}" alt="Messaging" class="nav-icon"></span>
             Messaging
         </a>
-        <a href="#" class="nav-link">
+        <a href="{{ route('settings.index') }}" class="nav-link {{ request()->routeIs('settings.*') ? 'active' : '' }}">
             <span><img src="{{ asset('assets/images/icons/setting.png') }}" alt="Settings" class="nav-icon"></span>
             Settings
         </a>
-        <a href="#" class="nav-link">
+        <a href="#" class="nav-link ">
             <div class="brand"  
                 style="display:flex; align-items:center; gap:0.8vw; cursor:pointer; position:relative;">
                 <div class="logo-placeholder">

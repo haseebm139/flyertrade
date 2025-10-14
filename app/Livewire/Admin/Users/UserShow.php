@@ -101,6 +101,27 @@ class UserShow extends Component
         }
     }
 
+    public function updateUser()
+    {
+        try {
+            $this->validate([
+                'user.name' => 'required|string|max:255',
+                'user.email' => 'required|email|unique:users,email,' . $this->userId,
+                'user.phone' => 'nullable|string|max:20',
+                'user.address' => 'nullable|string|max:500',
+                'user.state' => 'nullable|string|max:100',
+                'user.city' => 'nullable|string|max:100',
+                'user.country' => 'nullable|string|max:100',
+            ]);
+
+            $this->user->save();
+            $this->closeEditModal();
+            $this->dispatch('showSweetAlert', type: 'success', message: 'User updated successfully.', title: 'Success');
+        } catch (\Exception $e) {
+            $this->dispatch('showSweetAlert', type: 'error', message: 'Error updating user: ' . $e->getMessage(), title: 'Error');
+        }
+    }
+
     public function refreshUserData()
     {
         try {
