@@ -120,6 +120,14 @@
             }
         }
 
+
+
+
+
+
+
+
+
         // Close modal when clicking outside
         document.addEventListener('click', function(event) {
             const modal = document.querySelector('.modal');
