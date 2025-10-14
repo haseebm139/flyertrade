@@ -7,7 +7,6 @@
 <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/css/responsive.css') }}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-    integrity="sha512-H0C3xVqjLWV6UQ6cTIa8KoFytYURaoaI8zXnH3aE72A5WJrhvzq6ZVjoP6FOKS/71sUGj0M1pqOmM/vwyNm4lQ=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <!-- SweetAlert2 CSS -->
