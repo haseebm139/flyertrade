@@ -4,6 +4,7 @@ namespace App\Livewire\Admin\Users;
 
 use Livewire\Component;
 use Livewire\WithPagination;
+use Livewire\Attributes\On;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\DB;
@@ -24,6 +25,7 @@ class UsersTable extends Component
     public $statusFilter = '';
     public $roleFilter = '';
     public $showModal = false;
+    public $confirmingId = null;
     
     // Form properties
     public $name = '';
@@ -45,6 +47,36 @@ class UsersTable extends Component
         if (!in_array($this->sortField, $validFields)) {
             $this->sortField = 'name';
         }
+    }
+
+    public function refreshTable()
+    {
+        // Force refresh the table data by resetting pagination
+        $this->resetPage();
+    }
+
+    #[On('userSaved')]
+    public function refreshUsers()
+    {
+        $this->refreshTable();
+    }
+
+    #[On('refreshUsersTable')]
+    public function refreshUsersTable()
+    {
+        $this->refreshTable();
+    }
+
+    #[On('userUpdated')]
+    public function refreshUser($userId)
+    {
+        $this->refreshTable();
+    }
+
+    #[On('userDeleted')]
+    public function refreshAfterDelete()
+    {
+        $this->refreshTable();
     }
 
     public function render()
@@ -154,14 +186,21 @@ class UsersTable extends Component
         return response()->stream($callback, 200, $headers);
     }
 
+    public function confirmDelete($userId)
+    {
+        $this->confirmingId = $userId;
+    }
+
     public function deleteUser($userId)
     {
         try {
             $user = User::findOrFail($userId);
             $user->delete();
-            $this->dispatch('showToastr', 'success', 'User deleted successfully.', 'Success');
+            $this->confirmingId = null;
+            $this->dispatch('showSweetAlert', type: 'success', message: 'User deleted successfully.', title: 'Success');
+            $this->dispatch('userDeleted');
         } catch (\Exception $e) {
-            $this->dispatch('showToastr', 'error', 'Error deleting user: ' . $e->getMessage(), 'Error');
+            $this->dispatch('showSweetAlert', type: 'error', message: 'Error deleting user: ' . $e->getMessage(), title: 'Error');
         }
     }
 

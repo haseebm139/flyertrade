@@ -4,6 +4,7 @@ namespace App\Livewire\Admin\Roles;
 
 use Livewire\Component;
 use Livewire\WithPagination;
+use Livewire\Attributes\On;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\DB;
@@ -21,9 +22,7 @@ class RolesTable extends Component
     public $fromDate = '';
     public $toDate = '';
     public $statusFilter = '';
-    public $showDeleteModal = false;
-    public $deleteRoleId;
-    public $deleteRoleName;
+    public $confirmingId = null;
 
     protected $queryString = [
         'search' => ['except' => ''],
@@ -144,39 +143,59 @@ class RolesTable extends Component
         return response()->stream($callback, 200, $headers);
     }
 
-    public function openDeleteModal($roleId)
+    public function refreshTable()
     {
-        $role = Role::findOrFail($roleId);
-        
-        $this->deleteRoleId = $roleId;
-        $this->deleteRoleName = $role->name;
-        $this->showDeleteModal = true;
-        // Removed unnecessary info message
+        // Force refresh the table data by resetting pagination
+        $this->resetPage();
     }
 
-    public function closeDeleteModal()
+    #[On('roleSaved')]
+    public function refreshRoles()
     {
-        $this->showDeleteModal = false;
-        $this->deleteRoleId = null;
-        $this->deleteRoleName = null;
-        // Removed unnecessary info message
+        $this->refreshTable();
     }
 
-    public function deleteRole()
+    #[On('refreshRolesTable')]
+    public function refreshRolesTable()
+    {
+        $this->refreshTable();
+    }
+
+    #[On('roleUpdated')]
+    public function refreshRole($roleId)
+    {
+        // Refresh the specific role data
+        $this->refreshTable();
+    }
+
+    #[On('roleDeleted')]
+    public function refreshAfterDelete()
+    {
+        // Refresh the table after role deletion
+        $this->refreshTable();
+    }
+
+    public function confirmDelete($roleId)
+    {
+        $this->confirmingId = $roleId;
+    }
+
+    public function deleteRole($roleId)
     {
         try {
-            $role = Role::findOrFail($this->deleteRoleId);
+            $role = Role::findOrFail($roleId);
             
             // Check if role has users
             if ($role->users()->count() > 0) {
                 $this->dispatch('showSweetAlert', type: 'error', message: 'Cannot delete role. It has assigned users.', title: 'Error');
-                $this->closeDeleteModal();
+                $this->confirmingId = null;
                 return;
             }
             
             $role->delete();
             $this->dispatch('showSweetAlert', type: 'success', message: 'Role deleted successfully.', title: 'Success');
-            $this->closeDeleteModal();
+            $this->dispatch('roleDeleted');
+            $this->confirmingId = null;
         } catch (\Exception $e) {
             $this->dispatch('showSweetAlert', type: 'error', message: 'Error deleting role: ' . $e->getMessage(), title: 'Error');
         }

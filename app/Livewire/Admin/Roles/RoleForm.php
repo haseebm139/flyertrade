@@ -85,6 +85,9 @@ class RoleForm extends Component
 
             $this->dispatch('showSweetAlert', type: 'success', message: $message, title: 'Success');
             $this->dispatch('roleSaved');
+            $this->dispatch('refreshRolesTable');
+            // Also try dispatching to parent
+            $this->dispatch('roleSaved')->to('admin.roles.roles-table');
             
             // If editing a role, dispatch a specific event to refresh that role's data
             if ($this->isEdit && $this->roleId) {

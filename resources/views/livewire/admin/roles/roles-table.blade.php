@@ -70,12 +70,28 @@
                             <img src="{{ asset('assets/images/icons/edit.png') }}" alt="Edit" class="eye-icon">
                             Edit
                         </a>
-                        <a href="javascript:void(0);" class="view-btn"
-                            wire:click="openDeleteModal({{ $role->id }})">
+                        <button class="delete-btn showDeleteModal" wire:click="confirmDelete({{ $role->id }})">
                             <img src="{{ asset('assets/images/icons/trash_trash.png') }}" alt="Delete"
                                 class="eye-icon">
                             Delete
-                        </a>
+                        </button>
+                        @if ($confirmingId === $role->id)
+                            <div class="deleteModal delete-card" id="global-delete-modal">
+                                <div class="delete-card-header">
+                                    <h3 class="delete-title">Delete Role</h3>
+                                    <span class="delete-close" wire:click="$set('confirmingId', null)">&times;</span>
+                                </div>
+                                <p class="delete-text">Are you sure you want to delete role
+                                    <strong>{{ $role->name }}</strong>?
+                                </p>
+                                <div class="delete-actions">
+                                    <button class="confirm-delete-btn"
+                                        wire:click="deleteRole({{ $role->id }})">Delete</button>
+                                    <button class="cancel-delete-btn"
+                                        wire:click="$set('confirmingId', null)">Cancel</button>
+                                </div>
+                            </div>
+                        @endif
                     </td>
                 </tr>
             @empty
@@ -141,37 +157,5 @@
         }
     </style>
 
-    <script>
-        // Close modal when clicking outside
-        document.addEventListener('click', function(event) {
-            const modal = document.querySelector('.deleteModal');
-            if (event.target === modal) {
-                @this.call('closeDeleteModal');
-            }
-        });
 
-        // Close modal with escape key
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                @this.call('closeDeleteModal');
-            }
-        });
-    </script>
-
-    <!-- Global Delete Modal -->
-    @if ($showDeleteModal)
-        <div class="deleteModal delete-card" id="global-delete-modal">
-            <div class="delete-card-header">
-                <h3 class="delete-title">Delete Role</h3>
-                <span class="delete-close" wire:click="closeDeleteModal">&times;</span>
-            </div>
-            <p class="delete-text">Are you sure you want to delete this role?
-            </p>
-             
-            <div class="delete-actions">
-                <button class="confirm-delete-btn" wire:click="deleteRole">Delete</button>
-                <button class="cancel-delete-btn" wire:click="closeDeleteModal">Cancel</button>
-            </div>
-        </div>
-    @endif
 </div>

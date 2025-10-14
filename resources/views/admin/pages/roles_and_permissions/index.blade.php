@@ -58,13 +58,17 @@
         document.addEventListener('livewire:init', () => {
             // Listen for role saved events
             Livewire.on('roleSaved', () => {
-                // Refresh the roles table
+                // Refresh the roles table specifically
+                Livewire.dispatch('refreshRolesTable');
+                // Also try to refresh all components
                 Livewire.dispatch('$refresh');
             });
 
             // Listen for user saved events
             Livewire.on('userSaved', () => {
-                // Refresh the users table
+                // Refresh the users table specifically
+                Livewire.dispatch('refreshUsersTable');
+                // Also try to refresh all components
                 Livewire.dispatch('$refresh');
             });
 

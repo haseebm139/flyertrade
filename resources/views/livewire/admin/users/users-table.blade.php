@@ -72,12 +72,27 @@
                             <img src="{{ asset('assets/images/icons/eye-icon.png') }}" alt="View" class="eye-icon">
                             View
                         </a>
-                        <a href="javascript:void(0);" class="view-btn" wire:click="deleteUser({{ $user->id }})"
-                            onclick="return confirm('Are you sure you want to delete this user?')">
+                        <button class="delete-btn showDeleteModal" wire:click="confirmDelete({{ $user->id }})">
                             <img src="{{ asset('assets/images/icons/trash_trash.png') }}" alt="Delete"
                                 class="eye-icon">
                             Delete
-                        </a>
+                        </button>
+                        @if ($confirmingId === $user->id)
+                            <div class="deleteModal delete-card" id="global-delete-modal">
+                                <div class="delete-card-header">
+                                    <h3 class="delete-title">Delete User</h3>
+                                    <span class="delete-close" wire:click="$set('confirmingId', null)">&times;</span>
+                                </div>
+                                <p class="delete-text">Are you sure you want to delete user
+                                    <strong>{{ $user->name }}</strong>?</p>
+                                <div class="delete-actions">
+                                    <button class="confirm-delete-btn"
+                                        wire:click="deleteUser({{ $user->id }})">Delete</button>
+                                    <button class="cancel-delete-btn"
+                                        wire:click="$set('confirmingId', null)">Cancel</button>
+                                </div>
+                            </div>
+                        @endif
                     </td>
                 </tr>
             @empty
