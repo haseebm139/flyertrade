@@ -224,7 +224,7 @@
                     title: title,
                     text: message,
                     icon: alertType,
-                    toast: true, 
+                    toast: true,
                     showConfirmButton: false,
                     timer: 5000,
                     timerProgressBar: true,

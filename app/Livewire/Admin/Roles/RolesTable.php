@@ -147,10 +147,11 @@ class RolesTable extends Component
     public function openDeleteModal($roleId)
     {
         $role = Role::findOrFail($roleId);
+        
         $this->deleteRoleId = $roleId;
         $this->deleteRoleName = $role->name;
         $this->showDeleteModal = true;
-        $this->dispatch('showSweetAlert', type: 'info', message: 'Delete confirmation modal opened.', title: 'Info');
+        // Removed unnecessary info message
     }
 
     public function closeDeleteModal()
@@ -158,7 +159,7 @@ class RolesTable extends Component
         $this->showDeleteModal = false;
         $this->deleteRoleId = null;
         $this->deleteRoleName = null;
-        $this->dispatch('showSweetAlert', type: 'info', message: 'Delete operation cancelled.', title: 'Info');
+        // Removed unnecessary info message
     }
 
     public function deleteRole()

@@ -119,7 +119,7 @@ class RoleShow extends Component
             
             // Check if role has users
             if ($role->users()->count() > 0) {
-                $this->dispatch('showSweetAlert', 'error', 'Cannot delete role. It has assigned users.', 'Error');
+                $this->dispatch('showSweetAlert', type: 'error', message: 'Cannot delete role. It has assigned users.', title: 'Error');
                 $this->closeDeleteModal();
                 return;
             }

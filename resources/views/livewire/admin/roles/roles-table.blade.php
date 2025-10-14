@@ -141,6 +141,23 @@
         }
     </style>
 
+    <script>
+        // Close modal when clicking outside
+        document.addEventListener('click', function(event) {
+            const modal = document.querySelector('.deleteModal');
+            if (event.target === modal) {
+                @this.call('closeDeleteModal');
+            }
+        });
+
+        // Close modal with escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                @this.call('closeDeleteModal');
+            }
+        });
+    </script>
+
     <!-- Global Delete Modal -->
     @if ($showDeleteModal)
         <div class="deleteModal delete-card" id="global-delete-modal">
@@ -148,9 +165,9 @@
                 <h3 class="delete-title">Delete Role</h3>
                 <span class="delete-close" wire:click="closeDeleteModal">&times;</span>
             </div>
-            <p class="delete-text">Are you sure you want to delete the role <strong>"{{ $deleteRoleName }}"</strong>?
+            <p class="delete-text">Are you sure you want to delete this role?
             </p>
-            <p class="delete-text text-danger">This action cannot be undone.</p>
+             
             <div class="delete-actions">
                 <button class="confirm-delete-btn" wire:click="deleteRole">Delete</button>
                 <button class="cancel-delete-btn" wire:click="closeDeleteModal">Cancel</button>
