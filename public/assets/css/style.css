@@ -1426,10 +1426,10 @@ td.user-data.id-number {
   font-size: 0.833vw;
 }
 
-.theme-table th:first-child,
+/* .theme-table th:first-child,
 .theme-table td:first-child {
   text-align: center;
-}
+} */
 
 .user-info {
   display: flex;
@@ -2126,8 +2126,8 @@ img.download-icon {
   box-shadow: 0px 0.5vw 2vw rgba(0, 0, 0, 0.1);
   animation: fadeIn 0.3s ease-in-out;
   position: relative;
-  left: -41vw;
-  top: 0.5vw;
+right: 9vw;
+    top: 25.5vw;
 }
 
 .deleteModal {
@@ -2382,7 +2382,7 @@ button.btn-close {
 }
 
 .tab-content {
-  display: none; /* default hidden */
+  display: none; 
 }
 
 .tab-content.active {
