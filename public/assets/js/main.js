@@ -295,3 +295,30 @@ if (serviceModal) {
         if (e.key === 'Escape' && modal.classList.contains('is-open')) closeCheckModal();
     });
 })();
+
+
+
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll('.nav-link').forEach(link => {
+    const icon = link.querySelector('.nav-icon');
+    const defaultIcon = link.getAttribute('data-icon-default');
+    const activeIcon = link.getAttribute('data-icon-active');
+
+    if (link.classList.contains('active') && activeIcon) {
+      icon.src = activeIcon;
+    } else if (defaultIcon) {
+      icon.src = defaultIcon;
+    }
+
+    // optional hover zoom
+    link.addEventListener('mouseenter', () => {
+      icon.style.transform = 'scale(1.1)';
+    });
+    link.addEventListener('mouseleave', () => {
+      icon.style.transform = link.classList.contains('active') ? 'scale(1.1)' : 'scale(1)';
+    });
+  });
+});

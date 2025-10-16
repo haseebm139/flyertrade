@@ -294,30 +294,30 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // Delete popover functionality
-function openDeletePopover(button) {
-    const popover = document.getElementById('deletePopover');
-    if (!popover) return;
+// function openDeletePopover(button) {
+//     const popover = document.getElementById('deletePopover');
+//     if (!popover) return;
 
-    const rect = button.getBoundingClientRect();
-    popover.style.top = `${rect.top + window.scrollY + 30}px`;
-    popover.style.left = `${rect.left + window.scrollX - 50}px`;
-    popover.style.display = 'block';
-}
+//     const rect = button.getBoundingClientRect();
+//     popover.style.top = `${rect.top + window.scrollY + 30}px`;
+//     popover.style.left = `${rect.left + window.scrollX - 50}px`;
+//     popover.style.display = 'block';
+// }
 
-function closeDeletePopover() {
-    const popover = document.getElementById('deletePopover');
-    if (popover) {
-        popover.style.display = 'none';
-    }
-}
+// function closeDeletePopover() {
+//     const popover = document.getElementById('deletePopover');
+//     if (popover) {
+//         popover.style.display = 'none';
+//     }
+// }
 
 // Hide popover if clicked outside
-window.addEventListener('click', function (event) {
-    const popover = document.getElementById('deletePopover');
-    if (popover && popover.style.display === 'block' && !popover.contains(event.target) && !event.target.closest('.delete-btn')) {
-        closeDeletePopover();
-    }
-});
+// window.addEventListener('click', function (event) {
+//     const popover = document.getElementById('deletePopover');
+//     if (popover && popover.style.display === 'block' && !popover.contains(event.target) && !event.target.closest('.delete-btn')) {
+//         closeDeletePopover();
+//     }
+// });
 
 // Booking modal functionality
 function openBookingModal() {
@@ -396,46 +396,3 @@ function openUserModal(name, email, image) {
     }
 }
 
-// Initiate payout modal
-document.addEventListener('DOMContentLoaded', () => {
-    const modal = document.getElementById('initiateModal');
-    if (!modal) return;
-
-    const modalMessage = document.getElementById('modalMessage');
-    const closeBtn = modal.querySelector('.close-btn');
-    const cancelBtn = modal.querySelector('.cancel-btn');
-
-    // Get all trigger buttons
-    const triggerButtons = document.querySelectorAll('.initiateBtn');
-
-    triggerButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            e.preventDefault();
-            const userName = button.getAttribute('data-user') || 'this user';
-            if (modalMessage) {
-                modalMessage.textContent = `Are you sure you want to initiate payout to ${userName}?`;
-            }
-            modal.style.display = 'flex';
-        });
-    });
-
-    // Close modal (X or Cancel)
-    if (closeBtn) {
-        closeBtn.addEventListener('click', () => modal.style.display = 'none');
-    }
-    if (cancelBtn) {
-        cancelBtn.addEventListener('click', () => modal.style.display = 'none');
-    }
-
-    // Close modal when clicking outside content
-    window.addEventListener('click', (e) => {
-        if (e.target === modal) modal.style.display = 'none';
-    });
-});
-
-// Close modals on outside click
-window.addEventListener('click', (e) => {
-    if (e.target.classList.contains("modal")) {
-        e.target.style.display = "none";
-    }
-});

@@ -42,7 +42,7 @@
                         <div class="notification-title">High Cancellation Alert</div>
                         <div class="notification-text">David E. has 3 cancellations this week.</div>
                     </div>
-          <div class="notification-view" onclick="openProviderModal('providerModal')">View</div>
+                    <div class="notification-view">View</div>
                 </div>
                 <div style="padding: 0.8vw 1.5vw; text-align: left;">
       <a href="#" style="color: #00796B; font-size: 0.95vw; font-weight: 500; text-decoration: none; display: flex; align-items: center; gap: 0.3vw;">

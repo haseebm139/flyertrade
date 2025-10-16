@@ -122,15 +122,7 @@
                         </ul>
                     </div>
                 </td>
-                <td>
-                    <div class="actions-dropdown">
-                        <button class="actions-btn"></button>
-                        <div class="actions-menu">
-                            <a href="javascript:void(0);" onclick="openBookingModal()"><i class="fa fa-eye"></i>
-                                View details</a>
-                        </div>
-                    </div>
-                </td>
+        
             </tr>
 
         </tbody>

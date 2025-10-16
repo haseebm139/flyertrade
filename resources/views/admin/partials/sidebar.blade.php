@@ -1,100 +1,93 @@
-<!-- ========== Begin::SIDEBAR (always open) ========== -->
-
+<!-- ========== Begin::SIDEBAR ========== -->
 <aside class="sidebar">
-    <!-- Brand / Logo -->
+    <!-- Brand -->
     <div class="brand">
         <a href="{{ route('dashboard') }}" class="logo-link">
-            <img src="{{ asset('assets/images/icons/logo.png') }}" alt="Company Logo" class="logo-img">
+            <img src="{{ asset('assets/images/icons/logo.png') }}" alt="Logo" class="logo-img">
         </a>
     </div>
 
     <!-- Navigation -->
     <nav>
-        <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-            <span><img src="{{ asset('assets/images/icons/home-icon.png') }}" alt="Dashboard" class="nav-icon"></span>
+        <!-- Dashboard -->
+        <a href="{{ route('dashboard') }}" 
+           class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"
+           data-icon-default="{{ asset('assets/images/icons/home-icon.png') }}"
+           data-icon-active="{{ asset('assets/images/icons/home-icon-filled.png') }}">
+            <span><img src="{{ asset('assets/images/icons/home-icon.png') }}" class="nav-icon"></span>
             Dashboard
         </a>
 
-        <!-- User Management with Dropdown -->
-        <a class="nav-link dropdown-toggle {{ request()->routeIs('user-management.*') ? 'active' : '' }}"
-            data-bs-toggle="collapse" href="#userManagementMenu" role="button"
-            aria-expanded="{{ request()->routeIs('user-management.*') ? 'true' : 'false' }}"
-            aria-controls="userManagementMenu">
-            <span><img src="{{ asset('assets/images/icons/user-management-icon.png') }}" alt="User Management"
-                    class="nav-icon"></span>
-            User management
+        <!-- User Management -->
+        <a href="{{ route('user-management.service.users.index') }}" 
+           class="nav-link {{ request()->routeIs('user-management.*') ? 'active' : '' }}"
+           data-icon-default="{{ asset('assets/images/icons/user-management-icon.png') }}"
+           data-icon-active="{{ asset('assets/images/icons/user-management-icon-filled.png') }}">
+            <span><img src="{{ asset('assets/images/icons/user-management-icon.png') }}" class="nav-icon"></span>
+            User Management
         </a>
-        <div class="collapse {{ request()->routeIs('user-management.*') ? 'show' : '' }}" id="userManagementMenu">
-            <a href="{{ route('user-management.service.users.index') }}"
-                class="nav-sublink {{ request()->routeIs('user-management.service.users.*') ? 'active' : '' }}">Service
-                Users</a>
-            <a href="{{ route('user-management.service.providers.index') }}"
-                class="nav-sublink {{ request()->routeIs('user-management.service.providers.*') ? 'active' : '' }}">Service
-                Providers</a>
-        </div>
 
-        <a href="{{ route('service-category.index') }}"
-            class="nav-link {{ request()->routeIs('service-category.*') ? 'active' : '' }}">
-            <span><img src="{{ asset('assets/images/icons/service-catogrey-icon.png') }}" alt="Service Category"
-                    class="nav-icon"></span>
-            Service category
+        <!-- Service Category -->
+        <a href="{{ route('service-category.index') }}" 
+           class="nav-link {{ request()->routeIs('service-category.*') ? 'active' : '' }}"
+           data-icon-default="{{ asset('assets/images/icons/service-catogrey-icon.png') }}"
+           data-icon-active="{{ asset('assets/images/icons/service-catogrey-icon-filled.png') }}">
+            <span><img src="{{ asset('assets/images/icons/service-catogrey-icon.png') }}" class="nav-icon"></span>
+            Service Category
         </a>
-        <a href="{{ route('booking.index') }}" class="nav-link {{ request()->routeIs('booking.*') ? 'active' : '' }}">
-            <span><img src="{{ asset('assets/images/icons/booking-icon.png') }}" alt="Bookings"
-                    class="nav-icon"></span>
+
+        <!-- Bookings -->
+        <a href="{{ route('booking.index') }}" 
+           class="nav-link {{ request()->routeIs('booking.*') ? 'active' : '' }}"
+           data-icon-default="{{ asset('assets/images/icons/booking-icon.png') }}"
+           data-icon-active="{{ asset('assets/images/icons/booking-icon-filled.png') }}">
+            <span><img src="{{ asset('assets/images/icons/booking-icon.png') }}" class="nav-icon"></span>
             Bookings
         </a>
-        <a href="{{ route('transaction.index') }}"
-            class="nav-link {{ request()->routeIs('transaction.*') ? 'active' : '' }}">
-            <span><img src="{{ asset('assets/images/icons/transition-icon.png') }}" alt="Transactions"
-                    class="nav-icon"></span>
+
+        <!-- Transactions -->
+        <a href="{{ route('transaction.index') }}" 
+           class="nav-link {{ request()->routeIs('transaction.*') ? 'active' : '' }}"
+           data-icon-default="{{ asset('assets/images/icons/transition-icon.png') }}"
+           data-icon-active="{{ asset('assets/images/icons/transition-icon-filled.png') }}">
+            <span><img src="{{ asset('assets/images/icons/transition-icon.png') }}" class="nav-icon"></span>
             Transactions
         </a>
-        <a href="{{ route('reviews.index') }}" class="nav-link {{ request()->routeIs('reviews.*') ? 'active' : '' }}">
-            <span><img src="{{ asset('assets/images/icons/reviews.png') }}" alt="Reviews & Ratings"
-                    class="nav-icon "></span>
+
+        <!-- Reviews -->
+        <a href="{{ route('reviews.index') }}" 
+           class="nav-link {{ request()->routeIs('reviews.*') ? 'active' : '' }}"
+           data-icon-default="{{ asset('assets/images/icons/reviews.png') }}"
+           data-icon-active="{{ asset('assets/images/icons/reviews-filled.png') }}">
+            <span><img src="{{ asset('assets/images/icons/reviews.png') }}" class="nav-icon"></span>
             Reviews & Ratings
         </a>
-        <a href="{{ route('dispute.index') }}" class="nav-link {{ request()->routeIs('dispute.*') ? 'active' : '' }}">
-            <span><img src="{{ asset('assets/images/icons/dispute.png') }}" alt="Disputes & Complaints"
-                    class="nav-icon "></span>
-            Disputes & complaints
+
+        <!-- Disputes -->
+        <a href="{{ route('dispute.index') }}" 
+           class="nav-link {{ request()->routeIs('dispute.*') ? 'active' : '' }}"
+           data-icon-default="{{ asset('assets/images/icons/dispute.png') }}"
+           data-icon-active="{{ asset('assets/images/icons/dispute-filled.png') }}">
+            <span><img src="{{ asset('assets/images/icons/dispute.png') }}" class="nav-icon"></span>
+            Disputes & Complaints
         </a>
-        <a href="{{ route('roles-and-permissions.index') }}"
-            class="nav-link {{ request()->routeIs('roles-and-permissions.*') ? 'active' : '' }}">
-            <span><img src="{{ asset('assets/images/icons/roles.png') }}" alt="Roles & Permissions"
-                    class="nav-icon"></span>
-            Roles & permission
+
+        <!-- Roles -->
+        <a href="{{ route('roles-and-permissions.index') }}" 
+           class="nav-link {{ request()->routeIs('roles-and-permissions.*') ? 'active' : '' }}"
+           data-icon-default="{{ asset('assets/images/icons/roles.png') }}"
+           data-icon-active="{{ asset('assets/images/icons/roles-filled.png') }}">
+            <span><img src="{{ asset('assets/images/icons/roles.png') }}" class="nav-icon"></span>
+            Roles & Permissions
         </a>
-        <a href="#" class="nav-link">
-            <span><img src="{{ asset('assets/images/icons/message.png') }}" alt="Messaging" class="nav-icon"></span>
-            Messaging
-        </a>
-        <a href="#" class="nav-link">
-            <span><img src="{{ asset('assets/images/icons/setting.png') }}" alt="Settings" class="nav-icon"></span>
+
+        <!-- Settings -->
+        <a href="#" class="nav-link"
+           data-icon-default="{{ asset('assets/images/icons/setting.png') }}"
+           data-icon-active="{{ asset('assets/images/icons/setting-filled.png') }}">
+            <span><img src="{{ asset('assets/images/icons/setting.png') }}" class="nav-icon"></span>
             Settings
         </a>
-        <a href="#" class="nav-link">
-            <div class="brand"  
-                style="display:flex; align-items:center; gap:0.8vw; cursor:pointer; position:relative;">
-                <div class="logo-placeholder">
-                    <img src="{{ asset('assets/images/icons/person.png') }}" alt="" class="admin-img">
-                </div>
-
-                <div>
-                    <div style="font-weight:500; font-size:0.8vw;">Flyertrade</div>
-                    <div class="muted small" style="font-size:0.8vw;">flyertrade@example.com</div>
-                </div>
-
-                <!-- arrows -->
-
-
-                 
-            </div>
-
-        </a>
-
-
-
     </nav>
 </aside>
+<!-- ========== End::SIDEBAR ========== -->
