@@ -11,6 +11,44 @@ $(document).ready(function () {
         }],
     });
 });
+const statusBtn = document.querySelector(".status-btn");
+const statusMenu = document.querySelector(".status-menu");
+const statusOptions = document.querySelectorAll(".status-option");
+
+if (statusBtn && statusMenu) {
+    // Default inactive
+    statusBtn.classList.add("active");
+
+    statusBtn.addEventListener("click", () => {
+        statusMenu.style.display = statusMenu.style.display === "block" ? "none" : "block";
+    });
+
+    // Change status on option click
+    statusOptions.forEach(option => {
+        option.addEventListener("click", () => {
+            let status = option.textContent.trim();
+
+            statusBtn.textContent = status + " ▼";
+
+            if (status === "Active") {
+                statusBtn.classList.remove("inactive");
+                statusBtn.classList.add("active");
+            } else {
+                statusBtn.classList.remove("active");
+                statusBtn.classList.add("inactive");
+            }
+
+            statusMenu.style.display = "none";
+        });
+    });
+
+    // Close dropdown if clicked outside
+    document.addEventListener("click", (e) => {
+        if (!e.target.closest(".status-dropdown")) {
+            statusMenu.style.display = "none";
+        }
+    });
+}
 
 // Modal functionality
 document.addEventListener("DOMContentLoaded", () => {
@@ -124,44 +162,6 @@ document.querySelectorAll(".tabs-wrapper").forEach(wrapper => {
 // Service details modal
 
 // Status dropdown functionality
-const statusBtn = document.querySelector(".status-btn");
-const statusMenu = document.querySelector(".status-menu");
-const statusOptions = document.querySelectorAll(".status-option");
-
-if (statusBtn && statusMenu) {
-    // Default inactive
-    statusBtn.classList.add("active");
-
-    statusBtn.addEventListener("click", () => {
-        statusMenu.style.display = statusMenu.style.display === "block" ? "none" : "block";
-    });
-
-    // Change status on option click
-    statusOptions.forEach(option => {
-        option.addEventListener("click", () => {
-            let status = option.textContent.trim();
-
-            statusBtn.textContent = status + " ▼";
-
-            if (status === "Active") {
-                statusBtn.classList.remove("inactive");
-                statusBtn.classList.add("active");
-            } else {
-                statusBtn.classList.remove("active");
-                statusBtn.classList.add("inactive");
-            }
-
-            statusMenu.style.display = "none";
-        });
-    });
-
-    // Close dropdown if clicked outside
-    document.addEventListener("click", (e) => {
-        if (!e.target.closest(".status-dropdown")) {
-            statusMenu.style.display = "none";
-        }
-    });
-}
 
 // Filter modal functionality
 const openFilterBtn = document.getElementById("openFilterModal");
