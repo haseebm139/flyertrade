@@ -4,6 +4,7 @@ namespace App\Livewire\Admin\Roles;
 
 use Livewire\Component;
 use Livewire\WithPagination;
+use Livewire\Attributes\On;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\DB;
@@ -21,6 +22,7 @@ class RolesTable extends Component
     public $fromDate = '';
     public $toDate = '';
     public $statusFilter = '';
+    public $confirmingId = null;
 
     protected $queryString = [
         'search' => ['except' => ''],
@@ -141,6 +143,43 @@ class RolesTable extends Component
         return response()->stream($callback, 200, $headers);
     }
 
+    public function refreshTable()
+    {
+        // Force refresh the table data by resetting pagination
+        $this->resetPage();
+    }
+
+    #[On('roleSaved')]
+    public function refreshRoles()
+    {
+        $this->refreshTable();
+    }
+
+    #[On('refreshRolesTable')]
+    public function refreshRolesTable()
+    {
+        $this->refreshTable();
+    }
+
+    #[On('roleUpdated')]
+    public function refreshRole($roleId)
+    {
+        // Refresh the specific role data
+        $this->refreshTable();
+    }
+
+    #[On('roleDeleted')]
+    public function refreshAfterDelete()
+    {
+        // Refresh the table after role deletion
+        $this->refreshTable();
+    }
+
+    public function confirmDelete($roleId)
+    {
+        $this->confirmingId = $roleId;
+    }
+
     public function deleteRole($roleId)
     {
         try {
@@ -148,20 +187,23 @@ class RolesTable extends Component
             
             // Check if role has users
             if ($role->users()->count() > 0) {
-                $this->dispatch('showToastr', 'error', 'Cannot delete role. It has assigned users.', 'Error');
+                $this->dispatch('showSweetAlert', type: 'error', message: 'Cannot delete role. It has assigned users.', title: 'Error');
+                $this->confirmingId = null;
                 return;
             }
             
             $role->delete();
-            $this->dispatch('showToastr', 'success', 'Role deleted successfully.', 'Success');
+            $this->dispatch('showSweetAlert', type: 'success', message: 'Role deleted successfully.', title: 'Success');
+            $this->dispatch('roleDeleted');
+            $this->confirmingId = null;
         } catch (\Exception $e) {
-            $this->dispatch('showToastr', 'error', 'Error deleting role: ' . $e->getMessage(), 'Error');
+            $this->dispatch('showSweetAlert', type: 'error', message: 'Error deleting role: ' . $e->getMessage(), title: 'Error');
         }
     }
 
     public function viewRole($roleId)
     {
-        return redirect()->route('roles-and-permissions.show', ['id' => $roleId, 'type' => 'role']);
+        return redirect()->route('roles-and-permissions.roles.show', ['id' => $roleId]);
     }
 
     public function editRole($roleId)
@@ -171,8 +213,7 @@ class RolesTable extends Component
 
     public function addRole()
     {
-         
-        $this->dispatch('openRoleModal', null, 'create'); 
+        $this->dispatch('openRoleModal', null, 'create');
     }
 
     public function openRoleModal($roleId = null, $mode = 'create')

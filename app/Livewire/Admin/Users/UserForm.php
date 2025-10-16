@@ -99,6 +99,13 @@ class UserForm extends Component
 
             $this->dispatch('showToastr', 'success', $message, 'Success');
             $this->dispatch('userSaved');
+            $this->dispatch('refreshUsersTable');
+            
+            // If editing a user, dispatch a specific event to refresh that user's data
+            if ($this->isEdit && $this->userId) {
+                $this->dispatch('userUpdated', $this->userId);
+            }
+            
             $this->closeUserModal();
         } catch (\Exception $e) {
             $this->dispatch('showToastr', 'error', 'Error saving user: ' . $e->getMessage(), 'Error');

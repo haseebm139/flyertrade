@@ -44,24 +44,31 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         return view('admin.pages.roles_and_permissions.index');
     })->name('roles-and-permissions.index');
 
-    Route::get('roles-and-permissions/show/{id?}', function($id = null, $type = null) {
-        $data = null;
-        $title = 'View Details';
+    Route::get('roles-and-permissions/roles/show/{id}', function($id) {
+        $data = \Spatie\Permission\Models\Role::with('permissions')->findOrFail($id);
+        $title = $data->name ?? '';
+        $type = 'role';
+        $tab_type = "Roles";
         
-        if ($id) {
-             
-            if ($type === 'role') {
-                $data = \Spatie\Permission\Models\Role::with('permissions')->findOrFail($id);
-                $title = 'Role: ' . $data->name;
-            } else {
-                $data = \App\Models\User::with('roles')->findOrFail($id);
-                $title = $data->name;
-                $type = "User";
-            }
-        }
+        return view('admin.pages.roles_and_permissions.show', compact('data', 'title', 'type', 'tab_type'));
+    })->name('roles-and-permissions.roles.show');
+
+    Route::get('roles-and-permissions/users/show/{id}', function($id) {
+        $data = \App\Models\User::with('roles')->findOrFail($id);
+        $title = $data->name ?? '';
+        $type = 'user';
+        $tab_type = "Users";
         
-        return view('admin.pages.roles_and_permissions.show', compact('data', 'title', 'type'));
-    })->name('roles-and-permissions.show');
+        return view('admin.pages.roles_and_permissions.show', compact('data', 'title', 'type', 'tab_type'));
+    })->name('roles-and-permissions.users.show');
+
+    Route::get('messages',function(){
+        return view('admin.pages.messages.index');
+    })->name('messages.index');
+
+    Route::get('settings',function(){
+        return view('admin.pages.settings.index');
+    })->name('settings.index');
     // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

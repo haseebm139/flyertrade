@@ -1360,7 +1360,15 @@ td.user-data.id-number {
   border: none;
   cursor: pointer;
 }
-
+.edit-btn {
+    border: 0.1vw solid #ccc;
+padding: 0.6vw 1.2vw;
+    font-size: 0.9vw;
+    border-radius: 0.4vw;
+    background-color: white;
+    border: none;
+    cursor: pointer;
+}
 .export-btn {
   border: 0.1vw solid #ccc;
 }
