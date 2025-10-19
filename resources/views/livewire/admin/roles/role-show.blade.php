@@ -9,7 +9,7 @@
     </div>
 
     <!-- Toolbar -->
-    <div class="users-toolbar">
+    <div class="users-toolbar" style="position: relative">
         <div class="toolbar-left">
             @if ($role)
                 <button class="edit-btn" wire:click="editRole">
@@ -30,6 +30,26 @@
         <div class="toolbar-right">
             <h2 class="page-titles">{{ ucfirst($role->name) ?? 'Role Details' }}</h2>
         </div>
+          <!-- Global Delete Modal -->
+    @if ($showDeleteModal)
+            <div class="deleteModal delete-card" id="global-delete-modal" style="
+    position: absolute;
+    right: 12vw;
+    top: 1vw;
+">
+            <div class="delete-card-header">
+                <h3 class="delete-title">Delete Role</h3>
+                <span class="delete-close" wire:click="closeDeleteModal">&times;</span>
+            </div>
+            <p class="delete-text">Are you sure you want to delete this role?
+            </p>
+             
+            <div class="delete-actions justify-content-start" >
+                <button class="confirm-delete-btn" wire:click="deleteRole">Delete</button>
+                <button class="cancel-delete-btn" wire:click="closeDeleteModal">Cancel</button>
+            </div>
+        </div>
+    @endif
     </div>
 
     <div class="users-toolbars">
@@ -129,22 +149,7 @@
         </tbody>
     </table>
 
-    <!-- Global Delete Modal -->
-    @if ($showDeleteModal)
-        <div class="deleteModal delete-card" id="global-delete-modal">
-            <div class="delete-card-header">
-                <h3 class="delete-title">Delete Role</h3>
-                <span class="delete-close" wire:click="closeDeleteModal">&times;</span>
-            </div>
-            <p class="delete-text">Are you sure you want to delete this role?
-            </p>
-             
-            <div class="delete-actions">
-                <button class="confirm-delete-btn" wire:click="deleteRole">Delete</button>
-                <button class="cancel-delete-btn" wire:click="closeDeleteModal">Cancel</button>
-            </div>
-        </div>
-    @endif
+  
 
     <script>
         function scrollTabs(direction) {

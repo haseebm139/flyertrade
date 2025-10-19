@@ -22,7 +22,7 @@
     </div>
 
     <!-- Table -->
-    <table class="theme-table roles">
+    <table class="theme-table roles" style="position: relative">
         <thead>
             <tr>
                 <th><input type="checkbox"></th>
@@ -73,10 +73,20 @@
                         <button class="delete-btn showDeleteModal" wire:click="confirmDelete({{ $role->id }})">
                             <img src="{{ asset('assets/images/icons/trash_trash.png') }}" alt="Delete"
                                 class="eye-icon">
-                            Delete
+                            <span
+                                style="    font-size: 0.9vw;
+    color: #064f3c;
+    cursor: pointer;     font-weight: 400;">
+                                Delete </span>
                         </button>
                         @if ($confirmingId === $role->id)
-                            <div class="deleteModal delete-card" id="global-delete-modal">
+                            <div class="deleteModal delete-card" id="global-delete-modal"
+                                style="
+    position: absolute;
+    right: 12vw;
+    top: 1vw;
+    z-index: 99;
+">
                                 <div class="delete-card-header">
                                     <h3 class="delete-title">Delete Role</h3>
                                     <span class="delete-close" wire:click="$set('confirmingId', null)">&times;</span>
@@ -84,7 +94,7 @@
                                 <p class="delete-text">Are you sure you want to delete role
                                     <strong>{{ $role->name }}</strong>?
                                 </p>
-                                <div class="delete-actions">
+                                <div class="delete-actions  justify-content-start">
                                     <button class="confirm-delete-btn"
                                         wire:click="deleteRole({{ $role->id }})">Delete</button>
                                     <button class="cancel-delete-btn"

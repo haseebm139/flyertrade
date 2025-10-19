@@ -9,7 +9,7 @@
     </div>
 
     <!-- Toolbar -->
-    <div class="users-toolbar">
+    <div class="users-toolbar" style="position: relative">
         <div class="toolbar-left">
             @if ($user)
                 <button class="edit-btn" wire:click="openEditModal">
@@ -32,13 +32,30 @@
             <!-- User Profile -->
             <div class="user-profile">
                 <img src="{{ asset($user->avatar) ?? asset('assets/images/user-profile-img.png') }}" alt="User"
-                    class="user-avatar">
+          class="user-profile-img">
                 <div class="user-infos">
                     <h4 class="user-name-user">{{ $user->name ?? 'Unknown User' }}</h4>
                     <p class="user-role">{{ $user->roles->first()->name ?? 'No Role' }}</p>
                 </div>
             </div>
         </div>
+            @if ($showDeleteModal)
+     <div class="deleteModal delete-card" id="global-delete-modal" style="
+    position: absolute;
+    right: 12vw;
+    top: 1vw;
+">
+            <div class="delete-card-header">
+                <h3 class="delete-title">Delete User</h3>
+                <span class="delete-close" wire:click="closeDeleteModal">&times;</span>
+            </div>
+            <p class="delete-text">Are you sure you want to delete this user?</p>
+            <div class="delete-actions  justify-content-start">
+                <button class="confirm-delete-btn" wire:click="deleteUser">Delete</button>
+                <button class="cancel-delete-btn" wire:click="closeDeleteModal">Cancel</button>
+            </div>
+        </div>
+    @endif
     </div>
 
     <!-- Profile Details Section -->
@@ -62,19 +79,7 @@
 
 
     <!-- Delete Modal -->
-    @if ($showDeleteModal)
-        <div class="deleteModal delete-card" id="global-delete-modal">
-            <div class="delete-card-header">
-                <h3 class="delete-title">Delete User</h3>
-                <span class="delete-close" wire:click="closeDeleteModal">&times;</span>
-            </div>
-            <p class="delete-text">Are you sure you want to delete this user?</p>
-            <div class="delete-actions">
-                <button class="confirm-delete-btn" wire:click="deleteUser">Delete</button>
-                <button class="cancel-delete-btn" wire:click="closeDeleteModal">Cancel</button>
-            </div>
-        </div>
-    @endif
+
 
 
     <!-- Edit Modal -->
@@ -82,7 +87,7 @@
         <div
             style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; display: flex; justify-content: center; align-items: center;">
             <div
-                style="background: white; padding: 2vw; border-radius: 0.6vw; width: 42vw; max-width: 500px; position: relative;">
+                style="background: white; padding: 2vw; border-radius: 0.6vw; width: 42vw;  position: relative;">
                 <span wire:click="closeEditModal"
                     style="position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; color: #999;">&times;</span>
                 <h3>Edit User</h3>
@@ -106,29 +111,13 @@
                         <span class="error-message">{{ $message }}</span>
                     @enderror
 
-                    <label>Address</label>
+                    <label> Home address</label>
                     <input type="text" class="form-input" wire:model="editUser.address" placeholder="Enter address">
                     @error('editUser.address')
                         <span class="error-message">{{ $message }}</span>
                     @enderror
 
-                    <label>State</label>
-                    <input type="text" class="form-input" wire:model="editUser.state" placeholder="Enter state">
-                    @error('editUser.state')
-                        <span class="error-message">{{ $message }}</span>
-                    @enderror
-
-                    <label>City</label>
-                    <input type="text" class="form-input" wire:model="editUser.city" placeholder="Enter city">
-                    @error('editUser.city')
-                        <span class="error-message">{{ $message }}</span>
-                    @enderror
-
-                    <label>Country</label>
-                    <input type="text" class="form-input" wire:model="editUser.country" placeholder="Enter country">
-                    @error('editUser.country')
-                        <span class="error-message">{{ $message }}</span>
-                    @enderror
+                    
 
                     <label>Role</label>
                     <select class="form-input" wire:model="editUser.user_type">

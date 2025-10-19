@@ -112,17 +112,37 @@
                 </td>
 
 
-                <td>
-                    <div class="status-dropdown">
-                        <!-- Default: Publish -->
-                        <span class="status active" onclick="toggleDropdown(this)">Resolved</span>
-                        <ul class="dropdown-menu" style="display: none;">
-                            <li class="active" onclick="setStatus(this, 'Resolved')">Resolved</li>
-                            <li class="inactive" onclick="setStatus(this, 'Unresolved')">Unresolved</li>
-                        </ul>
+           <td>
+ <div class="status-dropdown">
+  <span class="status active" onclick="toggleDropdown(this)">
+    Unresolved
+    <svg class="arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" 
+      viewBox="0 0 24 24" fill="none" stroke="#d4aa00" stroke-width="2" 
+      stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>
+  </span>
+  <ul class="dropdown-menu" style="display: none;">
+    <li onclick="setStatus(this, 'Resolved')">Resolved</li>
+    <li onclick="setStatus(this, 'Unresolved')">Unresolved</li>
+  </ul>
+</div>
+</td>
+
+                  <td>
+                <div class="actions-dropdown">
+                    <button class="actions-btn" fdprocessedid="3p4nw"> <img src="http://127.0.0.1:8000/assets/images/icons/three-dots.png" class="dots-img "></button>
+                    <div class="actions-menu" style="display: none;">
+                        <a onclick="openBookingModal()"><img src="http://127.0.0.1:8000/assets/images/icons/eye.png" alt="">
+                            View
+                            details</a>
+                                    <a href="#" class="initiateBtn" data-user="Mike Brown">
+  <img src="http://127.0.0.1:8000/assets/images/icons/init.png" alt=""> Initiate payout
+</a>
+
                     </div>
-                </td>
-        
+                </div>
+            </td>
             </tr>
 
         </tbody>
@@ -210,7 +230,7 @@
                 <br>
                 <h4>Dispute issue</h4>
 
-                <div class="details-grid">
+                <div class="dispute-text">
                     <div>Service provider did not show up at the scheduled time and did not provide prior notice.</div>
 
                 </div>
@@ -476,4 +496,6 @@
             }
         });
     </script>
+
+
 @endsection

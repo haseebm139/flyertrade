@@ -49,8 +49,8 @@
 
                     <td>
                         <span class="desf d-flex">
-                            <button class="edit-btn" wire:click="edit({{ $item->id }})">
-                                <img src="{{ asset('assets/images/icons/edit-icon.png') }}" alt="Edit" class="action-icon">
+                            <button class="edit-btn" wire:click="edit({{ $item->id }})" style="border: 0 !important">
+                                <img src="{{ asset('assets/images/icons/edit-icon.png') }}" alt="Edit" class="action-icon" > 
                             </button>
 
                             <!-- ✅ Delete button -->
@@ -76,7 +76,7 @@
                 <span class="delete-close" id="closeDeleteModal">&times;</span>
             </div>
             <p class="delete-text">Are you sure you want to delete this service?</p>
-            <div class="delete-actions">
+            <div class="delete-actions justify-content-start">
                 <button class="confirm-delete-btn">Delete</button>
                 <button class="cancel-delete-btn">Cancel</button>
             </div>
@@ -123,8 +123,10 @@ document.addEventListener("DOMContentLoaded", function() {
             const rect = btn.getBoundingClientRect();
 
             const modalWidth = window.innerWidth * 0.40;
-            let topPos = window.scrollY + rect.top + 40;
-            let leftPos = rect.left - 620;
+            let topPos = window.scrollY + rect.top + 60;
+
+            // 🔹 Left position reduced (closer to button)
+            let leftPos = rect.left + rect.width / 2 - modalWidth / 2 - 200; // was -20 before, reduced more
 
             if (leftPos + modalWidth > window.innerWidth - 20) leftPos = window.innerWidth - modalWidth - 20;
             if (leftPos < 20) leftPos = 20;
@@ -137,21 +139,18 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // Close modal
     [cancelBtn, closeBtn].forEach(btn => {
         btn.addEventListener("click", () => {
             modal.style.display = "none";
         });
     });
 
-    // Close when clicking outside
     document.addEventListener("click", function(e) {
         if (!e.target.closest(".deleteModal") && !e.target.closest(".showDeleteModal")) {
             modal.style.display = "none";
         }
     });
 
-    // Confirm delete
     confirmBtn.addEventListener("click", function() {
         const id = modal.dataset.id;
         if (window.Livewire) {
@@ -161,4 +160,5 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 </script>
+
 @endpush

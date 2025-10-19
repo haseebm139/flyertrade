@@ -322,3 +322,297 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+
+
+// message hide and show
+// ------------------- Send Message -------------------
+const sendBtn = document.getElementById('sendBtn');
+const chatInput = document.getElementById('chatInput');
+const chatBody = document.getElementById('chatBody');
+
+if (sendBtn && chatInput && chatBody) {
+    sendBtn.addEventListener('click', () => {
+        const msg = chatInput.value.trim();
+        if (msg === '') return;
+
+        const newMsg = document.createElement('div');
+        newMsg.classList.add('message', 'message-right');
+        newMsg.innerHTML =
+            `<p>${msg}</p>
+             <span class="timestamp">
+                 Message sent ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+             </span>`;
+
+        chatBody.appendChild(newMsg);
+        chatInput.value = '';
+        chatBody.scrollTop = chatBody.scrollHeight;
+    });
+
+    chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendBtn.click();
+    });
+}
+
+// ------------------- Main Panels -------------------
+document.addEventListener("DOMContentLoaded", function () {
+    const contentPanel = document.querySelector(".content-panel");
+    const emailCompose = document.querySelector(".email-compose");
+    const viewEmail = document.querySelector(".view-email");
+    const messageChat = document.querySelector(".message-chat-theme");
+
+    const newMsgBtn = document.querySelector(".export-btn");
+    const userListItems = document.querySelectorAll(".user-list-item");
+    const tabButtons = document.querySelectorAll(".filter-btn");
+
+    // âœ… Select ALL buttons with class .new-email-btn (handles both)
+    const newEmailBtns = document.querySelectorAll(".new-email-btn");
+
+    // Hide all panels
+    function hideAll() {
+        [contentPanel, emailCompose, viewEmail, messageChat].forEach(el => {
+            if (el) el.style.display = "none";
+        });
+    }
+
+    // Show a specific panel
+    function show(el) {
+        hideAll();
+        if (el) el.style.display = "flex";
+    }
+
+    // Default view
+    show(contentPanel);
+
+    // ðŸŸ¢ Open Compose Email on any new-email-btn click
+    newEmailBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+            show(emailCompose);
+        });
+    });
+
+    // ðŸŸ¢ Open Chat on new message button
+    if (newMsgBtn) {
+        newMsgBtn.addEventListener("click", () => {
+            show(messageChat);
+        });
+    }
+
+    // ðŸŸ¢ When user clicks an email list item â†’ open email view
+    document.querySelectorAll("#emails .user-list-item").forEach(item => {
+        item.addEventListener("click", () => {
+            show(viewEmail);
+        });
+    });
+
+    // ðŸŸ¢ When user clicks a chat list item â†’ open chat
+    document.querySelectorAll("#chats .user-list-item").forEach(item => {
+        item.addEventListener("click", () => {
+            show(messageChat);
+        });
+    });
+
+    // ðŸŸ¢ Filter buttons active state + show content panel
+    tabButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            tabButtons.forEach(b => b.classList.remove("tab-active"));
+            btn.classList.add("tab-active");
+            show(contentPanel);
+        });
+    });
+});
+
+
+// Select all functionality
+const selectAll = document.getElementById("selectAll");
+const userCheckboxes = document.querySelectorAll(".select-user");
+
+selectAll.addEventListener("change", function () {
+    userCheckboxes.forEach(cb => cb.checked = this.checked);
+});
+
+userCheckboxes.forEach(cb => {
+    cb.addEventListener("change", () => {
+        const allChecked = [...userCheckboxes].every(c => c.checked);
+        selectAll.checked = allChecked;
+    });
+});
+
+// Filter functionality
+const filterStatus = document.getElementById("filterStatus");
+filterStatus.addEventListener("change", function () {
+    const value = this.value;
+    const users = document.querySelectorAll(".user-list-item");
+
+    users.forEach(user => {
+        if (value === "all" || user.classList.contains(value)) {
+            user.style.display = "flex";
+        } else {
+            user.style.display = "none";
+        }
+    });
+});
+function toggleDropdown(el) {
+  const parent = el.closest('.status-dropdown');
+  const dropdown = parent.querySelector('.dropdown-menu');
+  const isOpen = dropdown.style.display === 'block';
+
+  // Hide all dropdowns first
+  document.querySelectorAll('.dropdown-menu').forEach(d => d.style.display = 'none');
+  document.querySelectorAll('.status').forEach(s => s.classList.remove('open'));
+
+  // Toggle current dropdown
+  if (!isOpen) {
+    dropdown.style.display = 'block';
+    el.classList.add('open');
+  } else {
+    dropdown.style.display = 'none';
+    el.classList.remove('open');
+  }
+}
+
+function setStatus(el, status) {
+  const parent = el.closest('.status-dropdown');
+  const statusBtn = parent.querySelector('.status');
+
+  // Reset old classes
+  statusBtn.classList.remove('publish', 'unpublish', 'pending', 'open');
+
+  // Define colors
+  let color = '';
+  let cssClass = '';
+
+  if (status === 'Publish') {
+    color = '#0a8754'; // Green
+    cssClass = 'publish';
+  } else if (status === 'Unpublish') {
+    color = '#d91e18'; // Red
+    cssClass = 'unpublish';
+  } else if (status === 'Pending') {
+    color = '#d4aa00'; // Yellow
+    cssClass = 'pending';
+  }
+
+  // Apply new class and color
+  statusBtn.classList.add(cssClass);
+  statusBtn.style.color = color;
+
+  // Update button text + arrow
+  statusBtn.innerHTML = `${status}
+    <svg class="arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" 
+      viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" 
+      stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>`;
+
+  // Close dropdown
+  parent.querySelector('.dropdown-menu').style.display = 'none';
+}
+  
+// Wait for DOM to fully load
+document.addEventListener("DOMContentLoaded", function() {
+
+    // ===== Notification Popup =====
+    const notifBtn = document.getElementById('notifBtn');
+    const notifPopup = document.getElementById('notifPopup');
+
+    notifBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        notifPopup.style.display = notifPopup.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // Hide notif popup when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!notifBtn.contains(e.target)) {
+            notifPopup.style.display = 'none';
+        }
+    });
+
+    // ===== Provider Modal =====
+    const providerModal = document.getElementById('providerModal');
+
+    // Log check (optional)
+    console.log("Modal found:", providerModal);
+
+    // Handle all buttons that open provider modal
+    document.querySelectorAll('[data-modal="providerModal"]').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("View clicked!"); // Debug check
+            notifPopup.style.display = 'none'; // hide popup
+            providerModal.style.display = 'flex'; // show modal
+            providerModal.style.animation = 'fadeIn 0.2s ease'; 
+        });
+    });
+
+    // Close provider modal (cross button)
+    document.querySelectorAll('[data-close="providerModal"]').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            providerModal.style.display = 'none';
+        });
+    });
+
+    // Close modal if clicking outside
+    window.addEventListener('click', function(e) {
+        if (e.target === providerModal) {
+            providerModal.style.display = 'none';
+        }
+    });
+
+});
+
+
+function toggleDropdown(el) {
+  const parent = el.closest('.status-dropdown');
+  const dropdown = parent.querySelector('.dropdown-menu');
+  const isOpen = dropdown.style.display === 'block';
+
+  // Band kar sab dropdowns
+  document.querySelectorAll('.dropdown-menu').forEach(d => d.style.display = 'none');
+  document.querySelectorAll('.status').forEach(s => s.classList.remove('open'));
+
+  // Toggle current
+  if (!isOpen) {
+    dropdown.style.display = 'block';
+    el.classList.add('open');
+  } else {
+    dropdown.style.display = 'none';
+    el.classList.remove('open');
+  }
+}
+
+function setStatus(el, status) {
+  const parent = el.closest('.status-dropdown');
+  const statusBtn = parent.querySelector('.status');
+
+  // Reset classes
+  statusBtn.classList.remove('resolved', 'unresolved', 'open');
+
+  // Define colors
+  let color = '';
+  let cssClass = '';
+
+  if (status === 'Resolved') {
+    color = '#0a8754'; // Green (Publish color)
+    cssClass = 'resolved';
+  } else if (status === 'Unresolved') {
+    color = '#d4aa00'; // Yellow (Pending color)
+    cssClass = 'unresolved';
+  }
+
+  // Apply class & color
+  statusBtn.classList.add(cssClass);
+  statusBtn.style.color = color;
+
+  // Update inner text + arrow
+  statusBtn.innerHTML = `${status}
+    <svg class="arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+      viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>`;
+
+  // Close dropdown
+  parent.querySelector('.dropdown-menu').style.display = 'none';
+}

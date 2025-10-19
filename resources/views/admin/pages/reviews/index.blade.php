@@ -106,16 +106,21 @@
                     </td>
 
 
-                    <td>
-                        <div class="status-dropdown">
-                            <!-- Default: Publish -->
-                            <span class="status active" onclick="toggleDropdown(this)">Publish</span>
-                            <ul class="dropdown-menu" style="display: none;">
-                                <li class="active" onclick="setStatus(this, 'Publish')">Publish</li>
-                                <li class="inactive" onclick="setStatus(this, 'UnPublish')">UnPublish</li>
-                            </ul>
-                        </div>
-                    </td>
+              <td>
+  <div class="status-dropdown">
+    <span class="status publish" onclick="toggleDropdown(this)">
+      Publish
+      <svg class="arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0a8754" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </span>
+    <ul class="dropdown-menu">
+      <li onclick="setStatus(this, 'Pending')">Pending</li>
+      <li onclick="setStatus(this, 'Publish')">Publish</li>
+     
+    </ul>
+  </div>
+</td>
                     <td>
                         <div class="actions-dropdown" bis_skin_checked="1">
                             <button class="actions-btn"><img src="{{ asset('assets/images/icons/three-dots.png') }}"
@@ -213,17 +218,22 @@
                     </td>
 
 
-                    <td>
-                        <div class="status-dropdown">
-                            <!-- Default: Publish -->
-                            <span class="status active" onclick="toggleDropdown(this)">Publish</span>
-                            <ul class="dropdown-menu" style="display: none;">
-                                <li class="inactive" onclick="setStatus(this, 'Pending')">Pending</li>
-                                <li class="active" onclick="setStatus(this, 'Publish')">Publish</li>
-                                <li class="inactive" onclick="setStatus(this, 'UnPublish')">UnPublish</li>
-                            </ul>
-                        </div>
-                    </td>
+            <td>
+  <div class="status-dropdown">
+    <span class="status publish" onclick="toggleDropdown(this)">
+      Publish
+      <svg class="arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0a8754" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </span>
+    <ul class="dropdown-menu">
+      <li onclick="setStatus(this, 'Pending')">Pending</li>
+      <li onclick="setStatus(this, 'Publish')">Publish</li>
+
+    </ul>
+  </div>
+</td>
+
                     <td>
                         <div class="actions-dropdown" bis_skin_checked="1">
                             <button class="actions-btn"><img src="{{ asset('assets/images/icons/three-dots.png') }}"

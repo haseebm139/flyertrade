@@ -12,7 +12,8 @@
             <img src="{{ asset('assets/images/icons/notification.png') }}" alt="Notifications">
             <!-- Notification Popup -->
             <div class="popup ioioios" id="notifPopup">
-                <div class="popup-header" style="display: flex; align-items: center; justify-content: space-between; 
+                <div class="popup-header"
+                    style="display: flex; align-items: center; justify-content: space-between; 
             padding: 1vw 1.5vw; border-bottom: 0vw solid #ddd; background-color: #fff;border-radius: 20px;">
 
                     <span class="popup-title"
@@ -20,8 +21,7 @@
                         Notification
                     </span>
 
-                    <span class="popup-close" 
-                        style="cursor: pointer; display: flex; align-items: center;">
+                    <span class="popup-close" style="cursor: pointer; display: flex; align-items: center;">
                         <img src="{{ asset('assets/images/icons/iconoir_cancel.png') }}" alt=""
                             style="width: 1.2vw; height: auto; transition: transform 0.2s ease;">
                     </span>
@@ -45,47 +45,52 @@
                     <div class="notification-view">View</div>
                 </div>
                 <div style="padding: 0.8vw 1.5vw; text-align: left;">
-      <a href="#" style="color: #00796B; font-size: 0.95vw; font-weight: 500; text-decoration: none; display: flex; align-items: center; gap: 0.3vw;">
-        View all notifications 
-        <span style="font-size: 1vw;">&#8250;</span>
-      </a>
-    </div>
+                    <a href="#"
+                        style="color: #00796B; font-size: 0.95vw; font-weight: 500; text-decoration: none; display: flex; align-items: center; gap: 0.3vw;">
+                        View all notifications
+                        <span style="font-size: 1vw;">&#8250;</span>
+                    </a>
+                </div>
             </div>
-            
+
         </div>
 
         <!-- Provider Verification Modal -->
-        <div class="provider-modal" id="providerModal">
-            <div class="provider-modal-header">
-                <span class="provider-modal-close" data-close="providerModal">
-                    <img src="{{ asset('assets/images/icons/iconoir_cancel.png') }}" alt="">
-                </span>
-            </div>
-            <div class="provider-modal-body">
-                <h6>
-
-                    3 New Providers Awaiting Document Verification.
-                </h6>
-                <div class="provider-item">
-                    <img src="{{ asset('assets/images/icons/person.png') }}" alt="">
-                    <span>Johnbosco Davies</span>
-                    <a href="#" class="provider-view-profile">View profile</a>
-                </div>
-                <div class="provider-item">
-                    <img src="{{ asset('assets/images/icons/person.png') }}" alt="">
-                    <span>Jane Doe</span>
-                    <a href="#" class="provider-view-profile">View profile</a>
-                </div>
-                <div class="provider-item">
-                    <img src="{{ asset('assets/images/icons/person.png') }}" alt="">
-                    <span>Michael Smith</span>
-                    <a href="#" class="provider-view-profile">View profile</a>
-                </div>
-            </div>
+<div class="provider-modal" id="providerModal">
+    <div class="provider-modal-content">
+        <!-- Header -->
+        <div class="provider-modal-header">
+            <h6>3 New Providers Awaiting Document Verification.</h6>
+            <button class="provider-modal-close" data-close="providerModal">
+                <img src="{{ asset('assets/images/icons/iconoir_cancel.png') }}" alt="Close">
+            </button>
         </div>
 
+        <!-- Body -->
+        <div class="provider-modal-body">
+            <div class="provider-item">
+                <img src="{{ asset('assets/images/icons/person.png') }}" alt="">
+                <span>Johnbosco Davies</span>
+                <a href="#" class="provider-view-profile">View profile</a>
+            </div>
+
+            <div class="provider-item">
+                <img src="{{ asset('assets/images/icons/person.png') }}" alt="">
+                <span>Jane Doe</span>
+                <a href="#" class="provider-view-profile">View profile</a>
+            </div>
+
+            <div class="provider-item">
+                <img src="{{ asset('assets/images/icons/person.png') }}" alt="">
+                <span>Michael Smith</span>
+                <a href="#" class="provider-view-profile">View profile</a>
+            </div>
+        </div>
+    </div>
+</div>
+
         <!-- Provider Verification Popup -->
-   
+
 
 
         <!-- Brand / Profile -->
@@ -124,6 +129,36 @@
 </div>
 
 
+<script>
+    // Get modal and close button
+    const providerModal = document.getElementById('providerModal');
+    const closeBtn = document.querySelector('[data-close="providerModal"]');
+    const notifPopup = document.querySelector('.notification-popup'); // only if exists
+
+    // Open modal
+    document.querySelectorAll('[data-modal="providerModal"]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (notifPopup) notifPopup.style.display = 'none';
+            providerModal.style.display = 'flex';
+            providerModal.style.animation = 'fadeIn 0.2s ease';
+        });
+    });
+
+    // Close modal on close button click
+    closeBtn.addEventListener('click', () => {
+        providerModal.style.display = 'none';
+    });
+
+    // Close modal when clicking outside modal content
+    window.addEventListener('click', (e) => {
+        if (e.target === providerModal) {
+            providerModal.style.display = 'none';
+        }
+    });
+</script>
 
 
 <!-- ========== End::Header (always open) ========== -->

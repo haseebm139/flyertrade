@@ -20,7 +20,7 @@
         <div class="toolbar-left">
             <button class="reset-btn">Reset Password</button>
 
-            <button class="export-btn" id="openAddUserModal">
+            <button class="edit-btn" id="openAddUserModal">
                 <span class="download-icon"><img src="{{ asset('assets/images/icons/edit.png') }}" alt="" class="icons-btn"></span> Edit
                 User
             </button>
@@ -34,7 +34,7 @@
         <div class="toolbar-right">
             <!-- ✅ User Profile -->
             <div class="user-profile">
-                <img src="{{ asset('assets/images/icons/user-profile-img.png') }}" alt="User" class="user-avatar">
+                <img src="{{ asset('assets/images/icons/user-profile-img.png') }}" alt="User" class="user-profile-img">
                 <div class="user-infos">
                     <h4 class="user-name-user">Johnbosco Davies</h4>
                     <p class="user-role">Service user</p>
