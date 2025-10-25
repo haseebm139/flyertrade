@@ -39,7 +39,7 @@
                             <h5 class="card-title ">Finances</h5>
                             <select
                                 class="form-select form-select-sm"
-                                style="width: auto;"
+                                style="width:30% ;"
                             >
                                 <option>February</option>
                                 <option>January</option>
