@@ -70,29 +70,41 @@
             <span><img src="{{ asset('assets/images/icons/message.png') }}" alt="Messaging" class="nav-icon"></span>
             Messaging
         </a>
+        <div class="spacenin">
         <a href="#" class="nav-link">
             <span><img src="{{ asset('assets/images/icons/setting.png') }}" alt="Settings" class="nav-icon"></span>
             Settings
         </a>
         <a href="#" class="nav-link">
-            <div class="brand"  
-                style="display:flex; align-items:center; gap:0.8vw; cursor:pointer; position:relative;">
-                <div class="logo-placeholder">
-                    <img src="{{ asset('assets/images/icons/person.png') }}" alt="" class="admin-img">
-                </div>
+         <!-- Include Font Awesome (if not already included) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-                <div>
-                    <div style="font-weight:500; font-size:0.8vw;">Flyertrade</div>
-                    <div class="muted small" style="font-size:0.8vw;">flyertrade@example.com</div>
-                </div>
+<div class="brand"  
+     style="display:flex; align-items:center; gap:0.5vw; cursor:pointer; position:relative;">
+    
+    <!-- Logo -->
+    <div class="logo-placeholder">
+        <img src="{{ asset('assets/images/icons/person.png') }}" alt="" class="admin-img" 
+             style="width:2vw; height:2vw; border-radius:50%;">
+    </div>
 
-                <!-- arrows -->
+    <!-- Text -->
+    <div>
+        <div style="font-weight:500; font-size:0.8vw;">Flyertrade</div>
+        <div class="muted small" style="font-size:0.8vw;">flyertrade@example.com</div>
+    </div>
 
+    <!-- Arrows -->
+    <div class="arrow-icons" style="display:flex; flex-direction:column;  font-size:0.8vw;">
+        <i class="fa-solid fa-chevron-up" style="line-height:0.6vw;"></i>
+        <i class="fa-solid fa-chevron-down" style="line-height:0.6vw;"></i>
+    </div>
+</div>
 
-                 
-            </div>
 
         </a>
+        </div>
+      
 
 
 
