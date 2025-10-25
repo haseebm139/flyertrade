@@ -57,7 +57,7 @@ img.nav-icon {
   /* 22px 18px */
 
 
-  height: 42.902vw;
+    height: 43.902vw;
   border-bottom: 0.0625vw solid var(--border);
 }
 img.btn-icons {
@@ -241,18 +241,18 @@ img.btn-icons {
   position: absolute;
   top: 5.625vw !important;
   /* 90px */
-  right: 1.25vw !important;
+  right: 1.25vw;
   /* 20px */
   background: white;
   border: 0.0625vw solid #ccc;
   /* 1px */
   border-radius: 0.5vw;
   /* 8px */
-  box-shadow: 0 0.25vw 0.75vw rgba(0, 0, 0, 0.15) !important;
+  box-shadow: 0 0.25vw 0.75vw rgba(0, 0, 0, 0.15);
   /* 0 4px 12px */
   display: none;
   z-index: 100;
-  width: 17.875vw !important;
+  width: 21.875vw;
   /* 350px */
   height: auto;
   /* 265px */
@@ -287,9 +287,10 @@ img.btn-icons {
 /* Profile popup content */
 .profile-card {
   text-align: center;
-  padding: -0.375vw;
-  padding-bottom: 2vw;
+  padding: 0.625vw;
+  /* 10px */
 }
+
 .profile-card img {
   width: 3.75vw;
   /* 60px */
@@ -306,12 +307,9 @@ img.btn-icons {
   border-radius: 0.375vw;
   /* 6px */
   cursor: pointer;
-  width: 47%;
+  width: 70%;
   margin-top: 1.25vw;
   /* 20px */
-}
-.spacenin {
-  margin-top: 3vw;
 }
 
 .logout-btn:hover {
@@ -717,7 +715,7 @@ background: #fff;
 .popup-header {
   padding: 0.625vw;
   /* 10px */
-  border-bottom: 0 solid #ddd;
+  border-bottom: 0.0625vw solid #ddd;
   /* 1px */
   display: flex;
   justify-content: flex-end;
@@ -902,7 +900,7 @@ background: #fff;
   /* 11px */
   width: 13.4vw;
   background-color: #fff;
-  height: 7vw;
+  height: 8vw;
   /* 128px */
 }
 
@@ -2200,7 +2198,7 @@ img.download-icon {
 
 .delete-actions {
   display: flex;
- 
+  justify-content: space-between;
   margin-top: 1rem;
 }
 

@@ -41,80 +41,136 @@
             </a>
         </div>
 
-        <a href="{{ route('service-category.index') }}"
-            class="nav-link {{ request()->routeIs('service-category.*') ? 'active' : '' }}">
-            <span><img src="{{ asset('assets/images/icons/service-catogrey-icon.png') }}" alt="Service Category"
-                    class="nav-icon"></span>
-            Service category
-        </a>
-        <a href="{{ route('booking.index') }}" class="nav-link {{ request()->routeIs('booking.*') ? 'active' : '' }}">
-            <span><img src="{{ asset('assets/images/icons/booking-icon.png') }}" alt="Bookings"
-                    class="nav-icon"></span>
-            Bookings
-        </a>
-        <a href="{{ route('transaction.index') }}"
-            class="nav-link {{ request()->routeIs('transaction.*') ? 'active' : '' }}">
-            <span><img src="{{ asset('assets/images/icons/transition-icon.png') }}" alt="Transactions"
-                    class="nav-icon"></span>
-            Transactions
-        </a>
-        <a href="{{ route('reviews.index') }}" class="nav-link {{ request()->routeIs('reviews.*') ? 'active' : '' }}">
-            <span><img src="{{ asset('assets/images/icons/reviews.png') }}" alt="Reviews & Ratings"
-                    class="nav-icon "></span>
-            Reviews & Ratings
-        </a>
-        <a href="{{ route('dispute.index') }}" class="nav-link {{ request()->routeIs('dispute.*') ? 'active' : '' }}">
-            <span><img src="{{ asset('assets/images/icons/dispute.png') }}" alt="Disputes & Complaints"
-                    class="nav-icon "></span>
-            Disputes & complaints
-        </a>
-        <a href="{{ route('roles-and-permissions.index') }}"
-            class="nav-link {{ request()->routeIs('roles-and-permissions.*') ? 'active' : '' }}">
-            <span><img src="{{ asset('assets/images/icons/roles.png') }}" alt="Roles & Permissions"
-                    class="nav-icon"></span>
-            Roles & permission
-        </a>
+        <!-- Service Category -->
+     <a href="{{ route('service-category.index') }}" 
+   class="nav-link {{ request()->routeIs('service-category.*') ? 'active' : '' }}">
+    <span>
+        <img 
+            src="{{ asset(request()->routeIs('service-category.*') 
+                ? 'assets/images/icons/service-catogrey-icon-active.png' 
+                : 'assets/images/icons/service-catogrey-icon.png') }}" 
+            alt="Service Category" 
+            class="nav-icon">
+    </span>
+    Service category
+</a>
+
+
+        <!-- Bookings -->
+      <a href="{{ route('booking.index') }}" 
+   class="nav-link {{ request()->routeIs('booking.*') ? 'active' : '' }}">
+    <span>
+        <img 
+            src="{{ asset(request()->routeIs('booking.*') 
+                ? 'assets/images/icons/booking-icon-active.png' 
+                : 'assets/images/icons/booking-icon.png') }}" 
+            alt="Bookings" 
+            class="nav-icon">
+    </span>
+    Bookings
+</a>
+
+
+        <!-- Transactions -->
+ <a href="{{ route('transaction.index') }}" 
+   class="nav-link {{ request()->routeIs('transaction.*') ? 'active' : '' }}">
+    <span>
+        <img 
+            src="{{ asset(request()->routeIs('transaction.*') 
+                ? 'assets/images/icons/transition-icon-active.png' 
+                : 'assets/images/icons/transition-icon.png') }}" 
+            alt="Transactions" 
+            class="nav-icon">
+    </span>
+    Transactions
+</a>
+
+        <!-- Reviews -->
+     <a href="{{ route('reviews.index') }}" 
+   class="nav-link {{ request()->routeIs('reviews.*') ? 'active' : '' }}">
+    <span>
+        <img 
+            src="{{ asset(request()->routeIs('reviews.*') 
+                ? 'assets/images/icons/reviews-active.png' 
+                : 'assets/images/icons/reviews.png') }}" 
+            alt="Reviews & Ratings" 
+            class="nav-icon">
+    </span>
+    Reviews & Ratings
+</a>
+
+
+        <!-- Disputes -->
+      <a href="{{ route('dispute.index') }}" 
+   class="nav-link {{ request()->routeIs('dispute.*') ? 'active' : '' }}">
+    <span>
+        <img 
+            src="{{ asset(request()->routeIs('dispute.*') 
+                ? 'assets/images/icons/dispute-active.png' 
+                : 'assets/images/icons/dispute.png') }}" 
+            alt="Disputes & Complaints" 
+            class="nav-icon">
+    </span>
+    Disputes & complaints
+</a>
+
+
+        <!-- Roles -->
+      <a href="{{ route('roles-and-permissions.index') }}" 
+   class="nav-link {{ request()->routeIs('roles-and-permissions.*') ? 'active' : '' }}">
+    <span>
+        <img 
+            src="{{ asset(request()->routeIs('roles-and-permissions.*') 
+                ? 'assets/images/icons/roles-active.png' 
+                : 'assets/images/icons/roles.png') }}" 
+            alt="Roles & Permissions" 
+            class="nav-icon">
+    </span>
+    Roles & permission
+</a>
+
+
+        <!-- Messaging -->
+<a href="#" 
+   class="nav-link {{ request()->routeIs('messaging.*') ? 'active' : '' }}">
+    <span>
+        <img 
+            src="{{ asset(request()->routeIs('messaging.*') 
+                ? 'assets/images/icons/message-active.png' 
+                : 'assets/images/icons/message.png') }}" 
+            alt="Messaging" 
+            class="nav-icon">
+    </span>
+    Messaging
+</a>
+
+
+        <!-- Settings -->
+<a href="#" 
+   class="nav-link {{ request()->routeIs('settings.*') ? 'active' : '' }}">
+    <span>
+        <img 
+            src="{{ asset(request()->routeIs('settings.*') 
+                ? 'assets/images/icons/setting-active.png' 
+                : 'assets/images/icons/setting.png') }}" 
+            alt="Settings" 
+            class="nav-icon">
+    </span>
+    Settings
+</a>
+
+
+        <!-- Profile -->
         <a href="#" class="nav-link">
-            <span><img src="{{ asset('assets/images/icons/message.png') }}" alt="Messaging" class="nav-icon"></span>
-            Messaging
+            <div class="brand" style="display:flex; align-items:center; gap:0.8vw; cursor:pointer;">
+                <div class="logo-placeholder">
+                    <img src="{{ asset('assets/images/icons/person.png') }}" alt="" class="admin-img">
+                </div>
+                <div>
+                    <div style="font-weight:500; font-size:0.8vw;">Flyertrade</div>
+                    <div class="muted small" style="font-size:0.8vw;">flyertrade@example.com</div>
+                </div>
+            </div>
         </a>
-        <div class="spacenin">
-        <a href="#" class="nav-link">
-            <span><img src="{{ asset('assets/images/icons/setting.png') }}" alt="Settings" class="nav-icon"></span>
-            Settings
-        </a>
-        <a href="#" class="nav-link">
-         <!-- Include Font Awesome (if not already included) -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<div class="brand"  
-     style="display:flex; align-items:center; gap:0.5vw; cursor:pointer; position:relative;">
-    
-    <!-- Logo -->
-    <div class="logo-placeholder">
-        <img src="{{ asset('assets/images/icons/person.png') }}" alt="" class="admin-img" 
-             style="width:2vw; height:2vw; border-radius:50%;">
-    </div>
-
-    <!-- Text -->
-    <div>
-        <div style="font-weight:500; font-size:0.8vw;">Flyertrade</div>
-        <div class="muted small" style="font-size:0.8vw;">flyertrade@example.com</div>
-    </div>
-
-    <!-- Arrows -->
-    <div class="arrow-icons" style="display:flex; flex-direction:column;  font-size:0.8vw;">
-        <i class="fa-solid fa-chevron-up" style="line-height:0.6vw;"></i>
-        <i class="fa-solid fa-chevron-down" style="line-height:0.6vw;"></i>
-    </div>
-</div>
-
-
-        </a>
-        </div>
-      
-
-
-
     </nav>
 </aside>

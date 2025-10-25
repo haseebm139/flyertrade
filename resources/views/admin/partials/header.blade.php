@@ -94,27 +94,16 @@
 
 
         <!-- Brand / Profile -->
-        <div class="brand"  
-     style="display:flex; align-items:center; gap:0.5vw; cursor:pointer; position:relative;">
-    
-    <!-- Logo -->
-    <div class="logo-placeholder">
-        <img src="{{ asset('assets/images/icons/person.png') }}" alt="" class="admin-img" 
-             style="width:2vw; height:2vw; border-radius:50%;">
-    </div>
+        <div class="brand" id="profileBtn">
+            <div class="logo-placeholder ">
+                <img src="{{ asset('assets/images/icons/person.png') }}" alt="" class="admin-img ">
+            </div>
+            <div>
+                <div style="font-weight:500; font-size:0.8vw;">Flyertrade</div>
+                <div class="muted small " style=" font-size:0.8vw;">flyertrade@example.com</div>
+            </div>
+        </div>
 
-    <!-- Text -->
-    <div>
-        <div style="font-weight:500; font-size:0.8vw;">Flyertrade</div>
-        <div class="muted small" style="font-size:0.8vw;">flyertrade@example.com</div>
-    </div>
-
-    <!-- Arrows -->
-    <div class="arrow-icons" style="display:flex; flex-direction:column;  font-size:0.8vw;">
-        <i class="fa-solid fa-chevron-up" style="line-height:0.6vw;"></i>
-        <i class="fa-solid fa-chevron-down" style="line-height:0.6vw;"></i>
-    </div>
-</div>
         <!-- Profile Popup (moved outside profileBtn) -->
         <div class="popup" id="profilePopup"
             style="display: none; position: absolute; top: 100%; right: 0; background: white; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); z-index: 1000; min-width: 200px;">
