@@ -143,9 +143,7 @@
     </span>
     Messaging
 </a>
-
-
-        <!-- Settings -->
+<div class="space">
 <a href="#" 
    class="nav-link {{ request()->routeIs('settings.*') ? 'active' : '' }}">
     <span>
@@ -158,19 +156,29 @@
     </span>
     Settings
 </a>
-
-
-        <!-- Profile -->
-        <a href="#" class="nav-link">
-            <div class="brand" style="display:flex; align-items:center; gap:0.8vw; cursor:pointer;">
-                <div class="logo-placeholder">
-                    <img src="{{ asset('assets/images/icons/person.png') }}" alt="" class="admin-img">
-                </div>
-                <div>
-                    <div style="font-weight:500; font-size:0.8vw;">Flyertrade</div>
-                    <div class="muted small" style="font-size:0.8vw;">flyertrade@example.com</div>
-                </div>
+ <!-- Profile -->
+ <a href="#" class="nav-link" style="padding:0;">
+        <div class="brand" id="profileBt">
+            <div class="logo-placeholder">
+                <img src="{{ asset('assets/images/icons/main-group.png') }}" alt="" class="admin-img">
             </div>
+
+            <div class="profile-info">
+                <div class="profile-name">Flyertrade</div>
+                <div class="profile-email" style="font-size:0.8vw; font-weight:400;">flyertrade@gmail.com</div>
+            </div>
+
+            <div class="profile-arrows">
+                <i class="fa-solid fa-chevron-up"></i>
+                <i class="fa-solid fa-chevron-down"></i>
+            </div>
+        </div>
         </a>
+</div>
+
+        <!-- Settings -->
+
+
+       
     </nav>
 </aside>

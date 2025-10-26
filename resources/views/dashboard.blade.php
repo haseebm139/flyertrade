@@ -39,7 +39,7 @@
                             <h5 class="card-title ">Finances</h5>
                             <select
                                 class="form-select form-select-sm"
-                                style="width: auto;"
+                                style="width: 30%;     padding: 0.4vw 0.4vw 0.4vw 0.4vw;"
                             >
                                 <option>February</option>
                                 <option>January</option>
@@ -96,7 +96,7 @@
                         <div class="table-responsive">
                             <table
                                 class="table mb-0"
-                                border="1"
+                                border="0"
                             >
                                 <thead>
                                     <tr>

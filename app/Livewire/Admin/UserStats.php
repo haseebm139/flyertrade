@@ -39,7 +39,7 @@ class UserStats extends Component
                     [
                         'label' => 'Active Users', 
                         'value' => $counts->active,
-                        'icon' => 'assets/images/icons/new-provides.png'
+                        'icon' => 'assets/images/icons/new-providers.png'
                     ],
                     [
                         'label' => 'Inactive Users',
@@ -65,7 +65,7 @@ class UserStats extends Component
                     [
                         'label' => 'Active Users', 
                         'value' => $counts->active,
-                        'icon' => 'assets/images/icons/new-provides.png'
+                        'icon' => 'assets/images/icons/new-providers.png'
                     ],
                     [
                         'label' => 'Inactive Users',
@@ -91,7 +91,7 @@ class UserStats extends Component
                     [
                         'label' => 'Total service providers', 
                         'value' => $counts->providers,
-                        'icon' => 'assets/images/icons/new-provides.png'
+                        'icon' => 'assets/images/icons/new-providers.png'
                     ],
                     [
                         'label' => 'Active bookings', 

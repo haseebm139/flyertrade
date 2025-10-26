@@ -94,15 +94,22 @@
 
 
         <!-- Brand / Profile -->
-        <div class="brand" id="profileBtn">
-            <div class="logo-placeholder ">
-                <img src="{{ asset('assets/images/icons/person.png') }}" alt="" class="admin-img ">
-            </div>
-            <div>
-                <div style="font-weight:500; font-size:0.8vw;">Flyertrade</div>
-                <div class="muted small " style=" font-size:0.8vw;">flyertrade@example.com</div>
-            </div>
-        </div>
+      <div class="brand" id="profileBtn">
+  <div class="logo-placeholder">
+    <img src="{{ asset('assets/images/icons/main-group.png') }}" alt="" class="admin-img">
+  </div>
+
+  <div class="profile-info">
+    <div class="profile-name">Flyertrade</div>
+    <div class="profile-email">flyertrade@gmail.com</div>
+  </div>
+
+  <div class="profile-arrows">
+    <i class="fa-solid fa-chevron-up"></i>
+    <i class="fa-solid fa-chevron-down"></i>
+  </div>
+</div>
+
 
         <!-- Profile Popup (moved outside profileBtn) -->
         <div class="popup" id="profilePopup"
