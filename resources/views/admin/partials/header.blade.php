@@ -31,18 +31,22 @@
                     <img src="{{ asset('assets/images/icons/manage.png') }}" alt="">
                     <div class="notification-content">
                         <div class="notification-title">Document verification</div>
-                        <div class="notification-text">3 New Providers Awaiting Document Verification.
+                        <br>
+                        <div class="notification-text" style="margin-left:-3vw;">3 New Providers Awaiting Document Verification.
                         </div>
                     </div>
-                    <div class="notification-view" data-modal="providerModal">View</div>
+                    <div class="notification-view" data-modal="providerModal" style="    margin-top: 2.9vw;
+">View</div>
                 </div>
                 <div class="notification-item">
                     <img src="{{ asset('assets/images/icons/manage.png') }}" alt="">
                     <div class="notification-content">
                         <div class="notification-title">High Cancellation Alert</div>
-                        <div class="notification-text">David E. has 3 cancellations this week.</div>
+                        <br>
+                        <div class="notification-text" style="margin-left:-3vw;">David E. has 3 cancellations this week.</div>
                     </div>
-                    <div class="notification-view">View</div>
+                    <div class="notification-view" style="    margin-top: 2.9vw;
+">View</div>
                 </div>
                 <div style="padding: 0.8vw 1.5vw; text-align: left;">
                     <a href="#"

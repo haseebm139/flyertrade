@@ -355,17 +355,14 @@ img.btn-icons {
   border-bottom: none;
 }
 
-.notification-item img {
-  width: auto;
-  height: auto;
-  border-radius: 0.375vw;
-  /* 6px */
-  padding: 0.25vw;
-  /* 4px */
-}
+.notification-item img
 
-.notification-content {
-  flex: 1;
+ {
+    width: 3vw !important;
+    height: 3vw !important;
+    border-radius: 0.375vw;
+    padding: 0.25vw;
+    margin-top: -2vw;
 }
 
 .notification-title {
@@ -394,9 +391,8 @@ img.btn-icons {
 
 div#notifPopup {
   top: 3.4375vw !important;
-  /* 55px */
-  right: -6.6875vw;
-  /* -107px */
+  right: -0.6875vw !important;
+  width: 25vw !important;
 }
 
 .img-log {
@@ -772,7 +768,7 @@ background: #fff;
 .notification-text {
   font-size: 0.8125vw;
   /* 13px */
-  color: #555;
+  color: #8f8d8d;
 }
 
 .notification-view {
@@ -780,6 +776,8 @@ background: #fff;
   /* 13px */
   color: #1a7f64;
   cursor: pointer;
+
+  margin-right: 0.5vw;
   font-weight: 500;
 }
 
