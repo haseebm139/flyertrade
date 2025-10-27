@@ -12,8 +12,7 @@
             <img src="{{ asset('assets/images/icons/notification.png') }}" alt="Notifications">
             <!-- Notification Popup -->
             <div class="popup ioioios" id="notifPopup">
-                <div class="popup-header"
-                    style="display: flex; align-items: center; justify-content: space-between; 
+                <div class="popup-header" style="display: flex; align-items: center; justify-content: space-between; 
             padding: 1vw 1.5vw; border-bottom: 0vw solid #ddd; background-color: #fff;border-radius: 20px;">
 
                     <span class="popup-title"
@@ -32,7 +31,8 @@
                     <div class="notification-content">
                         <div class="notification-title">Document verification</div>
                         <br>
-                        <div class="notification-text" style="margin-left:-3vw;">3 New Providers Awaiting Document Verification.
+                        <div class="notification-text" style="margin-left:-3vw;">3 New Providers Awaiting Document
+                            Verification.
                         </div>
                     </div>
                     <div class="notification-view" data-modal="providerModal" style="    margin-top: 2.9vw;
@@ -43,7 +43,8 @@
                     <div class="notification-content">
                         <div class="notification-title">High Cancellation Alert</div>
                         <br>
-                        <div class="notification-text" style="margin-left:-3vw;">David E. has 3 cancellations this week.</div>
+                        <div class="notification-text" style="margin-left:-3vw;">David E. has 3 cancellations this week.
+                        </div>
                     </div>
                     <div class="notification-view" style="    margin-top: 2.9vw;
 ">View</div>
@@ -60,59 +61,59 @@
         </div>
 
         <!-- Provider Verification Modal -->
-<div class="provider-modal" id="providerModal">
-    <div class="provider-modal-content">
-        <!-- Header -->
-        <div class="provider-modal-header">
-            <h6>3 New Providers Awaiting Document Verification.</h6>
-            <button class="provider-modal-close" data-close="providerModal">
-                <img src="{{ asset('assets/images/icons/iconoir_cancel.png') }}" alt="Close">
-            </button>
+        <div class="provider-modal" id="providerModal">
+            <div class="provider-modal-content">
+                <!-- Header -->
+                <div class="provider-modal-header">
+                    <h6>3 New Providers Awaiting Document Verification.</h6>
+                    <button class="provider-modal-close" data-close="providerModal">
+                        <img src="{{ asset('assets/images/icons/iconoir_cancel.png') }}" alt="Close">
+                    </button>
+                </div>
+
+                <!-- Body -->
+                <div class="provider-modal-body">
+                    <div class="provider-item">
+                        <img src="{{ asset('assets/images/icons/person.png') }}" alt="">
+                        <span>Johnbosco Davies</span>
+                        <a href="#" class="provider-view-profile">View profile</a>
+                    </div>
+
+                    <div class="provider-item">
+                        <img src="{{ asset('assets/images/icons/person.png') }}" alt="">
+                        <span>Jane Doe</span>
+                        <a href="#" class="provider-view-profile">View profile</a>
+                    </div>
+
+                    <div class="provider-item">
+                        <img src="{{ asset('assets/images/icons/person.png') }}" alt="">
+                        <span>Michael Smith</span>
+                        <a href="#" class="provider-view-profile">View profile</a>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <!-- Body -->
-        <div class="provider-modal-body">
-            <div class="provider-item">
-                <img src="{{ asset('assets/images/icons/person.png') }}" alt="">
-                <span>Johnbosco Davies</span>
-                <a href="#" class="provider-view-profile">View profile</a>
-            </div>
-
-            <div class="provider-item">
-                <img src="{{ asset('assets/images/icons/person.png') }}" alt="">
-                <span>Jane Doe</span>
-                <a href="#" class="provider-view-profile">View profile</a>
-            </div>
-
-            <div class="provider-item">
-                <img src="{{ asset('assets/images/icons/person.png') }}" alt="">
-                <span>Michael Smith</span>
-                <a href="#" class="provider-view-profile">View profile</a>
-            </div>
-        </div>
-    </div>
-</div>
 
         <!-- Provider Verification Popup -->
-
+        <div class="icon-separator"></div> <!-- 🧱 yahan border line -->
 
 
         <!-- Brand / Profile -->
-      <div class="brand" id="profileBtn">
-  <div class="logo-placeholder">
-    <img src="{{ asset('assets/images/icons/main-group.png') }}" alt="" class="admin-img">
-  </div>
+        <div class="brand" id="profileBtn">
+            <div class="logo-placeholder">
+                <img src="{{ asset('assets/images/icons/main-group.png') }}" alt="" class="admin-img">
+            </div>
 
-  <div class="profile-info">
-    <div class="profile-name">Flyertrade</div>
-    <div class="profile-email">flyertrade@gmail.com</div>
-  </div>
+            <div class="profile-info">
+                <div class="profile-name">Flyertrade</div>
+                <div class="profile-email">flyertrade@gmail.com</div>
+            </div>
 
-  <div class="profile-arrows">
-    <i class="fa-solid fa-chevron-up"></i>
-    <i class="fa-solid fa-chevron-down"></i>
-  </div>
-</div>
+            <div class="profile-arrows">
+                <i class="fa-solid fa-chevron-up"></i>
+                <i class="fa-solid fa-chevron-down"></i>
+            </div>
+        </div>
 
 
         <!-- Profile Popup (moved outside profileBtn) -->
@@ -141,34 +142,34 @@
 
 
 <script>
-    // Get modal and close button
-    const providerModal = document.getElementById('providerModal');
-    const closeBtn = document.querySelector('[data-close="providerModal"]');
-    const notifPopup = document.querySelector('.notification-popup'); // only if exists
+// Get modal and close button
+const providerModal = document.getElementById('providerModal');
+const closeBtn = document.querySelector('[data-close="providerModal"]');
+const notifPopup = document.querySelector('.notification-popup'); // only if exists
 
-    // Open modal
-    document.querySelectorAll('[data-modal="providerModal"]').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
+// Open modal
+document.querySelectorAll('[data-modal="providerModal"]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
 
-            if (notifPopup) notifPopup.style.display = 'none';
-            providerModal.style.display = 'flex';
-            providerModal.style.animation = 'fadeIn 0.2s ease';
-        });
+        if (notifPopup) notifPopup.style.display = 'none';
+        providerModal.style.display = 'flex';
+        providerModal.style.animation = 'fadeIn 0.2s ease';
     });
+});
 
-    // Close modal on close button click
-    closeBtn.addEventListener('click', () => {
+// Close modal on close button click
+closeBtn.addEventListener('click', () => {
+    providerModal.style.display = 'none';
+});
+
+// Close modal when clicking outside modal content
+window.addEventListener('click', (e) => {
+    if (e.target === providerModal) {
         providerModal.style.display = 'none';
-    });
-
-    // Close modal when clicking outside modal content
-    window.addEventListener('click', (e) => {
-        if (e.target === providerModal) {
-            providerModal.style.display = 'none';
-        }
-    });
+    }
+});
 </script>
 
 

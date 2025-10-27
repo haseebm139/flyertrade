@@ -11,3 +11,4 @@
 
 <!-- SweetAlert2 CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Glory:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">

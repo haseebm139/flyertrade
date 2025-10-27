@@ -1,7 +1,7 @@
 <!-- ========== Begin::SIDEBAR (always open) ========== -->
 <aside class="sidebar">
     <!-- Brand / Logo -->
-    <div class="brand">
+    <div class="brand" style="margin-bottom:1.125vw;">
         <a href="{{ route('dashboard') }}" class="logo-link">
             <img src="{{ asset('assets/images/icons/logo.png') }}" alt="Company Logo" class="logo-img">
         </a>

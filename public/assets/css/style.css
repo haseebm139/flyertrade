@@ -64,13 +64,24 @@ img.btn-icons {
   height: 1.042vw;
   width: 1.042vw;
 }
+.profile-email {
+  color: #8e8e8e;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1vw;
+}
+.icon-separator {
+  width: 1px;
+  height: 2.5vw; /* ya jitni height chahiye */
+  background-color: #ccc; /* border ka color */
 
+}
 .brand {
   display: flex;
   align-items: center;
   gap: 0.625vw;
   /* 10px */
-  margin-bottom: 1.125vw;
+  margin-bottom: 0.125vw;
   /* 18px */
 }
 .dropdown-toggle::after {
@@ -97,7 +108,7 @@ img.btn-icons {
   /* 10px 12px */
   border-radius: 0.5vw;
   /* 8px */
-  color: #1f2937;
+  color: #393939;
   margin-bottom: 0.375vw;
   /* 6px */
   font-weight: 500;
@@ -213,9 +224,9 @@ img.btn-icons {
 }
 
 .icon-btn img {
-  width: 1.75vw;
+  width: 1.75vw !important;
   /* 28px */
-  height: 1.75vw;
+  height: 1.75vw !important;
   /* 28px */
 }
 
@@ -927,7 +938,7 @@ background: #fff;
   font-size: 0.733vw;
   font-weight: 400;
   margin-bottom: 0.5vw;
-  color: #000000;
+  color: #1B1B1B;
 }
 
 .dashboard-card h2 {
@@ -1020,6 +1031,7 @@ background: #fff;
   font-size: 1vw;
   /* 16px */
   display: flex;
+  color: #555555;
   align-items: center;
   gap: 0.3125vw;
   /* 5px */
@@ -1107,7 +1119,7 @@ background: #fff;
 
 .table td {
   vertical-align: middle;
-  font-size: 0.7vw;
+  font-size: 0.8vw;
   border-bottom: 0;
   font-weight: 400;
   color: #676767;
@@ -1188,6 +1200,7 @@ background: #fff;
   font-weight: 600;
   margin-bottom: 0.1875vw;
   font-size: 0.733vw;
+  color: #393939;
   letter-spacing: 0.042vw;
 }
 .logo-placeholder .admin-img {
@@ -1197,6 +1210,7 @@ background: #fff;
 .activity-text span {
   font-weight: 400;
   font-size: 0.8vw;
+  color: #393939;
 }
 
 .activity-text small {
@@ -1477,9 +1491,13 @@ padding: 0.6vw 1.2vw;
 } */
 
 .user-info {
-  display: flex;
+  display: flex
+;
   align-items: center;
   gap: 0.521vw;
+  white-space: nowrap;
+  font-size: 0.8vw;
+  color: #676767;
 }
 
 .user-info img {
@@ -1490,13 +1508,14 @@ padding: 0.6vw 1.2vw;
 
 .user-name {
   margin: 0;
+  color: #393939;
   font-weight: 500;
   font-size: 0.833vw;
 }
 
 .user-email {
   margin: 0;
-  color: #888;
+  color: #717171;
   font-size: 0.729vw;
   font-weight: 400;
 }
@@ -2291,6 +2310,11 @@ img.download-icon {
 .delete-actions {
   display: flex;
   gap: 1vw;
+}
+.profile-name {
+  font-weight: 600;
+  font-family: 'Glory', sans-serif;
+  font-size: 17px;
 }
 
 .confirm-delete-btn {
