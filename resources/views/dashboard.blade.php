@@ -4,6 +4,7 @@
 @section('content')
 
 
+
 <!-- two-column area: left (finance + table) and right (recent activities) -->
 <div class="row g-3">
     <!-- MAIN LEFT COLUMN (8/12) -->
