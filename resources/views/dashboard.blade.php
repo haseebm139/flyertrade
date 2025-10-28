@@ -13,9 +13,6 @@
 
         <livewire:admin.user-stats mode="users" />
 
-
-
-
         <!-- finances & disputes row -->
         <div class="row">
             <div class="col-md-6 mb-3">
