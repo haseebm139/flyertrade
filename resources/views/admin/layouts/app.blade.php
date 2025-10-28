@@ -95,6 +95,9 @@
             transform: rotate(-45deg);
             width: 47px;
         }
+        .main_content{
+            padding:20px;
+        }
     </style>
 </head>
 
@@ -104,13 +107,15 @@
     <div class="wrapper">
         <!-- ========== MAIN CONTENT ========== -->
         <main class="main">
-            <div class="container">
+  
                 @include('admin.partials.header')
+                <div class="main_content">
+                         @yield('content')
+                </div>
+   
 
-                @yield('content')
 
-
-            </div>
+     
         </main>
     </div>
 
