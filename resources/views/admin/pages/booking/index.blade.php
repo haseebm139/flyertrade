@@ -9,6 +9,9 @@
         <livewire:admin.booking-stats mode="booking" />
     </div>
 
+
+    
+
     <!-- Back Button (Hidden by default) -->
 
     <div class="container">

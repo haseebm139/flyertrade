@@ -19,7 +19,7 @@
         </a>
 
         <!-- User Management -->
-         <a class="nav-link dropdown-toggle {{ request()->routeIs('user-management.*') ? 'active' : '' }}"
+        <a class="nav-link dropdown-toggle {{ request()->routeIs('user-management.*') ? 'active' : '' }}"
             data-bs-toggle="collapse" href="#userManagementMenu" role="button"
             aria-expanded="{{ request()->routeIs('user-management.*') ? 'true' : 'false' }}"
             aria-controls="userManagementMenu">
@@ -42,143 +42,143 @@
         </div>
 
         <!-- Service Category -->
-     <a href="{{ route('service-category.index') }}" 
-   class="nav-link {{ request()->routeIs('service-category.*') ? 'active' : '' }}">
-    <span>
-        <img 
-            src="{{ asset(request()->routeIs('service-category.*') 
+        <a href="{{ route('service-category.index') }}"
+            class="nav-link {{ request()->routeIs('service-category.*') ? 'active' : '' }}">
+            <span>
+                <img
+                    src="{{ asset(request()->routeIs('service-category.*') 
                 ? 'assets/images/icons/service-catogrey-icon-active.png' 
-                : 'assets/images/icons/service-catogrey-icon.png') }}" 
-            alt="Service Category" 
-            class="nav-icon">
-    </span>
-    Service category
-</a>
+                : 'assets/images/icons/service-catogrey-icon.png') }}"
+                    alt="Service Category"
+                    class="nav-icon">
+            </span>
+            Service category
+        </a>
 
 
         <!-- Bookings -->
-      <a href="{{ route('booking.index') }}" 
-   class="nav-link {{ request()->routeIs('booking.*') ? 'active' : '' }}">
-    <span>
-        <img 
-            src="{{ asset(request()->routeIs('booking.*') 
+        <a href="{{ route('booking.index') }}"
+            class="nav-link {{ request()->routeIs('booking.*') ? 'active' : '' }}">
+            <span>
+                <img
+                    src="{{ asset(request()->routeIs('booking.*') 
                 ? 'assets/images/icons/booking-icon-active.png' 
-                : 'assets/images/icons/booking-icon.png') }}" 
-            alt="Bookings" 
-            class="nav-icon">
-    </span>
-    Bookings
-</a>
+                : 'assets/images/icons/booking-icon.png') }}"
+                    alt="Bookings"
+                    class="nav-icon">
+            </span>
+            Bookings
+        </a>
 
 
         <!-- Transactions -->
- <a href="{{ route('transaction.index') }}" 
-   class="nav-link {{ request()->routeIs('transaction.*') ? 'active' : '' }}">
-    <span>
-        <img 
-            src="{{ asset(request()->routeIs('transaction.*') 
+        <a href="{{ route('transaction.index') }}"
+            class="nav-link {{ request()->routeIs('transaction.*') ? 'active' : '' }}">
+            <span>
+                <img
+                    src="{{ asset(request()->routeIs('transaction.*') 
                 ? 'assets/images/icons/transition-icon-active.png' 
-                : 'assets/images/icons/transition-icon.png') }}" 
-            alt="Transactions" 
-            class="nav-icon">
-    </span>
-    Transactions
-</a>
+                : 'assets/images/icons/transition-icon.png') }}"
+                    alt="Transactions"
+                    class="nav-icon">
+            </span>
+            Transactions
+        </a>
 
         <!-- Reviews -->
-     <a href="{{ route('reviews.index') }}" 
-   class="nav-link {{ request()->routeIs('reviews.*') ? 'active' : '' }}">
-    <span>
-        <img 
-            src="{{ asset(request()->routeIs('reviews.*') 
+        <a href="{{ route('reviews.index') }}"
+            class="nav-link {{ request()->routeIs('reviews.*') ? 'active' : '' }}">
+            <span>
+                <img
+                    src="{{ asset(request()->routeIs('reviews.*') 
                 ? 'assets/images/icons/reviews-active.png' 
-                : 'assets/images/icons/reviews.png') }}" 
-            alt="Reviews & Ratings" 
-            class="nav-icon">
-    </span>
-    Reviews & Ratings
-</a>
+                : 'assets/images/icons/reviews.png') }}"
+                    alt="Reviews & Ratings"
+                    class="nav-icon">
+            </span>
+            Reviews & Ratings
+        </a>
 
 
         <!-- Disputes -->
-      <a href="{{ route('dispute.index') }}" 
-   class="nav-link {{ request()->routeIs('dispute.*') ? 'active' : '' }}">
-    <span>
-        <img 
-            src="{{ asset(request()->routeIs('dispute.*') 
+        <a href="{{ route('dispute.index') }}"
+            class="nav-link {{ request()->routeIs('dispute.*') ? 'active' : '' }}">
+            <span>
+                <img
+                    src="{{ asset(request()->routeIs('dispute.*') 
                 ? 'assets/images/icons/dispute-active.png' 
-                : 'assets/images/icons/dispute.png') }}" 
-            alt="Disputes & Complaints" 
-            class="nav-icon">
-    </span>
-    Disputes & complaints
-</a>
+                : 'assets/images/icons/dispute.png') }}"
+                    alt="Disputes & Complaints"
+                    class="nav-icon">
+            </span>
+            Disputes & complaints
+        </a>
 
 
         <!-- Roles -->
-      <a href="{{ route('roles-and-permissions.index') }}" 
-   class="nav-link {{ request()->routeIs('roles-and-permissions.*') ? 'active' : '' }}">
-    <span>
-        <img 
-            src="{{ asset(request()->routeIs('roles-and-permissions.*') 
+        <a href="{{ route('roles-and-permissions.index') }}"
+            class="nav-link {{ request()->routeIs('roles-and-permissions.*') ? 'active' : '' }}">
+            <span>
+                <img
+                    src="{{ asset(request()->routeIs('roles-and-permissions.*') 
                 ? 'assets/images/icons/roles-active.png' 
-                : 'assets/images/icons/roles.png') }}" 
-            alt="Roles & Permissions" 
-            class="nav-icon">
-    </span>
-    Roles & permission
-</a>
+                : 'assets/images/icons/roles.png') }}"
+                    alt="Roles & Permissions"
+                    class="nav-icon">
+            </span>
+            Roles & permission
+        </a>
 
 
         <!-- Messaging -->
-<a href="#" 
-   class="nav-link {{ request()->routeIs('messaging.*') ? 'active' : '' }}">
-    <span>
-        <img 
-            src="{{ asset(request()->routeIs('messaging.*') 
+        <a href="#"
+            class="nav-link {{ request()->routeIs('messaging.*') ? 'active' : '' }}">
+            <span>
+                <img
+                    src="{{ asset(request()->routeIs('messaging.*') 
                 ? 'assets/images/icons/message-active.png' 
-                : 'assets/images/icons/message.png') }}" 
-            alt="Messaging" 
-            class="nav-icon">
-    </span>
-    Messaging
-</a>
-<div class="space">
-<a href="#" 
-   class="nav-link {{ request()->routeIs('settings.*') ? 'active' : '' }}">
-    <span>
-        <img 
-            src="{{ asset(request()->routeIs('settings.*') 
-                ? 'assets/images/icons/setting-active.png' 
-                : 'assets/images/icons/setting.png') }}" 
-            alt="Settings" 
-            class="nav-icon">
-    </span>
-    Settings
-</a>
- <!-- Profile -->
- <a href="#" class="nav-link" style="padding:0;">
-        <div class="brand" id="profileBt">
-            <div class="logo-placeholder">
-                <img src="{{ asset('assets/images/icons/main-group.png') }}" alt="" class="admin-img">
-            </div>
-
-            <div class="profile-info">
-                <div class="profile-name">Flyertrade</div>
-                <div class="profile-email" style="font-size:0.8vw; font-weight:400;">flyertrade@gmail.com</div>
-            </div>
-
-            <div class="profile-arrows">
-                <i class="fa-solid fa-chevron-up"></i>
-                <i class="fa-solid fa-chevron-down"></i>
-            </div>
-        </div>
+                : 'assets/images/icons/message.png') }}"
+                    alt="Messaging"
+                    class="nav-icon">
+            </span>
+            Messaging
         </a>
-</div>
+        <div class="space">
+            <a href="#"
+                class="nav-link {{ request()->routeIs('settings.*') ? 'active' : '' }}">
+                <span>
+                    <img
+                        src="{{ asset(request()->routeIs('settings.*') 
+                ? 'assets/images/icons/setting-active.png' 
+                : 'assets/images/icons/setting.png') }}"
+                        alt="Settings"
+                        class="nav-icon">
+                </span>
+                Settings
+            </a>
+            <!-- Profile -->
+            <a href="#" class="nav-link" style="padding:0;">
+                <div class="brand" id="profileBt">
+                    <div class="logo-placeholder">
+                        <img src="{{ asset('assets/images/icons/main-group.png') }}" alt="" class="admin-img">
+                    </div>
+
+                    <div class="profile-info">
+                        <div class="profile-name">Flyertrade</div>
+                        <div class="profile-email" style="font-size:0.8vw; font-weight:400;">flyertrade@gmail.com</div>
+                    </div>
+
+                    <div class="profile-arrows">
+                        <i class="fa-solid fa-chevron-up"></i>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
 
         <!-- Settings -->
 
 
-       
+
     </nav>
 </aside>
