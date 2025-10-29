@@ -16,7 +16,7 @@
             padding: 1vw 1.5vw; border-bottom: 0vw solid #ddd; background-color: #fff;border-radius: 20px;">
 
                     <span class="popup-title"
-                        style="font-size: 1.1vw; font-weight: 500; color: #333; letter-spacing: 0.05vw;">
+                        style="font-size: 1.2vw; font-weight: 600; color: #333; letter-spacing: 0.05vw;">
                         Notification
                     </span>
 
@@ -31,7 +31,8 @@
                     <div class="notification-content">
                         <div class="notification-title">Document verification</div>
                         <br>
-                        <div class="notification-text" style="margin-left:-3vw;">3 New Providers Awaiting Document
+                        <div class="notification-text" style="margin-left:-3vw;">
+                            3 New Providers Awaiting Document
                             Verification.
                         </div>
                     </div>
@@ -65,7 +66,7 @@
             <div class="provider-modal-content">
                 <!-- Header -->
                 <div class="provider-modal-header">
-                    <h6>3 New Providers Awaiting Document Verification.</h6>
+                    <h6><i class="fa-solid fa-arrow-left" style="margin-right:10px;"></i> 3 New Providers Awaiting Document Verification.</h6>
                     <button class="provider-modal-close" data-close="providerModal">
                         <img src="{{ asset('assets/images/icons/iconoir_cancel.png') }}" alt="Close">
                     </button>
@@ -118,14 +119,14 @@
 
         <!-- Profile Popup (moved outside profileBtn) -->
         <div class="popup" id="profilePopup"
-            style="display: none; position: absolute; top: 100%; right: 0; background: white; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); z-index: 1000; min-width: 200px;">
+            style="display: none; position: absolute; top: 100%; right: 0; background: white; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); z-index: 9999999; min-width: 200px;">
             <div class="popup-header">
                 <span class="popup-close" data-close="profilePopup"><img
                         src="{{ asset('assets/images/icons/iconoir_cancel.png') }}" alt=""></span>
             </div>
             <div class="profile-card">
                 <img src="{{ asset('assets/images/icons/person.png') }}" alt="User">
-                <div style="font-weight:400; margin-top:5px; font-size:16px;">Flyertrade</div>
+                <div style="font-weight:500; margin-top:5px; font-size:16px;">Flyertrade Admin</div>
                 <div class="muted small">flyertrade@example.com</div>
 
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
