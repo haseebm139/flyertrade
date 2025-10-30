@@ -932,10 +932,10 @@ table.dataTable thead th {
 
 .combo-class {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 0.625vw;
   /* 1rem */
-  width: 20px;
+  /* width: 20px; */
 }
 
 .dashboard-card {
@@ -1336,7 +1336,7 @@ td.user-data.id-number {
   border-radius: 4px;
   background: white;
   font-size: 1.1vw;
-  color: #333;
+  color: #717171;
   cursor: pointer;
   transition: background 0.3s;
 }
@@ -1349,6 +1349,7 @@ td.user-data.id-number {
   background: #f2f2f2;
   font-weight: 500;
   cursor: default;
+  color:#393939;
 }
 
 .page-btn:disabled {
@@ -1376,6 +1377,7 @@ td.user-data.id-number {
   border: 1px solid #ddd;
   font-size: 1vw;
   cursor: pointer;
+  color:#393939;
 }
 
 /* user-details */
@@ -1410,7 +1412,7 @@ td.user-data.id-number {
 }
 
 .theme-table th {
-  color: #8a8989;
+  color: #8E8E8E;
 }
 
 .theme-table th.sortable {
@@ -1438,13 +1440,14 @@ td.user-data.id-number {
 }
 
 .edit-btn {
-  border: 0.1vw solid #ccc !important;
+  border: 0.1vw solid #004E424D !important;
   padding: 0.6vw 1.2vw;
   font-size: 0.9vw;
   border-radius: 0.4vw;
   background-color: white;
   border: none;
   cursor: pointer;
+  color: #004E42;
 }
 
 .export-btn {
@@ -1461,10 +1464,10 @@ td.user-data.id-number {
   border: 0.1vw solid #ccc !important;
 }
 
-/* Download Icon */
+/* Download Icon
 .download-icon {
   margin-right: 0.5vw;
-}
+} */
 
 /* Table */
 .theme-table {
@@ -1503,7 +1506,7 @@ td.user-data.id-number {
   font-weight: 400;
   text-align: left;
   font-size: 0.8vw;
-
+  color:#393939;
   white-space: normal;
   overflow-wrap: break-word;
 }
@@ -1539,7 +1542,7 @@ td.user-data.id-number {
 .user-name {
   margin: 0;
   color: #393939;
-  font-weight: 500;
+  font-weight: 400;
   font-size: 0.833vw;
 }
 
@@ -1559,7 +1562,7 @@ td.user-data.id-number {
 
 .status.active {
   background: #e0f5e9;
-  color: #28a745;
+  color: #28a745 !important;
   border: 1px solid;
 }
 
@@ -1568,7 +1571,9 @@ td.user-data.id-number {
   color: #dc3545;
   border: 1px solid;
 }
-
+#addUserModal input, #addUserModal textarea{
+  background:#F6F6F6;
+}
 .actions-btn {
   background: transparent;
   border: none;
@@ -1847,7 +1852,7 @@ span.desf {
 
 small.time {
   font-size: 0.7vw;
-  color: grey;
+  color: #717171;
   font-weight: 400;
 }
 
@@ -1894,9 +1899,9 @@ small.time {
 }
 
 .date {
-  color: #423f3f;
+  color: #393939;
   font-size: 0.8vw;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .pending {
@@ -2083,7 +2088,7 @@ img.logo-img {
 }
 
 .details-grid div:nth-child(odd) {
-  color: #666;
+  color: #8E8E8E;
 }
 
 .status.completed {
@@ -2156,6 +2161,7 @@ img.download-icon {
 .details-grid div:nth-child(even) {
   text-align: right;
   /* even items to the right */
+  color:#555555;
 }
 
 .details-grid .status {
@@ -2400,13 +2406,13 @@ button.btn-close {
 
 .reset-btn {
   background: #f8f9fa;
-  border: 0.1vw solid #ccc;
+  border: 0.1vw solid #004E424D;
   color: #004d40;
 
   padding: 1vw 2vw;
   border-radius: 0.6vw;
   font-size: 1vw;
-
+font-weight:500;
   cursor: pointer;
 }
 
@@ -2590,6 +2596,7 @@ button.btn-close {
 .status-btn.active {
   color: green;
   border: 0.05vw solid green;
+  background: #17A55A1A;
 }
 
 /* Inactive style */
@@ -2647,9 +2654,10 @@ button.btn-close {
 
 .breadcrumb a {
   text-decoration: none;
-  color: #000000;
+  color: #8A8A8A;
   /* blue link */
   transition: color 0.2s ease-in-out;
+  font-weight:400;
 }
 
 .breadcrumb a:hover {
@@ -2662,8 +2670,8 @@ button.btn-close {
 }
 
 .breadcrumb-current {
-  color: #222;
-  font-weight: 400;
+  color:#535353;
+  font-weight: 500;
 }
 
 /* tabs */
@@ -2681,7 +2689,7 @@ button.btn-close {
   cursor: pointer;
   border-radius: 0.5vw 0.5vw 0 0;
   font-size: 1vw;
-  background: #f8f9fa;
+  color: #8E8E8E;
 }
 
 .tab.active {
@@ -2689,6 +2697,7 @@ button.btn-close {
 
   color: var(--accent);
   font-weight: 500;
+  border-radius:8px;
 }
 
 .tab-content {
@@ -2711,14 +2720,15 @@ button.btn-close {
 .profile-details {
   line-height: 2.2vw;
   font-size: 1vw;
-  color: #000000;
+  color: #393939;
   font-weight: 500;
+
 }
 
 .profile-details span {
   display: inline-block;
   width: 24vw;
-  color: #666;
+  color: #8E8E8E;
   font-weight: 500;
 }
 
@@ -3569,7 +3579,7 @@ img.chat-img {
 }
 
 .filter-btn {
-  padding: 0.2vw 0.5vw;
+  padding: 0.2vw 0.8vw 0.2vw 1vw;
   font-size: 0.8vw;
   background: transparent;
   border-radius: 0.3vw;
@@ -3578,6 +3588,7 @@ border:1px solid #E3E3E3;
   color: #696969;
   font-weight: 500;
   transition: background-color 0.3s;
+
 }
 
 .filter-btn.tab-active {

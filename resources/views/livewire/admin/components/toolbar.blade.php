@@ -14,8 +14,10 @@
             <input type="text" class="search-user" placeholder="Search {{ strtolower($label) }}"
                 wire:model.live.debounce.500ms="search">
             <button class="filter-btn" id="openFilterModal" wire:click="openFilterModal"> <span
-                    class="download-icon"><img  class="btn-icons" src="{{ asset('assets/images/icons/button-icon.png') }} "
-                        alt=""></span>Filter</button>
+                    class="download-icon">
+                    Filter
+                    <img  class="btn-icons" src="{{ asset('assets/images/icons/button-icon.png') }} "
+                        alt=""></span></button>
         </div>
     </div>
 </div>

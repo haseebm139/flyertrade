@@ -50,9 +50,9 @@
                         <div class="actions-dropdown">
                             <button class="actions-btn">   <img src="{{ asset('assets/images/icons/three-dots.png') }}"   class="dots-img "></button>
                             <div class="actions-menu">
-                                <a href="{{ route('user-management.service.users.view', ['id' => $item->id]) }}" ><i class="fa fa-eye"></i> View user</a>
-                                <a href="#" wire:click="edit({{ $item->id }}) "><i class="fa fa-pen"></i> Edit user</a>
-                                <a href="#"><i class="fa fa-trash"></i> Delete user</a>
+                                <a href="{{ route('user-management.service.users.view', ['id' => $item->id]) }}" ><i class="fa-regular fa-eye"></i> View user</a>
+                                <a href="#" wire:click="edit({{ $item->id }}) "><i class="fa-regular fa-pen-to-square"></i> Edit user</a>
+                                <a href="#"><i class="fa-regular fa-trash-can"></i> Delete user</a>
                             </div>
                         </div>
                     </td>
