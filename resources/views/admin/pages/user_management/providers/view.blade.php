@@ -440,11 +440,14 @@
 
         <div class="documents-list">
             <div class="doc-row" data-id="1">
-                <label class="check-wrap">
-                    <input type="checkbox" class="row-check">
-                    <span class="checkmark"></span>
-                </label>
-                <span class="doc-title">Valid Emirate ID card</span>
+                <div>
+                    <label class="check-wrap check-wrap-checkbox">
+                        <input type="checkbox" class="row-check">
+                        <span class="checkmark"></span>
+                    </label>
+                    <span class="doc-title">Valid Emirate ID card</span>
+                </div>
+              
                 <a href="#" class="doc-link" data-check-modal data-title="ID card"
                     data-src="{{ asset('assets/images/icons/id-sample.png') }}">
                     View document
@@ -453,11 +456,14 @@
             </div>
 
             <div class="doc-row" data-id="2">
-                <label class="check-wrap">
-                    <input type="checkbox" class="row-check">
-                    <span class="checkmark"></span>
-                </label>
-                <span class="doc-title">Passport copy</span>
+                <div>
+                    <label class="check-wrap check-wrap-checkbox">
+                        <input type="checkbox" class="row-check">
+                        <span class="checkmark"></span>
+                    </label>
+                    <span class="doc-title">Valid Emirate ID card</span>
+                </div>
+              
                 <a href="#" class="doc-link" data-check-modal data-title="ID card"
                     data-src="{{ asset('assets/images/icons/id-sample.png') }}">
                     View document
@@ -466,11 +472,14 @@
             </div>
 
             <div class="doc-row" data-id="3">
-                <label class="check-wrap">
-                    <input type="checkbox" class="row-check">
-                    <span class="checkmark"></span>
-                </label>
-                <span class="doc-title">Utility Bill</span>
+                <div>
+                    <label class="check-wrap check-wrap-checkbox">
+                        <input type="checkbox" class="row-check">
+                        <span class="checkmark"></span>
+                    </label>
+                    <span class="doc-title">Valid Emirate ID card</span>
+                </div>
+              
                 <a href="#" class="doc-link" data-check-modal data-title="ID card"
                     data-src="{{ asset('assets/images/icons/id-sample.png') }}">
                     View document
@@ -479,29 +488,34 @@
             </div>
 
             <div class="doc-row" data-id="4">
-                <label class="check-wrap">
-                    <input type="checkbox" class="row-check">
-                    <span class="checkmark"></span>
-                </label>
-                <span class="doc-title">Valid work permit</span>
+                <div>
+                    <label class="check-wrap check-wrap-checkbox">
+                        <input type="checkbox" class="row-check">
+                        <span class="checkmark"></span>
+                    </label>
+                    <span class="doc-title">Valid Emirate ID card</span>
+                </div>
+              
                 <a href="#" class="doc-link" data-check-modal data-title="ID card"
                     data-src="{{ asset('assets/images/icons/id-sample.png') }}">
                     View document
                 </a>
                 <span class="badge badge-verified badge-pill" data-badge>Verified</span>
             </div>
-
             <div class="doc-row" data-id="5">
-                <label class="check-wrap">
-                    <input type="checkbox" class="row-check">
-                    <span class="checkmark"></span>
-                </label>
-                <span class="doc-title">Certification</span>
+                <div>
+                    <label class="check-wrap check-wrap-checkbox">
+                        <input type="checkbox" class="row-check">
+                        <span class="checkmark"></span>
+                    </label>
+                    <span class="doc-title">Valid Emirate ID card</span>
+                </div>
+              
                 <a href="#" class="doc-link" data-check-modal data-title="ID card"
                     data-src="{{ asset('assets/images/icons/id-sample.png') }}">
                     View document
                 </a>
-                <span class="badge badge-verified badge-pill" data-badge>Verified</span>
+                <span class="badge badge-verified badge-pill" data-badge>Verified &nbsp;<i class="fa-solid fa-chevron-down"></i></span>
             </div>
         </div>
 
@@ -665,7 +679,7 @@
                 <input type="text" class="form-input" placeholder="Enter phone number">
                 <div class="form-actions justify-content-center">
                     <button type="button" class="cancel-btn">Cancel</button>
-                    <button type="submit" class="submit-btn"> <i class="fa-solid fa-plus"></i> Add User</button>
+                    <button type="submit" class="submit-btn"> Update</button>
                 </div>
             </form>
         </div>

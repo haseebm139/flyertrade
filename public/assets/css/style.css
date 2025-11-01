@@ -2404,6 +2404,22 @@ button.btn-close {
   font-size: 1vw;
 }
 
+.filter-modal .reset-btn {
+  background: #f8f9fa;
+  border: 0.1vw solid #004E424D;
+  color: #aaa;
+
+  padding: 1vw 2vw;
+  border-radius: 0.6vw;
+  font-size: 1vw;
+font-weight:500;
+  cursor: pointer;
+}
+
+
+.filter-modal span{
+  color:#1b1b1b;
+}
 .reset-btn {
   background: #f8f9fa;
   border: 0.1vw solid #004E424D;
@@ -2917,7 +2933,9 @@ input[type="checkbox"] {
   font-size: 1vw;
   width: 34vw;
 }
-
+.check-wrap-checkbox{
+ margin-right: 20px;
+}
 .doc-row .doc-title {
   flex: 1;
 }
@@ -2942,7 +2960,7 @@ input[type="checkbox"] {
   width: 1.1vw;
   height: 1.1vw;
   border: 0.1vw solid #306f65;
-  border-radius: 50%;
+  border-radius: 5px;
   display: inline-block;
   position: relative;
   background: #fff;
@@ -2973,7 +2991,7 @@ input[type="checkbox"] {
 .doc-link {
   font-size: 0.9vw;
   color: #306f65;
-  font-weight: 600;
+  font-weight: 500;
   text-decoration: underline;
 }
 
@@ -3010,7 +3028,7 @@ input[type="checkbox"] {
 
 .badge-pill {
   position: relative;
-  padding-right: 2.1vw;
+  /* padding-right: 2.1vw; */
 }
 
 .badge-pill::after {

@@ -27,7 +27,7 @@
                     @enderror
                     <div class="form-actions">
                         <button type="button" class="cancel-btn " wire:click="close">Cancel</button>
-                        <button type="submit" class="submit-btn"> + {{ $userId ? 'Save Changes' : 'Add User' }}</button>
+                        <button type="submit" class="submit-btn"> <i class="fa-solid fa-plus mr-3"></i> {{ $userId ? 'Save Changes' : 'Add User' }}</button>
                     </div>
                 </form>
             </div>

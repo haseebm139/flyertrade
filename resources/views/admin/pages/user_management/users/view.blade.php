@@ -424,7 +424,7 @@
                         <input type="text" class="form-input" placeholder="Enter phone number">
                         <div class="form-actions justify-content-center">
                             <button type="button" class="cancel-btn">Cancel</button>
-                            <button type="submit" class="submit-btn"> <i class="fa-solid fa-plus"></i> Add User</button>
+                            <button type="submit" class="submit-btn"> Update</button>
                         </div>
                     </form>
                 </div>

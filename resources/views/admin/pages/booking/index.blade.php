@@ -94,15 +94,15 @@
         <div class="modal-content filter-modal">
             <span class="close-modal" id="closeFilterModal">&times;</span>
             <h3>Filter</h3>
-            <label>Select Date</label>
-            <div class="date-range">
-                <div>
+            <label style="color:#717171;">Select Date</label>
+            <div class="row  mt-3">
+                <div class="col-6">
                     <span>From:</span>
-                    <input type="date" class="form-input">
+                    <input type="date" class="form-input mt-2">
                 </div>
-                <div>
+                <div  class="col-6">
                     <span>To:</span>
-                    <input type="date" class="form-input">
+                    <input type="date" class="form-input mt-2">
                 </div>
             </div>
 

@@ -7,7 +7,7 @@
                         alt=""></span> Export CSV
             </button>
             @if($showAddButton)
-            <button class="add-user-btn" id="openAddUserModal" wire:click="addItem">+ Add {{ $label }}</button>
+            <button class="add-user-btn" id="openAddUserModal" wire:click="addItem"><i class="fa-solid fa-plus mr-3"></i> Add {{ $label }}</button>
             @endif
         </div>
         <div class="toolbar-right">

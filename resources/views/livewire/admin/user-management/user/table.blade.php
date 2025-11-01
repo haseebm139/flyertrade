@@ -75,19 +75,19 @@
             <div class="modal-content filter-modal">
                 <span class="close-modal" wire:click="closeFilterModal">&times;</span>
                 <h3>Filter</h3>
-                <label>Select Date</label>
-                <div class="date-range">
-                    <div>
+                <label style='color:#717171'>Select Date</label>
+                <div class=" row mt-3">
+                    <div class='col-6'>
                         <span>From:</span>
-                        <input type="date" class="form-input" wire:model="fromDate">
+                        <input type="date" class="form-input mt-2" wire:model="fromDate">
                     </div>
-                    <div>
+                    <div class='col-6'>
                         <span>To:</span>
-                        <input type="date" class="form-input" wire:model="toDate">
+                        <input type="date" class="form-input mt-2" wire:model="toDate">
                     </div>
                 </div>
-                <label>Status</label>
-                <select class="form-input" wire:model="status">
+                   <label style="color:#1b1b1b;font-weight:400">Status</label>
+                <select class="form-input mt-2" wire:model="status">
                     <option value="">Select status</option>
                     <option value="active">Active</option>
                     <option value="inactive">Inactive</option>
