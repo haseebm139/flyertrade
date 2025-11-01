@@ -21,13 +21,15 @@
             <button class="reset-btn">Reset Password</button>
 
             <button class="edit-btn" id="openAddUserModal">
-                <span class="download-icon"><img src="{{ asset('assets/images/icons/edit.png') }}" alt="" class="icons-btn"></span> Edit
-                User
+                Edit User
+
+                <span class="download-icon"><img src="{{ asset('assets/images/icons/edit.png') }}" alt="" class="icons-btn"></span> 
             </button>
 
-            <button class="delete-btn">
-                <span class="download-icon"><img src="{{ asset('assets/images/icons/trash.png') }}" alt="" class="icons-btn"></span>
+            <button class="delete-btn showDeleteModal">
+                
                 Delete user
+                <span class="download-icon"><img src="{{ asset('assets/images/icons/trash.png') }}" alt="" class="icons-btn"></span>
             </button>
         </div>
 
@@ -42,7 +44,7 @@
 
                 <!-- ✅ Status Dropdown -->
                 <div class="status-dropdown">
-                    <button class="status-btn">Active ▼</button>
+                    <button class="status-btn">Active <i class="fa-solid fa-chevron-down"></i></button>
                     <div class="status-menu">
                         <div class="status-option active">Active</div>
                         <div class="status-option">Inactive</div>
@@ -452,7 +454,12 @@
                     data-src="{{ asset('assets/images/icons/id-sample.png') }}">
                     View document
                 </a>
-                <span class="badge badge-verified badge-pill" data-badge>Verified</span>
+                
+                     <span class="badge badge-verified badge-pill actions-btn-verified" data-block='1' data-badge>Verified</span>
+                <div class="actions-menu" id="actions-menu-verified-1" style="display: none;">
+                            <a href="#">Pend</a>
+                                <a href="#" class="showDeleteModal">Decline</a>
+                            </div>
             </div>
 
             <div class="doc-row" data-id="2">
@@ -468,7 +475,11 @@
                     data-src="{{ asset('assets/images/icons/id-sample.png') }}">
                     View document
                 </a>
-                <span class="badge badge-verified badge-pill" data-badge>Verified</span>
+                     <span class="badge badge-verified badge-pill actions-btn-verified" data-block='2' data-badge>Verified</span>
+                <div class="actions-menu" id="actions-menu-verified-2" style="display: none;">
+                             <a href="#">Pend</a>
+                                <a href="#" class="showDeleteModal">Decline</a>
+                            </div>
             </div>
 
             <div class="doc-row" data-id="3">
@@ -484,7 +495,11 @@
                     data-src="{{ asset('assets/images/icons/id-sample.png') }}">
                     View document
                 </a>
-                <span class="badge badge-verified badge-pill" data-badge>Verified</span>
+                <span class="badge badge-verified badge-pill actions-btn-verified" data-block='3' data-badge>Verified</span>
+                <div class="actions-menu" id="actions-menu-verified-3" style="display: none;">
+                                 <a href="#">Pend</a>
+                                <a href="#" class="showDeleteModal">Decline</a>
+                            </div>
             </div>
 
             <div class="doc-row" data-id="4">
@@ -500,7 +515,11 @@
                     data-src="{{ asset('assets/images/icons/id-sample.png') }}">
                     View document
                 </a>
-                <span class="badge badge-verified badge-pill" data-badge>Verified</span>
+                  <span class="badge badge-verified badge-pill actions-btn-verified" data-block='4' data-badge>Verified</span>
+                <div class="actions-menu" id="actions-menu-verified-4" style="display: none;">
+                                <a href="#">Pend</a>
+                                <a href="#" class="showDeleteModal">Decline</a>
+                            </div>
             </div>
             <div class="doc-row" data-id="5">
                 <div>
@@ -515,7 +534,11 @@
                     data-src="{{ asset('assets/images/icons/id-sample.png') }}">
                     View document
                 </a>
-                <span class="badge badge-verified badge-pill" data-badge>Verified &nbsp;<i class="fa-solid fa-chevron-down"></i></span>
+                <span class="badge badge-verified badge-pill actions-btn-verified" data-block='5' data-badge>Verified</span>
+                <div class="actions-menu" id="actions-menu-verified-5" style="display: none;">
+                                  <a href="#">Pend</a>
+                                <a href="#" class="showDeleteModal">Decline</a>
+                            </div>
             </div>
         </div>
 
@@ -698,4 +721,86 @@
             </div>
         </div>
     </div>
+    <script>
+document.addEventListener("DOMContentLoaded", function() {
+  const deleteModal = document.getElementById("globalDeleteModal");
+  const showButtons = document.querySelectorAll(".showDeleteModal");
+  const closeButton = document.getElementById("closeDeleteModal");
+  const cancelButton = document.querySelector(".cancel-delete-btn");
+
+  // Jab kisi showDeleteModal button pr click ho
+  showButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      deleteModal.style.display = "flex"; // modal show karo
+    });
+  });
+
+  // Close button ya cancel button pr click hone pr modal hide karo
+  [closeButton, cancelButton].forEach(btn => {
+    btn.addEventListener("click", () => {
+      deleteModal.style.display = "none";
+    });
+  });
+
+  // Optional: backdrop click se bhi band ho
+  deleteModal.addEventListener("click", (e) => {
+    if (e.target === deleteModal) {
+      deleteModal.style.display = "none";
+    }
+  });
+});
+</script>
+<style>
+    .deleteModal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.delete-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  min-width: 300px;
+}
+
+</style>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const actionButtons = document.querySelectorAll(".actions-btn-verified");
+
+  actionButtons.forEach(button => {
+    button.addEventListener("click", function(e) {
+      e.stopPropagation(); // prevent bubbling
+
+      const blockId = this.getAttribute("data-block");
+      const menu = document.getElementById(`actions-menu-verified-${blockId}`);
+
+      // Pehle sab menus hide kar do
+      document.querySelectorAll(".actions-menu").forEach(m => {
+        if (m !== menu) m.style.display = "none";
+      });
+
+      // Ab sirf current wale ko toggle karo
+      if (menu.style.display === "none" || menu.style.display === "") {
+        menu.style.display = "block";
+      } else {
+        menu.style.display = "none";
+      }
+    });
+  });
+
+  // Page ke kisi aur area pe click hone par dropdown close ho jaye
+  document.addEventListener("click", function() {
+    document.querySelectorAll(".actions-menu").forEach(m => {
+      m.style.display = "none";
+    });
+  });
+});
+</script>
+
 @endsection

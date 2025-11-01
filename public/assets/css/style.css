@@ -2932,6 +2932,7 @@ input[type="checkbox"] {
   border-bottom: 0.05vw solid #eee;
   font-size: 1vw;
   width: 34vw;
+  position: relative;
 }
 .check-wrap-checkbox{
  margin-right: 20px;

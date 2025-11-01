@@ -52,7 +52,7 @@
                             <div class="actions-menu">
                                 <a href="{{ route('user-management.service.users.view', ['id' => $item->id]) }}" ><i class="fa-regular fa-eye"></i> View user</a>
                                 <a href="#" wire:click="edit({{ $item->id }}) "><i class="fa-regular fa-pen-to-square"></i> Edit user</a>
-                                <a href="#"><i class="fa-regular fa-trash-can"></i> Delete user</a>
+                                <a href="#" class="showDeleteModal"><i class="fa-regular fa-trash-can"></i> Delete user</a>
                             </div>
                         </div>
                     </td>
