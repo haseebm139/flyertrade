@@ -70,7 +70,7 @@
                             <div class="actions-menu">
                                 <a href="{{ route('user-management.service.providers.view', ['id' => $item->id]) }}"><i class="fa fa-eye"></i> View user</a>
                                 <a href="#"><i class="fa fa-pen"></i> Edit user</a>
-                                <a href="#"><i class="fa fa-trash"></i> Delete user</a>
+                                <a href="#" class='showDeleteModal'><i class="fa fa-trash"></i> Delete user</a>
                             </div>
                         </div>
                     </td>
