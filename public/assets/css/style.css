@@ -1778,7 +1778,7 @@ td.user-data.id-number {
 .modal-content h3 {
   font-size: 1.2vw;
   margin-bottom: 1.5vw;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .close-modal {
@@ -1791,7 +1791,7 @@ td.user-data.id-number {
 
 label {
   font-size: 0.9vw;
-  font-weight: 400;
+  font-weight: 500;
 }
 
 
@@ -4181,7 +4181,9 @@ span.timestamps {
   margin-bottom: 20px;
   border: none;
 }
-
+.add-user-modal .form-input{
+  background:#F6F6F6;
+}
 @media(max-width:1800px) {
   .dashboard-card h6 {
     font-size: 0.8vw;
