@@ -98,10 +98,28 @@
         .main_content{
             padding:20px;
         }
+        #wrapper_mobile_display_none{
+            display: none;
+            background: #fff;
+            background-color: #fff;
+            position: fixed;
+            top: 0px;
+            left:0px;
+            width: 100vw;
+            height: 100vh;
+            z-index: 111111111111111111111111111111111111111111111
+            ;
+        }
+        @media(max-width:768px){
+               #wrapper_mobile_display_none{
+                display: block;
+               }
+        }
     </style>
 </head>
 
 <body>
+    <div id="wrapper_mobile_display_none"></div>
 
     @include('admin.partials.sidebar')
     <div class="wrapper">
