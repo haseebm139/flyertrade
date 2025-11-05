@@ -14,9 +14,9 @@
         <div class="toolbar-right">
             <input type="text" class="search-user" placeholder="Search users" wire:model.live="search">
             <button class="filter-btn" wire:click="openFilterModal">
-                <span class="download-icon">
+                Filter&nbsp;<span class="download-icon">
                     <img class="btn-icons" src="{{ asset('assets/images/icons/button-icon.png') }}" alt="">
-                </span>Filter
+                </span>
             </button>
         </div>
     </div>
@@ -52,7 +52,7 @@
             @forelse($users as $user)
                 <tr>
                     <td><input type="checkbox" value="{{ $user->id }}" wire:model.live="selected"></td>
-                    <td>
+                    <td style='font-weight:500;'>
                         {{ ucfirst($user->user_type ?? 'N/A') }}
                     </td>
                     <td>
@@ -60,13 +60,13 @@
                             <img src="{{ asset($user->avatar) ?? asset('assets/images/icons/person-one.png') }}  "
                                 alt="User">
                             <div>
-                                <p class="user-name">{{ $user->name }}</p>
+                                <p class="user-name"  style='font-weight:500;'>{{ $user->name }}</p>
                                 <p class="user-email">{{ $user->email }}</p>
                             </div>
                         </div>
                     </td>
-                    <td>{{ Str::limit($user->address ?? 'N/A', 30) }}</td>
-                    <td>{{ $user->phone ?? 'N/A' }}</td>
+                    <td  style='font-weight:500;'>{{ Str::limit($user->address ?? 'N/A', 30) }}</td>
+                    <td  style='font-weight:500;'>{{ $user->phone ?? 'N/A' }}</td>
                     <td class="viw-parent">
                         <a href="javascript:void(0);" class="view-btn" wire:click="viewUser({{ $user->id }})">
                             <img src="{{ asset('assets/images/icons/eye-icon.png') }}" alt="View" class="eye-icon">

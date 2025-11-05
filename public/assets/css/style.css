@@ -1571,7 +1571,7 @@ td.user-data.id-number {
   color: #dc3545;
   border: 1px solid;
 }
-#addUserModal input, #addUserModal textarea{
+#addUserModal input, #addUserModal textarea, #addUserModal select{
   background:#F6F6F6;
 }
 .actions-btn {
