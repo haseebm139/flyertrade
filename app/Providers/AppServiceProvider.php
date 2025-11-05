@@ -2,11 +2,11 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use App\Models\User;
-use Illuminate\Pagination\Paginator;
-
 use App\Observers\UserObserver;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\ServiceProvider;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -22,8 +22,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-            User::observe(UserObserver::class);
-            Paginator::defaultView('vendor.pagination.custom');
-
+        Schema::defaultStringLength(191);
+        User::observe(UserObserver::class);
+        Paginator::defaultView('vendor.pagination.custom');
     }
 }
