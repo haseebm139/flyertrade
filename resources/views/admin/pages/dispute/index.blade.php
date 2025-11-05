@@ -131,14 +131,14 @@
 
                   <td>
                 <div class="actions-dropdown">
-                    <button class="actions-btn" fdprocessedid="3p4nw"> <img src="http://127.0.0.1:8000/assets/images/icons/three-dots.png" class="dots-img "></button>
+                    <button class="actions-btn" fdprocessedid="3p4nw"> <img src="{{ asset('assets/images/icons/three-dots.png') }}" class="dots-img "></button>
                     <div class="actions-menu" style="display: none;">
-                        <a onclick="openBookingModal()"><img src="http://127.0.0.1:8000/assets/images/icons/eye.png" alt="">
+                        <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.png') }}" alt="">
                             View
                             details</a>
-                                    <a href="#" class="initiateBtn" data-user="Mike Brown">
-  <img src="http://127.0.0.1:8000/assets/images/icons/init.png" alt=""> Initiate payout
-</a>
+                        <a href="#" class="initiateBtn" data-user="Mike Brown">
+                            <img src="{{ asset('assets/images/icons/init.png') }}" alt=""> Initiate payout
+                        </a>
 
                     </div>
                 </div>
