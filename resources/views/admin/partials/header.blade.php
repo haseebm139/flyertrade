@@ -8,7 +8,7 @@
 
         <!-- Notifications -->
         <!-- Notification Icon -->
-        <div class="icon-btn" id="notifBtn">
+        <div class="icon-btn" id="notifBtn____">
             <img src="{{ asset('assets/images/icons/notification.png') }}" alt="Notifications">
             <!-- Notification Popup -->
             <div class="popup ioioios" id="notifPopup">
@@ -144,9 +144,10 @@
 
 <script>
 // Get modal and close button
+const notifBtn____ = document.getElementById('notifBtn____');
 const providerModal = document.getElementById('providerModal');
 const closeBtn = document.querySelector('[data-close="providerModal"]');
-const notifPopup = document.querySelector('.notification-popup'); // only if exists
+const notifPopup = document.getElementById('notifPopup'); // only if exists
 
 // Open modal
 document.querySelectorAll('[data-modal="providerModal"]').forEach(btn => {
@@ -155,14 +156,17 @@ document.querySelectorAll('[data-modal="providerModal"]').forEach(btn => {
         e.stopPropagation();
 
         if (notifPopup) notifPopup.style.display = 'none';
-        providerModal.style.display = 'flex';
+        providerModal.style.display = 'none';
         providerModal.style.animation = 'fadeIn 0.2s ease';
     });
 });
-
+// Close modal on close button click
+notifBtn____.addEventListener('click', () => {
+    notifPopup.style.display = 'block';
+});
 // Close modal on close button click
 closeBtn.addEventListener('click', () => {
-    providerModal.style.display = 'none';
+      if (notifPopup) notifPopup.style.display = 'block';
 });
 
 // Close modal when clicking outside modal content
