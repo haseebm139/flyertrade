@@ -144,7 +144,7 @@
             Messaging
         </a>
         <div class="space">
-            <a href="#"
+            <a href="{{ route('settings.index') }}"
                 class="nav-link {{ request()->routeIs('settings.*') ? 'active' : '' }}">
                 <span>
                     <img

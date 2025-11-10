@@ -112,37 +112,40 @@
                 </td>
 
 
-           <td>
- <div class="status-dropdown">
-  <span class="status active" onclick="toggleDropdown(this)">
-    Unresolved
-    <svg class="arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" 
-      viewBox="0 0 24 24" fill="none" stroke="#d4aa00" stroke-width="2" 
-      stroke-linecap="round" stroke-linejoin="round">
-      <polyline points="6 9 12 15 18 9"></polyline>
-    </svg>
-  </span>
-  <ul class="dropdown-menu" style="display: none;">
-    <li onclick="setStatus(this, 'Resolved')">Resolved</li>
-    <li onclick="setStatus(this, 'Unresolved')">Unresolved</li>
-  </ul>
-</div>
-</td>
-
-                  <td>
-                <div class="actions-dropdown">
-                    <button class="actions-btn" fdprocessedid="3p4nw"> <img src="http://127.0.0.1:8000/assets/images/icons/three-dots.png" class="dots-img "></button>
-                    <div class="actions-menu" style="display: none;">
-                        <a onclick="openBookingModal()"><img src="http://127.0.0.1:8000/assets/images/icons/eye.png" alt="">
-                            View
-                            details</a>
-                                    <a href="#" class="initiateBtn" data-user="Mike Brown">
-  <img src="http://127.0.0.1:8000/assets/images/icons/init.png" alt=""> Initiate payout
-</a>
-
+                <td>
+                    <div class="status-dropdown">
+                        <span class="status active" onclick="toggleDropdown(this)">
+                            Unresolved
+                            <svg class="arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                viewBox="0 0 24 24" fill="none" stroke="#d4aa00" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </span>
+                        <ul class="dropdown-menu" style="display: none;">
+                            <li onclick="setStatus(this, 'Resolved')">Resolved</li>
+                            <li onclick="setStatus(this, 'Unresolved')">Unresolved</li>
+                        </ul>
                     </div>
-                </div>
-            </td>
+                </td>
+
+                <td>
+                    <div class="actions-dropdown">
+                        <button class="actions-btn" fdprocessedid="3p4nw"> <img
+                                src="http://127.0.0.1:8000/assets/images/icons/three-dots.png" class="dots-img "></button>
+                        <div class="actions-menu" style="display: none;">
+                            <a onclick="openBookingModal()"><img src="http://127.0.0.1:8000/assets/images/icons/eye.png"
+                                    alt="">
+                                View
+                                details</a>
+                            <a href="#" class="initiateBtn" data-user="Mike Brown">
+                                <img src="http://127.0.0.1:8000/assets/images/icons/init.png" alt=""> Initiate
+                                payout
+                            </a>
+
+                        </div>
+                    </div>
+                </td>
             </tr>
 
         </tbody>
@@ -254,17 +257,18 @@
                     <span>From:</span>
                     <input type="date" class="form-input mt-2" id="fromDate">
                 </div>
-                <div  class='col-6'>
+                <div class='col-6'>
                     <span>To:</span>
                     <input type="date" class="form-input mt-2" id="toDate">
                 </div>
             </div>
-           <label style="color:#1b1b1b;font-weight:400">Status</label>
-            <select class="form-input mt-2" id="statusFilter">
-                <option value="">Select status</option>
-                <option value="resolved">Resolved</option>
-                <option value="unresolved">Unresolved</option>
-            </select>
+            <label style="color:#1b1b1b;font-weight:400">Status</label>
+            <x-custom-select name="statusFilter" id="statusFilter" :options="[
+                ['value' => '', 'label' => 'Select status'],
+                ['value' => 'resolved', 'label' => 'Resolved'],
+                ['value' => 'unresolved', 'label' => 'Unresolved'],
+            ]" placeholder="Select status"
+                class="form-input mt-2" />
 
             <div class="form-actions">
                 <button type="button" class="reset-btn" onclick="resetFilters()">Reset</button>
@@ -415,7 +419,16 @@
         function resetFilters() {
             document.getElementById('fromDate').value = '';
             document.getElementById('toDate').value = '';
-            document.getElementById('statusFilter').value = '';
+            // Reset custom select
+            const statusFilterWrapper = document.getElementById('statusFilter');
+            if (statusFilterWrapper) {
+                const hiddenInput = statusFilterWrapper.querySelector('input[type="hidden"]');
+                if (hiddenInput) hiddenInput.value = '';
+                // Reset Alpine.js state if available
+                if (statusFilterWrapper._x_dataStack && statusFilterWrapper._x_dataStack[0]) {
+                    statusFilterWrapper._x_dataStack[0].selected = null;
+                }
+            }
 
             // Show all rows
             const table = document.querySelector('.theme-table tbody');
@@ -436,7 +449,10 @@
         function applyFilters() {
             const fromDate = document.getElementById('fromDate').value;
             const toDate = document.getElementById('toDate').value;
-            const status = document.getElementById('statusFilter').value;
+            // Get value from custom select
+            const statusFilterWrapper = document.getElementById('statusFilter');
+            const status = statusFilterWrapper ? (statusFilterWrapper.querySelector('input[type="hidden"]')?.value || '') :
+                '';
 
             const table = document.querySelector('.theme-table tbody');
             if (!table) return;

@@ -115,14 +115,20 @@
                     </div>
                 </div>
                           <label style="color:#1b1b1b;font-weight:400">Status</label>
-                <select class="form-input mt-2" wire:model="status">
-                    <option value="">Select status</option>
-                    <option value="confirmed">Active</option>
-                    <option value="inactive">Inactive</option>
-                    <option value="awaiting_provider">Pending</option>
-                    <option value="completed">Completed</option>
-                    <option value="cancelled">Cancelled</option>
-                </select>
+                <x-custom-select
+                    name="status"
+                    :options="[
+                        ['value' => '', 'label' => 'Select status'],
+                        ['value' => 'confirmed', 'label' => 'Active'],
+                        ['value' => 'inactive', 'label' => 'Inactive'],
+                        ['value' => 'awaiting_provider', 'label' => 'Pending'],
+                        ['value' => 'completed', 'label' => 'Completed'],
+                        ['value' => 'cancelled', 'label' => 'Cancelled']
+                    ]"
+                    placeholder="Select status"
+                    wireModel="status"
+                    class="form-input mt-2"
+                />
                 <div class="form-actions">
                     <button type="button" class="reset-btn" wire:click="resetFilters">Reset</button>
                     <button type="button" class="submit-btn" wire:click="applyFilters">Apply Now</button>
