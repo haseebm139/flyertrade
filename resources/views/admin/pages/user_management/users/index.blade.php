@@ -18,10 +18,10 @@
     <div id="globalDeleteModal" class="deleteModal" style="display: none;">
         <div class="delete-card">
             <div class="delete-card-header">
-                <h3 class="delete-title">Delete Service</h3>
+                <h3 class="delete-title">Delete Service User?</h3>
                 <span class="delete-close" id="closeDeleteModal">&times;</span>
             </div>
-            <p class="delete-text">Are you sure you want to delete this service?</p>
+            <p class="delete-text">Are you sure you want to delete this service user?</p>
             <div class="delete-actions justify-content-start">
                 <button class="confirm-delete-btn">Delete</button>
                 <button class="cancel-delete-btn">Cancel</button>
@@ -58,23 +58,21 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 </script>
 <style>
-    .deleteModal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-}
-
-.delete-card {
-  background: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  min-width: 300px;
-}
-
+  .deleteModal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+  .delete-card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    min-width: 300px;
+  }
 </style>
      
 @endsection

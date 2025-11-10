@@ -29,7 +29,7 @@
             @forelse ($data as $item)
                 <tr>
                     <td><input type="checkbox" value="{{ $item->id }}" wire:model.live="selected"></td>
-                    <td>{{ $item->name }}</td>
+                    <td style="font-weight:500;">{{ $item->name }}</td>
 
                     <td style="cursor:pointer;" 
                         @if ($item->providers_count > 0)
@@ -38,14 +38,14 @@
                         @if ($item->providers_count > 0)
                             <div class="user-info">
                                 <img src="{{ asset($item->providers[0]->avatar ?? 'assets/images/icons/person-one.png') }}" alt="User" class="avatar">
-                                <span class="user-theme-name">{{ $item->providers[0]->name ?? '' }}</span>
+                                <span class="user-theme-name" style="font-weight:500;">{{ $item->providers[0]->name ?? '' }}</span>
                                 <span class="more"> + {{ $item->providers_count - 1 }} more</span>
                             </div>
                         @endif
                     </td>
 
-                    <td><span class="date">{{ dateFormat($item->created_at) }}</span></td>
-                    <td><span class="desf">{{ $item->description }}</span></td>
+                    <td><span class="date" style="font-weight:500;">{{ dateFormat($item->created_at) }}</span></td>
+                    <td><span class="desf" style="color:#717171;">{{ $item->description }}</span></td>
 
                     <td>
                         <span class="desf d-flex">
