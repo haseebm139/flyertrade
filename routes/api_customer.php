@@ -12,6 +12,12 @@ Route::middleware('auth:sanctum')->controller(CustomerBookingController::class)-
 });
 Route::prefix('customer')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
+        Route::controller(ProfileController::class)->group(function () {
+            Route::get('/profile/{id}', 'show');
+            Route::post('/profile', 'store');
+            Route::get('/me', 'getProfile');
+        });
+
         Route::controller(ProviderController::class)->group(function () {
             Route::get('/providers', 'providers');
             Route::get('/providers/{provider}', 'show');

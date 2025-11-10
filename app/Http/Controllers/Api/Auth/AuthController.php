@@ -177,7 +177,7 @@ class AuthController extends BaseController
         }
 
         // $otp = rand(100000, 999999);
-        $otp = 000000;
+        $otp = 123456;
 
 
         // Send email (assuming helper function works)
