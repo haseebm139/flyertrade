@@ -406,7 +406,7 @@ img.btn-icons {
 }
 
 
-div#notifPopup {
+div.notification_popup {
   top: 3.4375vw !important;
   right: -0.6875vw !important;
   width: 25vw !important;
