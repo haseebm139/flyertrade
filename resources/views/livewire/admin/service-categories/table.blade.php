@@ -94,11 +94,17 @@
                     <div class="col-6"><span>To:</span><input type="date" class="form-input mt-2" wire:model="toDate"></div>
                 </div>
                               <label style="color:#1b1b1b;font-weight:400">Status</label>
-                <select class="form-input mt-2" wire:model="status">
-                    <option value="">Select status</option>
-                    <option value="1">Active</option>
-                    <option value="0">Inactive</option>
-                </select>
+                <x-custom-select
+                    name="status"
+                    :options="[
+                        ['value' => '', 'label' => 'Select status'],
+                        ['value' => '1', 'label' => 'Active'],
+                        ['value' => '0', 'label' => 'Inactive']
+                    ]"
+                    placeholder="Select status"
+                    wireModel="status"
+                    class="form-input mt-2"
+                />
                 <div class="form-actions">
                     <button type="button" class="reset-btn" wire:click="resetFilters">Reset</button>
                     <button type="button" class="submit-btn" wire:click="applyFilters">Apply Now</button>

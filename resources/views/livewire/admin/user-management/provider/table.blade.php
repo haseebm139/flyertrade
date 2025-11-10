@@ -101,11 +101,17 @@
                     </div>
                 </div>
                           <label style="color:#1b1b1b;font-weight:400">Status</label>
-                <select class="form-input mt-2" wire:model="status">
-                    <option value="">Select status</option>
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                </select>
+                <x-custom-select
+                    name="status"
+                    :options="[
+                        ['value' => '', 'label' => 'Select status'],
+                        ['value' => 'active', 'label' => 'Active'],
+                        ['value' => 'inactive', 'label' => 'Inactive']
+                    ]"
+                    placeholder="Select status"
+                    wireModel="status"
+                    class="form-input mt-2"
+                />
                 <div class="form-actions">
                     <button type="button" class="reset-btn" wire:click="resetFilters">Reset</button>
                     <button type="button" class="submit-btn" wire:click="applyFilters">Apply Now</button>

@@ -34,12 +34,19 @@
 
                     <div class="mb-3">
                         <label for="userType" class="form-label">User Type</label>
-                        <select class="form-select" id="userType" wire:model="user_type" required>
-                            <option value="" selected>Select user type</option>
-                            <option value="customer">Customer</option>
-                            <option value="provider">Provider</option>
-                            <option value="admin">Admin</option>
-                        </select>
+                        <x-custom-select
+                            name="user_type"
+                            id="userType"
+                            :options="[
+                                ['value' => '', 'label' => 'Select user type'],
+                                ['value' => 'customer', 'label' => 'Customer'],
+                                ['value' => 'provider', 'label' => 'Provider'],
+                                ['value' => 'admin', 'label' => 'Admin']
+                            ]"
+                            placeholder="Select user type"
+                            wireModel="user_type"
+                            class="form-select"
+                        />
                         @error('user_type')
                             <span class="error">{{ $message }}</span>
                         @enderror

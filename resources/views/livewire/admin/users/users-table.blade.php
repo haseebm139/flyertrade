@@ -133,12 +133,18 @@
                     </div>
                 </div>
                 <label style="color:#1b1b1b;font-weight:400">Status</label>
-                <select class="form-input mt-2" wire:model="roleFilter">
-                    <option value="">All Types</option>
-                    <option value="admin">Admin</option>
-                    <option value="customer">Customer</option>
-                    <option value="provider">Provider</option>
-                </select>
+                <x-custom-select
+                    name="roleFilter"
+                    :options="[
+                        ['value' => '', 'label' => 'All Types'],
+                        ['value' => 'admin', 'label' => 'Admin'],
+                        ['value' => 'customer', 'label' => 'Customer'],
+                        ['value' => 'provider', 'label' => 'Provider']
+                    ]"
+                    placeholder="All Types"
+                    wireModel="roleFilter"
+                    class="form-input mt-2"
+                />
                 <div class="form-actions">
                     <button type="button" class="reset-btn" wire:click="resetFilters">Reset</button>
                     <button type="button" class="submit-btn" wire:click="applyFilters">Apply Now</button>
@@ -168,12 +174,19 @@
 
                     <div class="mb-3">
                         <label for="userType" class="form-label">Role</label>
-                        <select class="form-select" id="userType" wire:model="user_type">
-                            <option value="">Select role</option>
-                            <option value="customer">Customer</option>
-                            <option value="provider">Provider</option>
-                            <option value="admin">Admin</option>
-                        </select>
+                        <x-custom-select
+                            name="user_type"
+                            id="userType"
+                            :options="[
+                                ['value' => '', 'label' => 'Select role'],
+                                ['value' => 'customer', 'label' => 'Customer'],
+                                ['value' => 'provider', 'label' => 'Provider'],
+                                ['value' => 'admin', 'label' => 'Admin']
+                            ]"
+                            placeholder="Select role"
+                            wireModel="user_type"
+                            class="form-select"
+                        />
                     </div>
 
                     <div class="form-actions">
