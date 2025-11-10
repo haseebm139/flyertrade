@@ -176,7 +176,8 @@ class AuthController extends BaseController
             return $this->sendError('Invalid Email Address');
         }
 
-        $otp = rand(10000, 99999);
+        // $otp = rand(100000, 999999);
+        $otp = 000000;
 
 
         // Send email (assuming helper function works)
