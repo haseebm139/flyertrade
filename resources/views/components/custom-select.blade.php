@@ -159,6 +159,7 @@
         justify-content: space-between;
         transition: background-color 0.2s;
         border-bottom: 1px solid #f3f4f6;
+        font-weight:500;
     }
 
     .custom-select-option:last-child {
@@ -166,11 +167,11 @@
     }
 
     .custom-select-option:hover {
-        background-color: #f9fafb;
+        background-color: rgba(0, 78, 66, 0.1)
     }
 
     .custom-select-option.selected {
-        background-color: #f0fdfa;
+        background-color: rgba(0, 78, 66, 0.1)
     }
 
     .custom-select-option-label {

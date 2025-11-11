@@ -71,6 +71,20 @@
                                 <a href="{{ route('user-management.service.providers.view', ['id' => $item->id]) }}"><i class="fa fa-eye"></i> View user</a>
                                 <a href="#"><i class="fa fa-pen"></i> Edit user</a>
                                 <a href="#" class='showDeleteModal'><i class="fa fa-trash"></i> Delete user</a>
+                                         <!-- ✅ Global Delete Modal -->
+                                                <div id="globalDeleteModal{{ $item->id }}" class="deleteModal" style="display: none;position:absolute;    top: 2.5vw;">
+                                                    <div class="delete-card">
+                                                        <div class="delete-card-header">
+                                                            <h3 class="delete-title">Delete Service Provider?</h3>
+                                                            <span class="delete-close" id="closeDeleteModal">&times;</span>
+                                                        </div>
+                                                        <p class="delete-text">Are you sure you want to delete this service provider?</p>
+                                                        <div class="delete-actions justify-content-start">
+                                                            <button class="confirm-delete-btn">Delete</button>
+                                                            <button class="cancel-delete-btn">Cancel</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
                             </div>
                         </div>
                     </td>

@@ -48,13 +48,27 @@
                     <td><span class="desf" style="color:#717171;">{{ $item->description }}</span></td>
 
                     <td>
-                        <span class="desf d-flex">
-                            <button class="edit-btn" wire:click="edit({{ $item->id }})" style="border: 0 !important">
+                        <span class="desf d-flex" style="position:relative;">
+                            <button class="edit-btn"  wire:click="edit({{ $item->id }})" style="border: 0 !important">
                                 <img src="{{ asset('assets/images/icons/edit-icon.png') }}" alt="Edit" class="action-icon" > 
                             </button>
-
+                                <!-- ✅ Global Delete Modal -->
+                                <div id="globalDeleteModal{{ $item->id }}" class="deleteModal" style="display: none;position:absolute;    top: 2.5vw;
+    right: 7vw;">
+                                    <div class="delete-card">
+                                        <div class="delete-card-header">
+                                            <h3 class="delete-title">Delete Service Category?</h3>
+                                            <span class="delete-close closeDeleteModal" data-id="{{ $item->id }}">&times;</span>
+                                        </div>
+                                        <p class="delete-text">Are you sure you want to delete this service category?</p>
+                                        <div class="delete-actions justify-content-start">
+                                            <button class="confirm-delete-btn">Delete</button>
+                                            <button class="cancel-delete-btn">Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>
                             <!-- ✅ Delete button -->
-                            <button type="button" class="delete-btn showDeleteModal" data-id="{{ $item->id }}">
+                            <button type="button" class="delete-btn showDeleteModal"  data-id="{{ $item->id }}">
                                 <img src="{{ asset('assets/images/icons/delete-icon.png') }}" alt="Delete" class="action-icon">
                             </button>
                         </span>
@@ -68,20 +82,7 @@
 
     {{ $data->links('vendor.pagination.custom') }}
 
-    <!-- ✅ Global Delete Modal -->
-    <div id="globalDeleteModal" class="deleteModal" style="display: none;">
-        <div class="delete-card">
-            <div class="delete-card-header">
-                <h3 class="delete-title">Delete Service</h3>
-                <span class="delete-close" id="closeDeleteModal">&times;</span>
-            </div>
-            <p class="delete-text">Are you sure you want to delete this service?</p>
-            <div class="delete-actions justify-content-start">
-                <button class="confirm-delete-btn">Delete</button>
-                <button class="cancel-delete-btn">Cancel</button>
-            </div>
-        </div>
-    </div>
+
 
     @if ($showFilterModal)
         <div class="modal filter-theme-modals" style="display: flex;">
@@ -116,55 +117,72 @@
 
 @push('scripts')
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    const modal = document.getElementById("globalDeleteModal");
-    const confirmBtn = modal.querySelector(".confirm-delete-btn");
-    const cancelBtn = modal.querySelector(".cancel-delete-btn");
-    const closeBtn = document.getElementById("closeDeleteModal");
-
-    document.addEventListener("click", function(e) {
-        if (e.target.closest(".showDeleteModal")) {
-            const btn = e.target.closest(".showDeleteModal");
-            const id = btn.getAttribute("data-id");
-            const rect = btn.getBoundingClientRect();
-
-            const modalWidth = window.innerWidth * 0.40;
-            let topPos = window.scrollY + rect.top + 60;
-
-            // 🔹 Left position reduced (closer to button)
-            let leftPos = rect.left + rect.width / 2 - modalWidth / 2 - 200; // was -20 before, reduced more
-
-            if (leftPos + modalWidth > window.innerWidth - 20) leftPos = window.innerWidth - modalWidth - 20;
-            if (leftPos < 20) leftPos = 20;
-
-            modal.style.display = "block";
-            modal.style.position = "absolute";
-            modal.style.top = `${topPos}px`;
-            modal.style.left = `${leftPos}px`;
-            modal.dataset.id = id;
-        }
-    });
-
-    [cancelBtn, closeBtn].forEach(btn => {
-        btn.addEventListener("click", () => {
-            modal.style.display = "none";
-        });
-    });
-
-    document.addEventListener("click", function(e) {
-        if (!e.target.closest(".deleteModal") && !e.target.closest(".showDeleteModal")) {
-            modal.style.display = "none";
-        }
-    });
-
-    confirmBtn.addEventListener("click", function() {
-        const id = modal.dataset.id;
-        if (window.Livewire) {
-            Livewire.dispatch('delete', { id });
-        }
-        modal.style.display = "none";
-    });
+    $(document).on('click','.showDeleteModal',function(e){
+        e.preventDefault();
+        let id = $(this).data('id');
+        $('#globalDeleteModal'+id).css('display','block');
+    })
+       $(document).on('click','.closeDeleteModal',function(e){
+        e.preventDefault();
+        let id = $(this).data('id');
+        $('#globalDeleteModal'+id).css('display','none');
+    })
+$(document).on('click', function(e) {
+    if (!$(e.target).closest('.showDeleteModal, .deleteModal').length) {
+        $('.deleteModal').hide();
+    }
 });
+// document.addEventListener("DOMContentLoaded", function() {
+//     const modal = document.getElementById("globalDeleteModal");
+//     const confirmBtn = modal.querySelector(".confirm-delete-btn");
+//     const cancelBtn = modal.querySelector(".cancel-delete-btn");
+//     const closeBtn = document.getElementById("closeDeleteModal");
+
+//     document.addEventListener("click", function(e) {
+//         if (e.target.closest(".showDeleteModal")) {
+            
+//             const btn = e.target.closest(".showDeleteModal");
+//             const id = btn.getAttribute("data-id");
+//             alert(id);
+//             const rect = btn.getBoundingClientRect();
+
+//             const modalWidth = window.innerWidth * 0.40;
+//             let topPos = window.scrollY + rect.top + 60;
+
+//             // 🔹 Left position reduced (closer to button)
+//             let leftPos = rect.left + rect.width / 2 - modalWidth / 2 - 160; // was -20 before, reduced more
+
+//             if (leftPos + modalWidth > window.innerWidth - 40) leftPos = window.innerWidth - modalWidth - 40;
+//             if (leftPos < 40) leftPos = 40;
+
+//             modal.style.display = "block";
+//             modal.style.position = "absolute";
+//             modal.style.top = `${topPos}px`;
+//             modal.style.left = `${leftPos}px`;
+//             modal.dataset.id = id;
+//         }
+//     });
+
+//     [cancelBtn, closeBtn].forEach(btn => {
+//         btn.addEventListener("click", () => {
+//             modal.style.display = "none";
+//         });
+//     });
+
+//     document.addEventListener("click", function(e) {
+//         if (!e.target.closest(".deleteModal") && !e.target.closest(".showDeleteModal")) {
+//             modal.style.display = "none";
+//         }
+//     });
+
+//     confirmBtn.addEventListener("click", function() {
+//         const id = modal.dataset.id;
+//         if (window.Livewire) {
+//             Livewire.dispatch('delete', { id });
+//         }
+//         modal.style.display = "none";
+//     });
+// });
 </script>
 
 @endpush
