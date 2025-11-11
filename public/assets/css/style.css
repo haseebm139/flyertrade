@@ -2626,7 +2626,7 @@ font-weight:500;
   position: absolute;
   top: 2vw;
   /* 110% ~ 20px */
-  right: 0;
+  left: 0;
   background: #fff;
   border: 0.05vw solid #ddd;
   /* 1px */
