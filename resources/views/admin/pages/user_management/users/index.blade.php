@@ -57,22 +57,5 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 });
 </script>
-<style>
-  .deleteModal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.4);
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
-  }
-  .delete-card {
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    min-width: 300px;
-  }
-</style>
-     
+
 @endsection

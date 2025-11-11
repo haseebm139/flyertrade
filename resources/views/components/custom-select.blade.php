@@ -94,16 +94,16 @@
 
     .custom-select-input {
         width: 100%;
-        padding: 0.4vw;
+        /* padding: 0.4vw; */
         background: white;
-        border: 1px solid #d1d5db;
+        /* border: 1px solid #d1d5db; */
         border-radius: 8px;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: space-between;
         transition: border-color 0.2s;
-        min-height: 38px;
+        /* min-height: 38px; */
     }
 
     .custom-select-input:hover {
@@ -116,7 +116,7 @@
 
     .custom-select-text {
         font-size: 0.875rem;
-        color: #111827;
+        color: #777777;
         flex: 1;
     }
 
@@ -149,6 +149,8 @@
         overflow: hidden;
         max-height: 200px;
         overflow-y: auto;
+        left: 0px;
+    top: 50px;
     }
 
     .custom-select-option {

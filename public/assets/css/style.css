@@ -1542,7 +1542,7 @@ td.user-data.id-number {
 .user-name {
   margin: 0;
   color: #393939;
-  font-weight: 400;
+  font-weight: 500;
   font-size: 0.833vw;
 }
 
@@ -2991,7 +2991,7 @@ input[type="checkbox"] {
 
 .doc-link {
   font-size: 0.9vw;
-  color: #306f65;
+  color: green;
   font-weight: 500;
   text-decoration: underline;
 }
@@ -3011,8 +3011,8 @@ input[type="checkbox"] {
 
 .badge-verified {
   background: #f6fffb;
-  color: #306f65;
-  border-color: #306f65;
+  color: green;
+  border-color: green;
 }
 
 .badge-declined {

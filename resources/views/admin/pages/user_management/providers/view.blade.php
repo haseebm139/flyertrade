@@ -469,11 +469,12 @@
                 View document
             </a>
 
-            <span class="badge badge-verified badge-pill actions-btn-verified" data-block='1' data-badge>Verified</span>
-            <div class="actions-menu" id="actions-menu-verified-1" style="display: none;">
-                <a href="#">Pend</a>
-                <a href="#" class="showDeleteModal">Decline</a>
-            </div>
+            <span class="badge badge-verified badge-pill actions-btn-verified" style="position:relative" data-block='1' data-badge>Verified &nbsp; <i class="fa-solid fa-chevron-down"></i> 
+                          <div class="actions-menu" id="actions-menu-verified-1" style="display: none;left:0px;right:unset;">
+                             <a href="#">Pend</a>
+                                <a href="#" class="showDeleteModal">Decline</a>
+                            </div>
+                    </span>
         </div>
 
             <div class="doc-row" data-id="2">
@@ -489,11 +490,13 @@
                     data-src="{{ asset('assets/images/icons/id-sample.png') }}">
                     View document
                 </a>
-                     <span class="badge badge-verified badge-pill actions-btn-verified" data-block='2' data-badge>Verified</span>
-                <div class="actions-menu" id="actions-menu-verified-2" style="display: none;">
+                     <span class="badge badge-verified badge-pill actions-btn-verified" style="position:relative" data-block='2' data-badge>Verified &nbsp; <i class="fa-solid fa-chevron-down"></i> 
+                          <div class="actions-menu" id="actions-menu-verified-2" style="display: none;left:0px;right:unset;">
                              <a href="#">Pend</a>
                                 <a href="#" class="showDeleteModal">Decline</a>
                             </div>
+                    </span>
+          
             </div>
 
             <div class="doc-row" data-id="3">
@@ -509,11 +512,12 @@
                     data-src="{{ asset('assets/images/icons/id-sample.png') }}">
                     View document
                 </a>
-                <span class="badge badge-verified badge-pill actions-btn-verified" data-block='3' data-badge>Verified</span>
-                <div class="actions-menu" id="actions-menu-verified-3" style="display: none;">
-                                 <a href="#">Pend</a>
+         <span class="badge badge-verified badge-pill actions-btn-verified" style="position:relative" data-block='3' data-badge>Verified &nbsp; <i class="fa-solid fa-chevron-down"></i> 
+                          <div class="actions-menu" id="actions-menu-verified-3" style="display: none;left:0px;right:unset;">
+                             <a href="#">Pend</a>
                                 <a href="#" class="showDeleteModal">Decline</a>
                             </div>
+                    </span>
             </div>
 
             <div class="doc-row" data-id="4">
@@ -529,11 +533,12 @@
                     data-src="{{ asset('assets/images/icons/id-sample.png') }}">
                     View document
                 </a>
-                  <span class="badge badge-verified badge-pill actions-btn-verified" data-block='4' data-badge>Verified</span>
-                <div class="actions-menu" id="actions-menu-verified-4" style="display: none;">
-                                <a href="#">Pend</a>
+                <span class="badge badge-verified badge-pill actions-btn-verified" style="position:relative" data-block='4' data-badge>Verified &nbsp; <i class="fa-solid fa-chevron-down"></i> 
+                          <div class="actions-menu" id="actions-menu-verified-4" style="display: none;left:0px;right:unset;">
+                             <a href="#">Pend</a>
                                 <a href="#" class="showDeleteModal">Decline</a>
                             </div>
+                    </span>
             </div>
             <div class="doc-row" data-id="5">
                 <div>
@@ -548,11 +553,12 @@
                     data-src="{{ asset('assets/images/icons/id-sample.png') }}">
                     View document
                 </a>
-                <span class="badge badge-verified badge-pill actions-btn-verified" data-block='5' data-badge>Verified</span>
-                <div class="actions-menu" id="actions-menu-verified-5" style="display: none;">
-                                  <a href="#">Pend</a>
+               <span class="badge badge-verified badge-pill actions-btn-verified" style="position:relative" data-block='5' data-badge>Verified &nbsp; <i class="fa-solid fa-chevron-down"></i> 
+                          <div class="actions-menu" id="actions-menu-verified-5" style="display: none;left:0px;right:unset;">
+                             <a href="#">Pend</a>
                                 <a href="#" class="showDeleteModal">Decline</a>
                             </div>
+                    </span>
             </div>
         </div>
 

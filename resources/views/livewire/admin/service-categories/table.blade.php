@@ -63,7 +63,7 @@
                                         <p class="delete-text">Are you sure you want to delete this service category?</p>
                                         <div class="delete-actions justify-content-start">
                                             <button class="confirm-delete-btn">Delete</button>
-                                            <button class="cancel-delete-btn">Cancel</button>
+                                            <button class="cancel-delete-btn"  data-id="{{ $item->id }}">Cancel</button>
                                         </div>
                                     </div>
                                 </div>
@@ -122,16 +122,21 @@
         let id = $(this).data('id');
         $('#globalDeleteModal'+id).css('display','block');
     })
-       $(document).on('click','.closeDeleteModal',function(e){
+    $(document).on('click','.closeDeleteModal',function(e){
         e.preventDefault();
         let id = $(this).data('id');
         $('#globalDeleteModal'+id).css('display','none');
     })
-$(document).on('click', function(e) {
-    if (!$(e.target).closest('.showDeleteModal, .deleteModal').length) {
-        $('.deleteModal').hide();
-    }
-});
+        $(document).on('click','.cancel-delete-btn',function(e){
+        e.preventDefault();
+        let id = $(this).data('id');
+        $('#globalDeleteModal'+id).css('display','none');
+    })
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('.showDeleteModal, .deleteModal').length) {
+            $('.deleteModal').hide();
+        }
+    });
 // document.addEventListener("DOMContentLoaded", function() {
 //     const modal = document.getElementById("globalDeleteModal");
 //     const confirmBtn = modal.querySelector(".confirm-delete-btn");

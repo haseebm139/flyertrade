@@ -4,7 +4,17 @@
 @section('header', 'Roles and Permissions')
 
 @section('content')
-
+<style>
+    #addUserModal .custom-select-input ,#addUserModal .form-select{
+        background: #F6F6F6;
+        border-color:#ddd;
+        color:#333 !important;
+    }
+    #addUserModal .custom-select-text{
+        color:#777777 !important;
+            font-size: 0.9vw;
+    }
+</style>
 <div class="container">
     <h1 class="page-title">Roles and Permissions</h1>
 </div>
