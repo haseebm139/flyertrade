@@ -448,15 +448,15 @@
     <div class="toolbar">
         <h3 class="toolbar-title">Documents</h3>
         <div class="toolbar-actions" hidden>
-            <button class="btn btn-verified" data-action="verified">✔ Mark as verified</button>
-            <button class="btn btn-declined" data-action="declined">✖ Mark as decline</button>
-            <button class="btn btn-pending" data-action="pending">— Mark as pending</button>
+            <button class="btn btn-verified" style="font-weight:500" data-action="verified"><i class="fa-solid fa-trash-can"></i>&nbsp; Mark as verified</button>
+            <button class="btn btn-declined"  style="font-weight:500" data-action="declined"><i class="fa-solid fa-xmark"></i>&nbsp; Mark as decline</button>
+            <button class="btn btn-pending"  style="font-weight:500" data-action="pending"><i class="fa-solid fa-minus"></i>&nbsp; Mark as pending</button>
         </div>
     </div>
 
     <div class="documents-list">
         <div class="doc-row" data-id="1">
-            <div>
+            <div class="d-flex align-items-center">
                 <label class="check-wrap check-wrap-checkbox">
                     <input type="checkbox" class="row-check">
                     <span class="checkmark"></span>
@@ -472,13 +472,13 @@
             <span class="badge badge-verified badge-pill actions-btn-verified" style="position:relative" data-block='1' data-badge>Verified &nbsp; <i class="fa-solid fa-chevron-down"></i> 
                           <div class="actions-menu" id="actions-menu-verified-1" style="display: none;left:0px;right:unset;">
                              <a href="#">Pend</a>
-                                <a href="#" class="showDeleteModal">Decline</a>
+                                <a href="#" >Decline</a>
                             </div>
                     </span>
         </div>
 
             <div class="doc-row" data-id="2">
-                <div>
+                         <div class="d-flex align-items-center">
                     <label class="check-wrap check-wrap-checkbox">
                         <input type="checkbox" class="row-check">
                         <span class="checkmark"></span>
@@ -493,14 +493,14 @@
                      <span class="badge badge-verified badge-pill actions-btn-verified" style="position:relative" data-block='2' data-badge>Verified &nbsp; <i class="fa-solid fa-chevron-down"></i> 
                           <div class="actions-menu" id="actions-menu-verified-2" style="display: none;left:0px;right:unset;">
                              <a href="#">Pend</a>
-                                <a href="#" class="showDeleteModal">Decline</a>
+                                <a href="#">Decline</a>
                             </div>
                     </span>
           
             </div>
 
             <div class="doc-row" data-id="3">
-                <div>
+                        <div class="d-flex align-items-center">
                     <label class="check-wrap check-wrap-checkbox">
                         <input type="checkbox" class="row-check">
                         <span class="checkmark"></span>
@@ -515,13 +515,13 @@
          <span class="badge badge-verified badge-pill actions-btn-verified" style="position:relative" data-block='3' data-badge>Verified &nbsp; <i class="fa-solid fa-chevron-down"></i> 
                           <div class="actions-menu" id="actions-menu-verified-3" style="display: none;left:0px;right:unset;">
                              <a href="#">Pend</a>
-                                <a href="#" class="showDeleteModal">Decline</a>
+                                <a href="#" >Decline</a>
                             </div>
                     </span>
             </div>
 
             <div class="doc-row" data-id="4">
-                <div>
+                        <div class="d-flex align-items-center">
                     <label class="check-wrap check-wrap-checkbox">
                         <input type="checkbox" class="row-check">
                         <span class="checkmark"></span>
@@ -541,7 +541,7 @@
                     </span>
             </div>
             <div class="doc-row" data-id="5">
-                <div>
+                          <div class="d-flex align-items-center">
                     <label class="check-wrap check-wrap-checkbox">
                         <input type="checkbox" class="row-check">
                         <span class="checkmark"></span>
@@ -553,10 +553,10 @@
                     data-src="{{ asset('assets/images/icons/id-sample.png') }}">
                     View document
                 </a>
-               <span class="badge badge-verified badge-pill actions-btn-verified" style="position:relative" data-block='5' data-badge>Verified &nbsp; <i class="fa-solid fa-chevron-down"></i> 
+               <span class="badge badge-verified badge-pill actions-btn-verified text-danger border-danger" style="position:relative;background:rgba(251, 55, 72, 0.1);" data-block='5' data-badge>Declined &nbsp; <i class="fa-solid fa-chevron-down"></i> 
                           <div class="actions-menu" id="actions-menu-verified-5" style="display: none;left:0px;right:unset;">
-                             <a href="#">Pend</a>
-                                <a href="#" class="showDeleteModal">Decline</a>
+                                <a href="#">Pend</a>
+                                <a href="#" >Verified</a>
                             </div>
                     </span>
             </div>
@@ -627,9 +627,9 @@
         <textarea readonly> Reliable and affordable plumbing solutions for your home or office. From fixing leaks and unclogging drains to full bathroom installations, I deliver fast and professional services. </textarea>
 
         <div class="price-boxes">
-            <div>Maximum price/hr <input type="text" value="$80" readonly></div>
-            <div>Mid price/hr <input type="text" value="$30" readonly></div>
-            <div>Minimum price/hr <input type="text" value="$40" readonly></div>
+            <div><label for="">Maximum price/hr</label><input type="text" value="$80" readonly></div>
+            <div><label for="">Mid price/hr</label> <input type="text" value="$30" readonly></div>
+            <div><label for="">Minimum price/hr</label><input type="text" value="$40" readonly></div>
         </div>
 
         <h4>Photos</h4>
@@ -767,8 +767,8 @@
   align-items: center;
   z-index: 999; */
   position: absolute;
-  right: 0px;
-  top: 80px;
+    top: -5px;
+    right: -5px;
 }
 
 .delete-card {

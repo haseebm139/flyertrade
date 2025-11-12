@@ -482,8 +482,8 @@
         align-items: center;
         z-index: 999; */
         position: absolute;
-        top:80px;
-        right: 0px;
+        top: -5px;
+        right: -5px;
     }
 
     .delete-card {

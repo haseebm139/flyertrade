@@ -134,8 +134,8 @@
                             </div>
                         </td>
                         <td>
-                            <span class="status last-seen">
-                                {{ $user->last_login_at ? $user->last_login_at->diffForHumans() : 'Never' }}
+                            <span class="status last-seen py-2" style="font-weight:400">
+                                {{ $user->last_login_at ? $user->last_login_at->diffForHumans() : '2 weeks ago' }}
                             </span>
                         </td>
                         <td><span class="date">{{ $user->created_at->format('Y-m-d') }}</span></td>

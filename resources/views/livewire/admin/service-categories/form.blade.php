@@ -22,12 +22,13 @@
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
                     <label>Description</label>
-                    <input
+                    <textarea style=""
+                    id="myTextarea"
+                    rows="2"
                         type="text"
                         class="form-input"
                         placeholder="Add description"
-                        wire:model="description"
-                    >
+                        wire:model="description" rows="1"></textarea>
                     @error('description')
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
@@ -46,4 +47,24 @@
             </div>
         </div>
     @endif
+
+<style>
+#myTextarea {
+  width: 100%;
+  min-height: 40px;
+  resize: none; /* optional: user can't resize manually */
+  overflow: hidden; /* optional: hide scrollbar */
+}
+</style>
 </div>
+<script>
+const textarea = document.getElementById("myTextarea");
+
+textarea.addEventListener("input", () => {
+  textarea.style.height = "auto"; // reset height
+  textarea.style.height = textarea.scrollHeight + "px"; // set new height
+});
+</script>
+
+
+

@@ -8,14 +8,25 @@
 
             <div class="modal-content role-add add-user-modal">
                 <span class="close-modal" id="closeAddUserModal" wire:click="closeModal">&times;</span>
-                <h3>{{ $isEdit ? 'Edit Permission' : 'Add Permission' }} </h3>
+                <h3 id="change___Modal_title">{{ $isEdit ? 'Edit Role' : 'Add Role' }} </h3>
                 <form wire:submit.prevent="save">
-                    <!-- Role input -->
-                    <label>Role</label>
-                    <input type="text" class="form-input" wire:model="name" placeholder="Enter name">
-                    @error('name')
-                        <span class="error">{{ $message }}</span>
-                    @enderror
+                    <div  id="first_btns____wrapper">
+                          <!-- Role input -->
+                        <label>Role</label>
+                        <input type="text" class="form-input" wire:model="name" placeholder="Enter name">
+                        @error('name')
+                            <span class="error">{{ $message }}</span>
+                        @enderror
+                           <div class="form-actions justify-content-center" id="first_btns____">
+                            <button type="button" class="cancel-btn" wire:click="closeModal">Cancel</button>
+                            <button type="button" class="submit-btn add_permission________" id="add_permission________"><i class="fa-solid fa-plus"></i>
+                                {{ $isEdit ? 'Add Permission' : 'Add Permission' }}
+                            </button>
+                        </div>
+                    </div>
+              
+
+                    <div id="second_btns____wrapper" style="display:none">
 
                     <label>Permission</label>
                     <!-- Permission Section (hidden by default) -->
@@ -47,6 +58,8 @@
                             <button type="button" class="tab-control right" onclick="scrollTabs(1)">
                                 <img src="{{ asset('assets/images/icons/right-control.png') }} " alt="Right">
                             </button>
+                               <!-- Form actions -->
+                 
                         </div>
 
 
@@ -69,20 +82,16 @@
                                 </div>
                             @endif
                         @endforeach
-
-
-
-
-
+                        <!-- Form actions -->
+                        <div class="form-actions justify-content-center">
+                            <button type="button" class="cancel-btn" wire:click="closeModal">Cancel</button>
+                            <button type="submit" class="submit-btn"><i class="fa-solid fa-plus"></i> 
+                                {{ $isEdit ? 'Add Permission' : 'Add Permission' }}
+                            </button>
+                        </div>
+                    </div>
                     </div>
 
-                    <!-- Form actions -->
-                    <div class="form-actions justify-content-center">
-                        <button type="button" class="cancel-btn" wire:click="closeModal">Cancel</button>
-                        <button type="submit" class="submit-btn">+
-                            {{ $isEdit ? 'Update Permission' : 'Add Permission' }}
-                        </button>
-                    </div>
                 </form>
             </div>
 
@@ -90,6 +99,15 @@
     @endif
 
     <script>
+        
+        $(document).on('click', '.add_permission________', function(e){
+             e.preventDefault();
+            // $("#first_btns____wrapper").css("display","none");
+             $("#second_btns____wrapper").css("display","block");
+             $("#first_btns____").css("display","none");
+             $("#change___Modal_title").html('Add Permission');
+        
+        })
         function switchTab(tabId) {
             // Hide all tab contents
             document.querySelectorAll('.tab-content').forEach(content => {
