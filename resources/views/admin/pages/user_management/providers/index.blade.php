@@ -1,7 +1,7 @@
 @extends('admin.layouts.app')
 
 @section('title', 'Service Providers')
-@section('header', 'Booking Management')
+@section('header', 'User Management')
 @section('content')
     
      <livewire:admin.user-stats mode="providers"/>
