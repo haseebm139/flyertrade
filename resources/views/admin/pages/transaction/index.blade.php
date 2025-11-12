@@ -501,7 +501,8 @@
                 ['value' => 'booking_payment', 'label' => 'Booking Payment'],
                 ['value' => 'service_charges', 'label' => 'Service Charges'],
             ]" placeholder="Select transaction"
-                wireModel="transaction_type" class="form-input" />
+                wireModel="transaction_type" 
+                class="form-input" />
 
             <label>Payment method</label>
             <x-custom-select name="payment_method" :options="[

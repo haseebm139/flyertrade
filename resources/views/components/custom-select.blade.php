@@ -15,33 +15,36 @@
     $selectedValue = $selectedValue !== null && $selectedValue !== '' ? $selectedValue : null;
     $selectedLabel = null;
 
-    // Normalize options first
-    $normalizedOptions = collect($options)
-        ->map(function ($option) {
-            if (is_array($option)) {
-                return [
-                    'value' => $option['value'] ?? ($option['id'] ?? null),
-                    'label' => $option['label'] ?? ($option['name'] ?? ($option['text'] ?? '')),
-                ];
-            }
-            return ['value' => $option, 'label' => $option];
-        })
-        ->toArray();
+    // Check if we're in a Livewire component context
+$isLivewire = isset($this) && $this instanceof \Livewire\Component;
 
-    // If no value selected and options exist, select first non-empty option
-    if ($selectedValue === null && !empty($normalizedOptions)) {
-        foreach ($normalizedOptions as $option) {
-            if ($option['value'] !== '' && $option['value'] !== null) {
-                $selectedValue = $option['value'];
-                $selectedLabel = $option['label'];
-                break;
-            }
+// Normalize options first
+$normalizedOptions = collect($options)
+    ->map(function ($option) {
+        if (is_array($option)) {
+            return [
+                'value' => $option['value'] ?? ($option['id'] ?? null),
+                'label' => $option['label'] ?? ($option['name'] ?? ($option['text'] ?? '')),
+            ];
         }
-    } elseif ($selectedValue !== null) {
-        // Find the label for the selected value
-        foreach ($normalizedOptions as $option) {
-            if ($option['value'] !== '' && $option['value'] !== null && $option['value'] == $selectedValue) {
-                $selectedLabel = $option['label'];
+        return ['value' => $option, 'label' => $option];
+    })
+    ->toArray();
+
+// If no value selected and options exist, select first non-empty option
+if ($selectedValue === null && !empty($normalizedOptions)) {
+    foreach ($normalizedOptions as $option) {
+        if ($option['value'] !== '' && $option['value'] !== null) {
+            $selectedValue = $option['value'];
+            $selectedLabel = $option['label'];
+            break;
+        }
+    }
+} elseif ($selectedValue !== null) {
+    // Find the label for the selected value
+    foreach ($normalizedOptions as $option) {
+        if ($option['value'] !== '' && $option['value'] !== null && $option['value'] == $selectedValue) {
+            $selectedLabel = $option['label'];
                 break;
             }
         }
@@ -57,7 +60,7 @@
         this.selected = option;
         this.open = false;
         $dispatch('select-changed', { name: '{{ $name }}', value: option.value, label: option.label });
-        @if ($wireModel) @this.set('{{ $wireModel }}', option.value); @endif
+        @if ($wireModel && $isLivewire) @this.set('{{ $wireModel }}', option.value); @endif
     }
 }"
     @click.outside="open = false" @if ($id) id="{{ $id }}" @endif>
@@ -150,7 +153,7 @@
         max-height: 200px;
         overflow-y: auto;
         left: 0px;
-    /* top: 50px; */
+        /* top: 50px; */
     }
 
     .custom-select-option {
@@ -161,7 +164,7 @@
         justify-content: space-between;
         transition: background-color 0.2s;
         border-bottom: 1px solid #f3f4f6;
-        font-weight:500;
+        font-weight: 500;
     }
 
     .custom-select-option:last-child {
