@@ -12,7 +12,7 @@
     <div class="users-toolbar">
         <div class="toolbar-left">
             <button class="export-btn">
-                <span class="download-icon"><img src="{{ asset('assets/images/icons/download.png') }}" alt=""></span>
+                <span class="download-icon"><img src="{{ asset('assets/images/icons/download.png') }}" alt=""></span>&nbsp;
                 Export
                 CSV
             </button>
@@ -20,8 +20,8 @@
         </div>
         <div class="toolbar-right">
             <input type="text" class="search-user" placeholder="Search user">
-            <button class="filter-btn" id="openFilterModal"> <span class="download-icon"><img
-                        src="{{ asset('assets/images/icons/button-icon.png') }}" alt=""></span>Filter</button>
+            <button class="filter-btn" id="openFilterModal"> Filter&nbsp;&nbsp;<span class="download-icon"><img
+                        src="{{ asset('assets/images/icons/button-icon.png') }}" alt=""></span></button>
         </div>
     </div>
 
@@ -59,9 +59,9 @@
         <tbody>
             <tr>
                 <td><input type="checkbox"></td>
-                <td>12345</td>
-                <td>Payout</td>
-                <td><span class="date">Jan,2025-01-31</span>
+                <td style="font-weight:500;">12345</td>
+                <td style="font-weight:500;">Payout</td>
+                <td><span class="date" style="font-weight:500;">Jan,2025-01-31</span>
                     <br>
                     <small class="time">12:00pm</small>
 
@@ -72,13 +72,13 @@
                     <div class="user-info">
                         <img src="{{ asset('assets/images/icons/person-one.png') }}" alt="User">
                         <div>
-                            <p class="user-name">Johnbosco Davies</p>
+                            <p class="user-name" style="font-weight:500;">Johnbosco Davies</p>
 
                         </div>
                     </div>
                 </td>
-                <td>Mobile money</td>
-                <td>$1200</td>
+                <td style="font-weight:500;">Mobile money</td>
+                <td style="font-weight:500;">$1200</td>
 
 
                 <td><span class="status pending">Pending</span></td>
@@ -100,10 +100,10 @@
                 </td>
             </tr>
             <tr>
-                <td><input type="checkbox"></td>
-                <td>12345</td>
-                <td>Booking Payment</td>
-                <td><span class="date">Jan,2025-01-31</span>
+                <td style="font-weight:500;"><input type="checkbox"></td>
+                <td style="font-weight:500;">12345</td>
+                <td style="font-weight:500;">Booking Payment</td>
+                <td><span class="date" style="font-weight:500;">Jan,2025-01-31</span>
                     <br>
                     <small class="time">12:00pm</small>
 
@@ -113,13 +113,13 @@
                     <div class="user-info">
                         <img src="{{ asset('assets/images/icons/person-one.png') }}" alt="User">
                         <div>
-                            <p class="user-name">Johnbosco Davies</p>
+                            <p class="user-name" style="font-weight:500;">Johnbosco Davies</p>
 
                         </div>
                     </div>
                 </td>
-                <td>Card</td>
-                <td>$1200</td>
+                <td style="font-weight:500;">Card</td>
+                <td style="font-weight:500;">$1200</td>
 
 
 
@@ -144,9 +144,9 @@
 
             <tr>
                 <td><input type="checkbox"></td>
-                <td>12345</td>
-                <td>Service Charge</td>
-                <td><span class="date">Jan,2025-01-31</span>
+                <td style="font-weight:500;">12345</td>
+                <td style="font-weight:500;">Service Charge</td>
+                <td><span class="date" style="font-weight:500;">Jan,2025-01-31</span>
                     <br>
                     <small class="time">12:00pm</small>
 
@@ -156,13 +156,13 @@
                     <div class="user-info">
                         <img src="{{ asset('assets/images/icons/person-one.png') }}" alt="User">
                         <div>
-                            <p class="user-name">Johnbosco Davies</p>
+                            <p class="user-name" style="font-weight:500;">Johnbosco Davies</p>
 
                         </div>
                     </div>
                 </td>
-                <td>Pay Stock</td>
-                <td>$1200</td>
+                <td style="font-weight:500;">Pay Stock</td>
+                <td style="font-weight:500;">$1200</td>
 
 
 
@@ -188,9 +188,9 @@
 
             <tr>
                 <td><input type="checkbox"></td>
-                <td>12345</td>
-                <td>Refund</td>
-                <td><span class="date">Jan,2025-01-31</span>
+                <td style="font-weight:500;">12345</td>
+                <td style="font-weight:500;">Refund</td>
+                <td><span class="date" style="font-weight:500;">Jan,2025-01-31</span>
                     <br>
                     <small class="time">12:00pm</small>
 
@@ -200,13 +200,13 @@
                     <div class="user-info">
                         <img src="{{ asset('assets/images/icons/person-one.png') }}" alt="User">
                         <div>
-                            <p class="user-name">Johnbosco Davies</p>
+                            <p class="user-name" style="font-weight:500;">Johnbosco Davies</p>
 
                         </div>
                     </div>
                 </td>
-                <td>Card</td>
-                <td>$1200</td>
+                <td style="font-weight:500;">Card</td>
+                <td style="font-weight:500;">$1200</td>
 
 
 
@@ -230,9 +230,9 @@
             </tr>
             <tr>
                 <td><input type="checkbox"></td>
-                <td>12345</td>
-                <td>Service Charge</td>
-                <td><span class="date">Jan,2025-01-31</span>
+                <td style="font-weight:500;">12345</td>
+                <td style="font-weight:500;">Service Charge</td>
+                <td><span class="date" style="font-weight:500;">Jan,2025-01-31</span>
                     <br>
                     <small class="time">12:00pm</small>
 
@@ -242,13 +242,13 @@
                     <div class="user-info">
                         <img src="{{ asset('assets/images/icons/person-one.png') }}" alt="User">
                         <div>
-                            <p class="user-name">Johnbosco Davies</p>
+                            <p class="user-name" style="font-weight:500;">Johnbosco Davies</p>
 
                         </div>
                     </div>
                 </td>
-                <td>Pay Stock</td>
-                <td>$1200</td>
+                <td style="font-weight:500;">Pay Stock</td>
+                <td style="font-weight:500;">$1200</td>
 
 
 
@@ -271,9 +271,9 @@
             </tr>
             <tr>
                 <td><input type="checkbox"></td>
-                <td>12345</td>
-                <td>Service Charge</td>
-                <td><span class="date">Jan,2025-01-31</span>
+                <td style="font-weight:500;">12345</td>
+                <td style="font-weight:500;">Service Charge</td>
+                <td><span class="date" style="font-weight:500;">Jan,2025-01-31</span>
                     <br>
                     <small class="time">12:00pm</small>
 
@@ -283,13 +283,13 @@
                     <div class="user-info">
                         <img src="{{ asset('assets/images/icons/person-one.png') }}" alt="User">
                         <div>
-                            <p class="user-name">Johnbosco Davies</p>
+                            <p class="user-name" style="font-weight:500;">Johnbosco Davies</p>
 
                         </div>
                     </div>
                 </td>
-                <td>Pay Stock</td>
-                <td>$1200</td>
+                <td style="font-weight:500;">Pay Stock</td>
+                <td style="font-weight:500;">$1200</td>
 
 
 
@@ -314,9 +314,9 @@
             </tr>
             <tr>
                 <td><input type="checkbox"></td>
-                <td>12345</td>
-                <td>Payout</td>
-                <td><span class="date">Jan,2025-01-31</span>
+                <td style="font-weight:500;">12345</td>
+                <td style="font-weight:500;">Payout</td>
+                <td><span class="date" style="font-weight:500;">Jan,2025-01-31</span>
                     <br>
                     <small class="time">12:00pm</small>
 
@@ -327,13 +327,13 @@
                     <div class="user-info">
                         <img src="{{ asset('assets/images/icons/person-one.png') }}" alt="User">
                         <div>
-                            <p class="user-name">Johnbosco Davies</p>
+                            <p class="user-name" style="font-weight:500;">Johnbosco Davies</p>
 
                         </div>
                     </div>
                 </td>
-                <td>Mobile money</td>
-                <td>$1200</td>
+                <td style="font-weight:500;">Mobile money</td>
+                <td style="font-weight:500;">$1200</td>
 
 
                 <td><span class="status pending">Pending</span></td>

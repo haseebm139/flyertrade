@@ -74,19 +74,12 @@
                             <img src="{{ asset('assets/images/icons/trash_trash.png') }}" alt="Delete"
                                 class="eye-icon">
                             <span
-                                style="    font-size: 0.9vw;
-    color: #064f3c;
-    cursor: pointer;     font-weight: 400;">
+                                style="font-size: 0.9vw; color: #064f3c; cursor: pointer; font-weight: 400;">
                                 Delete </span>
                         </button>
                         @if ($confirmingId === $role->id)
                             <div class="deleteModal delete-card" id="global-delete-modal"
-                                style="
-    position: absolute;
-    right: 12vw;
-    top: 1vw;
-    z-index: 99;
-">
+                                style=" position: absolute; right: 12vw; top: 1vw; z-index: 99; ">
                                 <div class="delete-card-header">
                                     <h3 class="delete-title">Delete Role</h3>
                                     <span class="delete-close" wire:click="$set('confirmingId', null)">&times;</span>

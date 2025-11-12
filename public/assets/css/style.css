@@ -2533,6 +2533,7 @@ font-weight:500;
   font-weight: 500;
   transition: all 0.3s ease;
   user-select: none;
+  justify-content: center;
 }
 
 /* Publish (Green) */

@@ -49,11 +49,6 @@
                                     </div>
                                 @endif
                             @endforeach
-
-
-
-                            <!-- Tabs Navigation -->
-
                             <!-- Right Control -->
                             <button type="button" class="tab-control right" onclick="scrollTabs(1)">
                                 <img src="{{ asset('assets/images/icons/right-control.png') }} " alt="Right">
@@ -61,16 +56,11 @@
                                <!-- Form actions -->
                  
                         </div>
-
-
                         <!-- Tab content -->
                         @foreach ($permissionGroups as $groupName => $groupPermissions)
                             @if ($groupPermissions->count() > 0)
                                 <div id="{{ Str::slug($groupName) }}_tab"
                                     class="tab-content {{ $loop->first ? 'active' : '' }}">
-
-
-
                                     @foreach ($groupPermissions as $permission)
                                         <div class="permission-item">
                                             <span
@@ -112,11 +102,13 @@
             // Hide all tab contents
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.remove('active');
+                $("#ROlesss_tabb").addClass("active");
             });
 
             // Remove active class from all tabs
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.classList.remove('active');
+                 $("#ROlesss_tabb").addClass("active");
             });
 
             // Show selected tab content
