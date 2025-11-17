@@ -3,6 +3,13 @@
 @section('title', 'Transactions')
 @section('header', 'Transactions & Payments')
 @section('content')
+    <style>
+        .deleteModal{
+            position: absolute;
+            right:50px;
+            z-index: 99999;
+        }
+    </style>
     <livewire:admin.user-stats mode="transactions" />
 
     <br>
@@ -16,7 +23,7 @@
                 Export
                 CSV
             </button>
-            <button class="d-none add-user-btn" id="openAddUserModal">+ Add User</button>
+            <!-- <button class="d-none add-user-btn" id="openAddUserModal">+ Add User</button> -->
         </div>
         <div class="toolbar-right">
             <input type="text" class="search-user" placeholder="Search user">
@@ -82,7 +89,7 @@
 
 
                 <td><span class="status pending">Pending</span></td>
-                <td>
+                <td  style="position:relative;">
                     <div class="actions-dropdown">
                         <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three-dots.png') }}"
                                 class="dots-img "></button>
@@ -91,12 +98,27 @@
                                     alt="">
                                 View
                                 details</a>
-                            <a href="#" class="initiateBtn" data-user="Mike Brown">
+                            <a href="#" class="initiateBtn showDeleteModal___" data-id="1" data-user="Mike Brown">
                                 <img src="{{ asset('assets/images/icons/init.png') }}" alt=""> Initiate payout
                             </a>
 
                         </div>
+      
                     </div>
+                    <div id="globalDeleteModal__1" class="deleteModal" style="display: none;position:absolute;    top: 2.5vw; right: 3vw;">
+                                    <div class="delete-card">
+                                        <div class="delete-card-header">
+                                            <h3 class="delete-title">Initiate payout</h3>
+                                            <span class="delete-close closeDeleteModal" data-id="1">&times;</span>
+                                        </div>
+                                        <p class="delete-text">Are you sure you want to initiate payout to this user?</p>
+                                        <div class="delete-actions justify-content-start">
+                                          
+                                            <button class="cancel-delete-btn" data-id="1">Cancel</button>
+                                              <button class="confirm-delete-btn" style="background-color:#004E42 !important;color:#fff;">Initiate</button>
+                                        </div>
+                                    </div>
+                                </div>
                 </td>
             </tr>
             <tr>
@@ -124,7 +146,7 @@
 
 
                 <td><span class="status active">Completed</span></td>
-                <td>
+           <td  style="position:relative;">
                     <div class="actions-dropdown">
                         <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three-dots.png') }}"
                                 class="dots-img "></button>
@@ -133,12 +155,27 @@
                                     alt="">
                                 View
                                 details</a>
-                            <a href="#" class="initiateBtn" data-user="Mike Brown">
+                            <a href="#" class="initiateBtn showDeleteModal___" data-id="2" data-user="Mike Brown">
                                 <img src="{{ asset('assets/images/icons/init.png') }}" alt=""> Initiate payout
                             </a>
 
                         </div>
+      
                     </div>
+                    <div id="globalDeleteModal__2" class="deleteModal" style="display: none;position:absolute;    top: 2.5vw; right: 3vw;">
+                                    <div class="delete-card">
+                                        <div class="delete-card-header">
+                                            <h3 class="delete-title">Initiate payout</h3>
+                                            <span class="delete-close closeDeleteModal" data-id="2">&times;</span>
+                                        </div>
+                                        <p class="delete-text">Are you sure you want to initiate payout to this user?</p>
+                                        <div class="delete-actions justify-content-start">
+                                          
+                                            <button class="cancel-delete-btn" data-id="2">Cancel</button>
+                                              <button class="confirm-delete-btn" style="background-color:#004E42 !important;color:#fff;">Initiate</button>
+                                        </div>
+                                    </div>
+                                </div>
                 </td>
             </tr>
 
@@ -167,7 +204,7 @@
 
 
                 <td><span class="status active">Completed</span></td>
-                <td>
+   <td  style="position:relative;">
                     <div class="actions-dropdown">
                         <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three-dots.png') }}"
                                 class="dots-img "></button>
@@ -176,12 +213,27 @@
                                     alt="">
                                 View
                                 details</a>
-                            <a href="#" class="initiateBtn" data-user="Mike Brown">
+                            <a href="#" class="initiateBtn showDeleteModal___" data-id="3" data-user="Mike Brown">
                                 <img src="{{ asset('assets/images/icons/init.png') }}" alt=""> Initiate payout
                             </a>
 
                         </div>
+      
                     </div>
+                    <div id="globalDeleteModal__3" class="deleteModal" style="display: none;position:absolute;    top: 2.5vw; right: 3vw;">
+                                    <div class="delete-card">
+                                        <div class="delete-card-header">
+                                            <h3 class="delete-title">Initiate payout</h3>
+                                            <span class="delete-close closeDeleteModal" data-id="3">&times;</span>
+                                        </div>
+                                        <p class="delete-text">Are you sure you want to initiate payout to this user?</p>
+                                        <div class="delete-actions justify-content-start">
+                                          
+                                            <button class="cancel-delete-btn" data-id="3">Cancel</button>
+                                              <button class="confirm-delete-btn" style="background-color:#004E42 !important;color:#fff;">Initiate</button>
+                                        </div>
+                                    </div>
+                                </div>
                 </td>
             </tr>
 
@@ -211,7 +263,7 @@
 
 
                 <td><span class="status active">Completed</span></td>
-                <td>
+   <td  style="position:relative;">
                     <div class="actions-dropdown">
                         <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three-dots.png') }}"
                                 class="dots-img "></button>
@@ -220,12 +272,27 @@
                                     alt="">
                                 View
                                 details</a>
-                            <a href="#" class="initiateBtn" data-user="Mike Brown">
+                            <a href="#" class="initiateBtn showDeleteModal___" data-id="4" data-user="Mike Brown">
                                 <img src="{{ asset('assets/images/icons/init.png') }}" alt=""> Initiate payout
                             </a>
 
                         </div>
+      
                     </div>
+                    <div id="globalDeleteModal__4" class="deleteModal" style="display: none;position:absolute;    top: 2.5vw; right: 3vw;">
+                                    <div class="delete-card">
+                                        <div class="delete-card-header">
+                                            <h3 class="delete-title">Initiate payout</h3>
+                                            <span class="delete-close closeDeleteModal" data-id="4">&times;</span>
+                                        </div>
+                                        <p class="delete-text">Are you sure you want to initiate payout to this user?</p>
+                                        <div class="delete-actions justify-content-start">
+                                          
+                                            <button class="cancel-delete-btn" data-id="4">Cancel</button>
+                                              <button class="confirm-delete-btn" style="background-color:#004E42 !important;color:#fff;">Initiate</button>
+                                        </div>
+                                    </div>
+                                </div>
                 </td>
             </tr>
             <tr>
@@ -253,7 +320,7 @@
 
 
                 <td><span class="status active">Completed</span></td>
-                <td>
+    <td  style="position:relative;">
                     <div class="actions-dropdown">
                         <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three-dots.png') }}"
                                 class="dots-img "></button>
@@ -262,11 +329,27 @@
                                     alt="">
                                 View
                                 details</a>
-                            <a href="#" class="initiateBtn" data-user="Mike Brown">
+                            <a href="#" class="initiateBtn showDeleteModal___" data-id="5" data-user="Mike Brown">
                                 <img src="{{ asset('assets/images/icons/init.png') }}" alt=""> Initiate payout
                             </a>
+
                         </div>
+      
                     </div>
+                    <div id="globalDeleteModal__5" class="deleteModal" style="display: none;position:absolute;    top: 2.5vw; right: 3vw;">
+                                    <div class="delete-card">
+                                        <div class="delete-card-header">
+                                            <h3 class="delete-title">Initiate payout</h3>
+                                            <span class="delete-close closeDeleteModal" data-id="5">&times;</span>
+                                        </div>
+                                        <p class="delete-text">Are you sure you want to initiate payout to this user?</p>
+                                        <div class="delete-actions justify-content-start">
+                                          
+                                            <button class="cancel-delete-btn" data-id="5">Cancel</button>
+                                              <button class="confirm-delete-btn" style="background-color:#004E42 !important;color:#fff;">Initiate</button>
+                                        </div>
+                                    </div>
+                                </div>
                 </td>
             </tr>
             <tr>
@@ -294,7 +377,7 @@
 
 
                 <td><span class="status active">Completed</span></td>
-                <td>
+   <td  style="position:relative;">
                     <div class="actions-dropdown">
                         <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three-dots.png') }}"
                                 class="dots-img "></button>
@@ -303,13 +386,27 @@
                                     alt="">
                                 View
                                 details</a>
-                            <a href="#" class="showDeleteModal" data-user="Mike Brown">
+                            <a href="#" class="initiateBtn showDeleteModal___" data-id="6" data-user="Mike Brown">
                                 <img src="{{ asset('assets/images/icons/init.png') }}" alt=""> Initiate payout
                             </a>
 
-
                         </div>
+      
                     </div>
+                    <div id="globalDeleteModal__6" class="deleteModal" style="display: none;position:absolute;    top: 2.5vw; right: 3vw;">
+                                    <div class="delete-card">
+                                        <div class="delete-card-header">
+                                            <h3 class="delete-title">Initiate payout</h3>
+                                            <span class="delete-close closeDeleteModal" data-id="6">&times;</span>
+                                        </div>
+                                        <p class="delete-text">Are you sure you want to initiate payout to this user?</p>
+                                        <div class="delete-actions justify-content-start">
+                                          
+                                            <button class="cancel-delete-btn" data-id="6">Cancel</button>
+                                              <button class="confirm-delete-btn" style="background-color:#004E42 !important;color:#fff;">Initiate</button>
+                                        </div>
+                                    </div>
+                                </div>
                 </td>
             </tr>
             <tr>
@@ -337,7 +434,7 @@
 
 
                 <td><span class="status pending">Pending</span></td>
-                <td>
+   <td  style="position:relative;">
                     <div class="actions-dropdown">
                         <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three-dots.png') }}"
                                 class="dots-img "></button>
@@ -346,12 +443,27 @@
                                     alt="">
                                 View
                                 details</a>
-                            <a href="#" class="initiateBtn" data-user="Mike Brown">
+                            <a href="#" class="initiateBtn showDeleteModal___" data-id="7" data-user="Mike Brown">
                                 <img src="{{ asset('assets/images/icons/init.png') }}" alt=""> Initiate payout
                             </a>
 
                         </div>
+      
                     </div>
+                    <div id="globalDeleteModal__7" class="deleteModal" style="display: none;position:absolute;    top: 2.5vw; right: 3vw;">
+                                    <div class="delete-card">
+                                        <div class="delete-card-header">
+                                            <h3 class="delete-title">Initiate payout</h3>
+                                            <span class="delete-close closeDeleteModal" data-id="7">&times;</span>
+                                        </div>
+                                        <p class="delete-text">Are you sure you want to initiate payout to this user?</p>
+                                        <div class="delete-actions justify-content-start">
+                                          
+                                            <button class="cancel-delete-btn" data-id="7">Cancel</button>
+                                              <button class="confirm-delete-btn" style="background-color:#004E42 !important;color:#fff;">Initiate</button>
+                                        </div>
+                                    </div>
+                                </div>
                 </td>
             </tr>
         </tbody>
@@ -429,26 +541,10 @@
 
         </div>
     </div>
-
     <!-- this modal is end here -->
 
 
-    <!-- initiate moda -->
-    <div id="globalDeleteModal" class="deleteModal" style="display: none;">
-        <div class="delete-card">
-            <div class="delete-card-header">
-                <h3 class="delete-title">Delete Service</h3>
-                <span class="delete-close" id="closeDeleteModal">&times;</span>
-            </div>
-            <p class="delete-text">Are you sure you want to delete this service?</p>
-            <div class="delete-actions">
-                <div class="delete-actions"> <button class="confirm-delete-btn">Delete</button> <button
-                        class="cancel-delete-btn">Cancel</button> </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- end -->
 
 
 
@@ -531,6 +627,31 @@
 @endpush
 @push('scripts')
     <script>
+
+    $(document).on('click','.showDeleteModal___',function(e){
+      
+        e.preventDefault();
+        let id = $(this).data('id');
+          
+        $('#globalDeleteModal__'+id).css('display','block');
+    })
+       $(document).on('click','.closeDeleteModal',function(e){
+        e.preventDefault();
+        let id = $(this).data('id');
+        $('#globalDeleteModal__'+id).css('display','none');
+    })
+    $(document).on('click','.cancel-delete-btn',function(e){
+        e.preventDefault();
+        let id = $(this).data('id');
+        $('#globalDeleteModal__'+id).css('display','none');
+    })
+$(document).on('click', function(e) {
+    if (!$(e.target).closest('.showDeleteModal___, .deleteModal').length) {
+        $('.deleteModal').hide();
+    }
+});
+    
+
         document.addEventListener("DOMContentLoaded", function() {
             const modal = document.getElementById("globalDeleteModal");
             const confirmBtn = document.getElementById("confirmDeleteBtn");
