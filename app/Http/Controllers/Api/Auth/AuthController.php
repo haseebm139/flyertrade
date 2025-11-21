@@ -43,11 +43,11 @@ class AuthController extends BaseController
         $user = User::where('email', $request->email)->first();
 
         if (!$user) {
-            return $this->sendError('User not found');
+            return $this->sendError('Invalid email or password');
         }
 
         if (!Hash::check($request->password, $user->password)) {
-            return $this->sendError('Invalid password');
+            return $this->sendError('Invalid email or password');
         }
 
         if ($request->filled('role')) {
