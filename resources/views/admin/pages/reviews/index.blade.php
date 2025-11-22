@@ -106,27 +106,29 @@
                     </td>
 
 
-              <td>
-  <div class="status-dropdown">
-    <span class="status publish" onclick="toggleDropdown(this)">
-      Publish
-      <svg class="arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0a8754" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="6 9 12 15 18 9"></polyline>
-      </svg>
-    </span>
-    <ul class="dropdown-menu">
-      <li onclick="setStatus(this, 'Pending')">Pending</li>
-      <li onclick="setStatus(this, 'Publish')">Publish</li>
-     
-    </ul>
-  </div>
-</td>
+                    <td>
+                        <div class="status-dropdown">
+                            <span class="status publish" onclick="toggleDropdown(this)">
+                                Publish
+                                <svg class="arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                    viewBox="0 0 24 24" fill="none" stroke="#0a8754" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </span>
+                            <ul class="dropdown-menu">
+                                <li onclick="setStatus(this, 'Pending')">Pending</li>
+                                <li onclick="setStatus(this, 'Publish')">Publish</li>
+
+                            </ul>
+                        </div>
+                    </td>
                     <td>
                         <div class="actions-dropdown" bis_skin_checked="1">
                             <button class="actions-btn"><img src="{{ asset('assets/images/icons/three-dots.png') }}"
                                     class="dots-img" alt=""></button>
                             <div class="actions-menu" bis_skin_checked="1">
-                                <a href=""><img src="{{ asset('assets/images/icons/eye.png') }}" alt="">
+                                <a href="{{ route('reviews.show') }}"><img src="{{ asset('assets/images/icons/eye.png') }}" alt="">
                                     View
                                     Details</a>
                                 <a href=""><img src="{{ asset('assets/images/icons/delete-icon.png') }}"
@@ -150,8 +152,8 @@
             <thead>
                 <tr>
                     <th><input type="checkbox"></th>
-                    <th class="sortable" data-column="0">Booking ID <img src="{{ asset('assets/images/icons/sort.png') }}"
-                            class="sort-icon">
+                    <th class="sortable" data-column="0">Booking ID <img
+                            src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon">
                     </th>
 
                     <th class="sortable">Date created
@@ -218,28 +220,30 @@
                     </td>
 
 
-            <td>
-  <div class="status-dropdown">
-    <span class="status publish" onclick="toggleDropdown(this)">
-      Publish
-      <svg class="arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0a8754" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="6 9 12 15 18 9"></polyline>
-      </svg>
-    </span>
-    <ul class="dropdown-menu">
-      <li onclick="setStatus(this, 'Pending')">Pending</li>
-      <li onclick="setStatus(this, 'Publish')">Publish</li>
+                    <td>
+                        <div class="status-dropdown">
+                            <span class="status publish" onclick="toggleDropdown(this)">
+                                Publish
+                                <svg class="arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                    viewBox="0 0 24 24" fill="none" stroke="#0a8754" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </span>
+                            <ul class="dropdown-menu">
+                                <li onclick="setStatus(this, 'Pending')">Pending</li>
+                                <li onclick="setStatus(this, 'Publish')">Publish</li>
 
-    </ul>
-  </div>
-</td>
+                            </ul>
+                        </div>
+                    </td>
 
                     <td>
                         <div class="actions-dropdown" bis_skin_checked="1">
                             <button class="actions-btn"><img src="{{ asset('assets/images/icons/three-dots.png') }}"
                                     class="dots-img" alt=""></button>
                             <div class="actions-menu" bis_skin_checked="1">
-                                <a href=""><img src="{{ asset('assets/images/icons/eye.png') }}" alt="">
+                                <a href="{{ route('reviews.show') }}"><img src="{{ asset('assets/images/icons/eye.png') }}" alt="">
                                     View
                                     Details</a>
                                 <a href=""><img src="{{ asset('assets/images/icons/delete-icon.png') }}"

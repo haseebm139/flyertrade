@@ -39,6 +39,9 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         return view('admin.pages.reviews.index');
     })->name('reviews.index');
 
+    Route::get('reviews-details',function(){
+        return view('admin.pages.reviews.show');
+    })->name('reviews.show');
 
     Route::get('roles-and-permissions',function(){
         return view('admin.pages.roles_and_permissions.index');
