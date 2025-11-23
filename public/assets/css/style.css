@@ -2618,8 +2618,8 @@ font-weight:500;
 
 /* Active style */
 .status-btn.active {
-  color: green;
-  border: 0.05vw solid green;
+  color: #17A55A;
+  border: 0.05vw solid #17A55A;
   background: #17A55A1A;
 }
 

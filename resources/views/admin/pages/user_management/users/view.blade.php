@@ -63,7 +63,7 @@
                 <button class="status-btn">Active <i class="fa-solid fa-chevron-down"></i></button>
                 <div class="status-menu">
                     <div class="status-option active">Active</div>
-                    <div class="status-option">Inactive</div>
+                    <div class="status-option">Suspend</div>
                 </div>
             </div>
         </div>

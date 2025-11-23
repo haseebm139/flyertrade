@@ -4,7 +4,7 @@
     <div class="page-title">@yield('header', 'Dashboard')</div>
     <div class="d-flex gap-3">
         <!-- Search Input -->
-        <input type="text" class="search-box" placeholder="Search...">
+        <input type="text" class="search-box" placeholder="Search..." >
 
         <!-- Notifications -->
         <!-- Notification Icon -->
@@ -12,7 +12,8 @@
             <img src="{{ asset('assets/images/icons/notification.png') }}" alt="Notifications">
             <!-- Notification Popup -->
             <div class="popup ioioios notification_popup" id="notifPopup_____">
-                <div class="popup-header" style="display: flex; align-items: center; justify-content: space-between; 
+                <div class="popup-header"
+                    style="display: flex; align-items: center; justify-content: space-between; 
             padding: 1vw 1.5vw; border-bottom: 0vw solid #ddd; background-color: #fff;border-radius: 20px;">
 
                     <span class="popup-title"
@@ -20,7 +21,8 @@
                         Notification
                     </span>
 
-                    <span class="popup-close" id="close_notify_popop" style="cursor: pointer; display: flex; align-items: center;">
+                    <span class="popup-close" id="close_notify_popop"
+                        style="cursor: pointer; display: flex; align-items: center;">
                         <img src="{{ asset('assets/images/icons/iconoir_cancel.png') }}" alt=""
                             style="width: 1.2vw; height: auto; transition: transform 0.2s ease;">
                     </span>
@@ -47,7 +49,7 @@
                         <div class="notification-text" style="margin-left:-3vw;">David E. has 3 cancellations this week.
                         </div>
                     </div>
-                    <div class="notification-view"  data-modal="providerModal"  style="    margin-top: 2.9vw;
+                    <div class="notification-view" data-modal="providerModal" style="    margin-top: 2.9vw;
 ">View</div>
                 </div>
                 <div style="padding: 0.8vw 1.5vw; text-align: left;">
@@ -66,7 +68,9 @@
             <div class="provider-modal-content">
                 <!-- Header -->
                 <div class="provider-modal-header">
-                    <h6><i class="fa-solid fa-arrow-left" id="back_to_notify_modal" style="margin-right:10px;cursor:pointer"></i> 3 New Providers Awaiting Document Verification.</h6>
+                    <h6><i class="fa-solid fa-arrow-left" id="back_to_notify_modal"
+                            style="margin-right:10px;cursor:pointer"></i> 3 New Providers Awaiting Document
+                        Verification.</h6>
                     <button class="provider-modal-close" id="provide_modal_close" data-close="providerModal">
                         <img src="{{ asset('assets/images/icons/iconoir_cancel.png') }}" alt="Close">
                     </button>
@@ -143,51 +147,51 @@
 
 
 <script>
-// Get modal and close button
-const notifBtn____ = document.getElementById('notifBtn____');
-const providerModal = document.getElementById('providerModal');
-const closeBtn = document.getElementById('close_notify_popop');
-const provide_modal_close = document.getElementById('provide_modal_close');
-const back_to_notify_modal = document.getElementById('back_to_notify_modal');
-const notifPopup = document.getElementById('notifPopup_____'); // only if exists
+    // Get modal and close button
+    const notifBtn____ = document.getElementById('notifBtn____');
+    const providerModal = document.getElementById('providerModal');
+    const closeBtn = document.getElementById('close_notify_popop');
+    const provide_modal_close = document.getElementById('provide_modal_close');
+    const back_to_notify_modal = document.getElementById('back_to_notify_modal');
+    const notifPopup = document.getElementById('notifPopup_____'); // only if exists
 
-// Open modal
-document.querySelectorAll('[data-modal="providerModal"]').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
+    // Open modal
+    document.querySelectorAll('[data-modal="providerModal"]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
 
+            notifPopup.style.display = 'none';
+            providerModal.style.display = 'flex';
+            providerModal.style.animation = 'fadeIn 0.2s ease';
+        });
+    });
+    // Close modal on close button click
+    notifBtn____.addEventListener('click', () => {
+
+        notifPopup.style.display = 'block';
+    });
+    // Close modal on close button click
+    closeBtn.addEventListener('click', () => {
         notifPopup.style.display = 'none';
-        providerModal.style.display = 'flex';
+    });
+    // Close modal on close button click
+    provide_modal_close.addEventListener('click', () => {
+        providerModal.style.display = 'none';
+    });
+    back_to_notify_modal.addEventListener('click', () => {
+
+        notifPopup.style.display = 'block';
+        providerModal.style.animation = 'fadeIn 0.2s ease';
+        providerModal.style.display = 'none';
         providerModal.style.animation = 'fadeIn 0.2s ease';
     });
-});
-// Close modal on close button click
-notifBtn____.addEventListener('click', () => {
-    
-    notifPopup.style.display = 'block';
-});
-// Close modal on close button click
-closeBtn.addEventListener('click', () => {
-      notifPopup.style.display = 'none';
-});
-// Close modal on close button click
-provide_modal_close.addEventListener('click', () => {
-      providerModal.style.display = 'none';
-});
-back_to_notify_modal.addEventListener('click', () => {
-      
-        notifPopup.style.display = 'block';
-                providerModal.style.animation = 'fadeIn 0.2s ease';
-        providerModal.style.display = 'none';
-        providerModal.style.animation = 'fadeIn 0.2s ease';
-});
-// Close modal when clicking outside modal content
-window.addEventListener('click', (e) => {
-    if (e.target === providerModal) {
-        providerModal.style.display = 'none';
-    }
-});
+    // Close modal when clicking outside modal content
+    window.addEventListener('click', (e) => {
+        if (e.target === providerModal) {
+            providerModal.style.display = 'none';
+        }
+    });
 </script>
 
 

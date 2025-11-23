@@ -1,5 +1,5 @@
 <div>
-    
+
     <livewire:admin.components.toolbar label="service providers" />
 
     <!-- Users Table -->
@@ -66,25 +66,30 @@
                     </td>
                     <td>
                         <div class="actions-dropdown">
-                            <button class="actions-btn">   <img src="{{ asset('assets/images/icons/three-dots.png') }}"   class="dots-img "></button>
+                            <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three-dots.png') }}"
+                                    class="dots-img "></button>
                             <div class="actions-menu">
-                                <a href="{{ route('user-management.service.providers.view', ['id' => $item->id]) }}"><i class="fa fa-eye"></i> View user</a>
-                                <a href="#"><i class="fa fa-pen"></i> Edit user</a>
-                                <a href="#" class='showDeleteModal'><i class="fa fa-trash"></i> Delete user</a>
-                                         <!-- ✅ Global Delete Modal -->
-                                                <div id="globalDeleteModal{{ $item->id }}" class="deleteModal" style="display: none;position:absolute;    top: 2.5vw;">
-                                                    <div class="delete-card">
-                                                        <div class="delete-card-header">
-                                                            <h3 class="delete-title">Delete Service Provider?</h3>
-                                                            <span class="delete-close" id="closeDeleteModal">&times;</span>
-                                                        </div>
-                                                        <p class="delete-text">Are you sure you want to delete this service provider?</p>
-                                                        <div class="delete-actions justify-content-start">
-                                                            <button class="confirm-delete-btn">Delete</button>
-                                                            <button class="cancel-delete-btn">Cancel</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                <a href="{{ route('user-management.service.providers.view', ['id' => $item->id]) }}"><img
+                                        src="{{ asset('assets/images/icons/eye.png') }}" alt="View User"
+                                        class="w-5 h-5">View user</a>
+                                <a href="#"><img src="{{ asset('assets/images/icons/edit-icon.png') }}" alt="Edit User" class="w-5 h-5"> Edit user</a>
+                                <a href="#" class='showDeleteModal'><img src="{{ asset('assets/images/icons/delete-icon.png') }}" alt="Delete User" class="w-5 h-5"> Delete user</a>
+                                <!-- ✅ Global Delete Modal -->
+                                <div id="globalDeleteModal{{ $item->id }}" class="deleteModal"
+                                    style="display: none;position:absolute;    top: 2.5vw;">
+                                    <div class="delete-card">
+                                        <div class="delete-card-header">
+                                            <h3 class="delete-title">Delete Service Provider?</h3>
+                                            <span class="delete-close" id="closeDeleteModal">&times;</span>
+                                        </div>
+                                        <p class="delete-text">Are you sure you want to delete this service provider?
+                                        </p>
+                                        <div class="delete-actions justify-content-start">
+                                            <button class="confirm-delete-btn">Delete</button>
+                                            <button class="cancel-delete-btn">Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </td>
@@ -114,18 +119,13 @@
                         <input type="date" class="form-input mt-2" wire:model="toDate">
                     </div>
                 </div>
-                          <label style="color:#1b1b1b;font-weight:400">Status</label>
-                <x-custom-select
-                    name="status"
-                    :options="[
-                        ['value' => '', 'label' => 'Select status'],
-                        ['value' => 'active', 'label' => 'Active'],
-                        ['value' => 'inactive', 'label' => 'Inactive']
-                    ]"
-                    placeholder="Select status"
-                    wireModel="status"
-                    class="form-input mt-2"
-                />
+                <label style="color:#1b1b1b;font-weight:400">Status</label>
+                <x-custom-select name="status" :options="[
+                    ['value' => '', 'label' => 'Select status'],
+                    ['value' => 'active', 'label' => 'Active'],
+                    ['value' => 'inactive', 'label' => 'Inactive'],
+                ]" placeholder="Select status" wireModel="status"
+                    class="form-input mt-2" />
                 <div class="form-actions">
                     <button type="button" class="reset-btn" wire:click="resetFilters">Reset</button>
                     <button type="button" class="submit-btn" wire:click="applyFilters">Apply Now</button>
