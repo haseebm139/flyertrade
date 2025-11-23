@@ -4298,12 +4298,14 @@ span.timestamps {
     color: #1b1b1b;
 }
 
-.form-input.error-input {
+.form-input.error-input,
+textarea.form-input.error-input {
     border-color: #dc3545;
     border-width: 2px;
 }
 
-.form-input.error-input:focus {
+.form-input.error-input:focus,
+textarea.form-input.error-input:focus {
     outline: none;
     border-color: #dc3545;
     box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
@@ -4313,10 +4315,9 @@ span.timestamps {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    margin-top: 0.5rem;
     color: #dc3545;
     font-size: 0.875rem;
-    font-weight: 500;
+    font-weight: 400;
 }
 
 .error-message i {
@@ -4325,4 +4326,12 @@ span.timestamps {
 
 .error-message span {
     line-height: 1.4;
+}
+
+/* Textarea auto-resize styling */
+#myTextarea {
+    width: 100%;
+    min-height: 40px;
+    resize: none;
+    overflow: hidden;
 }
