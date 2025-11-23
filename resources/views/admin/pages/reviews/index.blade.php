@@ -125,7 +125,7 @@
                     </td>
                     <td>
                         <div class="actions-dropdown" bis_skin_checked="1">
-                            <button class="actions-btn"><img src="{{ asset('assets/images/icons/three-dots.png') }}"
+                            <button class="actions-btn act"><img src="{{ asset('assets/images/icons/three-dots.png') }}"
                                     class="dots-img" alt=""></button>
                             <div class="actions-menu" bis_skin_checked="1">
                                 <a href="{{ route('reviews.show') }}"><img src="{{ asset('assets/images/icons/eye.png') }}" alt="">
@@ -262,6 +262,9 @@
     </div>
 
     <script>
+        $('.act').on('click',function(e){
+            $('.dropdown-menu').hide();
+        })
         let rating = 4;
         let container = document.querySelector(".stars-rating");
 
