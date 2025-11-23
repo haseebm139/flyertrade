@@ -5,6 +5,10 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
 use App\Http\Controllers\NotificationController;
+
+Route::get('/testing', function () {
+    dd('Hello world');
+});
 Route::get('/', function () {
     return view('welcome');
 });
