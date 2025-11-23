@@ -576,7 +576,7 @@
     <!-- Filter Modal -->
     <div id="filterModal" class="modal filter-theme-modal">
 
-        <div class="modal-content filter-modal">
+        <div class="modal-content filter-modal" id="filter-theme-modal-content">
             <span class="close-modal" id="closeFilterModal">&times;</span>
             <h3>Filter</h3>
             <label style='color:#717171'>Select Date</label>
@@ -627,7 +627,26 @@
 @endpush
 @push('scripts')
     <script>
+$('#openFilterModal').on('click',function(e){
+    e.preventDefault();
+    $('#filterModal').css('display','flex');
+      $("#openFilterModal").removeClass('tab-active');
+})
+$('#closeFilterModal').on('click',function(e){
+    e.preventDefault();
+    $('#filterModal').css('display','none');
+    $("#openFilterModal").removeClass('tab-active');
+})
+$('#filterModal').on('click',function(e){
+    e.preventDefault();
+    $('#filterModal').css('display','none');
+    $("#openFilterModal").removeClass('tab-active');
+})
+// $("#filter-theme-modal-content").on('click',function(e){
+//      e.preventDefault();
+//        $('#filterModal').css('display','flex');
 
+// })
     $(document).on('click','.showDeleteModal___',function(e){
       
         e.preventDefault();
