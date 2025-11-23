@@ -57,7 +57,7 @@
                 href="{{ route('password.request') }}"
                 class="forgot"
             >
-                Forget Password</a>
+                Forgot Password</a>
         </div>
 
         <button
