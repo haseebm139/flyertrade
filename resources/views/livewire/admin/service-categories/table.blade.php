@@ -52,6 +52,7 @@
                     <td><span class="desf" style="color:#717171;">{{ $item->description }}</span></td>
 
                     <td>
+                        
                         <span class="desf d-flex" style="position:relative;">
                             <button class="edit-btn" wire:click="edit({{ $item->id }})"
                                 style="border: 0 !important">
