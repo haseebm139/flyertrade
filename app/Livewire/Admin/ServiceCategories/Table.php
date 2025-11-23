@@ -27,7 +27,6 @@ class Table extends Component
         'exportCsvRequested' => 'exportCsv',
         'openFilterModal'    => 'openFilterModal',
         'searchUpdated'      => 'updatingSearch',
-        'addItemRequested'   => 'openAddModal',
     ];
 
      
@@ -85,9 +84,9 @@ class Table extends Component
     public function delete($id)
     {
         Service::findOrFail($id)->delete();
-         $this->confirmingId = null;
+        $this->confirmingId = null;
         $this->dispatch('showToastr', 'success', 'Service category deleted successfully.', 'Success');
-        
+        $this->dispatch('categoryUpdated'); // Refresh the table
     }
 
     public function edit($id)
