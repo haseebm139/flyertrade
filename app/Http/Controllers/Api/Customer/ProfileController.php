@@ -63,7 +63,7 @@ class ProfileController extends BaseController
     {
         $result = $this->profileService->getProfile(auth()->user());
         return $this->sendResponse([ 
-            'user'  => $user->load('providerProfile'), // Load roles for response
+            'user'  => $result->load('providerProfile'), // Load roles for response
         ], 'Customer profile retrieved successfully.');
     }
 }
