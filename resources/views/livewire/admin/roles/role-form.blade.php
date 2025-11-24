@@ -1,8 +1,7 @@
 <div>
     {{-- Debug info removed for production --}}
     @if ($showModal)
-        <div class="modal"
-            style="display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999;">
+        <div class="modal role-form-modal">
 
 
 
@@ -10,13 +9,18 @@
                 <span class="close-modal" id="closeAddUserModal" wire:click="closeModal">&times;</span>
                 <h3 id="change___Modal_title">{{ $isEdit ? 'Edit Role' : 'Add Role' }} </h3>
                 <form wire:submit.prevent="save">
-                    <div  id="first_btns____wrapper">
-                          <!-- Role input -->
-                        <label>Role</label>
-                        <input type="text" class="form-input" wire:model="name" placeholder="Enter name">
-                        @error('name')
-                            <span class="error">{{ $message }}</span>
-                        @enderror
+                    <div id="first_btns____wrapper">
+                        <!-- Role input -->
+                        <div class="form-group">
+                            <label>Role</label>
+                            <input type="text" class="form-input @error('name') error-input @enderror" wire:model="name" placeholder="Enter name">
+                            @error('name')
+                                <div class="error-message">
+                                    <i class="fa-solid fa-circle-exclamation"></i>
+                                    <span>{{ $message }}</span>
+                                </div>
+                            @enderror
+                        </div>
                            <div class="form-actions justify-content-center" id="first_btns____">
                             <button type="button" class="cancel-btn" wire:click="closeModal">Cancel</button>
                             <button type="button" class="submit-btn add_permission________" id="add_permission________"><i class="fa-solid fa-plus"></i>
@@ -26,11 +30,11 @@
                     </div>
               
 
-                    <div id="second_btns____wrapper" style="display:none">
+                    <div id="second_btns____wrapper" class="permission-wrapper-hidden">
 
                     <label>Permission</label>
                     <!-- Permission Section (hidden by default) -->
-                    <div class="permission-section" id="permissionSection" style="display: block;">
+                    <div class="permission-section" id="permissionSection">
                         <!-- Tabs navigation -->
                         <div class="tabs-wrapper">
                             <!-- Left Control -->
