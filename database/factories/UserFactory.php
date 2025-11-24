@@ -8,6 +8,8 @@ use Illuminate\Support\Str;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 
+
+
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
  */
