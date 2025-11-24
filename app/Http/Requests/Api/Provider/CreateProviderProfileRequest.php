@@ -26,6 +26,7 @@ class CreateProviderProfileRequest extends FormRequest
 
 
             'avatar'         => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
+            'phone'          => 'nullable|string|max:20',
             'country'        => 'nullable|string|max:100',
             'city'           => 'nullable|string|max:100',
             'state'          => 'nullable|string|max:100',
@@ -34,13 +35,18 @@ class CreateProviderProfileRequest extends FormRequest
             'latitude'       => 'nullable|numeric',
             'longitude'      => 'nullable|numeric',
 
+            'is_booking_notification' => 'nullable|boolean',
+            'is_promo_option_notification' => 'nullable|boolean',
+
+            
+
             // Services
-            'services'                   => 'nullable|array',
-            'services.about'          => 'nullable|string|max:1000',
+            'services'                 => 'nullable|array',
+            'services.about'           => 'nullable|string|max:1000',
             'services.service_id'      => 'nullable|exists:services,id',
-            'services.title'   => 'nullable|string|max:255',
-            'services.description' => 'nullable|string',
-            'services.staff_count' => 'nullable|integer|min:1',
+            'services.title'           => 'nullable|string|max:255',
+            'services.description'     => 'nullable|string',
+            'services.staff_count'     => 'nullable|integer|min:1',
             'services.rate_min'        => 'nullable|numeric|min:0',
             'services.rate_max'        => 'nullable|numeric|min:0',
             'services.is_primary'      => 'boolean',

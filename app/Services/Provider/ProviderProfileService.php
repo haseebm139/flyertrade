@@ -5,6 +5,7 @@ namespace App\Services\Provider;
 use App\Models\ProviderProfile;
 use App\Models\ProviderService;
 use App\Models\ProviderCertificate;
+use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\Shared\UserResource;
 use DB;
@@ -38,9 +39,16 @@ class ProviderProfileService
 
             $profileData['profile_photo'] = $profileImg;
         }
-        $profileData['about_me'] = $data['services']['about'] ?? null;
 
-        $updateData = [];
+        $profileData['about_me'] = $data['services']['about'] ?? null;
+        $data['address'] = $data['office_address'];
+        
+        $updateData = collect($data)->only([
+            'country', 'city', 'state', 'zip',
+            'address', 'latitude', 'longitude','phone','is_booking_notification','is_promo_option_notification'
+        ])->toArray();
+         
+         
         if ($profileImg !== null) {
             $updateData['avatar'] = $profileImg;
         }
@@ -113,18 +121,18 @@ class ProviderProfileService
                 }
             }
         }
-
-        return $user->load(
-            'providerProfile',
-            // 'providerProfile.services',
-            // 'providerProfile.services.media',
-            // 'providerProfile.services.certificates'
-        );
+        return $this->getProfile($user->id);
+        // return $user->load(
+        //     'providerProfile',
+        //     // 'providerProfile.services',
+        //     // 'providerProfile.services.media',
+        //     // 'providerProfile.services.certificates'
+        // );
     }
 
     public function getProfile($user)
     {
-
+        $user = User::find($user);
         return $user->load(
             'providerProfile',
             // 'providerProfile.services',
