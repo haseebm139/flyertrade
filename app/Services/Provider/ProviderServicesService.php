@@ -24,7 +24,7 @@ class ProviderServicesService
     }
     public function create(array $data, $user)
     {
-
+            
         $existingService = ProviderService::where('user_id', $user->id)
         ->where('service_id', $data['services']['service_id'])
         ->first();
@@ -47,6 +47,7 @@ class ProviderServicesService
                 'description' => $data['services']['description'] ?? null,
                 'staff_count'     => $data['services']['staff_count'] ?? null,
                 'rate_min'            => $data['services']['rate_min'] ?? null,
+                'rate_mid'            => $data['services']['rate_mid'] ?? null,
                 'rate_max'            => $data['services']['rate_max'] ?? null,
             ]);
 
