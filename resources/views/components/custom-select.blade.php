@@ -125,6 +125,7 @@ if ($selectedValue === null && !empty($normalizedOptions)) {
 
     .custom-select-text.placeholder {
         color: #9ca3af;
+        background-color: rgba(0,0,0,0)!important;
     }
 
     .custom-select-arrow {

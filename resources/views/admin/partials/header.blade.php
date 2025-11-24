@@ -163,7 +163,7 @@
 
             notifPopup.style.display = 'none';
             providerModal.style.display = 'flex';
-            providerModal.style.animation = 'fadeIn 0.2s ease';
+            // providerModal.style.animation = 'fadeIn 0.2s ease';
         });
     });
     // Close modal on close button click
@@ -182,9 +182,9 @@
     back_to_notify_modal.addEventListener('click', () => {
 
         notifPopup.style.display = 'block';
-        providerModal.style.animation = 'fadeIn 0.2s ease';
+        // providerModal.style.animation = 'fadeIn 0.2s ease';
         providerModal.style.display = 'none';
-        providerModal.style.animation = 'fadeIn 0.2s ease';
+        // providerModal.style.animation = 'fadeIn 0.2s ease';
     });
     // Close modal when clicking outside modal content
     window.addEventListener('click', (e) => {
