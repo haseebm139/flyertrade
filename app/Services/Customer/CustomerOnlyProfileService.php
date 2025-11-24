@@ -19,17 +19,34 @@ class CustomerOnlyProfileService
         $updateData = [];
 
         // Handle avatar upload
-        if (isset($data['avatar']) && $data['avatar']) {
-            // Delete old avatar if exists and not default
-            if ($user->avatar && $user->avatar !== 'assets/images/avatar/default.png') {
-                $oldPath = str_replace('storage/', '', $user->avatar);
-                if (Storage::disk('public')->exists($oldPath)) {
-                    Storage::disk('public')->delete($oldPath);
-                }
-            }
+        // if (isset($data['avatar']) && $data['avatar']) {
+        //     // Delete old avatar if exists and not default
+        //     if ($user->avatar && $user->avatar !== 'assets/images/avatar/default.png') {
+        //         $oldPath = str_replace('storage/', '', $user->avatar);
+        //         if (Storage::disk('public')->exists($oldPath)) {
+        //             Storage::disk('public')->delete($oldPath);
+        //         }
+        //     }
 
-            $path = $data['avatar']->store('customer/profile', 'public');
-            $updateData['avatar'] = 'storage/' . $path;
+        //     $path = $data['avatar']->store('customer/profile', 'public');
+        //     $updateData['avatar'] = 'storage/' . $path;
+        // }
+
+        if (isset($data['avatar']) && $data['avatar']) {
+            $file = $data['avatar']; // $data['avatar'] ko UploadedFile hona zaroori hai
+            $path = 'customer/profile/' . $file->hashName(); // unique naam
+
+            // File content ko seedhe disk mein likhein
+            try {
+                Storage::disk('public')->put(
+                    $path, 
+                    file_get_contents($file->getRealPath())
+                );
+                $updateData['avatar'] = 'storage/' . $path;
+                \Log::info('File saved successfully using put method: ' . $path);
+            } catch (\Exception $e) {
+                \Log::error('File saving failed with PUT method: ' . $e->getMessage());
+            }
         }
 
         // Update other fields (only allowed fields for customer)
