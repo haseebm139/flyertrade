@@ -226,12 +226,14 @@ if (window.dashboardInitialized) {
     document.querySelectorAll('.actions-btn').forEach(btn => {
         btn.addEventListener('click', function (e) {
             e.stopPropagation();
+     
             let parent = this.parentElement;
             parent.classList.toggle('active');
 
             // Close other open menus
             document.querySelectorAll('.actions-dropdown').forEach(drop => {
                 if (drop !== parent) drop.classList.remove('active');
+                
             });
         });
     });
@@ -240,6 +242,7 @@ if (window.dashboardInitialized) {
     document.addEventListener('click', () => {
         document.querySelectorAll('.actions-dropdown').forEach(drop => {
             drop.classList.remove('active');
+            
         });
     });
 

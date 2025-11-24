@@ -456,6 +456,9 @@ function toggleDropdown(el) {
   const dropdown = parent.querySelector('.dropdown-menu');
   const isOpen = dropdown.style.display === 'block';
 
+  // Prevent outside listener from firing
+  event.stopPropagation();
+
   // Hide all dropdowns first
   document.querySelectorAll('.dropdown-menu').forEach(d => d.style.display = 'none');
   document.querySelectorAll('.status').forEach(s => s.classList.remove('open'));
@@ -469,6 +472,20 @@ function toggleDropdown(el) {
     el.classList.remove('open');
   }
 }
+
+// --- CLOSE ON OUTSIDE CLICK ---
+document.addEventListener('click', function () {
+  document.querySelectorAll('.dropdown-menu').forEach(d => d.style.display = 'none');
+  document.querySelectorAll('.status').forEach(s => s.classList.remove('open'));
+});
+
+// --- PREVENT dropdown-menu click FROM closing ---
+document.addEventListener('click', function (e) {
+  if (e.target.closest('.dropdown-menu') || e.target.closest('.status')) {
+    e.stopPropagation();
+  }
+}, true);
+
 
 function setStatus(el, status) {
   const parent = el.closest('.status-dropdown');

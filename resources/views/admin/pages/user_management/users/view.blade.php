@@ -21,8 +21,20 @@
 <!-- Toolbar -->
 <div class="users-toolbar">
     <div class="toolbar-left" style="position:relative">
-        <button class="reset-btn">Reset Password</button>
-
+        <button class="reset-btn" id="reset_moda">Reset Password</button>
+        <div id="globalresetModal" class="deleteModal" style="display: none;">
+            <div class="delete-card">
+                <div class="delete-card-header">
+                    <h3 class="delete-title">Reset password</h3>
+                    <span class="delete-close close_resset" >&times;</span>
+                </div>
+                <p class="delete-text">Are you sure you want to reset this user password?</p>
+                <div class="delete-actions justify-content-start">
+                    <button class="confirm-delete-btn">Reset</button>
+                    <button class="cancel-delete-btn close_resset">Cancel</button>
+                </div>
+            </div>
+        </div>
         <button class="edit-btn" id="openAddUserModal">
             Edit User&nbsp;
             <span class="download-icon"><img src="{{ asset('assets/images/icons/edit.png') }}" alt="" class="icons-btn"></span>
@@ -38,12 +50,12 @@
             <div class="delete-card">
                 <div class="delete-card-header">
                     <h3 class="delete-title">Delete Service User?</h3>
-                    <span class="delete-close" id="closeDeleteModal">&times;</span>
+                    <span class="delete-close " >&times;</span>
                 </div>
                 <p class="delete-text">Are you sure you want to delete this service user?</p>
                 <div class="delete-actions justify-content-start">
                     <button class="confirm-delete-btn">Delete</button>
-                    <button class="cancel-delete-btn">Cancel</button>
+                    <button class="cancel-delete-btn ">Cancel</button>
                 </div>
             </div>
         </div>
@@ -444,6 +456,14 @@
 </div>
 
 <script>
+    $('#reset_moda').on('click',function(e){
+        e.preventDefault();
+        $('#globalresetModal').toggle();
+    })
+    $('.close_resset').on('click',function(e){
+        e.preventDefault();
+       $('#globalresetModal').toggle();
+    })
     document.addEventListener("DOMContentLoaded", function() {
         const deleteModal = document.getElementById("globalDeleteModal");
         const showButtons = document.querySelectorAll(".showDeleteModal");

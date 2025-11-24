@@ -70,7 +70,7 @@
                 <td style="font-weight:500;">Payout</td>
                 <td><span class="date" style="font-weight:500;">Jan,2025-01-31</span>
                     <br>
-                    <small class="time">12:00pm</small>
+                    <small class="time m-0">12:00pm</small>
 
                 </td>
 
@@ -127,7 +127,7 @@
                 <td style="font-weight:500;">Booking Payment</td>
                 <td><span class="date" style="font-weight:500;">Jan,2025-01-31</span>
                     <br>
-                    <small class="time">12:00pm</small>
+                    <small class="time m-0">12:00pm</small>
 
                 </td>
 
@@ -185,7 +185,7 @@
                 <td style="font-weight:500;">Service Charge</td>
                 <td><span class="date" style="font-weight:500;">Jan,2025-01-31</span>
                     <br>
-                    <small class="time">12:00pm</small>
+                    <small class="time m-0">12:00pm</small>
 
                 </td>
 
@@ -244,7 +244,7 @@
                 <td style="font-weight:500;">Refund</td>
                 <td><span class="date" style="font-weight:500;">Jan,2025-01-31</span>
                     <br>
-                    <small class="time">12:00pm</small>
+                    <small class="time m-0">12:00pm</small>
 
                 </td>
 
@@ -301,7 +301,7 @@
                 <td style="font-weight:500;">Service Charge</td>
                 <td><span class="date" style="font-weight:500;">Jan,2025-01-31</span>
                     <br>
-                    <small class="time">12:00pm</small>
+                    <small class="time m-0">12:00pm</small>
 
                 </td>
 
@@ -358,7 +358,7 @@
                 <td style="font-weight:500;">Service Charge</td>
                 <td><span class="date" style="font-weight:500;">Jan,2025-01-31</span>
                     <br>
-                    <small class="time">12:00pm</small>
+                    <small class="time m-0">12:00pm</small>
 
                 </td>
 
@@ -415,7 +415,7 @@
                 <td style="font-weight:500;">Payout</td>
                 <td><span class="date" style="font-weight:500;">Jan,2025-01-31</span>
                     <br>
-                    <small class="time">12:00pm</small>
+                    <small class="time m-0">12:00pm</small>
 
                 </td>
 
