@@ -37,7 +37,7 @@ class CreateProviderProfileRequest extends FormRequest
             // Services
             'services'                   => 'nullable|array',
             'services.about'          => 'nullable|string|max:1000',
-            'services.service_id'      => 'required|exists:services,id',
+            'services.service_id'      => 'nullable|exists:services,id',
             'services.title'   => 'nullable|string|max:255',
             'services.description' => 'nullable|string',
             'services.staff_count' => 'nullable|integer|min:1',

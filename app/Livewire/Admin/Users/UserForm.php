@@ -23,8 +23,8 @@ class UserForm extends Component
     protected $rules = [
         'name' => 'required|string|max:255',
         'email' => 'required|email|max:255|unique:users,email',
-        'phone' => 'nullable|string|max:20',
-        'address' => 'nullable|string|max:500',
+        'phone' => 'required|string|max:20',
+        'address' => 'required|string|max:500',
         'user_type' => 'required|in:admin,customer,provider',
         'roles' => 'array',
     ];
