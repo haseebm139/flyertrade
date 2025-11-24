@@ -9,7 +9,7 @@
                 <h3>{{ $isEdit ? 'Edit User' : 'Add User' }}</h3>
                 <form wire:submit.prevent="save">
                     <label>Name</label>
-                    <input type="text" class="form-input @error('name') error-input @enderror" wire:model="name" placeholder="Enter name"  >
+                    <input type="text" class="form-input @error('name') error-input @enderror " wire:model="name" placeholder="Enter name"  >
                     @error('name')
                         <div class="error-message">
                                 <i class="fa-solid fa-circle-exclamation"></i>
@@ -27,7 +27,7 @@
                     @enderror
 
                     <label>Home Address</label>
-                    <input type="text" class="form-input @error('address') error-input @enderror" wire:model="address" placeholder="Enter home address">
+                    <input type="text" class="form-input  @error('address') error-input @enderror" wire:model="address" placeholder="Enter home address">
                     @error('address')
                         <div class="error-message">
                                 <i class="fa-solid fa-circle-exclamation"></i>
@@ -36,7 +36,7 @@
                     @enderror
 
                     <label>Phone Number</label>
-                    <input type="text" class="form-input  " wire:model="phone" placeholder="Enter phone number">
+                    <input type="text" class="form-input  @error('phone') error-input @enderror" wire:model="phone" placeholder="Enter phone number">
                     @error('phone')
                         <div class="error-message">
                                 <i class="fa-solid fa-circle-exclamation"></i>
@@ -57,7 +57,7 @@
                             ]"
                             placeholder="Select user type"
                             wireModel="user_type"
-                            class="form-select @error('user_type') error-input @enderror"
+                            class="form-select"
                         />
                         @error('user_type')
                            <div class="error-message">
