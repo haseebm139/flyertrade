@@ -81,38 +81,5 @@
         </div>
     @endif
 
-    <style>
-        .error {
-            color: #d32f2f;
-            font-size: 12px;
-            margin-top: 4px;
-            display: block;
-        }
-
-        .role-checkboxes {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .role-item {
-            display: flex;
-            align-items: center;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background: #f8f9fa;
-        }
-
-        .role-item input[type="checkbox"] {
-            margin-right: 8px;
-        }
-
-        .role-item label {
-            margin: 0;
-            cursor: pointer;
-            flex: 1;
-        }
-    </style>
+     
 </div>
