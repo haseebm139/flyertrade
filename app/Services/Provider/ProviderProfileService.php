@@ -28,6 +28,8 @@ class ProviderProfileService
             'country', 'city', 'state', 'zip',
             'office_address', 'latitude', 'longitude'
         ])->toArray();
+        
+        $profileImg = null;
         if (isset($data['avatar'])) {
             $path = $data['avatar']->store('provider/profile', 'public');
             $profileImg = 'storage/' . $path;
@@ -36,9 +38,14 @@ class ProviderProfileService
         }
         $profileData['about_me'] = $data['services']['about'] ?? null;
 
-        $user->update([
-            'avatar' => $profileImg
-        ]);
+        $updateData = [];
+        if ($profileImg !== null) {
+            $updateData['avatar'] = $profileImg;
+        }
+        
+        if (!empty($updateData)) {
+            $user->update($updateData);
+        }
         $profile = ProviderProfile::updateOrCreate(
             ['user_id' => $user->id],
             $profileData
