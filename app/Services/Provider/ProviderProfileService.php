@@ -116,23 +116,22 @@ class ProviderProfileService
 
         return $user->load(
             'providerProfile',
-            'providerProfile.services',
-            'providerProfile.services.media',
-            'providerProfile.services.certificates'
+            // 'providerProfile.services',
+            // 'providerProfile.services.media',
+            // 'providerProfile.services.certificates'
         );
     }
 
     public function getProfile($user)
     {
 
-        $user->load(
+        return $user->load(
             'providerProfile',
-            'providerProfile.services',
-            'providerProfile.services.service',
-            'providerProfile.services.media',
-            'providerProfile.services.certificates'
-        );
-        return new UserResource($user);
+            // 'providerProfile.services',
+            // 'providerProfile.services.service',
+            // 'providerProfile.services.media',
+            // 'providerProfile.services.certificates'
+        ); 
     }
 
     public function changeAvailabilityStatus($data, $user)

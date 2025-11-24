@@ -44,7 +44,7 @@ class ProfileController extends BaseController
     public function getProfile()
     {
         $result = $this->profileService->getProfile(auth()->user());
-        return $this->sendResponse($result, 'Provider profile.');
+        return $this->sendResponse($result->load('providerProfile'), 'profile retrieved successfully.');
     }
     public function changeAvailabilityStatus(Request $request)
     {
