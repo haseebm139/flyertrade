@@ -12,15 +12,17 @@ class ProviderProfileService
 {
     public function createOrUpdateProfile(array $data, $user)
     {
-
-        $existingService = ProviderService::where('user_id', $user->id)
-        ->where('service_id', $data['services']['service_id'])
-        ->first();
-        if ($existingService) {
-            return [
-                'error'   => true,
-                'message' => 'This service is already assigned to your profile.'
-            ];
+        // Check if services data exists and has service_id
+        if (!empty($data['services']) && isset($data['services']['service_id'])) {
+            $existingService = ProviderService::where('user_id', $user->id)
+                ->where('service_id', $data['services']['service_id'])
+                ->first();
+            if ($existingService) {
+                return [
+                    'error'   => true,
+                    'message' => 'This service is already assigned to your profile.'
+                ];
+            }
         }
 
         // ✅ Save profile
@@ -51,17 +53,15 @@ class ProviderProfileService
             $profileData
         );
         // ✅ Save services
-        if (!empty($data['services'])) {
-
-
+        if (!empty($data['services']) && isset($data['services']['service_id'])) {
             $service = ProviderService::create([
                 'user_id'             => $user->id,
                 'service_id'          => $data['services']['service_id'],
                 'provider_profile_id' => $profile->id,
                 'is_primary'          => $data['services']['is_primary'] ?? false,
-                'title'       => $data['services']['title'],
-                'description' => $data['services']['description'] ?? null,
-                'staff_count'     => $data['services']['staff_count'] ?? null,
+                'title'               => $data['services']['title'] ?? null,
+                'description'         => $data['services']['description'] ?? null,
+                'staff_count'         => $data['services']['staff_count'] ?? null,
                 'rate_min'            => $data['services']['rate_min'] ?? null,
                 'rate_max'            => $data['services']['rate_max'] ?? null,
             ]);
