@@ -58,7 +58,7 @@ class ProviderServicesService
 
                     $service->media()->create([
                         'provider_service_id' => $service->id,
-                        'provider_profile_id' => $profile->id,
+                        'provider_profile_id' => $profile_id,
                         'user_id'    => $user->id,
                         'file_path'  => 'storage/' . $path,
                         // 'file_path'  => Storage::disk('s3')->url($path),
@@ -74,7 +74,7 @@ class ProviderServicesService
                     $path = $video->store('provider/services/videos', 'public');
                     $service->media()->create([
                         'provider_service_id' => $service->id,
-                        'provider_profile_id' => $profile->id,
+                        'provider_profile_id' => $profile_id,
                         'user_id'    => $user->id,
                         'file_path'  => 'storage/' . $path,
                         // 'file_path'  => Storage::disk('s3')->url($path),
@@ -89,8 +89,8 @@ class ProviderServicesService
                     ProviderCertificate::create([
                         'provider_service_id' => $service->id,
                         'user_id'             => $user->id,
-                        'provider_profile_id' => $profile->id,
-                        'file_path'           => 'storage/' . $path?? null,
+                        'provider_profile_id' => $profile_id,
+                        'file_path'           => 'storage/' . $path ?? null,
                         // 'file_path'           => Storage::disk('s3')->url($path),
                         'status'              => 'pending',
                     ]);
@@ -126,6 +126,7 @@ class ProviderServicesService
             'description'    => $data['services']['description'] ?? $service->description,
             'staff_count'    => $data['services']['staff_count'] ?? $service->staff_count,
             'rate_min'       => $data['services']['rate_min'] ?? $service->rate_min,
+            'rate_mid'       => $data['services']['rate_mid'] ?? $service->rate_mid,
             'rate_max'       => $data['services']['rate_max'] ?? $service->rate_max,
         ]);
 

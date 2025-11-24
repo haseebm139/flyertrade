@@ -113,6 +113,7 @@ class ProviderServiceController extends BaseController
             'services.description'     => 'nullable|string',
             'services.staff_count'     => 'nullable|integer|min:1',
             'services.rate_min'        => 'nullable|numeric|min:0',
+            'services.rate_mid'        => 'nullable|numeric|min:0',
             'services.rate_max'        => 'nullable|numeric|min:0',
             'services.is_primary'      => 'boolean',
 
