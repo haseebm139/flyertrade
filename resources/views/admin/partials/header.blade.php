@@ -59,7 +59,7 @@
                     </div>
                     
                 </div>
-                      <div class="notification_item_wrapper">
+                      <div class="notification_item_wrapper " style="border-bottom:none">
                     <div  class="notification-item">
                         <img src="{{ asset('assets/images/icons/manage.png') }}" alt="">
                         <div class="notification-content">
