@@ -5,6 +5,7 @@ namespace App\Services\Provider;
 use App\Models\ProviderProfile;
 use App\Models\ProviderService;
 use App\Models\ProviderCertificate;
+use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\Shared\UserResource;
 use DB;
@@ -12,15 +13,17 @@ class ProviderProfileService
 {
     public function createOrUpdateProfile(array $data, $user)
     {
-
-        $existingService = ProviderService::where('user_id', $user->id)
-        ->where('service_id', $data['services']['service_id'])
-        ->first();
-        if ($existingService) {
-            return [
-                'error'   => true,
-                'message' => 'This service is already assigned to your profile.'
-            ];
+        // Check if services data exists and has service_id
+        if (!empty($data['services']) && isset($data['services']['service_id'])) {
+            $existingService = ProviderService::where('user_id', $user->id)
+                ->where('service_id', $data['services']['service_id'])
+                ->first();
+            if ($existingService) {
+                return [
+                    'error'   => true,
+                    'message' => 'This service is already assigned to your profile.'
+                ];
+            }
         }
 
         // ✅ Save profile
@@ -28,33 +31,45 @@ class ProviderProfileService
             'country', 'city', 'state', 'zip',
             'office_address', 'latitude', 'longitude'
         ])->toArray();
+        
+        $profileImg = null;
         if (isset($data['avatar'])) {
             $path = $data['avatar']->store('provider/profile', 'public');
             $profileImg = 'storage/' . $path;
 
             $profileData['profile_photo'] = $profileImg;
         }
-        $profileData['about_me'] = $data['services']['about'] ?? null;
 
-        $user->update([
-            'avatar' => $profileImg
-        ]);
+        $profileData['about_me'] = $data['services']['about'] ?? null;
+        $data['address'] = $data['office_address'];
+        
+        $updateData = collect($data)->only([
+            'country', 'city', 'state', 'zip',
+            'address', 'latitude', 'longitude','phone','is_booking_notification','is_promo_option_notification'
+        ])->toArray();
+         
+         
+        if ($profileImg !== null) {
+            $updateData['avatar'] = $profileImg;
+        }
+        
+        if (!empty($updateData)) {
+            $user->update($updateData);
+        }
         $profile = ProviderProfile::updateOrCreate(
             ['user_id' => $user->id],
             $profileData
         );
         // ✅ Save services
-        if (!empty($data['services'])) {
-
-
+        if (!empty($data['services']) && isset($data['services']['service_id'])) {
             $service = ProviderService::create([
                 'user_id'             => $user->id,
                 'service_id'          => $data['services']['service_id'],
                 'provider_profile_id' => $profile->id,
                 'is_primary'          => $data['services']['is_primary'] ?? false,
-                'title'       => $data['services']['title'],
-                'description' => $data['services']['description'] ?? null,
-                'staff_count'     => $data['services']['staff_count'] ?? null,
+                'title'               => $data['services']['title'] ?? null,
+                'description'         => $data['services']['description'] ?? null,
+                'staff_count'         => $data['services']['staff_count'] ?? null,
                 'rate_min'            => $data['services']['rate_min'] ?? null,
                 'rate_max'            => $data['services']['rate_max'] ?? null,
             ]);
@@ -106,26 +121,25 @@ class ProviderProfileService
                 }
             }
         }
-
-        return $user->load(
-            'providerProfile',
-            'providerProfile.services',
-            'providerProfile.services.media',
-            'providerProfile.services.certificates'
-        );
+        return $this->getProfile($user->id);
+        // return $user->load(
+        //     'providerProfile',
+        //     // 'providerProfile.services',
+        //     // 'providerProfile.services.media',
+        //     // 'providerProfile.services.certificates'
+        // );
     }
 
     public function getProfile($user)
     {
-
-        $user->load(
+        $user = User::find($user);
+        return $user->load(
             'providerProfile',
-            'providerProfile.services',
-            'providerProfile.services.service',
-            'providerProfile.services.media',
-            'providerProfile.services.certificates'
-        );
-        return new UserResource($user);
+            // 'providerProfile.services',
+            // 'providerProfile.services.service',
+            // 'providerProfile.services.media',
+            // 'providerProfile.services.certificates'
+        ); 
     }
 
     public function changeAvailabilityStatus($data, $user)

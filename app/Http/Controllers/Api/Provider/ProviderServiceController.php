@@ -58,6 +58,7 @@ class ProviderServiceController extends BaseController
             'services.description' => 'nullable|string',
             'services.staff_count' => 'nullable|integer|min:1',
             'services.rate_min'        => 'nullable|numeric|min:0',
+            'services.rate_mid'        => 'nullable|numeric|min:0',
             'services.rate_max'        => 'nullable|numeric|min:0',
             'services.is_primary'      => 'boolean',
 
@@ -70,7 +71,7 @@ class ProviderServiceController extends BaseController
 
         ]);
         if ($validator->fails()) {
-            return $this->sendError($validator->errors());
+            return $this->sendError($validator->errors()->first());
         }
         $data = $validator->validated();
         $result = $this->service->create($data, auth()->user());
@@ -112,6 +113,7 @@ class ProviderServiceController extends BaseController
             'services.description'     => 'nullable|string',
             'services.staff_count'     => 'nullable|integer|min:1',
             'services.rate_min'        => 'nullable|numeric|min:0',
+            'services.rate_mid'        => 'nullable|numeric|min:0',
             'services.rate_max'        => 'nullable|numeric|min:0',
             'services.is_primary'      => 'boolean',
 
@@ -148,6 +150,7 @@ class ProviderServiceController extends BaseController
             return $this->sendError($result['message']);
         }
 
-        return $this->sendResponse([], 'Provider Service deleted successfully.');
+        $message = $result['message'] ?? 'Service deleted successfully.';
+        return $this->sendResponse([], $message);
     }
 }
