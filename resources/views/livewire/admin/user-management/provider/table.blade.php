@@ -103,11 +103,37 @@
         </tbody>
     </table>
     {{ $data->links('vendor.pagination.custom') }}
+    <style>
+        .modal_heaader{
+            display: flex;
+            position: relative;
+            border-bottom: 1.50px solid #f1f1f1;
+            margin-bottom: 1.2vw;
+
+        }
+         .modal_heaader .close-modal{
+            top:0px;
+            right:0px;
+            line-height: 1;
+         }
+         .filter_modal_reset{
+            border: 1px solid #f1f1f1;
+border-radius: 10px;
+padding: 12px 24px;
+         }
+    </style>
     @if ($showFilterModal)
         <div class="modal filter-theme-modal" style="display: flex;">
             <div class="modal-content filter-modal">
-                <span class="close-modal" wire:click="closeFilterModal">&times;</span>
-                <h3>Filter</h3>
+                <div class="modal_heaader">
+                <span class="close-modal"  wire:click="closeFilterModal" >
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75" stroke="#717171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+</svg>
+                </span>
+                <h3 class="mt-0">Filter</h3>
+                </div>
+              
                 <label style='color:#717171'>Select Date</label>
                 <div class=" row mt-3">
                     <div class='col-6'>
@@ -127,7 +153,7 @@
                 ]" placeholder="Select status" wireModel="status"
                     class="form-input mt-2" />
                 <div class="form-actions">
-                    <button type="button" class="reset-btn" wire:click="resetFilters">Reset</button>
+                    <button type="button" class="reset-btn filter_modal_reset" wire:click="resetFilters">Reset</button>
                     <button type="button" class="submit-btn" wire:click="applyFilters">Apply Now</button>
                 </div>
             </div>
