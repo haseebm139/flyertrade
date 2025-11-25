@@ -26,6 +26,7 @@ class CreateProviderProfileRequest extends FormRequest
 
 
             'avatar'         => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
+            'cover_photo'    => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
             'phone'          => 'nullable|string|max:20',
             'country'        => 'nullable|string|max:100',
             'city'           => 'nullable|string|max:100',

@@ -16,6 +16,7 @@ class CustomerOnlyProfileService
      */
     public function updateProfile(array $data, User $user)
     {
+         
         $updateData = [];
 
         // Handle avatar upload
@@ -33,8 +34,8 @@ class CustomerOnlyProfileService
         // }
 
         if (isset($data['avatar']) && $data['avatar']) {
-            $file = $data['avatar']; // $data['avatar'] ko UploadedFile hona zaroori hai
-            $path = 'customer/profile/' . $file->hashName(); // unique naam
+            $file = $data['avatar'];  
+            $path = 'customer/profile/' . $file->hashName();  
 
             // File content ko seedhe disk mein likhein
             try {
@@ -48,7 +49,24 @@ class CustomerOnlyProfileService
                 \Log::error('File saving failed with PUT method: ' . $e->getMessage());
             }
         }
+         
+        if (isset($data['cover_photo']) && $data['cover_photo']) {
+            $file = $data['cover_photo'];  
+            $path = 'customer/profile/' . $file->hashName();  
 
+             
+            try {
+                Storage::disk('public')->put(
+                    $path, 
+                    file_get_contents($file->getRealPath())
+                );
+                $updateData['cover_photo'] = 'storage/' . $path;
+                \Log::info('File saved successfully using put method: ' . $path);
+            } catch (\Exception $e) {
+                \Log::error('File saving failed with PUT method: ' . $e->getMessage());
+            }
+        }
+        
         // Update other fields (only allowed fields for customer)
         if (isset($data['name'])) {
             $updateData['name'] = $data['name'];
@@ -70,8 +88,7 @@ class CustomerOnlyProfileService
             $updateData['address'] = $data['address'];
         }
 
-        $user->update($updateData);
-
+        $user->update($updateData); 
         return $user->fresh();
     }
 

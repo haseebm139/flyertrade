@@ -39,6 +39,26 @@ class CustomerProfileService
             $avatarPath = 'storage/' . $path;
             $updateData['avatar'] = $avatarPath;
         }
+       
+        // Handle cover photo upload
+        if (isset($data['cover_photo']) && $data['cover_photo']) {
+            // Delete old cover photo if exists
+            if ($user->cover_photo) {
+                $oldPath = str_replace('storage/', '', $user->cover_photo);
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
+                }
+            }
+
+            // Store in appropriate directory based on user type
+            $directory = ($user->user_type === 'provider' || $user->user_type === 'multi') 
+                ? 'provider/profile' 
+                : 'customer/profile';
+            
+            $path = $data['cover_photo']->store($directory, 'public');
+            $coverPhotoPath = 'storage/' . $path;
+            $updateData['cover_photo'] = $coverPhotoPath;
+        }
 
         // Update other fields
         if (isset($data['name'])) {

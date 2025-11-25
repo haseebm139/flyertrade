@@ -25,6 +25,7 @@ class CustomerProfileRequest extends FormRequest
             'name'           => 'nullable|string|max:255',
             'email'          => 'nullable|email|max:255|unique:users,email,' . auth()->id(),
             'avatar'         => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
+            'cover_photo'    => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
             'phone'          => 'nullable|string|max:20',
             'address'        => 'nullable|string|max:255',
             'country'        => 'nullable|string|max:100',

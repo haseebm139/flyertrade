@@ -40,6 +40,20 @@ class ProviderProfileService
             $profileData['profile_photo'] = $profileImg;
         }
 
+        $coverPhotoPath = null;
+        if (isset($data['cover_photo'])) {
+            // Delete old cover photo if exists
+            if ($user->cover_photo) {
+                $oldPath = str_replace('storage/', '', $user->cover_photo);
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
+                }
+            }
+
+            $path = $data['cover_photo']->store('provider/profile', 'public');
+            $coverPhotoPath = 'storage/' . $path;
+        }
+
         $profileData['about_me'] = $data['services']['about'] ?? null;
         $data['address'] = $data['office_address'];
         
@@ -51,6 +65,10 @@ class ProviderProfileService
          
         if ($profileImg !== null) {
             $updateData['avatar'] = $profileImg;
+        }
+
+        if ($coverPhotoPath !== null) {
+            $updateData['cover_photo'] = $coverPhotoPath;
         }
         
         if (!empty($updateData)) {

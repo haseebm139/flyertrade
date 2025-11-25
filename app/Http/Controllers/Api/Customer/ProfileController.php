@@ -49,6 +49,7 @@ class ProfileController extends BaseController
      */
     public function store(CustomerProfileRequest $request)
     {
+        
         $result = $this->profileService->updateProfile($request->validated(), auth()->user());
 
         return $this->sendResponse(new UserResource($result), 'Customer profile updated successfully.');

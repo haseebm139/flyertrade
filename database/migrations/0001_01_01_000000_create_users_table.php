@@ -18,6 +18,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
             $table->string('avatar')->nullable()->default('assets/images/avatar/default.png');
+            $table->string('cover_photo')->nullable();
             // 🔹 Additional fields for your app
             $table->string('phone')->nullable();
             $table->enum('role_id', ['customer', 'provider', 'admin','multi'])->default('customer');
