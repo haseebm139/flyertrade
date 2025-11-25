@@ -1,5 +1,5 @@
 <div>
-    <livewire:admin.components.toolbar label="service providers" />
+    <livewire:admin.components.toolbar label="Service categories" button_label="Service category" search_label="user"/>
 
     <!-- Begin::Table -->
     <table class="theme-table">

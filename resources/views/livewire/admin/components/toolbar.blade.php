@@ -7,11 +7,11 @@
                         alt=""></span> Export CSV
             </button>
             @if($showAddButton)
-            <button class="add-user-btn" id="openAddUserModal" wire:click="addItem"><i class="fa-solid fa-plus mr-3"></i> Add {{ $label }}</button>
+            <button class="add-user-btn" id="openAddUserModal" wire:click="addItem"><i class="fa-solid fa-plus mr-3"></i> Add {{ $button_label }}</button>
             @endif
         </div>
         <div class="toolbar-right">
-            <input type="text" class="search-user" placeholder="Search {{ strtolower($label) }}"
+            <input type="text" class="search-user" placeholder="Search {{ strtolower($search_label) }}"
                 wire:model.live.debounce.500ms="search">
             <button class="filter-btn" id="openFilterModal" wire:click="openFilterModal"> <span
                     class="download-icon">

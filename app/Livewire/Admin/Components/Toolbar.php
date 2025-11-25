@@ -9,6 +9,8 @@ class Toolbar extends Component
 
     public $search = '';
     public string $label = 'Item'; // default label
+    public string $button_label = ''; // default label
+    public string $search_label = ''; // default label
     public bool $showAddButton = true; // Control button visibility
     
     public function addItem()

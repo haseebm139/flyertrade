@@ -374,8 +374,8 @@ img.btn-icons {
 }
 
 .notification-item img {
-    width: 3vw !important;
-    height: 3vw !important;
+    width: 2.5vw !important;
+    height: 2.5vw !important;
     border-radius: 0.375vw;
     padding: 0.25vw;
     margin-top: -2vw;
@@ -383,7 +383,7 @@ img.btn-icons {
 
 .notification-title {
     font-weight: 500;
-    font-size: 1vw;
+    font-size: 0.87vw;
     /* 16px */
     color: #1b1b1b;
 }
@@ -407,7 +407,7 @@ img.btn-icons {
 
 
 div.notification_popup {
-    top: 3.4375vw !important;
+    top: 2.5vw !important;
     right: -0.6875vw !important;
     width: 25vw !important;
 }
@@ -619,7 +619,7 @@ table.dataTable thead th {
     width: 0.365vw;
     height: 0.365vw;
     border-radius: 50%;
-    background: gray;
+    background: #AAAAAA;
     top: 50%;
     transform: translateY(-50%);
 }
@@ -1507,7 +1507,7 @@ td.user-data.id-number {
     border-bottom: 0.052vw solid #eee !important;
     font-weight: 400;
     text-align: left;
-    font-size: 0.8vw;
+    font-size: 0.84vw;
     color: #393939;
     white-space: normal;
     overflow-wrap: break-word;

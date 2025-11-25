@@ -17,7 +17,7 @@
             padding: 1vw 1.5vw; border-bottom: 0vw solid #ddd; background-color: #fff;border-radius: 20px;">
 
                     <span class="popup-title"
-                        style="font-size: 1.2vw; font-weight: 600; color: #333; letter-spacing: 0.05vw;">
+                        style="font-size: 1vw; font-weight: 600; color: #333; letter-spacing: 0.05vw;">
                         Notification
                     </span>
 

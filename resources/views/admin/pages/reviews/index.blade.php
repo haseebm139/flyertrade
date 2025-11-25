@@ -38,11 +38,11 @@
             <thead>
                 <tr>
                     <th><input type="checkbox"></th>
-                    <th class="sortable" data-column="0">Booking ID <img src="{{ asset('assets/images/icons/sort.png') }}"
+                    <th class="sortable" data-column="0">Service type <img src="{{ asset('assets/images/icons/sort.png') }}"
                             class="sort-icon">
                     </th>
 
-                    <th class="sortable">Date created
+                    <th class="sortable">Date and time
                         <img src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon">
                     </th>
 
@@ -51,7 +51,7 @@
                     <th class="sortable" data-column="1">Reviewer<img src="{{ asset('assets/images/icons/sort.png') }}"
                             class="sort-icon">
                     </th>
-                    <th class="sortable" data-column="1">Reviewer Provider<img
+                    <th class="sortable" data-column="1">Reviewed Provider<img
                             src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon">
                     </th>
 
@@ -152,11 +152,11 @@
             <thead>
                 <tr>
                     <th><input type="checkbox"></th>
-                    <th class="sortable" data-column="0">Booking ID <img
-                            src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon">
+                    <th class="sortable" data-column="0">Service type <img src="{{ asset('assets/images/icons/sort.png') }}"
+                            class="sort-icon">
                     </th>
 
-                    <th class="sortable">Date created
+                    <th class="sortable">Date and time
                         <img src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon">
                     </th>
 
@@ -165,7 +165,7 @@
                     <th class="sortable" data-column="1">Reviewer<img src="{{ asset('assets/images/icons/sort.png') }}"
                             class="sort-icon">
                     </th>
-                    <th class="sortable" data-column="1">Reviewer Provider<img
+                    <th class="sortable" data-column="1">Reviewed Provider<img
                             src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon">
                     </th>
 

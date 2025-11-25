@@ -1,6 +1,6 @@
 <div>
 
-    <livewire:admin.components.toolbar label="Booking" :show-add-button="false" />
+    <livewire:admin.components.toolbar label="All Bookings" search_label="user" :show-add-button="false" />
 
 
     <table class="theme-table">

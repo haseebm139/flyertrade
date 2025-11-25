@@ -10,7 +10,9 @@
     </div>
 
 
-    
+    <div class="container">
+        <h1 class="page-title">Service Categories</h1>
+    </div>
 
     <!-- Back Button (Hidden by default) -->
 
