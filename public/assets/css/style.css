@@ -1643,7 +1643,6 @@ td.user-data.id-number {
 .theme-table th.sortable.asc::after {
     content: url("../images/arrow-up.png");
 }
-
 /* Descending */
 .theme-table th.sortable.desc::after {
     content: url("../images/arrow-down.png");
@@ -1677,8 +1676,8 @@ td.user-data.id-number {
 .actions-menu {
     display: none;
     position: absolute;
-    right: 0;
-    top: 100%;
+    right: 30px;
+    top: 0px;
     background: #fff;
     border: 1px solid #ddd;
     border-radius: 10px;
