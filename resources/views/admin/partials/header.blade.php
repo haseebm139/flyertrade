@@ -28,7 +28,7 @@
             <div class="popup ioioios notification_popup" id="notifPopup_____">
                 <div class="popup-header"
                     style="display: flex; align-items: center; justify-content: space-between; 
-            padding: 1vw 1.5vw; border-bottom: 0vw solid #ddd; background-color: #fff;border-radius: 20px;">
+            padding: 1vw 1.5vw 0px; border-bottom: 0vw solid #ddd; background-color: #fff;border-radius: 20px;">
 
                     <span class="popup-title"
                         style="font-size: 1vw; font-weight: 600; color: #333; letter-spacing: 0.05vw;">
