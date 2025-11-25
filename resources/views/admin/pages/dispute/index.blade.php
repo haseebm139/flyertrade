@@ -286,12 +286,14 @@
             if (openFilterBtn && filterModal) {
                 openFilterBtn.addEventListener("click", function() {
                     filterModal.style.display = "flex";
+                     openFilterBtn.classList.remove("tab-active");
                 });
             }
 
             if (closeFilterBtn && filterModal) {
                 closeFilterBtn.addEventListener("click", function() {
                     filterModal.style.display = "none";
+                     openFilterBtn.classList.remove("tab-active");
                 });
             }
 
@@ -299,6 +301,7 @@
             window.addEventListener('click', function(event) {
                 if (event.target === filterModal) {
                     filterModal.style.display = "none";
+                     openFilterBtn.classList.remove("tab-active");
                 }
             });
         });

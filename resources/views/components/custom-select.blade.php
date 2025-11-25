@@ -119,14 +119,18 @@ if ($selectedValue === null && !empty($normalizedOptions)) {
 
     .custom-select-text {
         font-size: 0.875rem;
-        color: #777777;
+        color: #1b1b1b;
         flex: 1;
     }
 
     .custom-select-text.placeholder {
-        color: #9ca3af;
+          color: #1b1b1b;
         background-color: rgba(0,0,0,0)!important;
+        opacity: 1!important;
     }
+ .placeholder {
+           opacity: 1!important;
+ }
 
     .custom-select-arrow {
         width: 16px;

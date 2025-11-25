@@ -4,6 +4,11 @@
 @section('header', 'User Management')
 
 @section('content')
+<style>
+  .theme-table td{
+    font-weight:500;
+  }
+</style>
 
     <livewire:admin.user-stats mode="customers"/>
     <br>

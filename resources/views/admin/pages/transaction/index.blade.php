@@ -639,11 +639,11 @@
         $('#filterModal').css('display', 'none');
         $("#openFilterModal").removeClass('tab-active');
     })
-    $('#filterModal').on('click', function(e) {
-        e.preventDefault();
-        $('#filterModal').css('display', 'none');
-        $("#openFilterModal").removeClass('tab-active');
-    })
+    // $('#filterModal').on('click', function(e) {
+    //     e.preventDefault();
+    //     $('#filterModal').css('display', 'none');
+    //     $("#openFilterModal").removeClass('tab-active');
+    // })
     // $("#filter-theme-modal-content").on('click',function(e){
     //      e.preventDefault();
     //        $('#filterModal').css('display','flex');

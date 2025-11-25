@@ -172,18 +172,21 @@ const filterModal = document.getElementById("filterModal");
 if (openFilterBtn && filterModal) {
     openFilterBtn.onclick = () => {
         filterModal.style.display = "flex";
+         openFilterBtn.classList.remove("tab-active");
     };
 }
 
 if (closeFilterBtn && filterModal) {
     closeFilterBtn.onclick = () => {
         filterModal.style.display = "none";
+        openFilterBtn.classList.remove("tab-active");
     };
 }
 
 if (resetBtn && filterModal) {
     resetBtn.onclick = () => {
         filterModal.style.display = "none";
+         openFilterBtn.classList.remove("tab-active");
     };
 }
 
@@ -192,6 +195,7 @@ function openModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
         modal.style.display = 'flex';
+         openFilterBtn.classList.remove("tab-active");
     }
 }
 
@@ -199,6 +203,7 @@ function closeModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
         modal.style.display = 'none';
+         openFilterBtn.classList.remove("tab-active");
     }
 }
 

@@ -219,6 +219,7 @@ img.btn-icons {
     background-size: 1vw;
     outline: none;
     background-color: #f1f1f1;
+    line-height: 1;
 }
 
 /* Icons */
@@ -675,7 +676,7 @@ table.dataTable thead th {
     align-items: center;
     z-index: 9999;
     left: 50%;
-    top: 6vw;
+    top: 4vw;
       transform: translateX(-50%);
 
 }
