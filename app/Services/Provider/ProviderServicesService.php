@@ -24,7 +24,7 @@ class ProviderServicesService
     }
     public function create(array $data, $user)
     {
-
+            
         $existingService = ProviderService::where('user_id', $user->id)
         ->where('service_id', $data['services']['service_id'])
         ->first();
@@ -47,6 +47,7 @@ class ProviderServicesService
                 'description' => $data['services']['description'] ?? null,
                 'staff_count'     => $data['services']['staff_count'] ?? null,
                 'rate_min'            => $data['services']['rate_min'] ?? null,
+                'rate_mid'            => $data['services']['rate_mid'] ?? null,
                 'rate_max'            => $data['services']['rate_max'] ?? null,
             ]);
 
@@ -57,7 +58,7 @@ class ProviderServicesService
 
                     $service->media()->create([
                         'provider_service_id' => $service->id,
-                        'provider_profile_id' => $profile->id,
+                        'provider_profile_id' => $profile_id,
                         'user_id'    => $user->id,
                         'file_path'  => 'storage/' . $path,
                         // 'file_path'  => Storage::disk('s3')->url($path),
@@ -73,7 +74,7 @@ class ProviderServicesService
                     $path = $video->store('provider/services/videos', 'public');
                     $service->media()->create([
                         'provider_service_id' => $service->id,
-                        'provider_profile_id' => $profile->id,
+                        'provider_profile_id' => $profile_id,
                         'user_id'    => $user->id,
                         'file_path'  => 'storage/' . $path,
                         // 'file_path'  => Storage::disk('s3')->url($path),
@@ -88,8 +89,8 @@ class ProviderServicesService
                     ProviderCertificate::create([
                         'provider_service_id' => $service->id,
                         'user_id'             => $user->id,
-                        'provider_profile_id' => $profile->id,
-                        'file_path'           => 'storage/' . $path?? null,
+                        'provider_profile_id' => $profile_id,
+                        'file_path'           => 'storage/' . $path ?? null,
                         // 'file_path'           => Storage::disk('s3')->url($path),
                         'status'              => 'pending',
                     ]);
@@ -125,6 +126,7 @@ class ProviderServicesService
             'description'    => $data['services']['description'] ?? $service->description,
             'staff_count'    => $data['services']['staff_count'] ?? $service->staff_count,
             'rate_min'       => $data['services']['rate_min'] ?? $service->rate_min,
+            'rate_mid'       => $data['services']['rate_mid'] ?? $service->rate_mid,
             'rate_max'       => $data['services']['rate_max'] ?? $service->rate_max,
         ]);
 
@@ -175,24 +177,45 @@ class ProviderServicesService
 
     public function delete($user, $id)
     {
-        $service = ProviderService::where('id', $id)
-            ->where('user_id', $user->id)
-            ->first();
+        // Handle multiple IDs (comma-separated or array)
+        if (is_string($id) && strpos($id, ',') !== false) {
+            $ids = array_map('trim', explode(',', $id));
+        } elseif (is_array($id)) {
+            $ids = $id;
+        } else {
+            $ids = [$id];
+        }
 
-        if (!$service) {
+        // Get all services owned by user
+        $services = ProviderService::whereIn('id', $ids)
+            ->where('user_id', $user->id)
+            ->get();
+
+        if ($services->isEmpty()) {
             return [
                 'error'   => true,
-                'message' => 'Service not found or not owned by this user.'
+                'message' => 'No services found or not owned by this user.'
             ];
         }
 
-        // Delete media + certificates (optional)
-        $service->media()->delete();
-        $service->certificates()->delete();
+        $deletedCount = 0;
+        foreach ($services as $service) {
+            // Delete media + certificates
+            $service->media()->delete();
+            $service->certificates()->delete();
+            $service->delete();
+            $deletedCount++;
+        }
 
-        $service->delete();
+        $message = $deletedCount === 1 
+            ? 'Service deleted successfully.' 
+            : 'Services deleted successfully.';
 
-        return true;
+        return [
+            'error' => false,
+            'message' => $message,
+            'deleted_count' => $deletedCount
+        ];
     }
 
 

@@ -9,27 +9,39 @@
                 <h3>{{ $isEdit ? 'Edit User' : 'Add User' }}</h3>
                 <form wire:submit.prevent="save">
                     <label>Name</label>
-                    <input type="text" class="form-input" wire:model="name" placeholder="Enter name" required>
+                    <input type="text" class="form-input @error('name') error-input @enderror " wire:model="name" placeholder="Enter name"  >
                     @error('name')
-                        <span class="error">{{ $message }}</span>
+                        <div class="error-message">
+                                <i class="fa-solid fa-circle-exclamation"></i>
+                                <span>{{ $message }}</span>
+                            </div>
                     @enderror
 
                     <label>Email</label>
-                    <input type="email" class="form-input" wire:model="email" placeholder="Enter email" required>
+                    <input type="email" class="form-input @error('email') error-input @enderror" wire:model="email" placeholder="Enter email"  >
                     @error('email')
-                        <span class="error">{{ $message }}</span>
+                        <div class="error-message">
+                                <i class="fa-solid fa-circle-exclamation"></i>
+                                <span>{{ $message }}</span>
+                            </div>
                     @enderror
 
                     <label>Home Address</label>
-                    <input type="text" class="form-input" wire:model="address" placeholder="Enter home address">
+                    <input type="text" class="form-input  @error('address') error-input @enderror" wire:model="address" placeholder="Enter home address">
                     @error('address')
-                        <span class="error">{{ $message }}</span>
+                        <div class="error-message">
+                                <i class="fa-solid fa-circle-exclamation"></i>
+                                <span>{{ $message }}</span>
+                            </div>
                     @enderror
 
                     <label>Phone Number</label>
-                    <input type="text" class="form-input" wire:model="phone" placeholder="Enter phone number">
+                    <input type="text" class="form-input  @error('phone') error-input @enderror" wire:model="phone" placeholder="Enter phone number">
                     @error('phone')
-                        <span class="error">{{ $message }}</span>
+                        <div class="error-message">
+                                <i class="fa-solid fa-circle-exclamation"></i>
+                                <span>{{ $message }}</span>
+                            </div>
                     @enderror
 
                     <div class="mb-3">
@@ -48,7 +60,10 @@
                             class="form-select"
                         />
                         @error('user_type')
-                            <span class="error">{{ $message }}</span>
+                           <div class="error-message">
+                                <i class="fa-solid fa-circle-exclamation"></i>
+                                <span>{{ $message }}</span>
+                            </div>
                         @enderror
                     </div>
 
@@ -66,38 +81,5 @@
         </div>
     @endif
 
-    <style>
-        .error {
-            color: #d32f2f;
-            font-size: 12px;
-            margin-top: 4px;
-            display: block;
-        }
-
-        .role-checkboxes {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .role-item {
-            display: flex;
-            align-items: center;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background: #f8f9fa;
-        }
-
-        .role-item input[type="checkbox"] {
-            margin-right: 8px;
-        }
-
-        .role-item label {
-            margin: 0;
-            cursor: pointer;
-            flex: 1;
-        }
-    </style>
+     
 </div>
