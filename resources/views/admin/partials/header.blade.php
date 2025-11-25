@@ -194,6 +194,7 @@
     notifBtn____.addEventListener('click', () => {
 
         notifPopup.style.display = 'block';
+         providerModal.style.display = 'none';
     });
     // Close modal on close button click
     closeBtn.addEventListener('click', () => {
