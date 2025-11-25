@@ -11,7 +11,7 @@
          gap:10px;
          display: flex;
          flex-direction: column;
-             border-bottom: 0.0625vw solid #f0f0f0;
+             /* border-bottom: 0.0625vw solid #f0f0f0; */
     }
 </style>
 <div class="top-row">
@@ -59,7 +59,7 @@
                     </div>
                     
                 </div>
-                      <div class="notification_item_wrapper " style="border-bottom:none">
+                      <div class="notification_item_wrapper ">
                     <div  class="notification-item">
                         <img src="{{ asset('assets/images/icons/manage.png') }}" alt="">
                         <div class="notification-content">
