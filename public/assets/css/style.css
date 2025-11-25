@@ -37,9 +37,9 @@ a {
 }
 
 img.nav-icon {
-    width: 1.425vw;
+    width: 1.2vw;
     /* 18px */
-    height: 1.425vw;
+    height: 1.2vw;
     /* 18px */
 }
 
@@ -951,7 +951,7 @@ table.dataTable thead th {
     /* 11px */
     width: 100%;
     background-color: #fff;
-    height: 7vw;
+    height: 6vw;
 
     /* 128px */
 }
@@ -972,8 +972,8 @@ table.dataTable thead th {
 }
 
 .icon-box img {
-    width: 3vw;
-    height: 3vw;
+    width: 2.25vw;
+    height: 2.25vw;
     margin-top: -0.5vw;
 }
 
@@ -1132,6 +1132,7 @@ table.dataTable thead th {
     /* 14px */
     color: #1b1b1b;
     text-decoration: none;
+    font-weight: 400;
 }
 
 .table thead th {
@@ -1207,8 +1208,8 @@ table.dataTable thead th {
 }
 
 .icon-boxs {
-    height: 2.5vw;
-    width: 2.5vw;
+    height: 2vw;
+    width: 2vw;
 }
 
 .activity-text {
@@ -2771,7 +2772,10 @@ input[type="checkbox"] {
     width: 0.9vw;
     accent-color: #004e42;
 }
-
+input::placeholder {
+  color: #AAAAAA; /* Change to your desired color (hex, RGB, or color name) */
+  opacity: 1; /* Ensures consistent opacity across browsers, especially in Firefox */
+}
 .tabs-section {
     display: flex;
 

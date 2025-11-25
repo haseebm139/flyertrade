@@ -92,6 +92,7 @@ if ($selectedValue === null && !empty($normalizedOptions)) {
 <style>
     .custom-select-wrapper {
         position: relative;
+        border: 1px solid #AAAAAA;
         width: 100%;
     }
 

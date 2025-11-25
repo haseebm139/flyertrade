@@ -117,7 +117,7 @@
                         <!-- Header -->
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h5 class="card-title mb-0">Recently added users</h5>
-                            <a href="#">View all</a>
+                            <a href="#" style="font-weight: 400">View all</a>
                         </div>
                         <nav>
                             <div class="nav nav-tabs" id="nav-tab" role="tablist">
