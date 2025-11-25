@@ -89,7 +89,8 @@ class CustomerOnlyProfileService
         }
 
         $user->update($updateData); 
-        return $user->fresh();
+        
+        return $user->load('providerProfile');
     }
 
     /**
@@ -111,7 +112,7 @@ class CustomerOnlyProfileService
      */
     public function getProfileById(int $id)
     {
-        return User::customers()->find($id);
+        return User::with('providerProfile')->find($id);
     }
 }
 

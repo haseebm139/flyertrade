@@ -38,7 +38,7 @@ class ProfileController extends BaseController
             return $this->sendError('Customer profile not found.', 404);
         }
 
-        return $this->sendResponse(new UserResource($customer), 'Customer profile retrieved successfully.');
+        return $this->sendResponse($customer, 'Customer profile retrieved successfully.');
     }
 
     /**
@@ -49,10 +49,10 @@ class ProfileController extends BaseController
      */
     public function store(CustomerProfileRequest $request)
     {
-        
+
         $result = $this->profileService->updateProfile($request->validated(), auth()->user());
 
-        return $this->sendResponse(new UserResource($result), 'Customer profile updated successfully.');
+        return $this->sendResponse($result, 'Customer profile updated successfully.');
     }
 
     /**
