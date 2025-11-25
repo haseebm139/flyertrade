@@ -1806,7 +1806,7 @@ label {
 
 h5#userModalLabel {
     font-size: 1.4vw;
-}
+} 
 
 span.desf {
     font-size: 1vw;
@@ -1815,7 +1815,7 @@ span.desf {
 
 .form-input {
     width: 100%;
-    padding: 0.8vw;
+    padding: 0.6vw;
     font-size: 0.9vw;
     margin-bottom: 1vw;
     border: 0.1vw solid #ddd;

@@ -124,6 +124,28 @@
          .date_field_wraper{
             position: relative;
          }
+         .date-input {
+  position: relative;
+  padding-right: 35px; /* space for icon */
+}
+
+/* Hide default icon */
+.date-input::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+/* Add your SVG as custom icon */
+.date-input {
+  background-image: url('data:image/svg+xml;utf8,<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.66406 1.66602V4.16602" stroke="%23717171" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.3359 1.66602V4.16602" stroke="%23555555" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M2.91406 7.57422H17.0807" stroke="%23555555" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M17.5 7.08268V14.166C17.5 16.666 16.25 18.3327 13.3333 18.3327H6.66667C3.75 18.3327 2.5 16.666 2.5 14.166V7.08268C2.5 4.58268 3.75 2.91602 6.66667 2.91602H13.3333C16.25 2.91602 17.5 4.58268 17.5 7.08268Z" stroke="%23555555" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.99803 11.4167H10.0055" stroke="%23555555" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.91209 11.4167H6.91957" stroke="%23555555" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.91209 13.9167H6.91957" stroke="%23555555" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 20px;
+}
+
     </style>
     @if ($showFilterModal)
         <div class="modal filter-theme-modal" style="display: flex;">
@@ -137,24 +159,24 @@
                 <h3 class="mt-0">Filter</h3>
                 </div>
               
-                <label style='color:#717171'>Select Date</label>
+                <label style='color:#717171;font-weight:500;'>Select Date</label>
                 <div class=" row mt-3">
                     <div class='col-6'>
                         <span>From:</span>
                         <div class="date_field_wraper">
-                            <input type="date" class="form-input mt-2" wire:model="fromDate">
+                            <input type="date" class="form-input mt-2 date-input" wire:model="fromDate">
                         </div>
                        
                     </div>
                     <div class='col-6'>
                         <span>To:</span>
                         <div class="date_field_wraper">
-                            <input type="date" class="form-input mt-2" wire:model="toDate">
+                            <input type="date" class="form-input mt-2 date-input" wire:model="toDate">
                         </div>
                        
                     </div>
                 </div>
-                <label style="color:#717171;font-weight:400">Status</label>
+                <label style="color:#717171;font-weight:500">Status</label>
                 <x-custom-select name="status" :options="[
                     ['value' => '', 'label' => 'Select status'],
                     ['value' => 'active', 'label' => 'Active'],
