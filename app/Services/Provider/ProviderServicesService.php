@@ -53,6 +53,7 @@ class ProviderServicesService
 
             // Photos
             if (!empty($data['services']['photos'])) {
+                 
                 foreach ($data['services']['photos'] as $photo) {
                     $path = $photo->store('provider/services/photos', 'public');
 
@@ -130,6 +131,56 @@ class ProviderServicesService
             'rate_max'       => $data['services']['rate_max'] ?? $service->rate_max,
         ]);
 
+        // Handle delete photos (by IDs)
+        if (!empty($data['services']['delete_photos']) && is_array($data['services']['delete_photos'])) {
+            $photosToDelete = $service->media()
+                ->where('type', 'photo')
+                ->whereIn('id', $data['services']['delete_photos'])
+                ->get();
+            
+            foreach ($photosToDelete as $photo) {
+                // Delete file from storage
+                $filePath = str_replace('storage/', '', $photo->file_path);
+                if (Storage::disk('public')->exists($filePath)) {
+                    Storage::disk('public')->delete($filePath);
+                }
+                $photo->delete();
+            }
+        }
+
+        // Handle delete videos (by IDs)
+        if (!empty($data['services']['delete_videos']) && is_array($data['services']['delete_videos'])) {
+            $videosToDelete = $service->media()
+                ->where('type', 'video')
+                ->whereIn('id', $data['services']['delete_videos'])
+                ->get();
+            
+            foreach ($videosToDelete as $video) {
+                // Delete file from storage
+                $filePath = str_replace('storage/', '', $video->file_path);
+                if (Storage::disk('public')->exists($filePath)) {
+                    Storage::disk('public')->delete($filePath);
+                }
+                $video->delete();
+            }
+        }
+
+        // Handle delete certificates (by IDs)
+        if (!empty($data['services']['delete_certificates']) && is_array($data['services']['delete_certificates'])) {
+            $certsToDelete = $service->certificates()
+                ->whereIn('id', $data['services']['delete_certificates'])
+                ->get();
+            
+            foreach ($certsToDelete as $cert) {
+                // Delete file from storage
+                $filePath = str_replace('storage/', '', $cert->file_path);
+                if (Storage::disk('public')->exists($filePath)) {
+                    Storage::disk('public')->delete($filePath);
+                }
+                $cert->delete();
+            }
+        }
+
         // Handle new photos
         if (!empty($data['services']['photos'])) {
             foreach ($data['services']['photos'] as $photo) {
@@ -172,7 +223,7 @@ class ProviderServicesService
             }
         }
 
-        return $service->fresh(['service', 'certificates', 'media']);
+        return $service->load('service', 'certificates', 'media');
     }
 
     public function delete($user, $id)

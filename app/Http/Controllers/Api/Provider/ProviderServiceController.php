@@ -63,17 +63,31 @@ class ProviderServiceController extends BaseController
             'services.is_primary'      => 'boolean',
 
             // Media
-            'services.photos.*'        => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
+            'services.photos.*'        => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
             'services.videos.*'        => 'nullable|file|mimes:mp4,mov,avi|max:10240',
 
             // Certificates
-            'services.certificates.*'        => 'nullable|file|mimes:jpg,jpeg,png|max:5120',
+            'services.certificates.*'        => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
 
         ]);
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first());
         }
+        
         $data = $validator->validated();
+        
+        // Add files from request (validated() doesn't include files in form-data)
+        // Postman format: services[photos], services[videos], services[certificates]
+        if ($request->hasFile('services.photos')) {
+            $data['services']['photos'] = $request->file('services.photos');
+        }
+        if ($request->hasFile('services.videos')) {
+            $data['services']['videos'] = $request->file('services.videos');
+        }
+        if ($request->hasFile('services.certificates')) {
+            $data['services']['certificates'] = $request->file('services.certificates');
+        }
+        
         $result = $this->service->create($data, auth()->user());
 
         if (isset($result['error']) && $result['error'] === true) {
@@ -103,8 +117,6 @@ class ProviderServiceController extends BaseController
      */
     public function update(Request $request, string $id)
     {
-
-
         $validator = Validator::make($request->all(), [
             'services'                 => 'nullable|array',
             'services.about'           => 'nullable|string|max:1000',
@@ -120,6 +132,9 @@ class ProviderServiceController extends BaseController
             // Media
             'services.photos.*'        => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
             'services.videos.*'        => 'nullable|file|mimes:mp4,mov,avi|max:10240',
+            'services.delete_photos'   => 'nullable',
+            'services.delete_videos'   => 'nullable',
+            'services.delete_certificates'   => 'nullable',
 
             // Certificates
             'services.certificates.*'  => 'nullable|file|mimes:jpg,jpeg,png|max:5120',
@@ -130,6 +145,59 @@ class ProviderServiceController extends BaseController
         }
 
         $data = $validator->validated();
+        
+        // Parse delete arrays from string format (Postman sends as "[7,8,9]")
+        if (isset($data['services']['delete_photos'])) {
+            $deletePhotos = $data['services']['delete_photos'];
+            if (is_string($deletePhotos)) {
+                // Remove brackets and split by comma
+                $deletePhotos = trim($deletePhotos, '[]');
+                $data['services']['delete_photos'] = array_filter(
+                    array_map('intval', explode(',', $deletePhotos))
+                );
+            } elseif (!is_array($deletePhotos)) {
+                unset($data['services']['delete_photos']);
+            }
+        }
+        
+        if (isset($data['services']['delete_videos'])) {
+            $deleteVideos = $data['services']['delete_videos'];
+            if (is_string($deleteVideos)) {
+                // Remove brackets and split by comma
+                $deleteVideos = trim($deleteVideos, '[]');
+                $data['services']['delete_videos'] = array_filter(
+                    array_map('intval', explode(',', $deleteVideos))
+                );
+            } elseif (!is_array($deleteVideos)) {
+                unset($data['services']['delete_videos']);
+            }
+        }
+        
+        if (isset($data['services']['delete_certificates'])) {
+            $deleteCerts = $data['services']['delete_certificates'];
+            if (is_string($deleteCerts)) {
+                // Remove brackets and split by comma
+                $deleteCerts = trim($deleteCerts, '[]');
+                $data['services']['delete_certificates'] = array_filter(
+                    array_map('intval', explode(',', $deleteCerts))
+                );
+            } elseif (!is_array($deleteCerts)) {
+                unset($data['services']['delete_certificates']);
+            }
+        }
+        
+        // Add files from request (validated() doesn't include files in form-data)
+        // Postman format: services[photos], services[videos], services[certificates]
+        if ($request->hasFile('services.photos')) {
+            $data['services']['photos'] = $request->file('services.photos');
+        }
+        if ($request->hasFile('services.videos')) {
+            $data['services']['videos'] = $request->file('services.videos');
+        }
+        if ($request->hasFile('services.certificates')) {
+            $data['services']['certificates'] = $request->file('services.certificates');
+        }
+         
         $result = $this->service->update($data, auth()->user(), $id);
 
         if (isset($result['error']) && $result['error'] === true) {
