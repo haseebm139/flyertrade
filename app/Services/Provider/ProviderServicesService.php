@@ -177,24 +177,45 @@ class ProviderServicesService
 
     public function delete($user, $id)
     {
-        $service = ProviderService::where('id', $id)
-            ->where('user_id', $user->id)
-            ->first();
+        // Handle multiple IDs (comma-separated or array)
+        if (is_string($id) && strpos($id, ',') !== false) {
+            $ids = array_map('trim', explode(',', $id));
+        } elseif (is_array($id)) {
+            $ids = $id;
+        } else {
+            $ids = [$id];
+        }
 
-        if (!$service) {
+        // Get all services owned by user
+        $services = ProviderService::whereIn('id', $ids)
+            ->where('user_id', $user->id)
+            ->get();
+
+        if ($services->isEmpty()) {
             return [
                 'error'   => true,
-                'message' => 'Service not found or not owned by this user.'
+                'message' => 'No services found or not owned by this user.'
             ];
         }
 
-        // Delete media + certificates (optional)
-        $service->media()->delete();
-        $service->certificates()->delete();
+        $deletedCount = 0;
+        foreach ($services as $service) {
+            // Delete media + certificates
+            $service->media()->delete();
+            $service->certificates()->delete();
+            $service->delete();
+            $deletedCount++;
+        }
 
-        $service->delete();
+        $message = $deletedCount === 1 
+            ? 'Service deleted successfully.' 
+            : 'Services deleted successfully.';
 
-        return true;
+        return [
+            'error' => false,
+            'message' => $message,
+            'deleted_count' => $deletedCount
+        ];
     }
 
 

@@ -150,6 +150,7 @@ class ProviderServiceController extends BaseController
             return $this->sendError($result['message']);
         }
 
-        return $this->sendResponse([], 'Provider Service deleted successfully.');
+        $message = $result['message'] ?? 'Service deleted successfully.';
+        return $this->sendResponse([], $message);
     }
 }
