@@ -3,8 +3,10 @@
 @section('title', 'Service Providers')
 @section('header', 'User Management')
 @section('content')
-    
-     <livewire:admin.user-stats mode="providers"/>
+    <div class="col-lg-9">
+
+        <livewire:admin.user-stats mode="providers"/>
+    </div>
     <br>
     <div class="container">
         <h1 class="page-title">Service Providers</h1>

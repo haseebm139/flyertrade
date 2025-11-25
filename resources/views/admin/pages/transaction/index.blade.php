@@ -10,7 +10,10 @@
         z-index: 99999;
     }
 </style>
-<livewire:admin.user-stats mode="transactions" />
+<div class="col-lg-9">
+
+    <livewire:admin.user-stats mode="transactions" />
+</div>
 
 
 

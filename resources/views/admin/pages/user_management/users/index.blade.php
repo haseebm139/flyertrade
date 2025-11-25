@@ -4,8 +4,10 @@
 @section('header', 'User Management')
 
 @section('content')
+<div class="col-lg-9">
 
-    <livewire:admin.user-stats mode="customers"/>
+  <livewire:admin.user-stats mode="customers"/>
+</div>
     <br>
     <div class="container">
         <h1 class="page-title">Service Users</h1>
