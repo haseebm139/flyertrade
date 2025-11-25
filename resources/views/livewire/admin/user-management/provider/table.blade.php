@@ -118,8 +118,11 @@
          }
          .filter_modal_reset{
             border: 1px solid #f1f1f1;
-border-radius: 10px;
-padding: 12px 24px;
+            border-radius: 10px;
+            padding: 12px 24px;
+         }
+         .date_field_wraper{
+            position: relative;
          }
     </style>
     @if ($showFilterModal)
@@ -138,14 +141,20 @@ padding: 12px 24px;
                 <div class=" row mt-3">
                     <div class='col-6'>
                         <span>From:</span>
-                        <input type="date" class="form-input mt-2" wire:model="fromDate">
+                        <div class="date_field_wraper">
+                            <input type="date" class="form-input mt-2" wire:model="fromDate">
+                        </div>
+                       
                     </div>
                     <div class='col-6'>
                         <span>To:</span>
-                        <input type="date" class="form-input mt-2" wire:model="toDate">
+                        <div class="date_field_wraper">
+                            <input type="date" class="form-input mt-2" wire:model="toDate">
+                        </div>
+                       
                     </div>
                 </div>
-                <label style="color:#1b1b1b;font-weight:400">Status</label>
+                <label style="color:#717171;font-weight:400">Status</label>
                 <x-custom-select name="status" :options="[
                     ['value' => '', 'label' => 'Select status'],
                     ['value' => 'active', 'label' => 'Active'],
