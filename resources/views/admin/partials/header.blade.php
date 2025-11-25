@@ -1,5 +1,19 @@
 <!-- ========== Begin::Header (always open) ========== -->
+<style>
+    .notification_text_wrapper{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
 
+    }
+    .notification_item_wrapper{
+         padding: 0.75vw;
+         gap:10px;
+         display: flex;
+         flex-direction: column;
+             border-bottom: 0.0625vw solid #f0f0f0;
+    }
+</style>
 <div class="top-row">
     <div class="page-title">@yield('header', 'Dashboard')</div>
     <div class="d-flex gap-3">
@@ -28,30 +42,40 @@
                     </span>
                 </div>
 
-                <div class="notification-item">
-                    <img src="{{ asset('assets/images/icons/manage.png') }}" alt="">
-                    <div class="notification-content">
-                        <div class="notification-title">Document verification</div>
-                        <br>
-                        <div class="notification-text" style="margin-left:-3vw;">
-                            3 New Providers Awaiting Document
-                            Verification.
+                <div class="notification_item_wrapper">
+                    <div  class="notification-item">
+                        <img src="{{ asset('assets/images/icons/manage.png') }}" alt="">
+                        <div class="notification-content">
+                            <div class="notification-title">Document verification</div>
                         </div>
                     </div>
-                    <div class="notification-view" data-modal="providerModal" style="    margin-top: 2.9vw;
-">View</div>
+                    
+                    <div class="notification_text_wrapper">
+                        <div class="notification-text">
+                                3 New Providers Awaiting Document
+                                Verification.
+                            </div>
+                        <div class="notification-view" data-modal="providerModal" >View</div>
+                    </div>
+                    
                 </div>
-                <div class="notification-item">
-                    <img src="{{ asset('assets/images/icons/manage.png') }}" alt="">
-                    <div class="notification-content">
-                        <div class="notification-title">High Cancellation Alert</div>
-                        <br>
-                        <div class="notification-text" style="margin-left:-3vw;">David E. has 3 cancellations this week.
+                      <div class="notification_item_wrapper">
+                    <div  class="notification-item">
+                        <img src="{{ asset('assets/images/icons/manage.png') }}" alt="">
+                        <div class="notification-content">
+                            <div class="notification-title">High Cancellation Alert</div>
                         </div>
                     </div>
-                    <div class="notification-view" data-modal="providerModal" style="    margin-top: 2.9vw;
-">View</div>
+                    
+                    <div class="notification_text_wrapper">
+                        <div class="notification-text">
+                                David E. has 3 cancellations this week.
+                            </div>
+                        <div class="notification-view" data-modal="providerModal" >View</div>
+                    </div>
+                    
                 </div>
+              
                 <div style="padding: 0.8vw 1.5vw; text-align: left;">
                     <a href="#"
                         style="color: #00796B; font-size: 0.95vw; font-weight: 500; text-decoration: none; display: flex; align-items: center; gap: 0.3vw;">

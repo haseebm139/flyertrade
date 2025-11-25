@@ -361,12 +361,12 @@ img.btn-icons {
 /* Notifications list */
 .notification-item {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 0.625vw;
     /* 10px */
-    padding: 0.5vw 0.75vw;
+    /* padding: 0.5vw 0.75vw; */
     /* 8px 12px */
-    border-bottom: 0.0625vw solid #f0f0f0;
+
     /* 1px */
 }
 
@@ -378,8 +378,7 @@ img.btn-icons {
     width: 2.5vw !important;
     height: 2.5vw !important;
     border-radius: 0.375vw;
-    padding: 0.25vw;
-    margin-top: -2vw;
+    /* margin-top: -2vw; */
 }
 
 .notification-title {
@@ -783,16 +782,7 @@ table.dataTable thead th {
 }
 
 /* Notification popup styling */
-.notification-item {
-    display: flex;
-    align-items: center;
-    gap: 0.625vw;
-    /* 10px */
-    padding: 0.625vw;
-    /* 10px */
-    border-bottom: 0.0625vw solid #f0f0f0;
-    /* 1px */
-}
+
 
 .notification-content {
     flex: 1;
