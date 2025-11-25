@@ -7,7 +7,7 @@
 
     }
     .notification_item_wrapper{
-         padding: 0.75vw;
+       padding: 0.8vw 1.5vw;
          gap:10px;
          display: flex;
          flex-direction: column;
