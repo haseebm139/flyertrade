@@ -90,7 +90,7 @@
 
 
     <!-- Filter Modal -->
-    <div id="filterModal" class="modal filter-theme-modal">
+    <div id="filterModal" class="modal filter-theme-modal" style="display:none">
         <div class="modal-content filter-modal">
             <span class="close-modal" id="closeFilterModal">&times;</span>
             <h3>Filter</h3>
