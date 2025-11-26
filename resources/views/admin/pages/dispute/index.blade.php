@@ -294,7 +294,7 @@
 
 
     <!-- Filter Modal -->
-    <div id="filterModal" class="modal filter-theme-modal">
+    <div id="filterModal" class="modal filter-theme-modal" style="display:none">
 
         <div class="modal-content filter-modal">
           <div class="modal_heaader">
