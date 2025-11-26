@@ -111,11 +111,11 @@ if ($selectedValue === null && !empty($normalizedOptions)) {
     }
 
     .custom-select-input:hover {
-        border-color: #9ca3af;
+        border-color: #ddd;
     }
 
     .custom-select-input.open {
-        border-color: #9ca3af;
+        border-color: #ddd;
     }
 
     .custom-select-text {
