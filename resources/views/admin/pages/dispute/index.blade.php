@@ -323,7 +323,7 @@
                        
                     </div>
                 </div>
-            <label style="color:#1b1b1b;font-weight:400">Status</label>
+            <label style="color:#717171;font-weight:500">Status</label>
             <x-custom-select name="statusFilter" id="statusFilter" :options="[
                 ['value' => '', 'label' => 'Select status'],
                 ['value' => 'resolved', 'label' => 'Resolved'],

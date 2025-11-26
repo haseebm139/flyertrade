@@ -634,7 +634,7 @@
                        
                     </div>
                 </div>
-        <label>Transaction type</label>
+        <label style="color:#717171">Transaction type</label>
         <x-custom-select name="transaction_type" :options="[
                 ['value' => '', 'label' => 'Select transaction'],
                 ['value' => 'payout', 'label' => 'Payout'],
@@ -644,7 +644,7 @@
             wireModel="transaction_type"
             class="form-input" />
 
-        <label>Payment method</label>
+        <label  style="color:#717171">Payment method</label>
         <x-custom-select name="payment_method" :options="[
                 ['value' => '', 'label' => 'Select payment method'],
                 ['value' => '0', 'label' => 'Mobile Money'],
