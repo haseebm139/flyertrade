@@ -128,7 +128,7 @@
             position: relative;
             padding-right: 35px; /* space for icon */
             font-family: Clash Display;
-
+            color:#555;
             font-style: Medium;
            font-weight: 500;
             }
@@ -195,3 +195,4 @@
         </div>
     @endif
 </div>
+                    
