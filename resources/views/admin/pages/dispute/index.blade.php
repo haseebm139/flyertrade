@@ -52,9 +52,9 @@
         </div>
         <div class="toolbar-right">
             <input type="text" class="search-user" placeholder="Search user">
-            <button class="filter-btn" id="openFilterModal"> <span class="download-icon"><img
+            <button class="filter-btn" id="openFilterModal"> Filter <span class="download-icon"><img
                         src="{{ asset('assets/images/icons/button-icon.png') }}" alt=""
-                        class="btn-icons"></span>Filter</button>
+                        class="btn-icons"></span></button>
         </div>
     </div>
 
