@@ -2,12 +2,12 @@
     
     <div class="users-toolbar">
         <div class="toolbar-left">
-            <button class="export-btn" wire:click="exportCsv">
+                <button class="export-btn d-flex align-items-center gap-1"  wire:click="exportCsv" style="color:#004E42; line-height:1">
                 <span class="download-icon"><img class="btn-icons"src="{{ asset('assets/images/icons/download.png') }}"
                         alt=""></span> Export CSV
             </button>
             @if($showAddButton)
-            <button class="add-user-btn" id="openAddUserModal" wire:click="addItem"><i class="fa-solid fa-plus mr-3"></i> Add {{ $button_label }}</button>
+            <button class="add-user-btn d-flex align-items-center gap-1" style="line-height:1" id="openAddUserModal" wire:click="addItem"><i class="fa-solid fa-plus mr-3"></i> Add {{ $button_label }}</button>
             @endif
         </div>
         <div class="toolbar-right">

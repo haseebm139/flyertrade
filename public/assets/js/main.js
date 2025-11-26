@@ -492,23 +492,30 @@ function setStatus(el, status) {
   const statusBtn = parent.querySelector('.status');
 
   // Reset old classes
-  statusBtn.classList.remove('publish', 'unpublish', 'pending', 'open');
+  statusBtn.classList.remove('publish', 'unpublish', 'pending', 'open','Resolved','Unresolved');
 
   // Define colors
   let color = '';
   let cssClass = '';
 
-  if (status === 'Publish') {
+  if (status === 'Resolved') {
     color = '#0a8754'; // Green
     cssClass = 'publish';
-  } else if (status === 'Unpublish') {
-    color = '#d91e18'; // Red
-    cssClass = 'unpublish';
+  }if (status === 'Publish') {
+    color = '#0a8754'; // Green
+    cssClass = 'publish';
+  }  else if (status === 'Unpublished') {
+    color = '#D00416'; // Red
+    cssClass = 'unpublished';
   } else if (status === 'Pending') {
     color = '#d4aa00'; // Yellow
     cssClass = 'pending';
   }
-
+   else if (status === 'Unresolved') {
+    color = '#D00416'; // Yellow
+    cssClass = 'unpublished';
+  }
+// alert(cssClass);
   // Apply new class and color
   statusBtn.classList.add(cssClass);
   statusBtn.style.color = color;
@@ -599,37 +606,37 @@ function toggleDropdown(el) {
   }
 }
 
-function setStatus(el, status) {
-  const parent = el.closest('.status-dropdown');
-  const statusBtn = parent.querySelector('.status');
+// function setStatus(el, status) {
+//   const parent = el.closest('.status-dropdown-resolve');
+//   const statusBtn = parent.querySelector('.status');
 
-  // Reset classes
-  statusBtn.classList.remove('resolved', 'unresolved', 'open');
+//   // Reset classes
+//   statusBtn.classList.remove('resolved', 'unresolved', 'open');
 
-  // Define colors
-  let color = '';
-  let cssClass = '';
+//   // Define colors
+//   let color = '';
+//   let cssClass = '';
 
-  if (status === 'Resolved') {
-    color = '#0a8754'; // Green (Publish color)
-    cssClass = 'resolved';
-  } else if (status === 'Unresolved') {
-    color = '#d4aa00'; // Yellow (Pending color)
-    cssClass = 'unresolved';
-  }
+//   if (status === 'Resolved') {
+//     color = '#0a8754'; // Green (Publish color)
+//     cssClass = 'resolved';
+//   } else if (status === 'Unresolved') {
+//     color = '#d4aa00'; // Yellow (Pending color)
+//     cssClass = 'unpublished';
+//   }
 
-  // Apply class & color
-  statusBtn.classList.add(cssClass);
-  statusBtn.style.color = color;
+//   // Apply class & color
+//   statusBtn.classList.add(cssClass);
+//   statusBtn.style.color = color;
 
-  // Update inner text + arrow
-  statusBtn.innerHTML = `${status}
-    <svg class="arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-      viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2"
-      stroke-linecap="round" stroke-linejoin="round">
-      <polyline points="6 9 12 15 18 9"></polyline>
-    </svg>`;
+//   // Update inner text + arrow
+//   statusBtn.innerHTML = `${status}
+//     <svg class="arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+//       viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2"
+//       stroke-linecap="round" stroke-linejoin="round">
+//       <polyline points="6 9 12 15 18 9"></polyline>
+//     </svg>`;
 
-  // Close dropdown
-  parent.querySelector('.dropdown-menu').style.display = 'none';
-}
+//   // Close dropdown
+//   parent.querySelector('.dropdown-menu').style.display = 'none';
+// }

@@ -315,7 +315,7 @@
 
     <!-- Pagination -->
     <div class="pagination">
-        <button class="page-btn prev" disabled>‹</button>
+        <button class="page-btn prev" disabled><i class="fa-solid fa-chevron-left"></i></button>
         <button class="page-btn active">1</button>
         <button class="page-btn">2</button>
         <button class="page-btn">3</button>
@@ -323,7 +323,7 @@
         <button class="page-btn">5</button>
         <span class="dots">...</span>
         <button class="page-btn">14</button>
-        <button class="page-btn next">›</button>
+        <button class="page-btn next"><i class="fa-solid fa-chevron-right"></i></button>
 
         <div class="rows-control">
             <label for="rows">Show</label>
@@ -418,7 +418,7 @@
 
     <!-- Pagination -->
     <div class="pagination">
-        <button class="page-btn prev" disabled>‹</button>
+        <button class="page-btn prev" disabled><i class="fa-solid fa-chevron-left"></i></button>
         <button class="page-btn active">1</button>
         <button class="page-btn">2</button>
         <button class="page-btn">3</button>
@@ -426,7 +426,7 @@
         <button class="page-btn">5</button>
         <span class="dots">...</span>
         <button class="page-btn">14</button>
-        <button class="page-btn next">›</button>
+        <button class="page-btn next"><i class="fa-solid fa-chevron-right"></i></button>
 
         <div class="rows-control">
             <label for="rows">Show</label>

@@ -17,7 +17,7 @@
 
 <div class="users-toolbar">
     <div class="toolbar-left">
-        <button class="export-btn">
+        <button class="export-btn d-flex align-items-center gap-1" style="color:#004E42; line-height:1">
             <span class="download-icon"><img src="{{ asset('assets/images/icons/download.png') }}"
                     alt=""></span> Export
             CSV
@@ -111,7 +111,13 @@
 
                 </td>
 
-
+                <style>
+                    .unpublished{
+                        color:#D00416;
+                        border: 2px solid #D00416;
+                        background-color: #fb374741!important;
+                    }
+                </style>
                 <td>
                     <div class="status-dropdown">
                         <span class="status publish" onclick="toggleDropdown(this)">
@@ -125,7 +131,7 @@
                         <ul class="dropdown-menu">
                             <li onclick="setStatus(this, 'Pending')">Pending</li>
                             <li onclick="setStatus(this, 'Publish')">Publish</li>
-
+                            <li onclick="setStatus(this, 'Unpublished')">Unpublished</li>
                         </ul>
                     </div>
                 </td>

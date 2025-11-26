@@ -24,23 +24,24 @@ if (statusBtn && statusMenu) {
     });
 
     // Change status on option click
-    statusOptions.forEach(option => {
-        option.addEventListener("click", () => {
-            let status = option.textContent.trim();
+statusOptions.forEach(option => {
+    option.addEventListener("click", () => {
+        let status = option.textContent.trim();
 
-            statusBtn.textContent = status + " ▼";
+        statusBtn.innerHTML = status + ' <i class="fa-solid fa-chevron-down"></i>';
 
-            if (status === "Active") {
-                statusBtn.classList.remove("inactive");
-                statusBtn.classList.add("active");
-            } else {
-                statusBtn.classList.remove("active");
-                statusBtn.classList.add("inactive");
-            }
+        if (status === "Active") {
+            statusBtn.classList.remove("inactive");
+            statusBtn.classList.add("active");
+        } else {
+            statusBtn.classList.remove("active");
+            statusBtn.classList.add("inactive");
+        }
 
-            statusMenu.style.display = "none";
-        });
+        statusMenu.style.display = "none";
     });
+});
+
 
     // Close dropdown if clicked outside
     document.addEventListener("click", (e) => {

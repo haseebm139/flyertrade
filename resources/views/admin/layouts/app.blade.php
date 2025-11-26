@@ -116,6 +116,35 @@
                }
         }
     </style>
+        <style>
+#rows, #perPage {
+    width: 150px;
+    padding: 8px 35px 8px 8px;
+
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+
+    /* hide default arrow */
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+
+    /* custom icon */
+    background-image: url("{{ asset('assets/images/icons/icon_.png') }}");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 8px;
+
+    background-clip: padding-box;
+}
+
+/* Firefox fix */
+#rows::-ms-expand #perPage::-ms-expand {
+    display: none;
+}
+
+    </style>
 </head>
 
 <body>

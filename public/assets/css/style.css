@@ -214,7 +214,7 @@ img.btn-icons {
     font-size: 0.9vw;
     border-radius: 1.5625vw;
 
-    border: 0.1vw solid #ddd;
+    border: 0.1vw solid #f1f1f1;
     background: url("/assets/images/icons/search-icon.png") no-repeat 0.8vw center;
     background-size: 1vw;
     outline: none;
@@ -1325,7 +1325,7 @@ td.user-data.id-number {
 
 .page-btn {
     padding: 0.4vw 0.7vw;
-    border: 1px solid #ddd;
+    border: none;
     border-radius: 4px;
     background: white;
     font-size: 1.1vw;
@@ -1333,7 +1333,9 @@ td.user-data.id-number {
     cursor: pointer;
     transition: background 0.3s;
 }
-
+.prev, .next{
+     border: 1px solid #ddd;
+}
 .page-btn:hover:not(.active):not(:disabled) {
     background: #f2f2f2;
 }
@@ -1397,7 +1399,7 @@ td.user-data.id-number {
     padding: 0.6vw 1vw 0.6vw 2.5vw;
     font-size: 0.9vw;
     border-radius: 0.4vw;
-    border: 0.1vw solid #ddd;
+    border: 0.1vw solid #f1f1f1;
     background: url("/assets/images/icons/search-icon.png") no-repeat 0.8vw center;
     background-size: 1vw;
     outline: none;
@@ -1502,6 +1504,7 @@ td.user-data.id-number {
     color: #393939;
     white-space: normal;
     overflow-wrap: break-word;
+    height: 10vh;
 }
 
 .user-theme-name {
@@ -1906,7 +1909,7 @@ small.time {
 
 .pending {
     color: goldenrod;
-    border: 0.052vw solid goldenrod;
+    border: 0.052vw solid goldenrod !important;
 }
 
 /* Delete Popover */
@@ -3738,7 +3741,7 @@ img.chat-img {
     font-size: 0.6vw;
     color: #899994;
     white-space: nowrap;
-    margin-left: 0.4vw;
+    margin-left: 0px;
 }
 
 .unread-count {
@@ -4353,7 +4356,7 @@ textarea.form-input.error-input:focus {
 
 /* Modal display */
 .modal {
-    display: flex;
+    display: none;
 }
 
 /* Role checkboxes styling */

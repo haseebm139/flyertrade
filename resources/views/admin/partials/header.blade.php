@@ -18,7 +18,7 @@
     <div class="page-title">@yield('header', 'Dashboard')</div>
     <div class="d-flex gap-3">
         <!-- Search Input -->
-        <input type="text" class="search-box" placeholder="Search..." >
+        <input type="text" class="search-box" placeholder="Search" >
 
         <!-- Notifications -->
         <!-- Notification Icon -->

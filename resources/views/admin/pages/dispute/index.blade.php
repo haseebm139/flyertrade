@@ -44,7 +44,7 @@
     </div>
     <div class="users-toolbar">
         <div class="toolbar-left">
-            <button class="export-btn">
+        <button class="export-btn d-flex align-items-center gap-1" style="color:#004E42; line-height:1">
                 <span class="download-icon"><img src="{{ asset('assets/images/icons/download.png') }}" alt=""
                         class="btn-icons"></span> Export CSV
             </button>
@@ -112,12 +112,19 @@
                 </td>
 
 
+                <style>
+                    .unpublished{
+                        color:#D00416;
+                        border: 2px solid #D00416;
+                        background-color: #fb374741!important;
+                    }
+                </style>
                 <td>
-                    <div class="status-dropdown">
-                        <span class="status active" onclick="toggleDropdown(this)">
-                            Unresolved
+                    <div class="status-dropdown status-dropdown-resolve">
+                        <span class="status active Resolved" onclick="toggleDropdown(this)">
+                            Resolved
                             <svg class="arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                viewBox="0 0 24 24" fill="none" stroke="#d4aa00" stroke-width="2" stroke-linecap="round"
+                                viewBox="0 0 24 24" fill="none" stroke="#0a8754" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round">
                                 <polyline points="6 9 12 15 18 9"></polyline>
                             </svg>
@@ -154,7 +161,7 @@
 
     <!-- Pagination -->
     <div class="pagination">
-        <button class="page-btn prev" disabled>‹</button>
+        <button class="page-btn prev" disabled><i class="fa-solid fa-chevron-left"></i></button>
         <button class="page-btn active">1</button>
         <button class="page-btn">2</button>
         <button class="page-btn">3</button>
@@ -162,7 +169,7 @@
         <button class="page-btn">5</button>
         <span class="dots">...</span>
         <button class="page-btn">14</button>
-        <button class="page-btn next">›</button>
+        <button class="page-btn next"><i class="fa-solid fa-chevron-right"></i></button>
 
         <div class="rows-control">
             <label for="rows">Show</label>

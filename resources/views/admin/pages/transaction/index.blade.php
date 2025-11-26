@@ -23,7 +23,7 @@
 </div>
 <div class="users-toolbar">
     <div class="toolbar-left">
-        <button class="export-btn">
+        <button class="export-btn d-flex align-items-center gap-1" style="color:#004E42; line-height:1">
             <span class="download-icon"><img src="{{ asset('assets/images/icons/download.png') }}" alt=""></span>&nbsp;
             Export
             CSV
@@ -477,7 +477,7 @@
 
 <!-- Pagination -->
 <div class="pagination">
-    <button class="page-btn prev" disabled>‹</button>
+    <button class="page-btn prev" disabled><i class="fa-solid fa-chevron-left"></i></button>
     <button class="page-btn active">1</button>
     <button class="page-btn">2</button>
     <button class="page-btn">3</button>
@@ -485,7 +485,7 @@
     <button class="page-btn">5</button>
     <span class="dots">...</span>
     <button class="page-btn">14</button>
-    <button class="page-btn next">›</button>
+    <button class="page-btn next"><i class="fa-solid fa-chevron-right"></i></button>
 
     <div class="rows-control">
         <label for="rows">Show</label>
