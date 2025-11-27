@@ -7,27 +7,27 @@
         <thead>
             <tr>
                 <th><input type="checkbox"></th>
-                <th class="sortable" data-column="0">Booking ID <img src="{{ asset('assets/images/icons/sort.png') }}"
+                <th class="sortable" data-column="0">Booking ID <img src="{{ asset('assets/images/icons/sort.svg') }}"
                         class="sort-icon">
                 </th>
                 <th class="sortable" data-column="4">Service category <img
-                        src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon"></th>
+                        src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
                 <th class="sortable">Date created
-                    <img src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon">
+                    <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
                 </th>
-                <th class="sortable" data-column="1">Service User<img src="{{ asset('assets/images/icons/sort.png') }}"
+                <th class="sortable" data-column="1">Service User<img src="{{ asset('assets/images/icons/sort.svg') }}"
                         class="sort-icon"></th>
 
 
-                <th class="sortable" data-column="1">Provider<img src="{{ asset('assets/images/icons/sort.png') }}"
+                <th class="sortable" data-column="1">Provider<img src="{{ asset('assets/images/icons/sort.svg') }}"
                         class="sort-icon"></th>
-                <th class="sortable" data-column="2">Location <img src="{{ asset('assets/images/icons/sort.png') }}"
+                <th class="sortable" data-column="2">Location <img src="{{ asset('assets/images/icons/sort.svg') }}"
                         class="sort-icon"></th>
-                <th class="sortable" data-column="3">Amount Paid <img src="{{ asset('assets/images/icons/sort.png') }}"
+                <th class="sortable" data-column="3">Amount Paid <img src="{{ asset('assets/images/icons/sort.svg') }}"
                         class="sort-icon"></th>
 
 
-                <th class="sortable" data-column="6"> Status <img src="{{ asset('assets/images/icons/sort.png') }}"
+                <th class="sortable" data-column="6"> Status <img src="{{ asset('assets/images/icons/sort.svg') }}"
                         class="sort-icon"></th>
                 <th></th>
             </tr>
@@ -44,14 +44,14 @@
                     </td>
                     <td>
                         <div class="user-info">
-                            <img src="{{ $booking->customer->avatar1 ?? asset('assets/images/icons/person-one.png') }}"
+                            <img src="{{ $booking->customer->avatar1 ?? asset('assets/images/icons/person-one.svg') }}"
                                 alt="User" class="avatar">
                             <span class="user-theme-name">{{ $booking->customer->name ?? 'N/A' }}</span>
                         </div>
                     </td>
                     <td>
                         <div class="user-info">
-                            <img src="{{ $booking->provider->avatar1 ?? asset('assets/images/icons/person-one.png') }}"
+                            <img src="{{ $booking->provider->avatar1 ?? asset('assets/images/icons/person-one.svg') }}"
                                 alt="User" class="avatar">
                             <span class="user-theme-name">{{ $booking->provider->name ?? 'N/A' }}</span>
                         </div>
@@ -80,7 +80,7 @@
                     </td>
                     <td>
                         <button class="view-btn" onclick="openBookingModal({{ $booking->id }})">
-                            <img src="{{ asset('assets/images/icons/eye-icon.png') }}" alt="View"
+                            <img src="{{ asset('assets/images/icons/eye_icon.svg') }}" alt="View"
                                 class="action-icon">
                         </button>
 

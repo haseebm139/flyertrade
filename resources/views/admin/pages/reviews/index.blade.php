@@ -18,7 +18,7 @@
 <div class="users-toolbar">
     <div class="toolbar-left">
         <button class="export-btn d-flex align-items-center gap-1" style="color:#004E42; line-height:1">
-            <span class="download-icon"><img src="{{ asset('assets/images/icons/download.png') }}"
+            <span class="download-icon"><img src="{{ asset('assets/images/icons/download.svg') }}"
                     alt=""></span> Export
             CSV
         </button>
@@ -27,7 +27,7 @@
     <div class="toolbar-right">
         <input type="text" class="search-user" placeholder="Search user">
         <button class="filter-btn" id="openFilterModal"> Filter <span class="download-icon"><img
-                    src="{{ asset('assets/images/icons/button-icon.png') }}" alt=""></span></button>
+                    src="{{ asset('assets/images/icons/button-icon.svg') }}" alt=""></span></button>
     </div>
 
 </div>
@@ -38,29 +38,29 @@
             <thead>
                 <tr>
                     <th><input type="checkbox"></th>
-                    <th class="sortable" data-column="0">Service type <img src="{{ asset('assets/images/icons/sort.png') }}"
+                    <th class="sortable" data-column="0">Service type <img src="{{ asset('assets/images/icons/sort.svg') }}"
                             class="sort-icon">
                     </th>
 
                     <th class="sortable">Date and time
-                        <img src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon">
+                        <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
                     </th>
 
 
 
-                    <th class="sortable" data-column="1">Reviewer<img src="{{ asset('assets/images/icons/sort.png') }}"
+                    <th class="sortable" data-column="1">Reviewer<img src="{{ asset('assets/images/icons/sort.svg') }}"
                             class="sort-icon">
                     </th>
                     <th class="sortable" data-column="1">Reviewed Provider<img
-                            src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon">
+                            src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
                     </th>
 
 
 
-                <th class="sortable" data-column="6"> Review <img src="{{ asset('assets/images/icons/sort.png') }}"
+                <th class="sortable" data-column="6"> Review <img src="{{ asset('assets/images/icons/sort.svg') }}"
                         class="sort-icon">
                 </th>
-                <th class="sortable" data-column="6"> Status <img src="{{ asset('assets/images/icons/sort.png') }}"
+                <th class="sortable" data-column="6"> Status <img src="{{ asset('assets/images/icons/sort.svg') }}"
                         class="sort-icon">
                 </th>
                 <th></th>
@@ -78,7 +78,7 @@
                 </td>
                 <td>
                     <div class="user-info" bis_skin_checked="1">
-                        <img src="{{ asset('assets/images/icons/person-one.png') }}" alt="User">
+                        <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
                         <div bis_skin_checked="1">
                             <span class="user-theme-name ">Johnbosco Davies</span>
 
@@ -87,7 +87,7 @@
                 </td>
                 <td>
                     <div class="user-info" bis_skin_checked="1">
-                        <img src="{{ asset('assets/images/icons/person-one.png') }}" alt="User">
+                        <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
                         <div bis_skin_checked="1">
                             <span class="user-theme-name ">Johnbosco Davies</span>
 
@@ -99,10 +99,10 @@
                 <td>
 
                    <div class="stars-rating">
-                        <img src="http://127.0.0.1:8000/assets/images/icons/star.png" alt="star" style="width: 1vw; height: 1vw; margin-right: 0.1vw;">
-                        <img src="http://127.0.0.1:8000/assets/images/icons/star.png" alt="star" style="width: 1vw; height: 1vw; margin-right: 0.1vw;">
-                        <img src="http://127.0.0.1:8000/assets/images/icons/star.png" alt="star" style="width: 1vw; height: 1vw; margin-right: 0.1vw;">
-                        <img src="http://127.0.0.1:8000/assets/images/icons/star.png" alt="star" style="width: 1vw; height: 1vw; margin-right: 0.1vw;">
+                        <img src="http://127.0.0.1:8000/assets/images/icons/star.svg" alt="star" style="width: 1vw; height: 1vw; margin-right: 0.1vw;">
+                        <img src="http://127.0.0.1:8000/assets/images/icons/star.svg" alt="star" style="width: 1vw; height: 1vw; margin-right: 0.1vw;">
+                        <img src="http://127.0.0.1:8000/assets/images/icons/star.svg" alt="star" style="width: 1vw; height: 1vw; margin-right: 0.1vw;">
+                        <img src="http://127.0.0.1:8000/assets/images/icons/star.svg" alt="star" style="width: 1vw; height: 1vw; margin-right: 0.1vw;">
                     </div>
                      Lorem ipsum dolor sit amet consectetur adipisicing
                     elit. Non, voluptates? Lorem
@@ -137,13 +137,13 @@
                 </td>
                 <td style="position:relative;">
                     <div class="actions-dropdown" bis_skin_checked="1">
-                        <button class="actions-btn act"><img src="{{ asset('assets/images/icons/three-dots.png') }}"
+                        <button class="actions-btn act"><img src="{{ asset('assets/images/icons/three_dots.svg') }}"
                                 class="dots-img" alt=""></button>
                         <div class="actions-menu" bis_skin_checked="1">
-                            <a href="{{ route('reviews.show') }}"><img src="{{ asset('assets/images/icons/eye.png') }}" alt="">
+                            <a href="{{ route('reviews.show') }}"><img src="{{ asset('assets/images/icons/eye.svg') }}" alt="">
                                 View
                                 Details</a>
-                            <a href="" class="showDeleteModal"  data-id="1"><img src="{{ asset('assets/images/icons/delete-icon.png') }}"
+                            <a href="" class="showDeleteModal"  data-id="1"><img src="{{ asset('assets/images/icons/delete-icon.svg') }}"
                                     alt="">
                                 Deleted
                             </a>
@@ -180,29 +180,29 @@
             <thead>
                 <tr>
                     <th><input type="checkbox"></th>
-                    <th class="sortable" data-column="0">Service type <img src="{{ asset('assets/images/icons/sort.png') }}"
+                    <th class="sortable" data-column="0">Service type <img src="{{ asset('assets/images/icons/sort.svg') }}"
                             class="sort-icon">
                     </th>
 
                     <th class="sortable">Date and time
-                        <img src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon">
+                        <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
                     </th>
 
 
 
-                    <th class="sortable" data-column="1">Reviewer<img src="{{ asset('assets/images/icons/sort.png') }}"
+                    <th class="sortable" data-column="1">Reviewer<img src="{{ asset('assets/images/icons/sort.svg') }}"
                             class="sort-icon">
                     </th>
                     <th class="sortable" data-column="1">Reviewed Provider<img
-                            src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon">
+                            src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
                     </th>
 
 
 
-                <th class="sortable" data-column="6"> Review <img src="{{ asset('assets/images/icons/sort.png') }}"
+                <th class="sortable" data-column="6"> Review <img src="{{ asset('assets/images/icons/sort.svg') }}"
                         class="sort-icon">
                 </th>
-                <th class="sortable" data-column="6"> Status <img src="{{ asset('assets/images/icons/sort.png') }}"
+                <th class="sortable" data-column="6"> Status <img src="{{ asset('assets/images/icons/sort.svg') }}"
                         class="sort-icon">
                 </th>
                 <th></th>
@@ -220,7 +220,7 @@
                 </td>
                 <td>
                     <div class="user-info" bis_skin_checked="1">
-                        <img src="{{ asset('assets/images/icons/person-one.png') }}" alt="User">
+                        <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
                         <div bis_skin_checked="1">
                             <span class="user-theme-name ">Johnbosco Davies</span>
 
@@ -229,7 +229,7 @@
                 </td>
                 <td>
                     <div class="user-info" bis_skin_checked="1">
-                        <img src="{{ asset('assets/images/icons/person-one.png') }}" alt="User">
+                        <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
                         <div bis_skin_checked="1">
                             <span class="user-theme-name ">Johnbosco Davies</span>
 
@@ -241,10 +241,10 @@
                 <td>
 
                     <div class="stars-rating">
-                        <img src="http://127.0.0.1:8000/assets/images/icons/star.png" alt="star" style="width: 1vw; height: 1vw; margin-right: 0.1vw;">
-                        <img src="http://127.0.0.1:8000/assets/images/icons/star.png" alt="star" style="width: 1vw; height: 1vw; margin-right: 0.1vw;">
-                        <img src="http://127.0.0.1:8000/assets/images/icons/star.png" alt="star" style="width: 1vw; height: 1vw; margin-right: 0.1vw;">
-                        <img src="http://127.0.0.1:8000/assets/images/icons/star.png" alt="star" style="width: 1vw; height: 1vw; margin-right: 0.1vw;">
+                        <img src="http://127.0.0.1:8000/assets/images/icons/star.svg" alt="star" style="width: 1vw; height: 1vw; margin-right: 0.1vw;">
+                        <img src="http://127.0.0.1:8000/assets/images/icons/star.svg" alt="star" style="width: 1vw; height: 1vw; margin-right: 0.1vw;">
+                        <img src="http://127.0.0.1:8000/assets/images/icons/star.svg" alt="star" style="width: 1vw; height: 1vw; margin-right: 0.1vw;">
+                        <img src="http://127.0.0.1:8000/assets/images/icons/star.svg" alt="star" style="width: 1vw; height: 1vw; margin-right: 0.1vw;">
                     </div>
                     Lorem ipsum dolor sit amet consectetur adipisicing
                     elit. Non, voluptates? Lorem
@@ -274,13 +274,13 @@
 
                 <td  style="position:relative;">
                     <div class="actions-dropdown" bis_skin_checked="1">
-                        <button class="actions-btn"><img src="{{ asset('assets/images/icons/three-dots.png') }}"
+                        <button class="actions-btn"><img src="{{ asset('assets/images/icons/three_dots.svg') }}"
                                 class="dots-img" alt=""></button>
                         <div class="actions-menu" bis_skin_checked="1">
-                            <a href="{{ route('reviews.show') }}"><img src="{{ asset('assets/images/icons/eye.png') }}" alt="">
+                            <a href="{{ route('reviews.show') }}"><img src="{{ asset('assets/images/icons/eye.svg') }}" alt="">
                                 View
                                 Details</a>
-                            <a href="" class="showDeleteModal"  data-id="1"><img src="{{ asset('assets/images/icons/delete-icon.png') }}"
+                            <a href="" class="showDeleteModal"  data-id="1"><img src="{{ asset('assets/images/icons/delete-icon.svg') }}"
                                     alt="">
                                 Deleted
                             </a>
@@ -459,7 +459,7 @@
 
     // for (let i = 0; i < rating; i++) {
     //     let img = document.createElement("img");
-    //     img.src = "{{ asset('assets/images/icons/star.png') }}";
+    //     img.src = "{{ asset('assets/images/icons/star.svg') }}";
     //     img.alt = "star";
     //     img.style.width = "1vw";
     //     img.style.height = "1vw";

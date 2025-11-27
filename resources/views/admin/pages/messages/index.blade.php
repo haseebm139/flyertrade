@@ -7,10 +7,10 @@
     <div class="users-toolbar border-0 p-0">
         <div class="toolbar-left">
             <button class="add-user-btn new-email-btn">
-                <img class="icons-btn" src="{{asset('assets/images/icons/sms.png')}}" alt=""> New Email
+                <img class="icons-btn" src="{{asset('assets/images/icons/sms.svg')}}" alt=""> New Email
             </button>
             <button class="export-btn">
-                <img class="icons-btn" src="{{asset('assets/images/icons/messages.png')}}" alt=""> New Message
+                <img class="icons-btn" src="{{asset('assets/images/icons/messages.svg')}}" alt=""> New Message
             </button>
         </div>
         <div class="toolbar-right">
@@ -56,7 +56,7 @@
 
                 <ul class="user-list">
                     <li class="user-list-item active">
-                        <img src="{{asset('assets/images/icons/five.png')}}" class="user-avatar" />
+                        <img src="{{asset('assets/images/icons/five.svg')}}" class="user-avatar" />
                         <div class="user-infos">
                             <div class="user-header">
                                 <strong>Johnson James</strong>
@@ -67,7 +67,7 @@
                     </li>
 
                     <li class="user-list-item inactive">
-                        <img src="{{asset('assets/images/icons/five.png')}}" class="user-avatar" />
+                        <img src="{{asset('assets/images/icons/five.svg')}}" class="user-avatar" />
                         <div class="user-infos">
                             <div class="user-header">
                                 <strong>Emma Watson</strong>
@@ -78,7 +78,7 @@
                     </li>
 
                     <li class="user-list-item active">
-                        <img src="{{asset('assets/images/icons/five.png')}}" class="user-avatar" />
+                        <img src="{{asset('assets/images/icons/five.svg')}}" class="user-avatar" />
                         <div class="user-infos">
                             <div class="user-header">
                                 <strong>Chris Evans</strong>
@@ -98,7 +98,7 @@
 
                 <ul class="user-list">
                     <li class="user-list-item">
-                        <img src="{{asset('assets/images/icons/five.png')}}" class="user-avatar" />
+                        <img src="{{asset('assets/images/icons/five.svg')}}" class="user-avatar" />
                         <div class="user-infos">
                             <div class="user-header">
                                 <strong>Johnson James</strong>
@@ -109,7 +109,7 @@
                         <span class="unread-count">2</span>
                     </li>
                     <li class="user-list-item">
-                        <img src="{{asset('assets/images/icons/five.png')}}" class="user-avatar" />
+                        <img src="{{asset('assets/images/icons/five.svg')}}" class="user-avatar" />
                         <div class="user-infos">
                             <div class="user-header">
                                 <strong>Emma Watson</strong>
@@ -125,7 +125,7 @@
             <div id="unread" class="tab-content">
                 <ul class="user-list">
                     <li class="user-list-item">
-                        <img src="{{asset('assets/images/icons/five.png')}}" class="user-avatar" />
+                        <img src="{{asset('assets/images/icons/five.svg')}}" class="user-avatar" />
                         <div class="user-infos">
                             <div class="user-header">
                                 <strong>Ali Raza</strong>
@@ -142,7 +142,7 @@
             <div id="emails" class="tab-content">
                 <ul class="user-list">
                     <li class="user-list-item">
-                        <img src="{{asset('assets/images/icons/five.png')}}" class="user-avatar" />
+                        <img src="{{asset('assets/images/icons/five.svg')}}" class="user-avatar" />
                         <div class="user-infos">
                             <div class="user-header">
                                 <strong>Support Team</strong>
@@ -158,7 +158,7 @@
             <div id="chats" class="tab-content">
                 <ul class="user-list">
                     <li class="user-list-item">
-                        <img src="{{asset('assets/images/icons/five.png')}}" class="user-avatar" />
+                        <img src="{{asset('assets/images/icons/five.svg')}}" class="user-avatar" />
                         <div class="user-infos">
                             <div class="user-header">
                                 <strong>Ali Khan</strong>
@@ -169,7 +169,7 @@
                         <span class="unread-count">1</span>
                     </li>
                     <li class="user-list-item">
-                        <img src="{{asset('assets/images/icons/five.png')}}" class="user-avatar" />
+                        <img src="{{asset('assets/images/icons/five.svg')}}" class="user-avatar" />
                         <div class="user-infos">
                             <div class="user-header">
                                 <strong>Lucy Cleaner</strong>
@@ -186,18 +186,18 @@
         <div class="email-compose">
             <div class="compose-header">
                 <div class="heading-with-icon">
-                    <img src="{{asset('assets/images/icons/back.png')}}" alt="" class="icon-back">
+                    <img src="{{asset('assets/images/icons/back.svg')}}" alt="" class="icon-back">
                     <h2>Compose email</h2>
                 </div>
 
                 <div class="recipient-container">
                     <span class="label">to</span>
                     <div class="recipient-list">
-                        <img src="{{asset('assets/images/icons/five.png')}}" alt="Recipient 1">
-                        <img src="{{asset('assets/images/icons/five.png')}}" alt="Recipient 2">
-                        <img src="{{asset('assets/images/icons/five.png')}}" alt="Recipient 3">
-                        <img src="{{asset('assets/images/icons/five.png')}}" alt="Recipient 4">
-                        <img src="{{asset('assets/images/icons/five.png')}}" alt="Recipient 5">
+                        <img src="{{asset('assets/images/icons/five.svg')}}" alt="Recipient 1">
+                        <img src="{{asset('assets/images/icons/five.svg')}}" alt="Recipient 2">
+                        <img src="{{asset('assets/images/icons/five.svg')}}" alt="Recipient 3">
+                        <img src="{{asset('assets/images/icons/five.svg')}}" alt="Recipient 4">
+                        <img src="{{asset('assets/images/icons/five.svg')}}" alt="Recipient 5">
                     </div>
                     <span class="others">+20 others</span>
                 </div>
@@ -211,7 +211,7 @@
             <div class="compose-footer">
                 <span class="attachment">
                     <div class="file-upload">
-                        <img class="attach" src="{{asset('assets/images/icons/ic_attachment.png')}}" alt="Attach">
+                        <img class="attach" src="{{asset('assets/images/icons/ic_attachment.svg')}}" alt="Attach">
                         <input type="file">
                     </div>
                 </span>
@@ -223,7 +223,7 @@
         <section class="content-panel">
             <div class="display-chat">
                 <div class="chat-display-img">
-                    <img src="{{asset('assets/images/icons/chat-img.png')}}" alt="Chat Icon" class="chat-img">
+                    <img src="{{asset('assets/images/icons/chat-img.svg')}}" alt="Chat Icon" class="chat-img">
                     <h2 class="chat-title">Select a message to view</h2>
                 </div>
             </div>
@@ -233,18 +233,18 @@
         <div class="view-email">
             <div class="compose-header">
                 <div class="heading-with-icon">
-                    <img src="{{asset('assets/images/icons/back.png')}}" alt="" class="icon-back">
+                    <img src="{{asset('assets/images/icons/back.svg')}}" alt="" class="icon-back">
                     <h2>Compose email</h2>
                 </div>
 
                 <div class="recipient-container">
                     <span class="label">to</span>
                     <div class="recipient-list">
-                        <img src="{{asset('assets/images/icons/five.png')}}" alt="Recipient 1">
-                        <img src="{{asset('assets/images/icons/five.png')}}" alt="Recipient 2">
-                        <img src="{{asset('assets/images/icons/five.png')}}" alt="Recipient 3">
-                        <img src="{{asset('assets/images/icons/five.png')}}" alt="Recipient 4">
-                        <img src="{{asset('assets/images/icons/five.png')}}" alt="Recipient 5">
+                        <img src="{{asset('assets/images/icons/five.svg')}}" alt="Recipient 1">
+                        <img src="{{asset('assets/images/icons/five.svg')}}" alt="Recipient 2">
+                        <img src="{{asset('assets/images/icons/five.svg')}}" alt="Recipient 3">
+                        <img src="{{asset('assets/images/icons/five.svg')}}" alt="Recipient 4">
+                        <img src="{{asset('assets/images/icons/five.svg')}}" alt="Recipient 5">
                     </div>
                     <span class="others">+20 others</span>
                 </div>
@@ -273,9 +273,9 @@
         <div class="message-chat-theme">
             <div class="chat-header">
                 <div class="heading-with-icon" bis_skin_checked="1">
-                    <img src="{{asset('assets/images/icons/back.png')}}" alt="" class="icon-back">
+                    <img src="{{asset('assets/images/icons/back.svg')}}" alt="" class="icon-back">
                     <div class="user-info" bis_skin_checked="1">
-                        <img src="{{asset('assets/images/icons/five.png')}}" alt="avatar">
+                        <img src="{{asset('assets/images/icons/five.svg')}}" alt="avatar">
                         <div bis_skin_checked="1">
                             <p class="user-name" style="font-weight:600; color:black;">Antonetta Walker</p>
                             <p class="user-email">bfahey@example.org</p>
@@ -287,11 +287,11 @@
                 <div class="header-right">
                     <span>1 of 200</span>
                     <div class="icons">
-                        <img src="{{asset('assets/images/icons/message-icon-prev.png')}}" alt="Refresh Icon">
-                        <img src="{{asset('assets/images/icons/message-icon-next.png')}}" alt="Expand Icon">
+                        <img src="{{asset('assets/images/icons/message-icon-prev.svg')}}" alt="Refresh Icon">
+                        <img src="{{asset('assets/images/icons/message-icon-next.svg')}}" alt="Expand Icon">
                     </div>
                     <div class="icons">
-                        <img src="{{asset('assets/images/icons/dots-message.png')}}" alt="Refresh Icon">
+                        <img src="{{asset('assets/images/icons/dots_message.svg')}}" alt="Refresh Icon">
 
                     </div>
                     <button class="new-email new-email-btn">+ New email</button>
@@ -352,14 +352,14 @@
 
             <div class="chat-footer">
                 <input id="chatInput" type="text" placeholder="Reply message......">
-                <div class="footer-icons"><img src="{{asset('assets/images/icons/emoji.png')}}" alt=""><img
-                        src="{{asset('assets/images/icons/txt.png')}}" alt=""><span class="attachment">
+                <div class="footer-icons"><img src="{{asset('assets/images/icons/emoji.svg')}}" alt=""><img
+                        src="{{asset('assets/images/icons/txt.svg')}}" alt=""><span class="attachment">
                         <div class="file-upload">
-                            <img class="attach theme-attach" src="{{asset('assets/images/icons/ic_attachment.png')}}" alt="Attach">
+                            <img class="attach theme-attach" src="{{asset('assets/images/icons/ic_attachment.svg')}}" alt="Attach">
                             <input type="file">
                         </div>
                     </span></div>
-                <button id="sendBtn" class="send-btn"><img src="{{asset('assets/images/icons/send-chat-icon.png')}}"
+                <button id="sendBtn" class="send-btn"><img src="{{asset('assets/images/icons/send-chat-icon.svg')}}"
                         alt=""></button>
             </div>
         </div>

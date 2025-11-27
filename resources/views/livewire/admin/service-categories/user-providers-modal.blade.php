@@ -14,7 +14,7 @@
 
                             @forelse ($providers as $provider)
                                 <div class="list-group-item d-flex align-items-center">
-                                    <img src="{{ asset($provider->avatar ?? 'assets/images/icons/person-one.png') }}" class="rounded-circle me-3"
+                                    <img src="{{ asset($provider->avatar ?? 'assets/images/icons/person-one.svg') }}" class="rounded-circle me-3"
                                         style="width:35px; height:35px; object-fit:cover;" alt="User">
                                     <div>
                                         <h6 class="mb-0">{{ $provider->name }}</h6>

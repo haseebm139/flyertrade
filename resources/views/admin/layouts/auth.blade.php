@@ -43,7 +43,7 @@
                 <!-- Left Image -->
                 <div class="col-md-6 left-img">
                     <img
-                        src="{{ asset('assets/images/icons/authentication-foam-image.png') }}"
+                        src="{{ asset('assets/images/icons/authentication-foam-image.svg') }}"
                         alt="img"
                     >
                 </div>

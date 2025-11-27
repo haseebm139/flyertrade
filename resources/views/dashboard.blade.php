@@ -37,7 +37,7 @@
                                     <span class="revenue-dot"></span> Total revenue
                                 </div>
                                 <div class="stat-value">
-                                    $3000 <span class="stat-up"><img src="{{ asset('assets/images/icons/value-high.png') }}"
+                                    $3000 <span class="stat-up"><img src="{{ asset('assets/images/icons/value-high.svg') }}"
                                             class="img-log" alt=""></span>
                                 </div>
                             </div>
@@ -48,7 +48,7 @@
                                 </div>
                                 <div class="stat-value">
                                     $800 <span class="stat-down"><img
-                                            src="{{ asset('assets/images/icons/value-down.png') }}" class="img-log"
+                                            src="{{ asset('assets/images/icons/value-down.svg') }}" class="img-log"
                                             alt=""></span>
                                 </div>
                             </div>
@@ -77,7 +77,7 @@
                                     <tr>
                                         <td>
                                             <div class="user-info">
-                                                <img src="{{ asset('assets/images/icons/person.png') }}" alt="User">
+                                                <img src="{{ asset('assets/images/icons/person.svg') }}" alt="User">
                                                 Johnbosco Davies
                                             </div>
                                         </td>
@@ -88,7 +88,7 @@
                                     <tr>
                                         <td>
                                             <div class="user-info">
-                                                <img src="{{ asset('assets/images/icons/person.png') }}" alt="User">
+                                                <img src="{{ asset('assets/images/icons/person.svg') }}" alt="User">
                                                 Johnbosco Davies
                                             </div>
                                         </td>
@@ -97,7 +97,7 @@
                                     <tr>
                                         <td>
                                             <div class="user-info">
-                                                <img src="{{ asset('assets/images/icons/person.png') }}" alt="User">
+                                                <img src="{{ asset('assets/images/icons/person.svg') }}" alt="User">
                                                 Johnbosco Davies
                                             </div>
                                         </td>
@@ -285,7 +285,7 @@
                     <!-- Activity item -->
                     <div class="activity-item">
                         <div class="activity-icon bg-beige">
-                            <img src="{{ asset('assets/images/icons/new-booking.png') }}" alt=""
+                            <img src="{{ asset('assets/images/icons/new-booking.svg') }}" alt=""
                                 class="icon-boxs">
                         </div>
                         <div class="activity-text">
@@ -298,7 +298,7 @@
 
                     <div class="activity-item">
                         <div class="activity-icon bg-green">
-                            <img src="{{ asset('assets/images/icons/new-provides.png') }}" alt=""
+                            <img src="{{ asset('assets/images/icons/new-provides.svg') }}" alt=""
                                 class="icon-boxs">
                         </div>
                         <div class="activity-text">
@@ -311,7 +311,7 @@
 
                     <div class="activity-item">
                         <div class="activity-icon bg-blue">
-                            <img src="{{ asset('assets/images/icons/new-dispute.png') }}" alt=""
+                            <img src="{{ asset('assets/images/icons/new-dispute.svg') }}" alt=""
                                 class="icon-boxs">
                         </div>
                         <div class="activity-text">
@@ -324,7 +324,7 @@
 
                     <div class="activity-item">
                         <div class="activity-icon bg-light-brown">
-                            <img src="{{ asset('assets/images/icons/review-posted.png') }}" alt=""
+                            <img src="{{ asset('assets/images/icons/review-posted.svg') }}" alt=""
                                 class="icon-boxs">
                         </div>
                         <div class="activity-text">
@@ -338,7 +338,7 @@
 
                     <div class="activity-item">
                         <div class="activity-icon bg-beige">
-                            <img src="{{ asset('assets/images/icons/verification-pending.png') }}" alt=""
+                            <img src="{{ asset('assets/images/icons/verification-pending.svg') }}" alt=""
                                 class="icon-boxs">
                         </div>
                         <div class="activity-text">

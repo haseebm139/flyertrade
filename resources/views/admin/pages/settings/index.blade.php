@@ -233,7 +233,7 @@
                             Introduction
                         </p>
                         <a href="" class="view-btn">
-                            <img src="https://www.flyertrade.com/assets/images/icons/edit.png" alt="View"
+                            <img src="https://www.flyertrade.com/assets/images/icons/edit.svg" alt="View"
                                 class="eye-icon" />
                             Edit
                         </a>
@@ -264,7 +264,7 @@
                             Information we collect
                         </p>
                         <a href="" class="view-btn">
-                            <img src="https://www.flyertrade.com/assets/images/icons/edit.png" alt="View"
+                            <img src="https://www.flyertrade.com/assets/images/icons/edit.svg" alt="View"
                                 class="eye-icon" />
                             Edit
                         </a>
@@ -294,7 +294,7 @@
                             How we use your information
                         </p>
                         <a href="" class="view-btn">
-                            <img src="https://www.flyertrade.com/assets/images/icons/edit.png" alt="View"
+                            <img src="https://www.flyertrade.com/assets/images/icons/edit.svg" alt="View"
                                 class="eye-icon" />
                             Edit
                         </a>
@@ -325,7 +325,7 @@
                             Disclosure of your information
                         </p>
                         <a href="" class="view-btn">
-                            <img src="https://www.flyertrade.com/assets/images/icons/edit.png" alt="View"
+                            <img src="https://www.flyertrade.com/assets/images/icons/edit.svg" alt="View"
                                 class="eye-icon" />
                             Edit
                         </a>

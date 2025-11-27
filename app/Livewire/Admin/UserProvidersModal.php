@@ -23,7 +23,7 @@ class UserProvidersModal extends Component
             return [
                 'name'   => $provider->name,
                 'email'  => $provider->email,
-                'avatar' => asset($provider->avatar ?? 'assets/images/icons/person-one.png'),
+                'avatar' => asset($provider->avatar ?? 'assets/images/icons/person-one.svg'),
             ];
         })->toArray();
 

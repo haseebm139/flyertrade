@@ -23,7 +23,7 @@
                         <div class="tabs-wrapper">
                             <!-- Left Control -->
                             <button type="button" class="tab-control left" onclick="scrollTabs(-1)">
-                                <img src="{{ asset('assets/images/icons/left-control.png') }}" alt="Left">
+                                <img src="{{ asset('assets/images/icons/left_control.svg') }}" alt="Left">
                             </button>
 
                             @foreach ($permissionGroups as $groupName => $groupPermissions)
@@ -44,7 +44,7 @@
 
                             <!-- Right Control -->
                             <button type="button" class="tab-control right" onclick="scrollTabs(1)">
-                                <img src="{{ asset('assets/images/icons/right-control.png') }} " alt="Right">
+                                <img src="{{ asset('assets/images/icons/right-control.svg') }} " alt="Right">
                             </button>
                         </div>
 

@@ -24,7 +24,7 @@
 <div class="users-toolbar">
     <div class="toolbar-left">
         <button class="export-btn d-flex align-items-center gap-1" style="color:#004E42; line-height:1">
-            <span class="download-icon"><img src="{{ asset('assets/images/icons/download.png') }}" alt=""></span>&nbsp;
+            <span class="download-icon"><img src="{{ asset('assets/images/icons/download.svg') }}" alt=""></span>&nbsp;
             Export
             CSV
         </button>
@@ -33,7 +33,7 @@
     <div class="toolbar-right">
         <input type="text" class="search-user" placeholder="Search user">
         <button class="filter-btn" id="openFilterModal"> Filter&nbsp;&nbsp;<span class="download-icon"><img
-                    src="{{ asset('assets/images/icons/button-icon.png') }}" alt=""></span></button>
+                    src="{{ asset('assets/images/icons/button-icon.svg') }}" alt=""></span></button>
     </div>
 </div>
 
@@ -42,28 +42,28 @@
     <thead>
         <tr>
             <th><input type="checkbox"></th>
-            <th class="sortable" data-column="0">Transaction ID <img src="{{ asset('assets/images/icons/sort.png') }}"
+            <th class="sortable" data-column="0">Transaction ID <img src="{{ asset('assets/images/icons/sort.svg') }}"
                     class="sort-icon">
             </th>
-            <th class="sortable" data-column="4">Transaction type <img src="{{ asset('assets/images/icons/sort.png') }}"
+            <th class="sortable" data-column="4">Transaction type <img src="{{ asset('assets/images/icons/sort.svg') }}"
                     class="sort-icon">
             </th>
             <th class="sortable">Date and time
-                <img src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon">
+                <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
             </th>
 
 
 
             <th class="sortable" data-column="1">Associated user/provider<img
-                    src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon"></th>
-            <th class="sortable" data-column="2">Payment method <img src="{{ asset('assets/images/icons/sort.png') }}"
+                    src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
+            <th class="sortable" data-column="2">Payment method <img src="{{ asset('assets/images/icons/sort.svg') }}"
                     class="sort-icon">
             </th>
-            <th class="sortable" data-column="3">Amount Paid <img src="{{ asset('assets/images/icons/sort.png') }}"
+            <th class="sortable" data-column="3">Amount Paid <img src="{{ asset('assets/images/icons/sort.svg') }}"
                     class="sort-icon"></th>
 
 
-            <th class="sortable" data-column="6"> Status <img src="{{ asset('assets/images/icons/sort.png') }}"
+            <th class="sortable" data-column="6"> Status <img src="{{ asset('assets/images/icons/sort.svg') }}"
                     class="sort-icon"></th>
             <th></th>
         </tr>
@@ -82,7 +82,7 @@
 
             <td>
                 <div class="user-info">
-                    <img src="{{ asset('assets/images/icons/person-one.png') }}" alt="User">
+                    <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
                     <div>
                         <p class="user-name" style="font-weight:500;">Johnbosco Davies</p>
 
@@ -96,15 +96,15 @@
             <td><span class="status pending">Pending</span></td>
             <td style="position:relative;">
                 <div class="actions-dropdown">
-                    <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three-dots.png') }}"
+                    <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three_dots.svg') }}"
                             class="dots-img "></button>
                     <div class="actions-menu">
-                        <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.png') }}"
+                        <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.svg') }}"
                                 alt="">
                             View
                             details</a>
                         <a href="#" class="initiateBtn showDeleteModal___" data-id="1" data-user="Mike Brown">
-                            <img src="{{ asset('assets/images/icons/init.png') }}" alt=""> Initiate payout
+                            <img src="{{ asset('assets/images/icons/init.svg') }}" alt=""> Initiate payout
                         </a>
 
                     </div>
@@ -138,7 +138,7 @@
 
             <td>
                 <div class="user-info">
-                    <img src="{{ asset('assets/images/icons/person-one.png') }}" alt="User">
+                    <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
                     <div>
                         <p class="user-name" style="font-weight:500;">Johnbosco Davies</p>
 
@@ -153,15 +153,15 @@
             <td><span class="status active">Completed</span></td>
             <td style="position:relative;">
                 <div class="actions-dropdown">
-                    <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three-dots.png') }}"
+                    <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three_dots.svg') }}"
                             class="dots-img "></button>
                     <div class="actions-menu">
-                        <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.png') }}"
+                        <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.svg') }}"
                                 alt="">
                             View
                             details</a>
                         <a href="#" class="initiateBtn showDeleteModal___" data-id="2" data-user="Mike Brown">
-                            <img src="{{ asset('assets/images/icons/init.png') }}" alt=""> Initiate payout
+                            <img src="{{ asset('assets/images/icons/init.svg') }}" alt=""> Initiate payout
                         </a>
 
                     </div>
@@ -196,7 +196,7 @@
 
             <td>
                 <div class="user-info">
-                    <img src="{{ asset('assets/images/icons/person-one.png') }}" alt="User">
+                    <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
                     <div>
                         <p class="user-name" style="font-weight:500;">Johnbosco Davies</p>
 
@@ -211,15 +211,15 @@
             <td><span class="status active">Completed</span></td>
             <td style="position:relative;">
                 <div class="actions-dropdown">
-                    <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three-dots.png') }}"
+                    <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three_dots.svg') }}"
                             class="dots-img "></button>
                     <div class="actions-menu">
-                        <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.png') }}"
+                        <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.svg') }}"
                                 alt="">
                             View
                             details</a>
                         <a href="#" class="initiateBtn showDeleteModal___" data-id="3" data-user="Mike Brown">
-                            <img src="{{ asset('assets/images/icons/init.png') }}" alt=""> Initiate payout
+                            <img src="{{ asset('assets/images/icons/init.svg') }}" alt=""> Initiate payout
                         </a>
 
                     </div>
@@ -255,7 +255,7 @@
 
             <td>
                 <div class="user-info">
-                    <img src="{{ asset('assets/images/icons/person-one.png') }}" alt="User">
+                    <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
                     <div>
                         <p class="user-name" style="font-weight:500;">Johnbosco Davies</p>
 
@@ -270,15 +270,15 @@
             <td><span class="status active">Completed</span></td>
             <td style="position:relative;">
                 <div class="actions-dropdown">
-                    <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three-dots.png') }}"
+                    <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three_dots.svg') }}"
                             class="dots-img "></button>
                     <div class="actions-menu">
-                        <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.png') }}"
+                        <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.svg') }}"
                                 alt="">
                             View
                             details</a>
                         <a href="#" class="initiateBtn showDeleteModal___" data-id="4" data-user="Mike Brown">
-                            <img src="{{ asset('assets/images/icons/init.png') }}" alt=""> Initiate payout
+                            <img src="{{ asset('assets/images/icons/init.svg') }}" alt=""> Initiate payout
                         </a>
 
                     </div>
@@ -312,7 +312,7 @@
 
             <td>
                 <div class="user-info">
-                    <img src="{{ asset('assets/images/icons/person-one.png') }}" alt="User">
+                    <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
                     <div>
                         <p class="user-name" style="font-weight:500;">Johnbosco Davies</p>
 
@@ -327,15 +327,15 @@
             <td><span class="status active">Completed</span></td>
             <td style="position:relative;">
                 <div class="actions-dropdown">
-                    <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three-dots.png') }}"
+                    <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three_dots.svg') }}"
                             class="dots-img "></button>
                     <div class="actions-menu">
-                        <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.png') }}"
+                        <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.svg') }}"
                                 alt="">
                             View
                             details</a>
                         <a href="#" class="initiateBtn showDeleteModal___" data-id="5" data-user="Mike Brown">
-                            <img src="{{ asset('assets/images/icons/init.png') }}" alt=""> Initiate payout
+                            <img src="{{ asset('assets/images/icons/init.svg') }}" alt=""> Initiate payout
                         </a>
 
                     </div>
@@ -369,7 +369,7 @@
 
             <td>
                 <div class="user-info">
-                    <img src="{{ asset('assets/images/icons/person-one.png') }}" alt="User">
+                    <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
                     <div>
                         <p class="user-name" style="font-weight:500;">Johnbosco Davies</p>
 
@@ -384,15 +384,15 @@
             <td><span class="status active">Completed</span></td>
             <td style="position:relative;">
                 <div class="actions-dropdown">
-                    <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three-dots.png') }}"
+                    <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three_dots.svg') }}"
                             class="dots-img "></button>
                     <div class="actions-menu">
-                        <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.png') }}"
+                        <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.svg') }}"
                                 alt="">
                             View
                             details</a>
                         <a href="#" class="initiateBtn showDeleteModal___" data-id="6" data-user="Mike Brown">
-                            <img src="{{ asset('assets/images/icons/init.png') }}" alt=""> Initiate payout
+                            <img src="{{ asset('assets/images/icons/init.svg') }}" alt=""> Initiate payout
                         </a>
 
                     </div>
@@ -427,7 +427,7 @@
 
             <td>
                 <div class="user-info">
-                    <img src="{{ asset('assets/images/icons/person-one.png') }}" alt="User">
+                    <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
                     <div>
                         <p class="user-name" style="font-weight:500;">Johnbosco Davies</p>
 
@@ -441,15 +441,15 @@
             <td><span class="status pending">Pending</span></td>
             <td style="position:relative;">
                 <div class="actions-dropdown">
-                    <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three-dots.png') }}"
+                    <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three_dots.svg') }}"
                             class="dots-img "></button>
                     <div class="actions-menu">
-                        <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.png') }}"
+                        <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.svg') }}"
                                 alt="">
                             View
                             details</a>
                         <a href="#" class="initiateBtn showDeleteModal___" data-id="7" data-user="Mike Brown">
-                            <img src="{{ asset('assets/images/icons/init.png') }}" alt=""> Initiate payout
+                            <img src="{{ asset('assets/images/icons/init.svg') }}" alt=""> Initiate payout
                         </a>
 
                     </div>
@@ -516,7 +516,7 @@
         </div>
         <div class="service-header-icons">
             <h4 style="font-size: 1vw">Transaction info</h4>
-            <h5> <img src="{{ asset('assets/images/icons/download.png') }}" alt="Download" class="download-icon">
+            <h5> <img src="{{ asset('assets/images/icons/download.svg') }}" alt="Download" class="download-icon">
                 <small style="color:grey;">Download </small>
             </h5>
         </div>

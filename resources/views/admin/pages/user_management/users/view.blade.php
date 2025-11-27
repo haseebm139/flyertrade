@@ -37,14 +37,14 @@
         </div>
         <button class="edit-btn" id="openAddUserModal">
             Edit User&nbsp;
-            <span class="download-icon"><img src="{{ asset('assets/images/icons/edit.png') }}" alt="" class="icons-btn"></span>
+            <span class="download-icon"><img src="{{ asset('assets/images/icons/edit.svg') }}" alt="" class="icons-btn"></span>
         </button>
 
         <button class="delete-btn showDeleteModal">
 
             Delete user
             &nbsp;
-            <span class="download-icon"><img src="{{ asset('assets/images/icons/trash.png') }}" alt="" class="icons-btn"></span>
+            <span class="download-icon"><img src="{{ asset('assets/images/icons/trash.svg') }}" alt="" class="icons-btn"></span>
         </button>
         <div id="globalDeleteModal" class="deleteModal" style="display: none;">
             <div class="delete-card">
@@ -64,7 +64,7 @@
     <div class="toolbar-right">
         <!-- ✅ User Profile -->
         <div class="user-profile">
-            <img src="{{ asset('assets/images/icons/user-profile-img.png') }}" alt="User" class="user-profile-img">
+            <img src="{{ asset('assets/images/icons/user_profile_img.svg') }}" alt="User" class="user-profile-img">
             <div class="user-infos">
                 <h4 class="user-name-user">Johnbosco Davies</h4>
                 <p class="user-role">Service user</p>
@@ -142,7 +142,7 @@
                 <h2>1200</h2>
             </div>
             <div class="icon-box">
-                <img src="{{ asset('assets/images/icons/payout-icon.png') }}" alt="User Icon">
+                <img src="{{ asset('assets/images/icons/payout-icon.svg') }}" alt="User Icon">
             </div>
         </div>
         <div class="dashboard-card">
@@ -151,7 +151,7 @@
                 <h2>1200</h2>
             </div>
             <div class="icon-box">
-                <img src="{{ asset('assets/images/icons/active-booking.png') }}" alt="User Icon">
+                <img src="{{ asset('assets/images/icons/active-booking.svg') }}" alt="User Icon">
             </div>
         </div>
         <div class="dashboard-card">
@@ -160,7 +160,7 @@
                 <h2>1200</h2>
             </div>
             <div class="icon-box">
-                <img src="{{ asset('assets/images/icons/active-booking.png') }}" alt="User Icon">
+                <img src="{{ asset('assets/images/icons/active-booking.svg') }}" alt="User Icon">
             </div>
         </div>
         <div class="dashboard-card">
@@ -169,7 +169,7 @@
                 <h2>1200</h2>
             </div>
             <div class="icon-box">
-                <img src="{{ asset('assets/images/icons/active-booking.png') }}" alt="User Icon">
+                <img src="{{ asset('assets/images/icons/active-booking.svg') }}" alt="User Icon">
             </div>
         </div>
 
@@ -180,25 +180,25 @@
         <thead>
             <tr>
                 <th><input type="checkbox"></th>
-                <th class="sortable" data-column="0">Booking ID <img src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon">
+                <th class="sortable" data-column="0">Booking ID <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
                 </th>
 
                 <th class="sortable">Date created
-                    <img src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon">
+                    <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
                 </th>
 
 
 
-                <th class="sortable" data-column="1">Provider<img src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon"></th>
-                <th class="sortable" data-column="2">Location <img src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon"></th>
-                <th class="sortable" data-column="2">Service Catogery <img src="{{ asset('assets/images/icons/sort.png') }}"
+                <th class="sortable" data-column="1">Provider<img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
+                <th class="sortable" data-column="2">Location <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
+                <th class="sortable" data-column="2">Service Catogery <img src="{{ asset('assets/images/icons/sort.svg') }}"
                         class="sort-icon"></th>
 
-                <th class="sortable" data-column="3">Amount Paid <img src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon">
+                <th class="sortable" data-column="3">Amount Paid <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
                 </th>
 
 
-                <th class="sortable" data-column="6">Duration<img src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon"></th>
+                <th class="sortable" data-column="6">Duration<img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
                 <th></th>
             </tr>
         </thead>
@@ -234,7 +234,7 @@
 
                 <td class="viw-parent">
                     <button class="view-btn" onclick="openBookingModal()">
-                        <img src="{{ asset('assets/images/icons/eye-icon.png') }}" alt="View" class="eye-icon">
+                        <img src="{{ asset('assets/images/icons/eye_icon.svg') }}" alt="View" class="eye-icon">
                         View
                     </button>
                 </td>
@@ -270,7 +270,7 @@
 
                 <td class="viw-parent">
                     <button class="view-btn" onclick="openBookingModal()">
-                        <img src="{{ asset('assets/images/icons/eye-icon.png') }}" alt="View" class="eye-icon">
+                        <img src="{{ asset('assets/images/icons/eye_icon.svg') }}" alt="View" class="eye-icon">
                         View
                     </button>
                 </td>
@@ -306,7 +306,7 @@
 
                 <td class="viw-parent">
                     <button class="view-btn" onclick="openBookingModal()">
-                        <img src="{{ asset('assets/images/icons/eye-icon.png') }}" alt="View" class="eye-icon">
+                        <img src="{{ asset('assets/images/icons/eye_icon.svg') }}" alt="View" class="eye-icon">
                         View
                     </button>
                 </td>
@@ -342,7 +342,7 @@
 
                 <td class="viw-parent">
                     <button class="view-btn" onclick="openBookingModal()">
-                        <img src="{{ asset('assets/images/icons/eye-icon.png') }}" alt="View" class="eye-icon">
+                        <img src="{{ asset('assets/images/icons/eye_icon.svg') }}" alt="View" class="eye-icon">
                         View
                     </button>
                 </td>
@@ -390,7 +390,7 @@
         </div>
         <div class="service-header-icons">
             <h4>Service details</h4>
-            <h5> <img src="{{ asset('assets/images/icons/download.png') }}" alt="Download" class="download-icon"> <small
+            <h5> <img src="{{ asset('assets/images/icons/download.svg') }}" alt="Download" class="download-icon"> <small
                     style="color:grey;">Download </small></h5>
         </div>
 

@@ -3,7 +3,7 @@
     <!-- Brand / Logo -->
     <div class="brand" style="margin-bottom:1.125vw;">
         <a href="{{ route('dashboard') }}" class="logo-link">
-            <img src="{{ asset('assets/images/icons/logo.png') }}" alt="Company Logo" class="logo-img">
+            <img src="{{ asset('assets/images/icons/logo.svg') }}" alt="Company Logo" class="logo-img">
         </a>
     </div>
 
@@ -12,7 +12,7 @@
         <!-- Dashboard -->
         <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
             <span>
-                <img src="{{ asset('assets/images/icons/' . (request()->routeIs('dashboard') ? 'home-icon.png' : 'home.png')) }}"
+                <img src="{{ asset('assets/images/icons/' . (request()->routeIs('dashboard') ? 'home-icon.svg' : 'home.svg')) }}"
                     alt="Dashboard" class="nav-icon">
             </span>
             Dashboard
@@ -24,7 +24,7 @@
             aria-expanded="{{ request()->routeIs('user-management.*') ? 'true' : 'false' }}"
             aria-controls="userManagementMenu">
             <span>
-                <img src="{{ asset('assets/images/icons/' . (request()->routeIs('user-management.*') ? 'user-management-icon-nav-active.png' : 'user-management-icon.png')) }}"
+                <img src="{{ asset('assets/images/icons/' . (request()->routeIs('user-management.*') ? 'user_management_icon_nav_active.svg' : 'user_management_icon.svg')) }}"
                     alt="User Management" class="nav-icon">
             </span>
             User management
@@ -47,8 +47,8 @@
             <span>
                 <img
                     src="{{ asset(request()->routeIs('service-category.*') 
-                ? 'assets/images/icons/service-catogrey-icon-active.png' 
-                : 'assets/images/icons/service-catogrey-icon.png') }}"
+                ? 'assets/images/icons/service_catogrey_active_icon.png' 
+                : 'assets/images/icons/service_catogrey_icon.svg') }}"
                     alt="Service Category"
                     class="nav-icon">
             </span>
@@ -62,8 +62,8 @@
             <span>
                 <img
                     src="{{ asset(request()->routeIs('booking.*') 
-                ? 'assets/images/icons/booking-icon-active.png' 
-                : 'assets/images/icons/booking-icon.png') }}"
+                ? 'assets/images/icons/booking-icon-active.svg' 
+                : 'assets/images/icons/booking-icon.svg') }}"
                     alt="Bookings"
                     class="nav-icon">
             </span>
@@ -77,8 +77,8 @@
             <span>
                 <img
                     src="{{ asset(request()->routeIs('transaction.*') 
-                ? 'assets/images/icons/transition-icon-active.png' 
-                : 'assets/images/icons/transition-icon.png') }}"
+                ? 'assets/images/icons/transition-icon-active.svg' 
+                : 'assets/images/icons/transition-icon.svg') }}"
                     alt="Transactions"
                     class="nav-icon">
             </span>
@@ -91,8 +91,8 @@
             <span>
                 <img
                     src="{{ asset(request()->routeIs('reviews.*') 
-                ? 'assets/images/icons/reviews-active.png' 
-                : 'assets/images/icons/reviews.png') }}"
+                ? 'assets/images/icons/reviews-active.svg' 
+                : 'assets/images/icons/reviews.svg') }}"
                     alt="Reviews & Ratings"
                     class="nav-icon">
             </span>
@@ -106,8 +106,8 @@
             <span>
                 <img
                     src="{{ asset(request()->routeIs('dispute.*') 
-                ? 'assets/images/icons/dispute-active.png' 
-                : 'assets/images/icons/dispute.png') }}"
+                ? 'assets/images/icons/dispute-active.svg' 
+                : 'assets/images/icons/dispute.svg') }}"
                     alt="Disputes & Complaints"
                     class="nav-icon">
             </span>
@@ -121,8 +121,8 @@
             <span>
                 <img
                     src="{{ asset(request()->routeIs('roles-and-permissions.*') 
-                ? 'assets/images/icons/roles-active.png' 
-                : 'assets/images/icons/roles.png') }}"
+                ? 'assets/images/icons/roles-active.svg' 
+                : 'assets/images/icons/roles.svg') }}"
                     alt="Roles & Permissions"
                     class="nav-icon">
             </span>
@@ -136,8 +136,8 @@
             <span>
                 <img
                     src="{{ asset(request()->routeIs('messaging.*') 
-                ? 'assets/images/icons/message-active.png' 
-                : 'assets/images/icons/message.png') }}"
+                ? 'assets/images/icons/message-active.svg' 
+                : 'assets/images/icons/message.svg') }}"
                     alt="Messaging"
                     class="nav-icon">
             </span>
@@ -149,8 +149,8 @@
                 <span>
                     <img
                         src="{{ asset(request()->routeIs('settings.*') 
-                ? 'assets/images/icons/setting-active.png' 
-                : 'assets/images/icons/setting.png') }}"
+                ? 'assets/images/icons/setting-active.svg' 
+                : 'assets/images/icons/setting.svg') }}"
                         alt="Settings"
                         class="nav-icon">
                 </span>
@@ -160,7 +160,7 @@
             <a href="#" class="nav-link" style="padding:0;">
                 <div class="brand" id="profileBt">
                     <div class="logo-placeholder">
-                        <img src="{{ asset('assets/images/icons/main-group.png') }}" alt="" class="admin-img">
+                        <img src="{{ asset('assets/images/icons/main-group.svg') }}" alt="" class="admin-img">
                     </div>
 
                     <div class="profile-info">

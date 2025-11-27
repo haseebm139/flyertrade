@@ -18,7 +18,7 @@
         <div class="back-button-container" id="backButtonContainer" style="display: none;">
             <button class="back-button" onclick="showAllBookings()">
                 <div class="back-icon">
-                    <img src="{{ asset('assets/images/icons/back_icon.png') }}" alt="Back">
+                    <img src="{{ asset('assets/images/icons/back_icon.svg') }}" alt="Back">
                 </div>
 
                 <span class="page-title" id="pageTitle">All Bookings</span>
@@ -45,7 +45,7 @@
             </div>
             <div class="service-header-icons">
                 <h4>Service details</h4>
-                <h5> <img src="{{ asset('assets/images/icons/download.png') }}" alt="Download" class="download-icon"> <small
+                <h5> <img src="{{ asset('assets/images/icons/download.svg') }}" alt="Download" class="download-icon"> <small
                         style="color:grey;">Download </small></h5>
             </div>
 

@@ -23,7 +23,7 @@
         <!-- Notifications -->
         <!-- Notification Icon -->
         <div class="icon-btn" id="notifBtn____">
-            <img src="{{ asset('assets/images/icons/notification.png') }}" alt="Notifications">
+            <img src="{{ asset('assets/images/icons/notification.svg') }}" alt="Notifications">
             <!-- Notification Popup -->
             <div class="popup ioioios notification_popup" id="notifPopup_____">
                 <div class="popup-header"
@@ -37,14 +37,14 @@
 
                     <span class="popup-close" id="close_notify_popop"
                         style="cursor: pointer; display: flex; align-items: center;">
-                        <img src="{{ asset('assets/images/icons/iconoir_cancel.png') }}" alt=""
+                        <img src="{{ asset('assets/images/icons/iconoir_cancel.svg') }}" alt=""
                             style="width: 1.2vw; height: auto; transition: transform 0.2s ease;">
                     </span>
                 </div>
 
                 <div class="notification_item_wrapper">
                     <div  class="notification-item">
-                        <img src="{{ asset('assets/images/icons/manage.png') }}" alt="">
+                        <img src="{{ asset('assets/images/icons/manage.svg') }}" alt="">
                         <div class="notification-content">
                             <div class="notification-title">Document verification</div>
                         </div>
@@ -61,7 +61,7 @@
                 </div>
                       <div class="notification_item_wrapper ">
                     <div  class="notification-item">
-                        <img src="{{ asset('assets/images/icons/manage.png') }}" alt="">
+                        <img src="{{ asset('assets/images/icons/manage.svg') }}" alt="">
                         <div class="notification-content">
                             <div class="notification-title">High Cancellation Alert</div>
                         </div>
@@ -96,26 +96,26 @@
                             style="margin-right:10px;cursor:pointer"></i> 3 New Providers Awaiting Document
                         Verification.</h6>
                     <button class="provider-modal-close" id="provide_modal_close" data-close="providerModal">
-                        <img src="{{ asset('assets/images/icons/iconoir_cancel.png') }}" alt="Close">
+                        <img src="{{ asset('assets/images/icons/iconoir_cancel.svg') }}" alt="Close">
                     </button>
                 </div>
 
                 <!-- Body -->
                 <div class="provider-modal-body">
                     <div class="provider-item">
-                        <img src="{{ asset('assets/images/icons/person.png') }}" alt="">
+                        <img src="{{ asset('assets/images/icons/person.svg') }}" alt="">
                         <span>Johnbosco Davies</span>
                         <a href="#" class="provider-view-profile">View profile</a>
                     </div>
 
                     <div class="provider-item">
-                        <img src="{{ asset('assets/images/icons/person.png') }}" alt="">
+                        <img src="{{ asset('assets/images/icons/person.svg') }}" alt="">
                         <span>Jane Doe</span>
                         <a href="#" class="provider-view-profile">View profile</a>
                     </div>
 
                     <div class="provider-item">
-                        <img src="{{ asset('assets/images/icons/person.png') }}" alt="">
+                        <img src="{{ asset('assets/images/icons/person.svg') }}" alt="">
                         <span>Michael Smith</span>
                         <a href="#" class="provider-view-profile">View profile</a>
                     </div>
@@ -130,7 +130,7 @@
         <!-- Brand / Profile -->
         <div class="brand" id="profileBtn">
             <div class="logo-placeholder">
-                <img src="{{ asset('assets/images/icons/main-group.png') }}" alt="" class="admin-img">
+                <img src="{{ asset('assets/images/icons/main_group.svg') }}" alt="" class="admin-img">
             </div>
 
             <div class="profile-info">
@@ -150,10 +150,10 @@
             style="display: none; position: absolute; top: 100%; right: 0; background: white; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); z-index: 9999999; min-width: 200px;">
             <div class="popup-header">
                 <span class="popup-close" data-close="profilePopup"><img
-                        src="{{ asset('assets/images/icons/iconoir_cancel.png') }}" alt=""></span>
+                        src="{{ asset('assets/images/icons/iconoir_cancel.svg') }}" alt=""></span>
             </div>
             <div class="profile-card">
-                <img src="{{ asset('assets/images/icons/person.png') }}" alt="User">
+                <img src="{{ asset('assets/images/icons/person.svg') }}" alt="User">
                 <div style="font-weight:500; margin-top:5px; font-size:16px;">Flyertrade Admin</div>
                 <div class="muted small">flyertrade@example.com</div>
 
@@ -162,7 +162,7 @@
                 </form>
                 <button class="logout-btn"
                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> <img
-                        src="{{ asset('assets/images/icons/Icon-logout.png') }}" class="img-log" alt="">
+                        src="{{ asset('assets/images/icons/Icon-logout.svg') }}" class="img-log" alt="">
                     Logout</button>
             </div>
         </div>

@@ -15,7 +15,7 @@
                 <h2>200</h2>
             </div>
             <div class="icon-box">
-                <img src="{{ asset('assets/images/icons/dispute_icon.png') }}" alt="User Icon">
+                <img src="{{ asset('assets/images/icons/dispute_icon.svg') }}" alt="User Icon">
             </div>
         </div>
         <div class="dashboard-card">
@@ -24,7 +24,7 @@
                 <h2>198</h2>
             </div>
             <div class="icon-box">
-                <img src="{{ asset('assets/images/icons/dispute_icon.png') }}" alt="User Icon">
+                <img src="{{ asset('assets/images/icons/dispute_icon.svg') }}" alt="User Icon">
             </div>
         </div>
         <div class="dashboard-card">
@@ -33,7 +33,7 @@
                 <h2>2</h2>
             </div>
             <div class="icon-box">
-                <img src="{{ asset('assets/images/icons/dispute_icon.png') }}" alt="User Icon">
+                <img src="{{ asset('assets/images/icons/dispute_icon.svg') }}" alt="User Icon">
             </div>
         </div>
 
@@ -45,7 +45,7 @@
     <div class="users-toolbar">
         <div class="toolbar-left">
         <button class="export-btn d-flex align-items-center gap-1" style="color:#004E42; line-height:1">
-                <span class="download-icon"><img src="{{ asset('assets/images/icons/download.png') }}" alt=""
+                <span class="download-icon"><img src="{{ asset('assets/images/icons/download.svg') }}" alt=""
                         class="btn-icons"></span> Export CSV
             </button>
 
@@ -53,7 +53,7 @@
         <div class="toolbar-right">
             <input type="text" class="search-user" placeholder="Search user">
             <button class="filter-btn" id="openFilterModal"> Filter <span class="download-icon"><img
-                        src="{{ asset('assets/images/icons/button-icon.png') }}" alt=""
+                        src="{{ asset('assets/images/icons/button-icon.svg') }}" alt=""
                         class="btn-icons"></span></button>
         </div>
     </div>
@@ -63,25 +63,25 @@
         <thead>
             <tr>
                 <th><input type="checkbox"></th>
-                <th class="sortable" data-column="0">Booking ID <img src="{{ asset('assets/images/icons/sort.png') }}"
+                <th class="sortable" data-column="0">Booking ID <img src="{{ asset('assets/images/icons/sort.svg') }}"
                         class="sort-icon">
                 </th>
 
                 <th class="sortable">Date created
-                    <img src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon">
+                    <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
                 </th>
 
 
 
-                <th class="sortable" data-column="1">Affected user<img src="{{ asset('assets/images/icons/sort.png') }}"
+                <th class="sortable" data-column="1">Affected user<img src="{{ asset('assets/images/icons/sort.svg') }}"
                         class="sort-icon"></th>
-                <th class="sortable" data-column="2">Service Typer <img src="{{ asset('assets/images/icons/sort.png') }}"
+                <th class="sortable" data-column="2">Service Typer <img src="{{ asset('assets/images/icons/sort.svg') }}"
                         class="sort-icon"></th>
-                <th class="sortable" data-column="3">Dispute issue <img src="{{ asset('assets/images/icons/sort.png') }}"
+                <th class="sortable" data-column="3">Dispute issue <img src="{{ asset('assets/images/icons/sort.svg') }}"
                         class="sort-icon"></th>
 
 
-                <th class="sortable" data-column="6"> Status <img src="{{ asset('assets/images/icons/sort.png') }}"
+                <th class="sortable" data-column="6"> Status <img src="{{ asset('assets/images/icons/sort.svg') }}"
                         class="sort-icon"></th>
                 <th></th>
             </tr>
@@ -98,7 +98,7 @@
                 </td>
                 <td>
                     <div class="user-info">
-                        <img src="{{ asset('assets/images/icons/person-one.png') }}" alt="User">
+                        <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
                         <div>
                             <span class="user-theme-name ">Johnbosco Davies</span>
 
@@ -139,14 +139,14 @@
                 <td>
                     <div class="actions-dropdown">
                         <button class="actions-btn" fdprocessedid="3p4nw"> <img
-                                src="http://127.0.0.1:8000/assets/images/icons/three-dots.png" class="dots-img "></button>
+                                src="http://127.0.0.1:8000/assets/images/icons/three_dots.svg" class="dots-img "></button>
                         <div class="actions-menu" style="display: none;">
-                            <a onclick="openBookingModal()"><img src="http://127.0.0.1:8000/assets/images/icons/eye.png"
+                            <a onclick="openBookingModal()"><img src="http://127.0.0.1:8000/assets/images/icons/eye.svg"
                                     alt="">
                                 View
                                 details</a>
                             <a href="#" class="initiateBtn" data-user="Mike Brown">
-                                <img src="http://127.0.0.1:8000/assets/images/icons/init.png" alt=""> Initiate
+                                <img src="http://127.0.0.1:8000/assets/images/icons/init.svg" alt=""> Initiate
                                 payout
                             </a>
 
@@ -197,7 +197,7 @@
             </div>
             <div class="service-header-icons">
                 <h4>Service details</h4>
-                <h5> <img src="{{ asset('assets/images/icons/download.png') }}" alt="Download" class="download-icon">
+                <h5> <img src="{{ asset('assets/images/icons/download.svg') }}" alt="Download" class="download-icon">
                     <small style="color:grey;">Download </small>
                 </h5>
             </div>

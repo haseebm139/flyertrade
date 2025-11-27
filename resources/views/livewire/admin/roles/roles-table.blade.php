@@ -4,7 +4,7 @@
         <div class="toolbar-left">
             <button class="export-btn" wire:click="exportCsv">
                 <span class="download-icon">
-                    <img class="btn-icons" src="{{ asset('assets/images/icons/download.png') }}" alt="">
+                    <img class="btn-icons" src="{{ asset('assets/images/icons/download.svg') }}" alt="">
                 </span> Export CSV
             </button>
             <button class="add-user-btn" wire:click="addRole">
@@ -15,7 +15,7 @@
             <input type="text" class="search-user" placeholder="Search roles" wire:model.live="search">
             <button class="filter-btn" wire:click="openFilterModal">
                 Filter <span class="download-icon">
-                    <img class="btn-icons" src="{{ asset('assets/images/icons/button-icon.png') }}" alt="">
+                    <img class="btn-icons" src="{{ asset('assets/images/icons/button-icon.svg') }}" alt="">
                 </span>
             </button>
         </div>
@@ -28,11 +28,11 @@
                 <th><input type="checkbox"></th>
                 <th wire:click="sortBy('name')" class="sortable" style="cursor: pointer;">
                     Role
-                    <img src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon">
+                    <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
                 </th>
                 <th wire:click="sortBy('users_count')" class="sortable" style="cursor: pointer;">
                     Assignees
-                    <img src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon">
+                    <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
                 </th>
 
                 <th></th>
@@ -51,7 +51,7 @@
                         <div class="users-info">
                             @if ($role->users->count() > 0)
                                 <div class="user-avatar">
-                                    <img src="{{ asset($role->users->first()->avatar) ?? asset('assets/images/icons/person-one.png') }}"
+                                    <img src="{{ asset($role->users->first()->avatar) ?? asset('assets/images/icons/person-one.svg') }}"
                                         alt="User" class="avatar-small">
                                     <span class="more">+{{ $role->users_count - 1 }} users</span>
                                 </div>
@@ -63,15 +63,15 @@
 
                     <td class="viw-parent theme-parent-class">
                         <a href="javascript:void(0);" class="view-btn" wire:click="viewRole({{ $role->id }})">
-                            <img src="{{ asset('assets/images/icons/eye-icon.png') }}" alt="View" class="eye-icon">
+                            <img src="{{ asset('assets/images/icons/eye_icon.svg') }}" alt="View" class="eye-icon">
                             View
                         </a>
                         <a href="javascript:void(0);" class="view-btn" wire:click="editRole({{ $role->id }})">
-                            <img src="{{ asset('assets/images/icons/edit.png') }}" alt="Edit" class="eye-icon">
+                            <img src="{{ asset('assets/images/icons/edit.svg') }}" alt="Edit" class="eye-icon">
                             Edit
                         </a>
                         <button class="delete-btn showDeleteModal" wire:click="confirmDelete({{ $role->id }})">
-                            <img src="{{ asset('assets/images/icons/trash_trash.png') }}" alt="Delete"
+                            <img src="{{ asset('assets/images/icons/delete-icon-active.svg') }}" alt="Delete"
                                 class="eye-icon">
                             <span
                                 style="font-size: 0.9vw; color: #064f3c; cursor: pointer; font-weight: 400;">

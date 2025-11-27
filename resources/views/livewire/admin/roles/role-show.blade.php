@@ -14,13 +14,13 @@
             @if ($role)
                 <button class="edit-btn" wire:click="editRole">
                     <span class="download-icon">
-                        <img src="{{ asset('assets/images/icons/edit.png') }}" alt="" class="icons-btn">
+                        <img src="{{ asset('assets/images/icons/edit.svg') }}" alt="" class="icons-btn">
                     </span> Edit Role
                 </button>
 
                 <button class="delete-btn" wire:click="openDeleteModal">
                     <span class="download-icon">
-                        <img src="{{ asset('assets/images/icons/trash.png') }}" alt="" class="icons-btn">
+                        <img src="{{ asset('assets/images/icons/trash.svg') }}" alt="" class="icons-btn">
                     </span>
                     Delete Role
                 </button>
@@ -60,7 +60,7 @@
     <div class="tabs-wrapper">
         <!-- Left Control -->
         <button class="tab-control left" onclick="scrollTabs('left')">
-            <img src="{{ asset('assets/images/icons/left-control.png') }}" alt="Left">
+            <img src="{{ asset('assets/images/icons/left_control.svg') }}" alt="Left">
         </button>
 
         <!-- Tabs Navigation -->
@@ -75,7 +75,7 @@
 
         <!-- Right Control -->
         <button class="tab-control right" onclick="scrollTabs('right')">
-            <img src="{{ asset('assets/images/icons/right-control.png') }}" alt="Right">
+            <img src="{{ asset('assets/images/icons/right-control.svg') }}" alt="Right">
         </button>
     </div>
 
@@ -105,16 +105,16 @@
             <tr>
                 <th><input type="checkbox" id="selectAllUsers"></th>
                 <th class="sortable" data-column="0">User Type
-                    <img src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon">
+                    <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
                 </th>
                 <th class="sortable" data-column="4">User name
-                    <img src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon">
+                    <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
                 </th>
                 <th class="sortable">Last login
-                    <img src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon">
+                    <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
                 </th>
                 <th class="sortable" data-column="6">Date added
-                    <img src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon">
+                    <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
                 </th>
                 <th></th>
             </tr>
@@ -127,7 +127,7 @@
                         <td>{{ ucfirst($user->user_type) }}</td>
                         <td>
                             <div class="user-info">
-                                <img src="{{ asset('assets/images/icons/person-one.png') }}" alt="User">
+                                <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
                                 <div>
                                     <p class="user-name">{{ $user->name }}</p>
                                 </div>

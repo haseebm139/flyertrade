@@ -88,7 +88,7 @@
                 <!-- Reviewer info -->
                 <div class="d-flex align-items-center justify-content-between border rounded p-3 mb-3">
                     <div class="d-flex align-items-center">
-                        <img src="{{ asset('assets/images/icons/person.png') }}" alt="Reviewer" class="me-3 profile">
+                        <img src="{{ asset('assets/images/icons/person.svg') }}" alt="Reviewer" class="me-3 profile">
                         <div>
                             <h6 class="mb-0" style="font-weight: 500; font-size: 0.8vw;">Johnbosco Davies</h6>
                             <small class="text-muted" style="font-size: 0.7vw;">Reviewer</small>
@@ -123,15 +123,15 @@
                     <div class="d-flex align-items-center justify-content-between mb-2">
                         <!-- Stars -->
                         <div class="stars-rating d-flex">
-                            <img src="{{ asset('assets/images/icons/star.png') }}" alt="star"
+                            <img src="{{ asset('assets/images/icons/star.svg') }}" alt="star"
                                 style="width:1.2vw; height:1.2vw; margin-right:0.3vw;">
-                            <img src="{{ asset('assets/images/icons/star.png') }}" alt="star"
+                            <img src="{{ asset('assets/images/icons/star.svg') }}" alt="star"
                                 style="width:1.2vw; height:1.2vw; margin-right:0.3vw;">
-                            <img src="{{ asset('assets/images/icons/star.png') }}" alt="star"
+                            <img src="{{ asset('assets/images/icons/star.svg') }}" alt="star"
                                 style="width:1.2vw; height:1.2vw; margin-right:0.3vw;">
-                            <img src="{{ asset('assets/images/icons/star.png') }}" alt="star"
+                            <img src="{{ asset('assets/images/icons/star.svg') }}" alt="star"
                                 style="width:1.2vw; height:1.2vw; margin-right:0.3vw;">
-                            <img src="{{ asset('assets/images/icons/star.png') }}" alt="star"
+                            <img src="{{ asset('assets/images/icons/star.svg') }}" alt="star"
                                 style="width:1.2vw; height:1.2vw;">
                         </div>
                         <small class="" style="font-size: 0.9vw;color:#8E8E8E;">2 days ago</small>
@@ -151,11 +151,11 @@
                     <div class="action-buttons">
                         <div class="edit-delete-buttons" id="edit-delete-buttons">
                             <a href="javascript:void(0);" class="view-btn" id="edit-btn" style="color: grey;">
-                                <img src="{{ asset('assets/images/icons/edit-2.png') }}" alt="Edit" class="eye-icon">
+                                <img src="{{ asset('assets/images/icons/edit-2.svg') }}" alt="Edit" class="eye-icon">
                                 Edit
                             </a>
                             <a href="#" class="view-btn" style="color: grey;">
-                                <img src="{{ asset('assets/images/icons/trash-theme.png') }}" alt="Delete"
+                                <img src="{{ asset('assets/images/icons/trash-theme.svg') }}" alt="Delete"
                                     class="eye-icon"> Delete
                             </a>
                         </div>

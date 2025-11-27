@@ -4,7 +4,7 @@
         <div class="toolbar-left">
             <button class="export-btn" wire:click="exportCsv">
                 <span class="download-icon">
-                    <img class="btn-icons" src="{{ asset('assets/images/icons/download.png') }}" alt="">
+                    <img class="btn-icons" src="{{ asset('assets/images/icons/download.svg') }}" alt="">
                 </span> Export CSV
             </button>
             <button class="add-user-btn" wire:click="addUser">
@@ -15,7 +15,7 @@
             <input type="text" class="search-user" placeholder="Search users" wire:model.live="search">
             <button class="filter-btn" wire:click="openFilterModal">
                 Filter&nbsp;<span class="download-icon">
-                    <img class="btn-icons" src="{{ asset('assets/images/icons/button-icon.png') }}" alt="">
+                    <img class="btn-icons" src="{{ asset('assets/images/icons/button-icon.svg') }}" alt="">
                 </span>
             </button>
         </div>
@@ -27,20 +27,20 @@
             <tr>
                 <th><input type="checkbox"></th>
                 <th class="sortable" data-column="0" wire:click="sortBy('user_type')" style="cursor: pointer;">User
-                    type<img src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon">
+                    type<img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
                 </th>
 
                 <th class="sortable" wire:click="sortBy('name')" style="cursor: pointer;">User name
-                    <img src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon">
+                    <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
                 </th>
 
 
 
                 <th class="sortable" wire:click="sortBy('address')" style="cursor: pointer;" data-column="1">Home
-                    address<img src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon">
+                    address<img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
                 </th>
                 <th class="sortable" wire:click="sortBy('phone')" style="cursor: pointer;" data-column="1">Phone
-                    number<img src="{{ asset('assets/images/icons/sort.png') }}" class="sort-icon">
+                    number<img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
                 </th>
 
 
@@ -57,7 +57,7 @@
                     </td>
                     <td>
                         <div class="user-info">
-                            <img src="{{ asset($user->avatar) ?? asset('assets/images/icons/person-one.png') }}  "
+                            <img src="{{ asset($user->avatar) ?? asset('assets/images/icons/person-one.svg') }}  "
                                 alt="User">
                             <div>
                                 <p class="user-name"  style='font-weight:500;'>{{ $user->name }}</p>
@@ -69,11 +69,11 @@
                     <td  style='font-weight:500;'>{{ $user->phone ?? 'N/A' }}</td>
                     <td class="viw-parent">
                         <a href="javascript:void(0);" class="view-btn" wire:click="viewUser({{ $user->id }})">
-                            <img src="{{ asset('assets/images/icons/eye-icon.png') }}" alt="View" class="eye-icon">
+                            <img src="{{ asset('assets/images/icons/eye_icon.svg') }}" alt="View" class="eye-icon">
                             View
                         </a>
                         <button class="delete-btn showDeleteModal" wire:click="confirmDelete({{ $user->id }})">
-                            <img src="{{ asset('assets/images/icons/trash_trash.png') }}" alt="Delete"
+                            <img src="{{ asset('assets/images/icons/delete-icon-active.svg') }}" alt="Delete"
                                 class="eye-icon">
                             <span style="    font-size: 0.9vw;
     color: #064f3c;

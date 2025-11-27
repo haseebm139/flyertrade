@@ -14,14 +14,14 @@
             @if ($user)
                 <button class="edit-btn" wire:click="openEditModal">
                     <span class="download-icon">
-                        <img src="{{ asset('assets/images/icons/edit.png') }}" alt="" class="icons-btn">
+                        <img src="{{ asset('assets/images/icons/edit.svg') }}" alt="" class="icons-btn">
                     </span> Edit User
                 </button>
 
 
                 <button class="delete-btn" wire:click="openDeleteModal">
                     <span class="download-icon">
-                        <img src="{{ asset('assets/images/icons/trash.png') }}" alt="" class="icons-btn">
+                        <img src="{{ asset('assets/images/icons/trash.svg') }}" alt="" class="icons-btn">
                     </span>
                     Delete User
                 </button>
@@ -31,7 +31,7 @@
         <div class="toolbar-right">
             <!-- User Profile -->
             <div class="user-profile">
-                <img src="{{ asset($user->avatar) ?? asset('assets/images/user-profile-img.png') }}" alt="User"
+                <img src="{{ asset($user->avatar) ?? asset('assets/images/user_profile_img.svg') }}" alt="User"
           class="user-profile-img">
                 <div class="user-infos">
                     <h4 class="user-name-user">{{ $user->name ?? 'Unknown User' }}</h4>

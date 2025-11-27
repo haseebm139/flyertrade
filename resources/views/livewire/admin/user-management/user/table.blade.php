@@ -6,19 +6,19 @@
         <thead>
             <tr>
                 <th><input type="checkbox" wire:model.live="selectAll"></th>
-                <th class="sortable" data-column="0">Customer ID <img src="{{ asset('assets/images/icons/sort.png') }}"
+                <th class="sortable" data-column="0">Customer ID <img src="{{ asset('assets/images/icons/sort.svg') }}"
                         class="sort-icon" wire:click="sortBy('id')" {{ $sortField === 'id' ? $sortDirection : '' }}>
                 </th>
-                <th class="sortable" data-column="1">Customer Name <img src="{{ asset('assets/images/icons/sort.png') }}"
+                <th class="sortable" data-column="1">Customer Name <img src="{{ asset('assets/images/icons/sort.svg') }}"
                         class="sort-icon" wire:click="sortBy('name')" {{ $sortField === 'name' ? $sortDirection : '' }}>
                 </th>
-                <th class="sortable" data-column="2">Home Address <img src="{{ asset('assets/images/icons/sort.png') }}"
+                <th class="sortable" data-column="2">Home Address <img src="{{ asset('assets/images/icons/sort.svg') }}"
                         class="sort-icon" wire:click="sortBy('address')"
                         {{ $sortField === 'address' ? $sortDirection : '' }}></th>
-                <th class="sortable" data-column="3">Phone Number <img src="{{ asset('assets/images/icons/sort.png') }}"
+                <th class="sortable" data-column="3">Phone Number <img src="{{ asset('assets/images/icons/sort.svg') }}"
                         class="sort-icon" wire:click="sortBy('phone')"
                         {{ $sortField === 'phone' ? $sortDirection : '' }}></th>
-                <th class="sortable" data-column="4">Status <img src="{{ asset('assets/images/icons/sort.png') }}"
+                <th class="sortable" data-column="4">Status <img src="{{ asset('assets/images/icons/sort.svg') }}"
                         class="sort-icon" wire:click="sortBy('status')"
                         {{ $sortField === 'status' ? $sortDirection : '' }}></th>
 
@@ -32,7 +32,7 @@
                     <td>{{ $item->id }}</td>
                     <td>
                         <div class="user-info">
-                            <img src="{{ asset($item->avatar ?? 'assets/images/icons/person-one.png') }}"
+                            <img src="{{ asset($item->avatar ?? 'assets/images/icons/person-one.svg') }}"
                                 alt="avatar">
                             <div>
                                 <p class="user-name">{{ $item->name ?? '' }}</p>
@@ -48,12 +48,12 @@
                     </td>
                     <td style="position:relative">
                         <div class="actions-dropdown">
-                            <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three-dots.png') }}"
+                            <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three_dots.svg') }}"
                                     class="dots-img "></button>
                             <div class="actions-menu">
-                                <a href="{{ route('user-management.service.users.view', ['id' => $item->id]) }}"><img src="{{ asset('assets/images/icons/eye.png') }}" alt="View User" class="w-5 h-5"> View user</a>
-                                <a href="#" wire:click="edit({{ $item->id }}) "><img src="{{ asset('assets/images/icons/edit-icon.png') }}" alt="Edit User" class="w-5 h-5"> Edit user</a>
-                                <a href="#" class="showDeleteModal___" data-id="{{ $item->id }}"><img src="{{ asset('assets/images/icons/delete-icon.png') }}" alt="Delete User" class="w-5 h-5"> Delete user</a>
+                                <a href="{{ route('user-management.service.users.view', ['id' => $item->id]) }}"><img src="{{ asset('assets/images/icons/eye.svg') }}" alt="View User" class="w-5 h-5"> View user</a>
+                                <a href="#" wire:click="edit({{ $item->id }}) "><img src="{{ asset('assets/images/icons/edit-icon.svg') }}" alt="Edit User" class="w-5 h-5"> Edit user</a>
+                                <a href="#" class="showDeleteModal___" data-id="{{ $item->id }}"><img src="{{ asset('assets/images/icons/delete-icon.svg') }}" alt="Delete User" class="w-5 h-5"> Delete user</a>
                             </div>
                             <!-- ✅ Global Delete Modal -->
 

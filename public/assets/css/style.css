@@ -215,7 +215,7 @@ img.btn-icons {
     border-radius: 1.5625vw;
 
     border: 0.1vw solid #f1f1f1;
-    background: url("/assets/images/icons/search-icon.png") no-repeat 0.8vw center;
+    background: url("/assets/images/icons/search-icon.svg") no-repeat 0.8vw center;
     background-size: 1vw;
     outline: none;
     background-color: #f1f1f1;
@@ -1400,7 +1400,7 @@ td.user-data.id-number {
     font-size: 0.9vw;
     border-radius: 0.4vw;
     border: 0.1vw solid #f1f1f1;
-    background: url("/assets/images/icons/search-icon.png") no-repeat 0.8vw center;
+    background: url("/assets/images/icons/search-icon.svg") no-repeat 0.8vw center;
     background-size: 1vw;
     outline: none;
     background-color: #f1f1f1;
@@ -1644,11 +1644,11 @@ td.user-data.id-number {
 
 /* Ascending */
 .theme-table th.sortable.asc::after {
-    content: url("../images/arrow-up.png");
+    content: url("../images/arrow-up.svg");
 }
 /* Descending */
 .theme-table th.sortable.desc::after {
-    content: url("../images/arrow-down.png");
+    content: url("../images/arrow-down.svg");
 }
 
 .actions-menu a {

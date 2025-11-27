@@ -3,7 +3,7 @@
     <div class="users-toolbar">
         <div class="toolbar-left">
                 <button class="export-btn d-flex align-items-center gap-1"  wire:click="exportCsv" style="color:#004E42; line-height:1">
-                <span class="download-icon"><img class="btn-icons"src="{{ asset('assets/images/icons/download.png') }}"
+                <span class="download-icon"><img class="btn-icons"src="{{ asset('assets/images/icons/download.svg') }}"
                         alt=""></span> Export CSV
             </button>
             @if($showAddButton)
@@ -16,7 +16,7 @@
             <button class="filter-btn" id="openFilterModal" wire:click="openFilterModal"> <span
                     class="download-icon">
                     Filter
-                    <img  class="btn-icons" src="{{ asset('assets/images/icons/button-icon.png') }} "
+                    <img  class="btn-icons" src="{{ asset('assets/images/icons/button-icon.svg') }} "
                         alt=""></span></button>
         </div>
     </div>

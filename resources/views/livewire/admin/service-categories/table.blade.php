@@ -8,22 +8,22 @@
                 <th><input type="checkbox" wire:model.live="selectAll"></th>
                 <th class="sortable">
                     Service category
-                    <img src="{{ asset('assets/images/icons/sort.png') }}" wire:click="sortBy('name')"
+                    <img src="{{ asset('assets/images/icons/sort.svg') }}" wire:click="sortBy('name')"
                         class="sort-icon {{ $sortField === 'name' ? $sortDirection : '' }}">
                 </th>
                 <th class="sortable">
                     Registered providers
-                    <img src="{{ asset('assets/images/icons/sort.png') }}" wire:click="sortBy('providers_count')"
+                    <img src="{{ asset('assets/images/icons/sort.svg') }}" wire:click="sortBy('providers_count')"
                         class="sort-icon {{ $sortField === 'providers_count' ? $sortDirection : '' }}">
                 </th>
                 <th class="sortable">
                     Date created
-                    <img src="{{ asset('assets/images/icons/sort.png') }}" wire:click="sortBy('created_at')"
+                    <img src="{{ asset('assets/images/icons/sort.svg') }}" wire:click="sortBy('created_at')"
                         class="sort-icon {{ $sortField === 'created_at' ? $sortDirection : '' }}">
                 </th>
                 <th class="sortable">
                     Description
-                    <img src="{{ asset('assets/images/icons/sort.png') }}" wire:click="sortBy('description')"
+                    <img src="{{ asset('assets/images/icons/sort.svg') }}" wire:click="sortBy('description')"
                         class="sort-icon {{ $sortField === 'description' ? $sortDirection : '' }}">
                 </th>
                 <th></th>
@@ -39,7 +39,7 @@
                         @if ($item->providers_count > 0) wire:click="$dispatch('open-user-providers-modal', { serviceId: {{ $item->id }} })" @endif>
                         @if ($item->providers_count > 0)
                             <div class="user-info">
-                                <img src="{{ asset($item->providers[0]->avatar ?? 'assets/images/icons/person-one.png') }}"
+                                <img src="{{ asset($item->providers[0]->avatar ?? 'assets/images/icons/person-one.svg') }}"
                                     alt="User" class="avatar">
                                 <span class="user-theme-name"
                                     style="font-weight:500;">{{ $item->providers[0]->name ?? '' }}</span>
@@ -56,7 +56,7 @@
                         <span class="desf d-flex" style="position:relative;">
                             <button class="edit-btn" wire:click="edit({{ $item->id }})"
                                 style="border: 0 !important">
-                                <img src="{{ asset('assets/images/icons/edit-icon.png') }}" alt="Edit"
+                                <img src="{{ asset('assets/images/icons/edit-icon.svg') }}" alt="Edit"
                                     class="action-icon">
                             </button>
                             <!-- ✅ Global Delete Modal -->
@@ -78,7 +78,7 @@
                             </div>
                             <!-- ✅ Delete button -->
                             <button type="button" class="delete-btn showDeleteModal" data-id="{{ $item->id }}">
-                                <img src="{{ asset('assets/images/icons/delete-icon.png') }}" alt="Delete"
+                                <img src="{{ asset('assets/images/icons/delete-icon.svg') }}" alt="Delete"
                                     class="action-icon">
                             </button>
                         </span>

@@ -34,17 +34,17 @@ class UserStats extends Component
                     [
                         'label' => 'Total Users', 
                         'value' => $counts->total,
-                        'icon' => 'assets/images/icons/service-providers.png',
+                        'icon' => 'assets/images/icons/service-providers.svg',
                     ],
                     [
                         'label' => 'Active Users', 
                         'value' => $counts->active,
-                        'icon' => 'assets/images/icons/new-providers.png'
+                        'icon' => 'assets/images/icons/new-providers.svg'
                     ],
                     [
                         'label' => 'Inactive Users',
                         'value' => $counts->inactive,
-                        'icon' => 'assets/images/icons/active-booking.png'                    
+                        'icon' => 'assets/images/icons/active-booking.svg'                    
                     ],
                 ];
                 break;
@@ -60,17 +60,17 @@ class UserStats extends Component
                     [
                         'label' => 'Total Users', 
                         'value' => $counts->total,
-                        'icon' => 'assets/images/icons/service-providers.png',
+                        'icon' => 'assets/images/icons/service-providers.svg',
                     ],
                     [
                         'label' => 'Active Users', 
                         'value' => $counts->active,
-                        'icon' => 'assets/images/icons/new-providers.png'
+                        'icon' => 'assets/images/icons/new-providers.svg'
                     ],
                     [
                         'label' => 'Inactive Users',
                         'value' => $counts->inactive,
-                        'icon' => 'assets/images/icons/active-booking.png'                    
+                        'icon' => 'assets/images/icons/active-booking.svg'                    
                     ],
                 ];
                 break;
@@ -86,24 +86,24 @@ class UserStats extends Component
                     [
                         'label' => 'Total service users', 
                         'value' => $counts->customers,
-                        'icon' => 'assets/images/icons/service-providers.png',
+                        'icon' => 'assets/images/icons/service-providers.svg',
                     ],
                     [
                         'label' => 'Total service providers', 
                         'value' => $counts->providers,
-                        'icon' => 'assets/images/icons/new-providers.png'
+                        'icon' => 'assets/images/icons/new-providers.svg'
                     ],
                     [
                         'label' => 'Active bookings', 
                         'value' => $counts->active,
-                        'icon' => 'assets/images/icons/active-booking.png'
+                        'icon' => 'assets/images/icons/active-booking.svg'
                     ],
                     [
                         'label' => 'Total active users', 
                         'value' => $counts->active,
-                        'icon' => 'assets/images/icons/active-members.png'
+                        'icon' => 'assets/images/icons/active-members.svg'
                     ],
-                    // assets/images/icons/active-members.png
+                    // assets/images/icons/active-members.svg
                      
                 ];
                 break;
@@ -113,17 +113,17 @@ class UserStats extends Component
                     [
                         'label' => 'Total revenue', 
                         'value' => '$' . number_format(824.00, 0),
-                        'icon' => 'assets/images/icons/payout-icon.png',
+                        'icon' => 'assets/images/icons/payout-icon.svg',
                     ],
                     [
                         'label' => 'Total payout', 
                         'value' => '$' . number_format(824.00, 0),
-                        'icon' => 'assets/images/icons/payout-icon.png'
+                        'icon' => 'assets/images/icons/payout-icon.svg'
                     ],
                     [
                         'label' => 'Pending payout',
                         'value' => '$' . number_format(824.00, 0),
-                        'icon' => 'assets/images/icons/payout-icon.png'                    
+                        'icon' => 'assets/images/icons/payout-icon.svg'                    
                     ],
                 ];
                 break;

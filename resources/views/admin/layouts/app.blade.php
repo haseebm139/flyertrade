@@ -131,7 +131,7 @@
     -moz-appearance: none !important;
 
     /* custom icon */
-    background-image: url("{{ asset('assets/images/icons/icon_.png') }}");
+    background-image: url("{{ asset('assets/images/icons/icon_.svg') }}");
     background-repeat: no-repeat;
     background-position: right 15px center;
     background-size: 8px;
