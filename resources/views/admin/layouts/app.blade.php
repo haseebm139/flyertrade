@@ -118,7 +118,7 @@
     </style>
         <style>
 #rows, #perPage {
-    width: 150px;
+    width: 100%;
     padding: 8px 35px 8px 8px;
 
     border: 1px solid #ccc;
