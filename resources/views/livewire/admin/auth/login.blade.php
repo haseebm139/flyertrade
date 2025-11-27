@@ -1,6 +1,6 @@
 <div>
     <h4>Welcome <img
-            src="{{ asset('assets/images/icons/hand-shake.svg') }}"
+            src="{{ asset('assets/images/icons/hand-shake.png') }}"
             alt=""
         ></h4>
     <h2>Flyertrade Admin</h2>
