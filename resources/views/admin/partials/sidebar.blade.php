@@ -160,7 +160,7 @@
             <a href="#" class="nav-link" style="padding:0;">
                 <div class="brand" id="profileBt">
                     <div class="logo-placeholder">
-                        <img src="{{ asset('assets/images/icons/main-group.svg') }}" alt="" class="admin-img">
+                        <img src="{{ asset('assets/images/icons/main_group.svg') }}" alt="" class="admin-img">
                     </div>
 
                     <div class="profile-info">
