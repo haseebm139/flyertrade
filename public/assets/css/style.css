@@ -1328,7 +1328,7 @@ td.user-data.id-number {
     border: none;
     border-radius: 4px;
     background: white;
-    font-size: 1.1vw;
+    font-size: 0.84vw;
     color: #717171;
     cursor: pointer;
     transition: background 0.3s;
@@ -1341,11 +1341,11 @@ td.user-data.id-number {
 }
 
 .page-btn.active {
-    background: #f2f2f2;
-    font-weight: 500;
+    background: #F1F1F1;
+    font-weight: 400;
     cursor: default;
     color: #393939;
-}
+} 
 
 .page-btn:disabled {
     opacity: 0.5;
@@ -1370,7 +1370,7 @@ td.user-data.id-number {
     padding: 0.4vw 0.7vw;
     border-radius: 4px;
     border: 1px solid #ddd;
-    font-size: 1vw;
+    font-size: 0.84vw;
     cursor: pointer;
     color: #393939;
 }

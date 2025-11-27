@@ -488,7 +488,8 @@
     <button class="page-btn next"><i class="fa-solid fa-chevron-right"></i></button>
 
     <div class="rows-control">
-        <label for="rows">Show</label>
+        <label for="rows" style="
+    color: #555555; font-weight: 400 !important;">Show</label>
         <select id="rows">
             <option>10 rows</option>
             <option>25 rows</option>

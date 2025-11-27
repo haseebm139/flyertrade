@@ -66,7 +66,8 @@
 
         {{-- Rows per page --}}
         <div class="rows-control">
-            <label for="perPage">Show</label>
+            <label for="perPage" style="
+    color: #555555;  font-weight: 400 !important;">Show</label>
             <select
                 wire:model.live="perPage"
                 id="perPage"
