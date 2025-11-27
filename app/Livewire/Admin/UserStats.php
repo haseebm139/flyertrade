@@ -34,7 +34,7 @@ class UserStats extends Component
                     [
                         'label' => 'Total Users', 
                         'value' => $counts->total,
-                        'icon' => 'assets/images/icons/service-providers.svg',
+                        'icon' => 'assets/images/icons/service_providers.svg',
                     ],
                     [
                         'label' => 'Active Users', 
@@ -44,7 +44,7 @@ class UserStats extends Component
                     [
                         'label' => 'Inactive Users',
                         'value' => $counts->inactive,
-                        'icon' => 'assets/images/icons/active-booking.svg'                    
+                        'icon' => 'assets/images/icons/active_booking.svg'                    
                     ],
                 ];
                 break;
@@ -60,7 +60,7 @@ class UserStats extends Component
                     [
                         'label' => 'Total Users', 
                         'value' => $counts->total,
-                        'icon' => 'assets/images/icons/service-providers.svg',
+                        'icon' => 'assets/images/icons/service_providers.svg',
                     ],
                     [
                         'label' => 'Active Users', 
@@ -70,7 +70,7 @@ class UserStats extends Component
                     [
                         'label' => 'Inactive Users',
                         'value' => $counts->inactive,
-                        'icon' => 'assets/images/icons/active-booking.svg'                    
+                        'icon' => 'assets/images/icons/active_booking.svg'                    
                     ],
                 ];
                 break;
@@ -86,7 +86,7 @@ class UserStats extends Component
                     [
                         'label' => 'Total service users', 
                         'value' => $counts->customers,
-                        'icon' => 'assets/images/icons/service-providers.svg',
+                        'icon' => 'assets/images/icons/service_providers.svg',
                     ],
                     [
                         'label' => 'Total service providers', 
@@ -96,14 +96,14 @@ class UserStats extends Component
                     [
                         'label' => 'Active bookings', 
                         'value' => $counts->active,
-                        'icon' => 'assets/images/icons/active-booking.svg'
+                        'icon' => 'assets/images/icons/active_booking.svg'
                     ],
                     [
                         'label' => 'Total active users', 
                         'value' => $counts->active,
-                        'icon' => 'assets/images/icons/active-members.svg'
+                        'icon' => 'assets/images/icons/active_members.svg'
                     ],
-                    // assets/images/icons/active-members.svg
+                    // assets/images/icons/active_members.svg
                      
                 ];
                 break;

@@ -1648,7 +1648,7 @@ td.user-data.id-number {
 }
 /* Descending */
 .theme-table th.sortable.desc::after {
-    content: url("../images/arrow-down.svg");
+    content: url("../images/arrow_down.svg");
 }
 
 .actions-menu a {
@@ -3414,7 +3414,7 @@ body.cm-lock {
 
 }
 
-.arrow-down-out {
+.arrow_down-out {
     width: 0.8vw;
 
 }

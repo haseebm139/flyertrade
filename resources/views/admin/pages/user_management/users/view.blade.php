@@ -151,7 +151,7 @@
                 <h2>1200</h2>
             </div>
             <div class="icon-box">
-                <img src="{{ asset('assets/images/icons/active-booking.svg') }}" alt="User Icon">
+                <img src="{{ asset('assets/images/icons/active_booking.svg') }}" alt="User Icon">
             </div>
         </div>
         <div class="dashboard-card">
@@ -160,7 +160,7 @@
                 <h2>1200</h2>
             </div>
             <div class="icon-box">
-                <img src="{{ asset('assets/images/icons/active-booking.svg') }}" alt="User Icon">
+                <img src="{{ asset('assets/images/icons/active_booking.svg') }}" alt="User Icon">
             </div>
         </div>
         <div class="dashboard-card">
@@ -169,7 +169,7 @@
                 <h2>1200</h2>
             </div>
             <div class="icon-box">
-                <img src="{{ asset('assets/images/icons/active-booking.svg') }}" alt="User Icon">
+                <img src="{{ asset('assets/images/icons/active_booking.svg') }}" alt="User Icon">
             </div>
         </div>
 

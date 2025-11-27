@@ -33,19 +33,19 @@ class BookingStats extends Component
                     [
                         'label' => 'Total Bookings', 
                         'value' => $counts->total ?? 0,
-                        'icon' => 'assets/images/icons/active-booking.svg',
+                        'icon' => 'assets/images/icons/active_booking.svg',
                         'onclick' => 'showAllBookings()'
                     ],
                     [
                         'label' => 'Active Bookings', 
                         'value' => $counts->active ?? 0,
-                        'icon' => 'assets/images/icons/active-booking.svg',
+                        'icon' => 'assets/images/icons/active_booking.svg',
                         'onclick' => 'filterByStatus("confirmed", "Active Bookings")'
                     ],
                     [
                         'label' => 'Cancelled Bookings',
                         'value' => $counts->cancelled ?? 0,
-                        'icon' => 'assets/images/icons/active-booking.svg',
+                        'icon' => 'assets/images/icons/active_booking.svg',
                         'onclick' => 'filterByStatus("cancelled", "Cancelled Bookings")'
                     ],
                 ];
@@ -64,31 +64,31 @@ class BookingStats extends Component
                     [
                         'label' => 'Total Bookings', 
                         'value' => $counts->total ?? 0,
-                        'icon' => 'assets/images/icons/active-booking.svg',
+                        'icon' => 'assets/images/icons/active_booking.svg',
                         'onclick' => 'showAllBookings()'
                     ],
                     [
                         'label' => 'Active Bookings', 
                         'value' => $counts->active ?? 0,
-                        'icon' => 'assets/images/icons/active-booking.svg',
+                        'icon' => 'assets/images/icons/active_booking.svg',
                         'onclick' => 'filterByStatus("confirmed", "Active Bookings")'
                     ],
                     [
                         'label' => 'Completed Bookings',
                         'value' => $counts->completed ?? 0,
-                        'icon' => 'assets/images/icons/active-booking.svg',
+                        'icon' => 'assets/images/icons/active_booking.svg',
                         'onclick' => 'filterByStatus("completed", "Completed Bookings")'
                     ],
                     [
                         'label' => 'Cancelled Bookings',
                         'value' => $counts->cancelled ?? 0,
-                        'icon' => 'assets/images/icons/active-booking.svg',
+                        'icon' => 'assets/images/icons/active_booking.svg',
                         'onclick' => 'filterByStatus("cancelled", "Cancelled Bookings")'
                     ],
                     [
                         'label' => 'Pending Bookings',
                         'value' => $counts->pending ?? 0,
-                        'icon' => 'assets/images/icons/active-booking.svg',
+                        'icon' => 'assets/images/icons/active_booking.svg',
                         'onclick' => 'filterByStatus("awaiting_provider", "Pending Bookings")'
                     ],
                 ];
