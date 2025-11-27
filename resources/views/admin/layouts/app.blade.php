@@ -119,8 +119,7 @@
         <style>
 #rows, #perPage {
     width: 100%;
-    padding: 8px 35px 8px 8px;
-
+    padding: 0.6vw 2.5vw 0.6vw 1vw; 
     border: 1px solid #ccc;
     border-radius: 4px;
     background-color: white;
