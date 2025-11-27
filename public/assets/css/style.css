@@ -2627,6 +2627,7 @@ button.btn-close {
 .status-btn.inactive {
     color: red;
     border: 0.05vw solid red;
+    background-color:#FB37481A;
 }
 
 .status-menu {
