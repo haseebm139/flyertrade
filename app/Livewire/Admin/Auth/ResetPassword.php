@@ -20,6 +20,9 @@ class ResetPassword extends Component
     {
         $this->validate([
             'password' => 'required|min:8|confirmed',
+        ], [], [
+            'password' => 'password',
+            'password_confirmation' => 'password confirmation',
         ]);
          
         $status = Password::reset(
@@ -40,11 +43,10 @@ class ResetPassword extends Component
         );
 
         if ($status === Password::PASSWORD_RESET) {
-            $this->dispatch('swal-success',message: 'Password has been reset successfully!', redirect: route('login')); 
-        }else {
+            $this->dispatch('swal-success', message: 'Password has been reset successfully!', redirect: route('login')); 
+        } else {
             $this->dispatch('swal-error', message: __($status));
         }
-        
     }
     public function render()
     {
