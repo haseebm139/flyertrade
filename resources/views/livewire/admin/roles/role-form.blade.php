@@ -1,7 +1,7 @@
 <div>
     {{-- Debug info removed for production --}}
     @if ($showModal)
-        <div class="modal role-form-modal">
+        <div class="modal role-form-modal" style="display: flex;">
 
 
 
