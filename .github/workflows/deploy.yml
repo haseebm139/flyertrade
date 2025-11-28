@@ -25,6 +25,7 @@ jobs:
           command_timeout: 15m        
           script: |
             cd /var/www/flyertrade
+            
             echo "👉 Clearing old config/cache before pull..."
             php artisan config:clear || true 
             php artisan cache:clear || true
@@ -38,15 +39,19 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
             
-            echo "👉 Installing dependencies..." 
-            composer install --no-dev --optimize-autoloader
+            echo "👉 Removing old vendor folder..."
+            rm -rf vendor composer.lock || true
+            
+            echo "👉 Installing dependencies (production only)..." 
+            composer install --no-dev --optimize-autoloader --no-interaction
 
             echo "👉 Running migrations..."
             php artisan migrate --force
 
-            echo "👉 Clearing and caching config..."
-            php artisan config:clear # Dependencies install hone ke baad dobara clear karein
-            php artisan cache:clear
+            echo "👉 Clearing all caches..."
+            php artisan optimize:clear
+            
+            echo "👉 Caching for production..."
             php artisan config:cache
             php artisan route:cache
             php artisan view:cache
