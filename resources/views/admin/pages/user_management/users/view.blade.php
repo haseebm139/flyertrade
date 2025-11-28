@@ -447,7 +447,7 @@
             <label>Home Address</label>
             <input type="text" class="form-input" placeholder="Enter home address">
             <label>Phone Number</label>
-            <input type="text" class="form-input" placeholder="Enter phone number">
+            <input type="number" class="form-input" placeholder="Enter phone number">
             <div class="form-actions justify-content-center">
                 <button type="button" class="cancel-btn">Cancel</button>
                 <button type="submit" class="submit-btn"> Update</button>

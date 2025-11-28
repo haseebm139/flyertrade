@@ -231,7 +231,7 @@
                     <input type="text" class="form-input" wire:model="address" placeholder="Enter home address">
 
                     <label>Phone Number</label>
-                    <input type="text" class="form-input" wire:model="phone" placeholder="Enter phone number">
+                    <input type="number" class="form-input" wire:model="phone" placeholder="Enter phone number">
 
                     <div class="mb-3">
                         <label for="userType" class="form-label">Role</label>

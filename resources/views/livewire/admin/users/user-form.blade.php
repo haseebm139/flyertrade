@@ -36,7 +36,7 @@
                     @enderror
 
                     <label>Phone Number</label>
-                    <input type="text" class="form-input  @error('phone') error-input @enderror" wire:model="phone" placeholder="Enter phone number">
+                    <input type="number" class="form-input  @error('phone') error-input @enderror" wire:model="phone" placeholder="Enter phone number">
                     @error('phone')
                         <div class="error-message">
                                 <i class="fa-solid fa-circle-exclamation"></i>

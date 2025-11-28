@@ -43,7 +43,7 @@
 
                     <div class="form-group">
                         <label>Phone Number</label>
-                        <input type="text" class="form-input @error('phone') error-input @enderror"
+                        <input type="number" class="form-input @error('phone') error-input @enderror"
                             placeholder="Enter phone number" wire:model="phone">
                         @error('phone')
                             <div class="error-message">

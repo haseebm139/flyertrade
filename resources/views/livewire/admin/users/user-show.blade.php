@@ -105,7 +105,7 @@
                     @enderror
 
                     <label>Phone Number</label>
-                    <input type="text" class="form-input" wire:model="editUser.phone"
+                    <input type="number" class="form-input" wire:model="editUser.phone"
                         placeholder="Enter phone number">
                     @error('editUser.phone')
                         <span class="error-message">{{ $message }}</span>
