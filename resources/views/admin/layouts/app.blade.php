@@ -119,8 +119,8 @@
         <style>
 #rows, #perPage {
     width: 100%;
-    padding: 0.6vw 2.5vw 0.6vw 1vw; 
-    border: 1px solid #ccc;
+    padding: 0.5vw 0.8vw 0.5vw 0.8vw; 
+    border: 1px solid #F1F1F1;
     border-radius: 4px;
     background-color: white;
 
@@ -132,9 +132,9 @@
     /* custom icon */
     background-image: url("{{ asset('assets/images/icons/icon_.svg') }}");
     background-repeat: no-repeat;
-    background-position: right 15px center;
-    background-size: 8px;
-
+    background-position: right 8px center;
+    background-size: 6px;
+    color: #393939 !important;
     background-clip: padding-box;
 }
 

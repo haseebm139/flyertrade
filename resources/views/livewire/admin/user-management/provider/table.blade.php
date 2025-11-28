@@ -180,7 +180,7 @@
                        
                     </div>
                 </div>
-                <label style="color:#717171;font-weight:500">Status</label>
+                <label style="color:#717171;font-weight:500;margin: 12px 0px 12px 0px;">Status</label>
                 <x-custom-select name="status" :options="[
                     ['value' => '', 'label' => 'Select status'],
                     ['value' => 'active', 'label' => 'Active'],

@@ -21,7 +21,7 @@
                         <div class="finances-header">
                             <h5 class="card-title ">Finances</h5>
                             <x-custom-select name="month" :options="['February', 'January', 'March']" placeholder="Select month"
-                                class="form-select-sm" style="width: 30%; padding: 0.4vw 0.4vw 0.4vw 0.4vw;" />
+                                class="form-select-sm" style="width: 25%; padding: 0.2vw 0.4vw 0.2vw 0.4vw;" />
                         </div>
 
                         <!-- Progress bars -->
@@ -76,7 +76,7 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <div class="user-info">
+                                            <div class="user-info name-2">
                                                 <img src="{{ asset('assets/images/icons/person.svg') }}" alt="User">
                                                 Johnbosco Davies
                                             </div>
@@ -87,7 +87,7 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <div class="user-info">
+                                            <div class="user-info name-2">
                                                 <img src="{{ asset('assets/images/icons/person.svg') }}" alt="User">
                                                 Johnbosco Davies
                                             </div>
@@ -96,7 +96,7 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <div class="user-info">
+                                            <div class="user-info name-2">
                                                 <img src="{{ asset('assets/images/icons/person.svg') }}" alt="User">
                                                 Johnbosco Davies
                                             </div>
@@ -117,7 +117,7 @@
                         <!-- Header -->
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h5 class="card-title mb-0">Recently added users</h5>
-                            <a href="#" style="font-weight: 400">View all</a>
+                            <a class="dashboard-view-all" href="#" style="font-weight:400,color:#1b1b1b ,font-size:0.875vw" >View all</a>
                         </div>
                         <nav>
                             <div class="nav nav-tabs" id="nav-tab" role="tablist">

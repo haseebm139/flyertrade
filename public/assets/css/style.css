@@ -1125,6 +1125,13 @@ table.dataTable thead th {
     text-decoration: none;
     font-weight: 400;
 }
+.dashboard-view-all{
+    font-size: 0.875vw;
+    /* 14px */
+    color: #1b1b1b;
+    text-decoration: none;
+    font-weight: 400;
+}
 
 .table thead th {
     background-color: #f5f8fa;
@@ -1149,6 +1156,7 @@ table.dataTable thead th {
     display: flex;
     align-items: center;
     gap: 1vw;
+    
     /* 16px */
 }
 
@@ -1301,13 +1309,13 @@ td.user-data.id-number {
 
 .name {
     font-weight: 500 !important;
-    color: #676767;
+    color: #393939;
     font-size: 0.9vw;
 }
 
 .name-2 {
     font-weight: 400;
-    color: #676767;
+    color: #676767 !important;
     font-size: 0.8vw;
 }
 
@@ -1526,7 +1534,7 @@ td.user-data.id-number {
     white-space: nowrap;
     font-size: 16px;
     font-weight: 500;
-    color: #676767;
+    color: #393939;
 }
 
 .user-info img {
@@ -1803,8 +1811,8 @@ label {
 }
 
 .theme-table td:last-child img {
-    width: 1.3vw;
-    height: 1.3vw;
+    width: 1vw;
+    height: 1vw;
 }
 
 h5#userModalLabel {
@@ -1820,7 +1828,7 @@ span.desf {
     width: 100%;
     padding: 0.6vw;
     font-size: 0.9vw;
-    margin-bottom: 1vw;
+    /* margin-bottom: 1vw; */
     border: 0.1vw solid #ddd;
     border-radius: 0.4vw;
 }
@@ -1830,6 +1838,7 @@ span.desf {
     justify-content: left;
     gap: 1vw;
     align-items: center;
+    margin: 16px 0px;
 }
 
 .cancel-btn,
@@ -3215,7 +3224,7 @@ body.cm-lock {
     position: absolute;
     top: 100%;
     left: 0;
-    min-width: 120px;
+    min-width: max-content;
     background: #fff;
     border: 1px solid #ddd;
     list-style: none;
@@ -3226,7 +3235,7 @@ body.cm-lock {
 
 .status-dropdown .dropdown-menu li {
     padding: 6px 12px;
-    cursor: pointer;
+    cursor: pointer; 
 }
 
 .status-dropdown .dropdown-menu li:hover {
@@ -4284,10 +4293,10 @@ span.timestamps {
     }
 
 }
-
+/* color:#717171;font-weight:500;margin: 12px 0px 12px 0px; */
 /* Form Group Styling */
 .form-group {
-    margin-bottom: 1.2rem;
+    margin-bottom: 1.3rem;
 }
 
 .form-group label {
@@ -4317,6 +4326,7 @@ textarea.form-input.error-input:focus {
     color: #dc3545;
     font-size: 0.875rem;
     font-weight: 400;
+    margin-top: 0.25rem;
 }
 
 .error-message i {

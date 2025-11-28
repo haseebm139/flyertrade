@@ -321,7 +321,7 @@
                 <h3 class="mt-0">Filter</h3>
             </div>
 
-            <label style='color:#717171;font-weight:500;'>Select Date</label>
+            <label style='color:#717171;font-weight:500; '>Select Date</label>
             <div class=" row mt-3">
                 <div class='col-6'>
                     <span style="font-weight:500">From:</span>
@@ -338,7 +338,7 @@
 
                 </div>
             </div>
-            <label style="color:#717171;font-weight:500">Status</label>
+            <label style="color:#717171;font-weight:500; margin: 12px 0px 12px 0px;" >Status</label>
             <x-custom-select name="statusFilter" id="statusFilter" :options="[
                 ['value' => '', 'label' => 'Select status'],
                 ['value' => 'resolved', 'label' => 'Resolved'],

@@ -100,8 +100,8 @@ if ($selectedValue === null && !empty($normalizedOptions)) {
         width: 100%;
         /* padding: 0.4vw; */
         background: white;
-        /* border: 1px solid #d1d5db; */
-        border-radius: 8px;
+        /* border: 1px solid #d1AAd5db; */
+        border-radius: 10px;
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -120,26 +120,28 @@ if ($selectedValue === null && !empty($normalizedOptions)) {
 
     .custom-select-text {
         font-size: 0.875rem;
-        color: #c6c6c6!important;
+        color: #AAAAAA !important;
         flex: 1;
     }
 
     .custom-select-text.placeholder {
-          color: #c6c6c6!important;
-        background-color: rgba(0,0,0,0)!important;
-        opacity: 1!important;
+        color: #AAAAAA !important;
+        background-color: rgba(0, 0, 0, 0) !important;
+        opacity: 1 !important;
     }
- .placeholder {
-           opacity: 1!important;
- }
+
+    .placeholder {
+        opacity: 1 !important;
+    }
 
     .custom-select-arrow {
-        width: 16px;
-        height: 16px;
-        color: #6b7280;
+        width: 14px;
+        height: 14px;
+        color: #AAAAAA;
         transition: transform 0.2s;
         flex-shrink: 0;
-        margin-left: 8px;
+        /* margin-left: 4px; */
+        /* margin-right: 14px; */
     }
 
     .custom-select-arrow.open {
