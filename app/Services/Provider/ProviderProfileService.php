@@ -54,8 +54,10 @@ class ProviderProfileService
             $coverPhotoPath = 'storage/' . $path;
         }
 
-        $profileData['about_me'] = $data['services']['about'] ?? null;
-        $data['address'] = $data['office_address'];
+        $profileData['about_me'] = isset($data['services']['about']) ? $data['services']['about'] : null;
+        if (isset($data['office_address'])) {
+            $data['address'] = $data['office_address'];
+        }
         
         $updateData = collect($data)->only([
             'country', 'city', 'state', 'zip',
