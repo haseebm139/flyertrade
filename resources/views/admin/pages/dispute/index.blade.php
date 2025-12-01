@@ -55,6 +55,10 @@
             <button class="filter-btn" id="openFilterModal"> Filter <span class="download-icon"><img
                         src="{{ asset('assets/images/icons/button-icon.svg') }}" alt=""
                         class="btn-icons"></span></button>
+                           <a href="#" class="filter_active_btna___">
+                            <span>Active users</span>
+                            <i class="fa-solid fa-xmark"></i>
+                    </a>
         </div>
     </div>
 
@@ -114,8 +118,8 @@
 
                 <style>
                     .unpublished {
-                        color: #D00416;
-                        border: 2px solid #D00416;
+                        color: #D00416!important;
+                        border: 2px solid #D00416!important;
                         background-color: #fb374741 !important;
                     }
                 </style>
@@ -138,9 +142,9 @@
 
                 <td>
                     <div class="actions-dropdown">
-                        <button class="actions-btn" fdprocessedid="3p4nw"> <img
+                        <button class="actions-btn" id="open-menu-btn" fdprocessedid="3p4nw"> <img
                                 src="http://127.0.0.1:8000/assets/images/icons/three_dots.svg" class="dots-img "></button>
-                        <div class="actions-menu" style="display: none;">
+                        <div class="actions-menu"  id="open-menu-btn-wrapper"  style="display: none;">
                             <a onclick="openBookingModal()"><img src="http://127.0.0.1:8000/assets/images/icons/eye.svg"
                                     alt="">
                                 View
@@ -353,6 +357,13 @@
         </div>
     </div>
     <script>
+        $(document).ready(function(){
+            $('#open-menu-btn').on('click',function(e){
+                e.preventDefault();
+                $('#open-menu-btn-wrapper').toggle();
+                
+            })
+        })
         // Filter modal functionality
         document.addEventListener('DOMContentLoaded', function() {
             const openFilterBtn = document.getElementById("openFilterModal");

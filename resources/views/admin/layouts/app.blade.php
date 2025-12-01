@@ -181,6 +181,21 @@
     <script src="{{ asset('assets/js/header-fix.js') }}"></script>
 
     <script>
+        
+                $(document).ready(function(){
+                    $('#filterModal .submit-btn').on('click',function(e){
+                        e.preventDefault();
+                          $('.filter_active_btna___').css('display','flex');
+                    })
+                     $('#filterModal .reset-btn').on('click',function(e){
+                        e.preventDefault();
+                          $('.filter_active_btna___').css('display','none');
+                    })
+                    $('.filter_active_btna___ .fa-xmark').on('click',function(e){
+                          e.preventDefault();
+                          $('.filter_active_btna___').css('display','none');
+                    })
+                })
         // Swal.fire({
         //     title: 'Success!',
         //     position: 'top-end',

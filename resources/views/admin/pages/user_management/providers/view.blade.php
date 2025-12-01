@@ -7,6 +7,12 @@
 <!-- Top Stat Cards -->
 
 
+<style>
+    #addUserModal label{
+        margin-top: 1vw;
+         margin-bottom: 0.2vw;
+    }
+</style>
 <div class="users-toolbar">
     <nav class="breadcrumb">
         <a href="#">Service Provider</a>

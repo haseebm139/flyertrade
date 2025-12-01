@@ -840,7 +840,7 @@ table.dataTable thead th {
 }
 
 .provider-modal-body {
-    padding: 0.9375vw;
+    padding: 1.5vw;
     /* 15px */
 }
 
@@ -1340,6 +1340,7 @@ td.user-data.id-number {
     color: #717171;
     cursor: pointer;
     transition: background 0.3s;
+    line-height: 1;
 }
 .prev, .next{
      border: 1px solid #ddd;
@@ -1566,7 +1567,7 @@ td.user-data.id-number {
 
 .status.active {
     background: #e0f5e9;
-    color: #28a745 !important;
+    color: #28a745;
     border: 1px solid;
 }
 
@@ -4326,7 +4327,7 @@ textarea.form-input.error-input:focus {
     color: #dc3545;
     font-size: 0.875rem;
     font-weight: 400;
-    margin-top: 0.25rem;
+    margin-top: 0rem;
 }
 
 .error-message i {
