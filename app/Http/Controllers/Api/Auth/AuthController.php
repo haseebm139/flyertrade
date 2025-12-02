@@ -17,7 +17,7 @@ use App\Http\Requests\Api\Auth\SocialRequest;
 use App\Models\ProviderWorkingHour;
 use App\Models\User;
 use App\Mail\OtpCodeMail;
-
+use Str;
 class AuthController extends BaseController
 {
     public function register(RegisterRequest $request)
@@ -59,7 +59,7 @@ class AuthController extends BaseController
         }
 
         try {
-            $token = $user->createToken('auth_token')->plainTextToken;
+            $token = $user->createToken('guest_token')->plainTextToken;
         } catch (\Exception $e) {
             return $this->sendError('Error generating token: ' . $e->getMessage());
         }
@@ -152,10 +152,11 @@ class AuthController extends BaseController
             'password'  => Hash::make(Str::random(16)), // Random password
             'is_guest'  => true,
         ]);
-
+        $user->assignRole('customer');
+        $user = $user->fresh();
         return $this->sendResponse([
             'token' => $user->createToken('guest_token')->plainTextToken,
-            'user'  => $user
+            'user'  => $user->load('providerProfile'),
         ], 'Guest mode enabled');
     }
 

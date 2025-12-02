@@ -167,8 +167,8 @@ class ProviderRepository
      * Get all bookmarks for a user
      */
     public function getBookmarks(int $userId)
-    {
-        return Bookmark::with('provider.providerProfile') // eager load provider info
+    {  
+        return Bookmark::with('provider.providerProfile','provider.providerServices.service','provider.providerServices.media','provider.providerServices.certificates','provider.providerProfile.workingHours') // eager load provider info
             ->where('user_id', $userId)
             ->get();
     }
