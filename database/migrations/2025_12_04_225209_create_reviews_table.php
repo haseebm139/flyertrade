@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('reviews', function (Blueprint $table) {
-             
+            
+            $table->id();
             $table->foreignId('booking_id')->constrained('bookings')->onDelete('cascade');
             $table->foreignId('sender_id')->constrained('users')->onDelete('cascade')->comment('Customer who wrote the review');
             $table->foreignId('receiver_id')->constrained('users')->onDelete('cascade')->comment('Provider being reviewed');
@@ -20,7 +21,7 @@ return new class extends Migration
             $table->tinyInteger('rating')->unsigned()->default(1)->comment('Rating from 1 to 5');
             $table->text('review')->nullable()->comment('Review text content');
             $table->enum('status', ['pending', 'published', 'unpublished'])->default('pending'); 
-            
+            $table->timestamps();
             // Indexes for better query performance
             $table->index('booking_id');
             $table->index('sender_id');
@@ -38,19 +39,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('reviews', function (Blueprint $table) {
-            $table->dropForeign(['booking_id']);
-            $table->dropForeign(['sender_id']);
-            $table->dropForeign(['receiver_id']);
-            $table->dropForeign(['service_id']);
-            $table->dropUnique(['booking_id']);
-            $table->dropIndex(['booking_id']);
-            $table->dropIndex(['sender_id']);
-            $table->dropIndex(['receiver_id']);
-            $table->dropIndex(['service_id']);
-            $table->dropIndex(['status']);
-            $table->dropColumn(['booking_id', 'sender_id', 'receiver_id', 'service_id', 'rating', 'review', 'status']);
-            
-        });
+        Schema::dropIfExists('reviews');
+         
     }
 };
