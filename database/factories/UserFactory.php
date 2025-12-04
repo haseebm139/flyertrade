@@ -17,26 +17,37 @@ class UserFactory extends Factory
 
     public function definition()
     {
+        // Get faker instance - handle AWS environment where $this->faker might be null
+        if (!isset($this->faker) || $this->faker === null) {
+            try {
+                $this->faker = \Illuminate\Support\Facades\App::make(\Faker\Generator::class);
+            } catch (\Exception $e) {
+                // Fallback: Create Faker instance directly if service container fails
+                $this->faker = \Faker\Factory::create();
+            }
+        }
+        $faker = $this->faker;
+        
         // Random role from roles table
         $role = Role::inRandomOrder()->first();
 
         return [
-            'name' => $this->faker->name(),
-            'email' => $this->faker->unique()->safeEmail(),
+            'name' => $faker->name(),
+            'email' => $faker->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => Hash::make('password'), // default password
             'remember_token' => Str::random(10),
             'role_id' => $role ? strtolower($role->name) : 'customer',
             'user_type' => $role ? strtolower($role->name) : 'customer',
-            'phone' => $this->faker->phoneNumber(),
+            'phone' => $faker->phoneNumber(),
 
-            'country' => $this->faker->country(),
-            'city' => $this->faker->city(),
-            'state' => $this->faker->state(),
-            'zip' => $this->faker->postcode(),
-            'address' => $this->faker->streetAddress(),
-            'latitude' => $this->faker->latitude(),
-            'longitude' => $this->faker->longitude(),
+            'country' => $faker->country(),
+            'city' => $faker->city(),
+            'state' => $faker->state(),
+            'zip' => $faker->postcode(),
+            'address' => $faker->streetAddress(),
+            'latitude' => $faker->latitude(),
+            'longitude' => $faker->longitude(),
 
         ];
     }
