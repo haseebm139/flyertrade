@@ -47,7 +47,7 @@ class ProfileController extends BaseController
             ]);
         }
 
-        return $this->sendResponse(new UserResource($user), 'Profile retrieved successfully.');
+        return $this->sendResponse($user, 'Profile retrieved successfully.');
     }
 
     /**
@@ -72,7 +72,7 @@ class ProfileController extends BaseController
             ]);
         }
 
-        return $this->sendResponse(new UserResource($result), 'Profile updated successfully.');
+        return $this->sendResponse($result, 'Profile updated successfully.');
     }
 
     /**
@@ -96,7 +96,7 @@ class ProfileController extends BaseController
         }
 
         $result = $this->profileService->getProfile($user);
-        return $this->sendResponse(new UserResource($result), 'Profile retrieved successfully.');
+        return $this->sendResponse($result, 'Profile retrieved successfully.');
     }
 }
 

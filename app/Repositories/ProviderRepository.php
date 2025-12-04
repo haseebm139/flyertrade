@@ -198,10 +198,9 @@ class ProviderRepository
         $user = User::with([
             'providerProfile',
             'workingHours',
-            'providerProfile.services',
-            'providerProfile.services.service',
-            'providerProfile.services.media',
-            'providerProfile.services.certificates'
+            'providerProfile.services' => function($q) {
+                $q->with(['service', 'media', 'certificates']);
+            }
         ])
         ->withCount([
             'providerBookings as provider_bookings_count',
@@ -218,9 +217,55 @@ class ProviderRepository
         })
         ->findOrFail($id);
 
-        return new UserResource($user);
+        // Add complete details to provider services (reviews count, rating, reviews list)
+        if ($user->providerProfile && $user->providerProfile->services) {
+            $serviceIds = $user->providerProfile->services->pluck('service_id')->toArray();
+            
+            if (!empty($serviceIds)) {
+                // Single query: Get all reviews stats (count + avg rating) for all services
+                $reviewsStats = Review::where('status', 'published')
+                    ->where('receiver_id', $user->id)
+                    ->whereIn('service_id', $serviceIds)
+                    ->select(
+                        'service_id',
+                        DB::raw('COUNT(*) as reviews_count'),
+                        DB::raw('AVG(rating) as rating')
+                    )
+                    ->groupBy('service_id')
+                    ->get()
+                    ->keyBy('service_id');
+                
+                // Single query: Get all reviews with reviewer info, then group in memory
+                $allReviews = Review::where('status', 'published')
+                    ->where('receiver_id', $user->id)
+                    ->whereIn('service_id', $serviceIds)
+                    ->with(['reviewer:id,name,avatar'])
+                    ->orderBy('created_at', 'desc')
+                    ->get()
+                    ->groupBy('service_id')
+                    ->map(function($reviews) {
+                        // Take only latest 3 reviews per service
+                        return $reviews->take(3)->values();
+                    });
+                
+                // Attach data to services
+                foreach ($user->providerProfile->services as $service) {
+                    // Get stats from pre-loaded data
+                    $stats = $reviewsStats->get($service->service_id);
+                    $reviewsCount = $stats ? (int) $stats->reviews_count : 0;
+                    $rating = $stats ? round((float) $stats->rating, 2) : 0;
+                    
+                    // Get reviews from pre-loaded data
+                    $reviews = $allReviews->get($service->service_id) ?? collect();
+                    
+                    $service->setAttribute('reviews_count', $reviewsCount);
+                    $service->setAttribute('rating', $rating);
+                    $service->setAttribute('reviews', $reviews);
+                }
+            }
+        }
 
-
+        return $user;
     }
 
     /**
