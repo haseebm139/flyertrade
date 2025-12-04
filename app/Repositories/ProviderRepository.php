@@ -5,7 +5,7 @@ namespace App\Repositories;
 
 use App\Models\User;
 use App\Models\Bookmark;
-
+use App\Models\Review;
 use App\Models\ProviderService;
 use Illuminate\Support\Facades\DB;
 
@@ -41,7 +41,17 @@ class ProviderRepository
     {
          $query = User::query()
             ->where('role_id', 'provider')
-            ->with(['providerProfile', 'providerServices.service', 'providerServices.media', 'providerServices.certificates','providerProfile.workingHours']); // eager load
+            ->with(['providerProfile', 
+                    'providerProfile.services' => function($q) {
+                        $q->with(['service', 'media', 'certificates']);
+                    },
+                    'providerProfile.workingHours']) // eager load
+            ->withCount([
+                'providerBookings as provider_bookings_count',
+                'providerServices as provider_services_count',
+                // 'publishedReviews as published_reviews_count'
+            ])
+            ->withAvg('publishedReviews as published_reviews_avg_rating', 'rating');
 
             // , 'ratings'
         // 🔹 Filter by Provider Name
@@ -104,7 +114,80 @@ class ProviderRepository
             $query->latest();
         }
         $perPage = $filters['per_page'] ?? 10; // default 10 per page
-        return $query->paginate($perPage);
+        $providers = $query->paginate($perPage);
+        
+        // Optimize: Batch load all reviews data in single queries (eliminates N+1)
+        $providerIds = $providers->getCollection()->pluck('id')->toArray();
+        
+        if (!empty($providerIds)) {
+            // Get all provider services mapping
+            $providerServicesMap = ProviderService::whereIn('user_id', $providerIds)
+                ->get(['id', 'user_id', 'service_id'])
+                ->groupBy('user_id');
+            
+            // Get all service_ids for these providers
+            $serviceIds = ProviderService::whereIn('user_id', $providerIds)
+                ->pluck('service_id')
+                ->unique()
+                ->toArray();
+            
+            if (!empty($serviceIds)) {
+                // Single query: Get all reviews stats (count + avg rating) for all provider-service combinations
+                $reviewsStats = Review::where('status', 'published')
+                    ->whereIn('receiver_id', $providerIds)
+                    ->whereIn('service_id', $serviceIds)
+                    ->select(
+                        'service_id',
+                        'receiver_id',
+                        DB::raw('COUNT(*) as reviews_count'),
+                        DB::raw('AVG(rating) as rating')
+                    )
+                    ->groupBy('service_id', 'receiver_id')
+                    ->get()
+                    ->keyBy(function($item) {
+                        return $item->service_id . '_' . $item->receiver_id;
+                    });
+                
+                // Single query: Get all reviews with reviewer info, then group in memory
+                $allReviews = Review::where('status', 'published')
+                    ->whereIn('receiver_id', $providerIds)
+                    ->whereIn('service_id', $serviceIds)
+                    ->with(['reviewer:id,name,avatar'])
+                    ->orderBy('created_at', 'desc')
+                    ->get()
+                    ->groupBy(function($review) {
+                        return $review->service_id . '_' . $review->receiver_id;
+                    })
+                    ->map(function($reviews) {
+                        // Take only latest 5 reviews per service
+                        return $reviews->take(3)->values();
+                    });
+                
+                // Attach data to services (in-memory operation, very fast)
+                $providers->getCollection()->transform(function ($provider) use ($reviewsStats, $allReviews) {
+                    if ($provider->providerProfile && $provider->providerProfile->services) {
+                        foreach ($provider->providerProfile->services as $service) {
+                            $key = $service->service_id . '_' . $provider->id;
+                            
+                            // Get stats from pre-loaded data
+                            $stats = $reviewsStats->get($key);
+                            $reviewsCount = $stats ? (int) $stats->reviews_count : 0;
+                            $rating = $stats ? round((float) $stats->rating, 2) : 0;
+                            
+                            // Get reviews from pre-loaded data
+                            $reviews = $allReviews->get($key) ?? collect();
+                            
+                            $service->setAttribute('reviews_count', $reviewsCount);
+                            $service->setAttribute('rating', $rating);
+                            $service->setAttribute('reviews', $reviews);
+                        }
+                    }
+                    return $provider;
+                });
+            }
+        }
+        
+        return $providers;
     }
 
 
@@ -120,6 +203,12 @@ class ProviderRepository
             'providerProfile.services.media',
             'providerProfile.services.certificates'
         ])
+        ->withCount([
+            'providerBookings as provider_bookings_count',
+            'providerServices as provider_services_count',
+            'publishedReviews as published_reviews_count'
+        ])
+        ->withAvg('publishedReviews as published_reviews_avg_rating', 'rating')
         ->when($userId, function ($q) use ($userId) {
             $q->withExists([
                 'bookmarkedBy as is_bookmarked' => function ($q2) use ($userId) {

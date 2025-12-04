@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('title')->nullable();
             $table->longText('about')->nullable();
             $table->longText('description')->nullable();
-            $table->unsignedInteger('staff_count')->nullable();
+            $table->unsignedInteger('staff_count')->nullable()->default(1);
             $table->decimal('rate_min', 10, 2)->nullable();
             $table->decimal('rate_max', 10, 2)->nullable();
             $table->unique(['user_id', 'service_id']);

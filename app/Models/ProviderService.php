@@ -40,6 +40,40 @@ class ProviderService extends Model
         return $this->belongsTo(Service::class, 'service_id');
     }
 
+    /**
+     * Get reviews for this provider service
+     * Reviews are linked by service_id and receiver_id (provider user_id)
+     */
+    public function reviews()
+    {
+        return Review::where('service_id', $this->service_id)
+            ->where('receiver_id', $this->user_id)
+            ->where('status', 'published');
+    }
+
+    /**
+     * Get reviews count for this provider service
+     */
+    public function getReviewsCountAttribute()
+    {
+        if (isset($this->attributes['reviews_count'])) {
+            return (int) $this->attributes['reviews_count'];
+        }
+        return $this->reviews()->count();
+    }
+
+    /**
+     * Get average rating for this provider service
+     */
+    public function getRatingAttribute()
+    {
+        if (isset($this->attributes['service_rating'])) {
+            return round((float) $this->attributes['service_rating'], 2);
+        }
+        $rating = $this->reviews()->avg('rating') ?? 0;
+        return round((float) $rating, 2);
+    }
+
      public function providers()
     {
         return $this->belongsToMany(User::class);
