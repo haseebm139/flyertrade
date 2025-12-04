@@ -23,22 +23,22 @@ class UserFactory extends Factory
         $role = Role::inRandomOrder()->first();
 
         return [
-            'name' => $this->faker->name(),
-            'email' => $this->faker->unique()->safeEmail(),
+            'name' => fake()->name(),
+            'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => Hash::make('password'), // default password
             'remember_token' => Str::random(10),
-            'role_id' => $role ? strtolower($role->name) : null,
-            'user_type' => $role ? strtolower($role->name) : null,
-            'phone' => $this->faker->phoneNumber(),
+            'role_id' => $role ? strtolower($role->name) : 'customer',
+            'user_type' => $role ? strtolower($role->name) : 'customer',
+            'phone' => fake()->phoneNumber(),
 
-            'country' => $this->faker->country(),
-            'city' => $this->faker->city(),
-            'state' => $this->faker->state(),
-            'zip' => $this->faker->postcode(),
-            'address' => $this->faker->streetAddress(),
-            'latitude' => $this->faker->latitude(),
-            'longitude' => $this->faker->longitude(),
+            'country' => fake()->country(),
+            'city' => fake()->city(),
+            'state' => fake()->state(),
+            'zip' => fake()->postcode(),
+            'address' => fake()->streetAddress(),
+            'latitude' => fake()->latitude(),
+            'longitude' => fake()->longitude(),
 
         ];
     }
