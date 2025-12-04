@@ -38,6 +38,19 @@ return new class extends Migration
      */
     public function down(): void
     {
-        
+        Schema::table('reviews', function (Blueprint $table) {
+            $table->dropForeign(['booking_id']);
+            $table->dropForeign(['sender_id']);
+            $table->dropForeign(['receiver_id']);
+            $table->dropForeign(['service_id']);
+            $table->dropUnique(['booking_id']);
+            $table->dropIndex(['booking_id']);
+            $table->dropIndex(['sender_id']);
+            $table->dropIndex(['receiver_id']);
+            $table->dropIndex(['service_id']);
+            $table->dropIndex(['status']);
+            $table->dropColumn(['booking_id', 'sender_id', 'receiver_id', 'service_id', 'rating', 'review', 'status']);
+            
+        });
     }
 };
