@@ -492,7 +492,7 @@ function setStatus(el, status) {
   const statusBtn = parent.querySelector('.status');
 
   // Reset old classes
-  statusBtn.classList.remove('publish', 'unpublish', 'pending', 'open','Resolved','Unresolved');
+  statusBtn.classList.remove('publish', 'unpublished', 'pending', 'open','Resolved','Unresolved');
 
   // Define colors
   let color = '';

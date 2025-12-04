@@ -28,6 +28,10 @@
             <input type="text" class="search-user" placeholder="Search user">
             <button class="filter-btn" id="openFilterModal"> Filter <span class="download-icon"><img
                         src="{{ asset('assets/images/icons/button-icon.svg') }}" alt=""></span></button>
+                        <a href="#" class="filter_active_btna___">
+                            <span>Active users</span>
+                            <i class="fa-solid fa-xmark"></i>
+                    </a>
         </div>
 
     </div>
@@ -479,6 +483,7 @@
         //     img.style.marginRight = "0.1vw";
         //     container.appendChild(img);
         // }
+
     </script>
 
 @endsection

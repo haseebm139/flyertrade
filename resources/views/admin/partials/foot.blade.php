@@ -30,4 +30,6 @@ const toggleActions = () => actions.hidden = !anyChecked();
 document.addEventListener('change', e => {
     if (e.target.classList.contains('row-check')) toggleActions();
 });
+
+
 </script>

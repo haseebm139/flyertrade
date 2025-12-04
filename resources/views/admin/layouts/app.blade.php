@@ -96,7 +96,7 @@
             width: 47px;
         }
         .main_content{
-            padding:20px;
+            padding:1.042vw;
         }
         #wrapper_mobile_display_none{
             display: none;
@@ -142,6 +142,10 @@
 #rows::-ms-expand #perPage::-ms-expand {
     display: none;
 }
+.nav {
+    --bs-nav-link-padding-x: 0.1041vw;
+    --bs-nav-link-padding-y: 0.0521vw;
+}
 
     </style>
 </head>
@@ -181,6 +185,21 @@
     <script src="{{ asset('assets/js/header-fix.js') }}"></script>
 
     <script>
+        
+                $(document).ready(function(){
+                    $('#filterModal .submit-btn').on('click',function(e){
+                        e.preventDefault();
+                          $('.filter_active_btna___').css('display','flex');
+                    })
+                     $('#filterModal .reset-btn').on('click',function(e){
+                        e.preventDefault();
+                          $('.filter_active_btna___').css('display','none');
+                    })
+                    $('.filter_active_btna___ .fa-xmark').on('click',function(e){
+                          e.preventDefault();
+                          $('.filter_active_btna___').css('display','none');
+                    })
+                })
         // Swal.fire({
         //     title: 'Success!',
         //     position: 'top-end',

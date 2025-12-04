@@ -8,7 +8,12 @@
 
 
 <!-- Top Stat Cards -->
-
+<style>
+    #addUserModal label{
+        margin-top: 1vw;
+         margin-bottom: 0.2vw;
+    }
+</style>
 
 <div class="users-toolbar">
     <nav class="breadcrumb">
@@ -46,16 +51,17 @@
             &nbsp;
             <span class="download-icon"><img src="{{ asset('assets/images/icons/trash.svg') }}" alt="" class="icons-btn"></span>
         </button>
+           <!-- ✅ Global Delete Modal -->
         <div id="globalDeleteModal" class="deleteModal" style="display: none;">
             <div class="delete-card">
                 <div class="delete-card-header">
                     <h3 class="delete-title">Delete Service User?</h3>
-                    <span class="delete-close " >&times;</span>
+                    <span class="delete-close" id="closeDeleteModal">&times;</span>
                 </div>
                 <p class="delete-text">Are you sure you want to delete this service user?</p>
                 <div class="delete-actions justify-content-start">
                     <button class="confirm-delete-btn">Delete</button>
-                    <button class="cancel-delete-btn ">Cancel</button>
+                    <button class="cancel-delete-btn" id="cancel-delete-btn">Cancel</button>
                 </div>
             </div>
         </div>
@@ -469,7 +475,7 @@
         const deleteModal = document.getElementById("globalDeleteModal");
         const showButtons = document.querySelectorAll(".showDeleteModal");
         const closeButton = document.getElementById("closeDeleteModal");
-        const cancelButton = document.querySelector(".cancel-delete-btn");
+        const cancelButton = document.getElementById("cancel-delete-btn");
 
         // Jab kisi showDeleteModal button pr click ho
         showButtons.forEach(btn => {

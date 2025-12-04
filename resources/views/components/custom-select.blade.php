@@ -119,7 +119,7 @@ if ($selectedValue === null && !empty($normalizedOptions)) {
     }
 
     .custom-select-text {
-        font-size: 0.875rem;
+        font-size: 0.833vw;
         color: #AAAAAA !important;
         flex: 1;
     }
@@ -135,8 +135,8 @@ if ($selectedValue === null && !empty($normalizedOptions)) {
     }
 
     .custom-select-arrow {
-        width: 14px;
-        height: 14px;
+        width: 0.729vw;
+        height: 0.729vw;
         color: #AAAAAA;
         transition: transform 0.2s;
         flex-shrink: 0;
@@ -152,20 +152,20 @@ if ($selectedValue === null && !empty($normalizedOptions)) {
         position: absolute;
         z-index: 50;
         width: 100%;
-        margin-top: 8px;
+        margin-top: 0.417vw;
         background: white;
-        border-radius: 8px;
+        border-radius: 0.417vw;
         box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         border: 1px solid #e5e7eb;
         overflow: hidden;
-        max-height: 200px;
+        max-height: 10.417vw;
         overflow-y: auto;
         left: 0px;
         /* top: 50px; */
     }
 
     .custom-select-option {
-        padding: 12px 16px;
+        padding: 0.625vw 0.833vw;
         cursor: pointer;
         display: flex;
         align-items: center;

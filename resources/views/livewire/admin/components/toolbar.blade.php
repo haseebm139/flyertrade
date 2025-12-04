@@ -18,6 +18,10 @@
                     Filter
                     <img  class="btn-icons" src="{{ asset('assets/images/icons/button-icon.svg') }} "
                         alt=""></span></button>
+                           <a href="#" class="filter_active_btna___">
+                            <span>Active users</span>
+                            <i class="fa-solid fa-xmark"></i>
+                    </a>
         </div>
     </div>
 </div>

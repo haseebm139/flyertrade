@@ -8,13 +8,35 @@
     }
     .notification_item_wrapper{
        /* padding: 0.8vw 1.5vw; */
-       padding: 0.8vw 1.5vw 0vw 1vw;
+       padding: 0.8vw 1.5vw 0vw 1.5vw;
          gap:10px;  
          display: flex;
          flex-direction: column;
              /* border-bottom: 0.0625vw solid #f0f0f0; */
     }
+    
 </style>
+    <style>
+        .filter_active_btna___{
+border: 0.052vw solid  rgba(0, 78, 66, 0.3);
+border-radius: 0.521vw;
+padding: 0.625vw 1.25vw;
+background:  rgba(0, 78, 66, 0.3);
+display: none;
+gap:0.521vw;
+align-items: center;
+
+
+font-family:"Clash Display", sans-serif;
+font-weight: 500;
+font-size: 0.833vw;
+line-height: 150%;
+text-align: center;
+color: #555;
+
+cursor:pointer;
+        }
+    </style>
 <div class="top-row">
     <div class="page-title">@yield('header', 'Dashboard')</div>
     <div class="d-flex gap-3">
@@ -155,7 +177,7 @@
             </div>
             <div class="profile-card">
                 <img src="{{ asset('assets/images/icons/person.svg') }}" alt="User">
-                <div style="font-weight:500; margin-top:5px; font-size:16px;">Flyertrade Admin</div>
+                <div style="font-weight:500; margin-top:5px; font-size:0.833vw;">Flyertrade Admin</div>
                 <div class="muted small">flyertrade@example.com</div>
 
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
