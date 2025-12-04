@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
-use Faker\Generator as Faker;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -18,11 +17,6 @@ class UserFactory extends Factory
 
     public function definition()
     {
-        // Ensure faker is available
-        if (!isset($this->faker)) {
-            $this->faker = \Faker\Factory::create();
-        }
-        
         // Random role from roles table
         $role = Role::inRandomOrder()->first();
 
