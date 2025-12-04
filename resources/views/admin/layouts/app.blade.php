@@ -96,7 +96,7 @@
             width: 47px;
         }
         .main_content{
-            padding:20px;
+            padding:1.042vw;
         }
         #wrapper_mobile_display_none{
             display: none;
@@ -141,6 +141,10 @@
 /* Firefox fix */
 #rows::-ms-expand #perPage::-ms-expand {
     display: none;
+}
+.nav {
+    --bs-nav-link-padding-x: 0.1041vw;
+    --bs-nav-link-padding-y: 0.0521vw;
 }
 
     </style>
