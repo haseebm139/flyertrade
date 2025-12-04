@@ -141,15 +141,45 @@ class User extends Authenticatable
         return $this->belongsToMany(User::class, 'bookmarks', 'user_id', 'provider_id');
     }
 
-    // public function bookings()
-    // {
-    //     return $this->hasMany(Booking::class, 'provider_id');
-    // }
+    /**
+     * Get bookings where user is the provider
+     */
+    public function providerBookings(): HasMany
+    {
+        return $this->hasMany(Booking::class, 'provider_id');
+    }
 
-    // public function reviews()
-    // {
-    //     return $this->hasMany(Review::class, 'provider_id');
-    // }
+    /**
+     * Get bookings where user is the customer
+     */
+    public function customerBookings(): HasMany
+    {
+        return $this->hasMany(Booking::class, 'customer_id');
+    }
 
+    /**
+     * Get reviews written by this user (as a customer)
+     */
+    public function reviewsWritten(): HasMany
+    {
+        return $this->hasMany(Review::class, 'sender_id');
+    }
+
+    /**
+     * Get reviews received by this user (as a provider)
+     */
+    public function reviewsReceived(): HasMany
+    {
+        return $this->hasMany(Review::class, 'receiver_id');
+    }
+
+    /**
+     * Get published reviews received by this user (as a provider)
+     */
+    public function publishedReviews(): HasMany
+    {
+        return $this->hasMany(Review::class, 'receiver_id')
+            ->where('status', 'published');
+    }
 
 }

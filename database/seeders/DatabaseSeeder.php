@@ -18,8 +18,7 @@ class DatabaseSeeder extends Seeder
             RolesAndPermissionsSeeder::class,
             ServiceSeeder::class,
             UserSeeder::class,
-
-
+            ReviewSeeder::class, // Uncomment after bookings are seeded
         ]);
 
     }

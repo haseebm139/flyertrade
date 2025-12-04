@@ -1,25 +1,24 @@
 <?php
 
-namespace App\Http\Controllers\Api\Customer;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Api\BaseController;
 use App\Models\Review;
-use App\Models\Booking;
-use Illuminate\Http\Request;
+use App\Models\Booking; 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
-
-class ReviewController extends BaseController
+class ReviewsController extends BaseController
 {
-     
     /**
      * Create a review for a completed booking
      */
-    public function store(Request $request, $bookingId): JsonResponse
+    public function store(Request $request, $bookingId)
     {
         $validator = Validator::make($request->all(), [
             'rating' => 'required|integer|min:1|max:5',
-            'review' => 'nullable|string|max:5000',
+            'review' => 'nullable|string|max:1000',
         ]);
 
         if ($validator->fails()) {
@@ -65,9 +64,6 @@ class ReviewController extends BaseController
         return $this->sendResponse($review->load(['reviewer', 'service', 'reviewedProvider']), 'Review submitted successfully.');
     }
 
-    /**
-     * Get all reviews written by the authenticated customer
-     */
     public function index(Request $request): JsonResponse
     {
         $provider = auth()->user();
@@ -99,88 +95,4 @@ class ReviewController extends BaseController
             ],
         ], 'Reviews retrieved successfully.');
     }
-
-    /**
-     * Get a single review by ID
-     */
-    public function show($id): JsonResponse
-    {
-        $customer = auth()->user();
-        
-        $review = Review::with(['service', 'reviewedProvider', 'booking'])
-            ->where('sender_id', $customer->id)
-            ->find($id);
-
-        if (!$review) {
-            return $this->sendError('Review not found.', 404);
-        }
-
-        return $this->sendResponse($review, 'Review retrieved successfully.');
-    }
-
-    /**
-     * Update a review (only if status is pending)
-     */
-    public function update(Request $request, $id): JsonResponse
-    {
-        $validator = Validator::make($request->all(), [
-            'rating' => 'sometimes|required|integer|min:1|max:5',
-            'review' => 'sometimes|nullable|string|max:1000',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->sendError($validator->errors()->first(), 422);
-        }
-
-        $customer = auth()->user();
-        
-        $review = Review::where('sender_id', $customer->id)
-            ->find($id);
-
-        if (!$review) {
-            return $this->sendError('Review not found.', 404);
-        }
-
-        // Only allow updates if review is pending
-        if ($review->status !== 'pending') {
-            return $this->sendError('You can only update pending reviews.', 400);
-        }
-
-        $updateData = [];
-        if ($request->has('rating')) {
-            $updateData['rating'] = $request->rating;
-        }
-        if ($request->has('review')) {
-            $updateData['review'] = $request->review;
-        }
-
-        $review->update($updateData);
-
-        return $this->sendResponse($review->load(['reviewer', 'service', 'reviewedProvider']), 'Review updated successfully.');
-    }
-
-    /**
-     * Delete a review (only if status is pending)
-     */
-    public function destroy($id): JsonResponse
-    {
-        $customer = auth()->user();
-        
-        $review = Review::where('sender_id', $customer->id)
-            ->find($id);
-
-        if (!$review) {
-            return $this->sendError('Review not found.', 404);
-        }
-
-        // Only allow deletion if review is pending
-        if ($review->status !== 'pending') {
-            return $this->sendError('You can only delete pending reviews.', 400);
-        }
-
-        $review->delete();
-
-        return $this->sendResponse([], 'Review deleted successfully.');
-    }
 }
-

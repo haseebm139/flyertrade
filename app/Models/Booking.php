@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 class Booking extends Model
 {
     protected $fillable = [
@@ -24,6 +25,7 @@ class Booking extends Model
     public function provider(): BelongsTo { return $this->belongsTo(User::class,'provider_id'); }
     public function service(): BelongsTo { return $this->belongsTo(Service::class); }
     public function providerService(): BelongsTo { return $this->belongsTo(ProviderService::class); }
+    public function review(): HasOne { return $this->hasOne(Review::class); }
 
     public function getWorkingHoursAttribute(): float
     {

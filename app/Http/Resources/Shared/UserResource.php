@@ -5,6 +5,7 @@ namespace App\Http\Resources\Shared;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\Provider\ProviderProfileResource;
+use App\Http\Resources\Customer\ReviewResource;
 class UserResource extends JsonResource
 {
     /**
@@ -41,7 +42,12 @@ class UserResource extends JsonResource
             'is_booking_notification'           => $this->is_booking_notification,
             'is_promo_option_notification'           => $this->is_promo_option_notification,
             'profile'  => new ProviderProfileResource($this->whenLoaded('providerProfile')) ,
-            'is_bookmarked' => $this->is_bookmarked ?? false
+            'is_bookmarked' => $this->is_bookmarked ?? false,
+            'overall_rating' => $this->overall_rating ?? 0,
+            'total_bookings' => $this->total_bookings ?? 0,
+            'services_offered' => $this->services_offered ?? 0,
+            'total_reviews' => $this->total_reviews ?? 0,
+            'reviews' => isset($this->reviews) && $this->reviews ? ReviewResource::collection($this->reviews) : [],
         ];
     }
 }

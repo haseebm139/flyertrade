@@ -8,9 +8,13 @@ use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\ConversationsController;
 use App\Http\Controllers\Api\MessagesController;
 use App\Http\Controllers\Api\OffersController;
+use App\Http\Controllers\Api\ReviewsController;
 
 
 Route::post('stripe/webhook', [StripeWebhookController::class, 'handle']);
+
+// Public reviews endpoint (no authentication required)
+Route::get('providers/{providerId}/reviews', [ReviewsController::class, 'getProviderReviews']);
 
 Route::prefix('auth')->controller(AuthController::class)->group(function () {
         Route::post('register','register');
@@ -34,6 +38,8 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
         Route::controller(HomeController::class)->group(function () {
             Route::get('/services', 'services');
         });
+
+         
     });
 
     // Chat & Offers API
@@ -51,7 +57,12 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
         Route::post('/offers/{offerId}/respond', [OffersController::class, 'respond']);
         Route::post('/offers/{offerId}/finalize', [OffersController::class, 'finalize']);
     });
-
+Route::middleware('auth:sanctum')->group(function () {
+         
+    Route::controller(ReviewsController::class)->prefix('reviews')->group(function () {
+        Route::get('/', 'index');
+    });
+});
 // require __DIR__ .'/auth.php';
 require __DIR__.'/api_customer.php';
 require __DIR__.'/api_provider.php';
