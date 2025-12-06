@@ -8,7 +8,7 @@
                 </span> Export CSV
             </button>
             <button class="add-user-btn" wire:click="addRole">
-                + Add Role
+                <i class="fa-solid fa-plus mr-3"></i> Add Role
             </button>
         </div>
         <div class="toolbar-right">
@@ -111,7 +111,7 @@
         .modal_heaader{
             display: flex;
             position: relative;
-            border-bottom: 1.50px solid #f1f1f1;
+            border-bottom: 0.078vw solid #f1f1f1;
             margin-bottom: 1.2vw;
 
         }
@@ -122,15 +122,15 @@
          }
          .filter_modal_reset{
             border: 1px solid #f1f1f1;
-            border-radius: 10px;
-            padding: 12px 24px;
+            border-radius: 0.521vw;
+            padding: 0.625vw 1.25vw;
          }
          .date_field_wraper{
             position: relative;
          }
          .date-input {
             position: relative;
-            padding-right: 35px; /* space for icon */
+            padding-right: 1.667vw; /* space for icon */
             font-family: Clash Display;
             color:#555;
             font-style: Medium;
@@ -150,8 +150,8 @@
             .date-input {
             background-image: url('data:image/svg+xml;utf8,<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.66406 1.66602V4.16602" stroke="%23717171" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.3359 1.66602V4.16602" stroke="%23555555" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M2.91406 7.57422H17.0807" stroke="%23555555" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M17.5 7.08268V14.166C17.5 16.666 16.25 18.3327 13.3333 18.3327H6.66667C3.75 18.3327 2.5 16.666 2.5 14.166V7.08268C2.5 4.58268 3.75 2.91602 6.66667 2.91602H13.3333C16.25 2.91602 17.5 4.58268 17.5 7.08268Z" stroke="%23555555" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.99803 11.4167H10.0055" stroke="%23555555" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.91209 11.4167H6.91957" stroke="%23555555" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.91209 13.9167H6.91957" stroke="%23555555" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>');
             background-repeat: no-repeat;
-            background-position: right 10px center;
-            background-size: 20px;
+            background-position: right 0.521vw center;
+            background-size: 1.042vw;
             }
 
     </style>
@@ -198,25 +198,25 @@
         .users-info {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 0.417vw;
         }
 
         .user-avatar {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 0.417vw;
         }
 
         .avatar-small {
-            width: 32px;
-            height: 32px;
+            width: 1.667vw;
+            height: 1.667vw;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid #e0e0e0;
+            border: 0.104vw solid #e0e0e0;
         }
 
         .users-count {
-            font-size: 14px;
+            font-size: 0.729vw;
             color: #666;
         }
     </style>

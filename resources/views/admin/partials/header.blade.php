@@ -18,23 +18,31 @@
 </style>
     <style>
         .filter_active_btna___{
-border: 0.052vw solid  rgba(0, 78, 66, 0.3);
-border-radius: 0.521vw;
-padding: 0.625vw 1.25vw;
-background:  rgba(0, 78, 66, 0.3);
-display: none;
-gap:0.521vw;
-align-items: center;
+            border: 0.052vw solid  rgba(0, 78, 66, 0.3);
+            border-radius: 0.521vw;
+            padding: 0.625vw 1.25vw;
+            background:  rgba(0, 78, 66, 0.3);
+            display: none;
+            gap:0.521vw;
+            align-items: center;
 
 
-font-family:"Clash Display", sans-serif;
-font-weight: 500;
-font-size: 0.833vw;
-line-height: 150%;
-text-align: center;
-color: #555;
+            font-family:"Clash Display", sans-serif;
+            font-weight: 500;
+            font-size: 0.833vw;
+            line-height: 150%;
+            text-align: center;
+            color: #555;
 
-cursor:pointer;
+            cursor:pointer;
+        }
+        #profilePopup svg,
+        #notifPopup_____ svg,
+        #providerModal svg,
+        .modal-content svg
+        {
+            width: 0.625vw;
+            height: 0.625vw;
         }
     </style>
 <div class="top-row">
@@ -60,8 +68,9 @@ cursor:pointer;
 
                     <span class="popup-close" id="close_notify_popop"
                         style="cursor: pointer; display: flex; align-items: center;">
-                        <img src="{{ asset('assets/images/icons/iconoir_cancel.svg') }}" alt=""
-                            style="width: 1.2vw; height: auto; transition: transform 0.2s ease;">
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75" stroke="#717171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
                     </span>
                 </div>
 
@@ -119,7 +128,9 @@ cursor:pointer;
                             style="margin-right:10px;cursor:pointer"></i> 3 New Providers Awaiting Document
                         Verification.</h6>
                     <button class="provider-modal-close" id="provide_modal_close" data-close="providerModal">
-                        <img src="{{ asset('assets/images/icons/iconoir_cancel.svg') }}" alt="Close">
+                       <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75" stroke="#717171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
                     </button>
                 </div>
 
@@ -172,8 +183,11 @@ cursor:pointer;
         <div class="popup" id="profilePopup"
             style="display: none; position: absolute; top: 100%; right: 0; background: white; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); z-index: 9999999; min-width: 200px;">
             <div class="popup-header">
-                <span class="popup-close" data-close="profilePopup"><img
-                        src="{{ asset('assets/images/icons/iconoir_cancel.svg') }}" alt=""></span>
+                <span class="popup-close" data-close="profilePopup">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75" stroke="#717171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                    </span>
             </div>
             <div class="profile-card">
                 <img src="{{ asset('assets/images/icons/person.svg') }}" alt="User">

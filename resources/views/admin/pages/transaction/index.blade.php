@@ -34,7 +34,7 @@
         <div class="toolbar-right">
             <input type="text" class="search-user" placeholder="Search user">
             <button class="filter-btn" id="openFilterModal"> Filter&nbsp;&nbsp;<span class="download-icon"><img
-                        src="{{ asset('assets/images/icons/button-icon.svg') }}" alt=""></span></button>
+                        src="{{ asset('assets/images/icons/button-icon.svg') }}" class="btn-icons" alt=""></span></button>
                            <a href="#" class="filter_active_btna___">
                             <span>Active users</span>
                             <i class="fa-solid fa-xmark"></i>
