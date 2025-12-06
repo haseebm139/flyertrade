@@ -984,7 +984,7 @@ table.dataTable thead th {
     padding: 0.625vw 0.9375vw;
     /* 1rem 1.5rem */
     background-color: #fff;
-    min-height: 19.531vw;
+    min-height: 18.5vw;
 
 }
 
@@ -1101,7 +1101,7 @@ table.dataTable thead th {
     /* 10px */
     width: 25vw;
     background-color: #fff;
-    min-height: 375px;
+        min-height: 18.5vw;
 
 }
 
