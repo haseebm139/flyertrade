@@ -56,6 +56,8 @@
                                     <span class="more">+{{ $role->users_count - 1 }} users</span>
                                 </div>
                             @else
+                            <img src="{{  asset('assets/images/icons/person-one.svg') }}"
+                                        alt="User" class="avatar-small">
                                 <span class="users-count more">{{ $role->users_count }} users</span>
                             @endif
                         </div>
