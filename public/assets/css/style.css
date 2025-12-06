@@ -337,6 +337,8 @@ img.btn-icons {
     cursor: pointer;
     margin-top: 1.25vw;
     font-weight: 600;
+        font-size: 0.8vw;
+
 }
 
 .profile-arrows {
@@ -1905,7 +1907,7 @@ small.time {
 }
 
 .more {
-    color: #777;
+    color: #717171;
     font-size: 0.825vw;
     font-weight: 500;
     white-space: nowrap;

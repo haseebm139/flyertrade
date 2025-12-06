@@ -16,7 +16,7 @@
             <button class="filter-btn" id="openFilterModal" wire:click="openFilterModal"> <span
                     class="download-icon">
                     Filter
-                    <img  class="btn-icons" src="{{ asset('assets/images/icons/button-icon.svg') }} "
+                    <img  class="btn-icons"  src="{{ asset('assets/images/icons/button-icon.svg') }} "
                         alt=""></span></button>
                            <a href="#" class="filter_active_btna___">
                             <span>Active users</span>

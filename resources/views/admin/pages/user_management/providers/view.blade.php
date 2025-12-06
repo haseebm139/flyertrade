@@ -729,7 +729,9 @@
 <!-- Add User Modal -->
 <div id="addUserModal" class="modal">
     <div class="modal-content add-user-modal">
-        <span class="close-modal" id="closeAddUserModal">&times;</span>
+        <span class="close-modal" id="closeAddUserModal"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75" stroke="#717171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg></span>
         <h3>Edit User</h3>
         <form>
             <label>Name</label>
