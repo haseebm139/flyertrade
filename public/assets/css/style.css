@@ -984,7 +984,7 @@ table.dataTable thead th {
     padding: 0.625vw 0.9375vw;
     /* 1rem 1.5rem */
     background-color: #fff;
-    min-height: 18.5vw;
+    min-height: 19.5vw;
 
 }
 
@@ -1101,15 +1101,15 @@ table.dataTable thead th {
     /* 10px */
     width: 25vw;
     background-color: #fff;
-        min-height: 18.5vw;
-
+        min-height: 19.5vw;
+    padding:1vw;
 }
 
 .recent-dispute-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.925vw 0.9375vw;
+    padding-bottom: 0.925vw;
     /* 1rem 1.5rem */
 }
 

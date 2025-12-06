@@ -4,7 +4,12 @@
 @section('content')
 
 
+<style>
+    table tr:nth-child(3) td {
+    border: 0px solid #000;
+}
 
+</style>
     <!-- two-column area: left (finance + table) and right (recent activities) -->
     <div class="row g-3">
         <!-- MAIN LEFT COLUMN (8/12) -->
