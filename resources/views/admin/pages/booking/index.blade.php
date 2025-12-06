@@ -14,7 +14,7 @@
 
     <!-- Back Button (Hidden by default) -->
 
-    <div class="container">
+    <div class="">
         <div class="back-button-container" id="backButtonContainer" style="display: none;">
             <button class="back-button" onclick="showAllBookings()">
                 <div class="back-icon">
