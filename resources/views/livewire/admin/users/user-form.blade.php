@@ -51,12 +51,12 @@
                         <x-custom-select
                             name="user_type"
                             id="userType"
-                            :options="[
-                                ['value' => '', 'label' => 'Select user type'],
-                                ['value' => 'customer', 'label' => 'Customer'],
-                                ['value' => 'provider', 'label' => 'Provider'],
-                                ['value' => 'admin', 'label' => 'Admin']
-                            ]"
+                            :options="array_merge(
+                                [['value' => '', 'label' => 'Select user type']],
+                                $availableRoles->map(function($role) {
+                                    return ['value' => $role->name, 'label' => ucfirst($role->name)];
+                                })->toArray()
+                            )"
                             placeholder="Select user type"
                             wireModel="user_type"
                             class="form-select"

@@ -34,11 +34,12 @@
         <div class="toolbar-right">
             <input type="text" class="search-user" placeholder="Search user">
             <button class="filter-btn" id="openFilterModal"> Filter&nbsp;&nbsp;<span class="download-icon"><img
-                        src="{{ asset('assets/images/icons/button-icon.svg') }}" class="btn-icons" alt=""></span></button>
-                           <a href="#" class="filter_active_btna___">
-                            <span>Active users</span>
-                            <i class="fa-solid fa-xmark"></i>
-                    </a>
+                        src="{{ asset('assets/images/icons/button-icon.svg') }}" class="btn-icons"
+                        alt=""></span></button>
+            <a href="#" class="filter_active_btna___">
+                <span>Active users</span>
+                <i class="fa-solid fa-xmark"></i>
+            </a>
         </div>
     </div>
 
@@ -78,7 +79,7 @@
                 <td><input type="checkbox"></td>
                 <td style="font-weight:500;">12345</td>
                 <td style="font-weight:500;">Payout</td>
-                <td><span class="date" style="font-weight:500;">Jan,2025-01-31</span>
+                <td><span class="date" style="font-weight:500;">31 Jan, 2025</span>
                     <br>
                     <small class="time m-0">12:00pm</small>
 
@@ -109,7 +110,8 @@
                                 View
                                 details</a>
                             <a href="#" class="initiateBtn showDeleteModal___" data-id="1" data-user="Mike Brown">
-                                <img style="height:0.7vw;width:0.7vw" src="{{ asset('assets/images/icons/init.svg') }}" alt=""> Initiate payout
+                                <img style="height:0.7vw;width:0.7vw" src="{{ asset('assets/images/icons/init.svg') }}"
+                                    alt=""> Initiate payout
                             </a>
 
                         </div>
@@ -137,7 +139,7 @@
                 <td style="font-weight:500;"><input type="checkbox"></td>
                 <td style="font-weight:500;">12345</td>
                 <td style="font-weight:500;">Booking Payment</td>
-                <td><span class="date" style="font-weight:500;">Jan,2025-01-31</span>
+                <td><span class="date" style="font-weight:500;">31 Jan, 2025</span>
                     <br>
                     <small class="time m-0">12:00pm</small>
 
@@ -169,7 +171,8 @@
                                 details</a>
                             <a href="#" class="initiateBtn showDeleteModal___" data-id="2"
                                 data-user="Mike Brown">
-                                <img style="height:0.7vw;width:0.7vw" src="{{ asset('assets/images/icons/init.svg') }}" alt=""> Initiate payout
+                                <img style="height:0.7vw;width:0.7vw" src="{{ asset('assets/images/icons/init.svg') }}"
+                                    alt=""> Initiate payout
                             </a>
 
                         </div>
@@ -198,7 +201,7 @@
                 <td><input type="checkbox"></td>
                 <td style="font-weight:500;">12345</td>
                 <td style="font-weight:500;">Service Charge</td>
-                <td><span class="date" style="font-weight:500;">Jan,2025-01-31</span>
+                <td><span class="date" style="font-weight:500;">31 Jan, 2025</span>
                     <br>
                     <small class="time m-0">12:00pm</small>
 
@@ -230,7 +233,8 @@
                                 details</a>
                             <a href="#" class="initiateBtn showDeleteModal___" data-id="3"
                                 data-user="Mike Brown">
-                                <img style="height:0.7vw;width:0.7vw" src="{{ asset('assets/images/icons/init.svg') }}" alt=""> Initiate payout
+                                <img style="height:0.7vw;width:0.7vw" src="{{ asset('assets/images/icons/init.svg') }}"
+                                    alt=""> Initiate payout
                             </a>
 
                         </div>
@@ -260,7 +264,7 @@
                 <td><input type="checkbox"></td>
                 <td style="font-weight:500;">12345</td>
                 <td style="font-weight:500;">Refund</td>
-                <td><span class="date" style="font-weight:500;">Jan,2025-01-31</span>
+                <td><span class="date" style="font-weight:500;">31 Jan, 2025</span>
                     <br>
                     <small class="time m-0">12:00pm</small>
 
@@ -292,7 +296,8 @@
                                 details</a>
                             <a href="#" class="initiateBtn showDeleteModal___" data-id="4"
                                 data-user="Mike Brown">
-                                <img style="height:0.7vw;width:0.7vw" src="{{ asset('assets/images/icons/init.svg') }}" alt=""> Initiate payout
+                                <img style="height:0.7vw;width:0.7vw" src="{{ asset('assets/images/icons/init.svg') }}"
+                                    alt=""> Initiate payout
                             </a>
 
                         </div>
@@ -320,7 +325,7 @@
                 <td><input type="checkbox"></td>
                 <td style="font-weight:500;">12345</td>
                 <td style="font-weight:500;">Service Charge</td>
-                <td><span class="date" style="font-weight:500;">Jan,2025-01-31</span>
+                <td><span class="date" style="font-weight:500;">31 Jan, 2025</span>
                     <br>
                     <small class="time m-0">12:00pm</small>
 
@@ -352,7 +357,8 @@
                                 details</a>
                             <a href="#" class="initiateBtn showDeleteModal___" data-id="5"
                                 data-user="Mike Brown">
-                                <img style="height:0.7vw;width:0.7vw" src="{{ asset('assets/images/icons/init.svg') }}" alt=""> Initiate payout
+                                <img style="height:0.7vw;width:0.7vw" src="{{ asset('assets/images/icons/init.svg') }}"
+                                    alt=""> Initiate payout
                             </a>
 
                         </div>
@@ -380,7 +386,7 @@
                 <td><input type="checkbox"></td>
                 <td style="font-weight:500;">12345</td>
                 <td style="font-weight:500;">Service Charge</td>
-                <td><span class="date" style="font-weight:500;">Jan,2025-01-31</span>
+                <td><span class="date" style="font-weight:500;">31 Jan, 2025</span>
                     <br>
                     <small class="time m-0">12:00pm</small>
 
@@ -412,7 +418,8 @@
                                 details</a>
                             <a href="#" class="initiateBtn showDeleteModal___" data-id="6"
                                 data-user="Mike Brown">
-                                <img style="height:0.7vw;width:0.7vw" src="{{ asset('assets/images/icons/init.svg') }}" alt=""> Initiate payout
+                                <img style="height:0.7vw;width:0.7vw" src="{{ asset('assets/images/icons/init.svg') }}"
+                                    alt=""> Initiate payout
                             </a>
 
                         </div>
@@ -440,7 +447,7 @@
                 <td><input type="checkbox"></td>
                 <td style="font-weight:500;">12345</td>
                 <td style="font-weight:500;">Payout</td>
-                <td><span class="date" style="font-weight:500;">Jan,2025-01-31</span>
+                <td><span class="date" style="font-weight:500;">31 Jan, 2025</span>
                     <br>
                     <small class="time m-0">12:00pm</small>
 
@@ -472,7 +479,8 @@
                                 details</a>
                             <a href="#" class="initiateBtn showDeleteModal___" data-id="7"
                                 data-user="Mike Brown">
-                                <img style="height:0.7vw;width:0.7vw" src="{{ asset('assets/images/icons/init.svg') }}" alt=""> Initiate payout
+                                <img style="height:0.7vw;width:0.7vw" src="{{ asset('assets/images/icons/init.svg') }}"
+                                    alt=""> Initiate payout
                             </a>
 
                         </div>

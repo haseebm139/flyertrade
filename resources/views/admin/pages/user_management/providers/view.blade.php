@@ -186,7 +186,7 @@
 
                 <td>12345</td>
 
-                <td><span class="date">Jan,2025-01-31</span>
+                <td><span class="date">31 Jan, 2025</span>
                     <br>
                     <small class="time">12:00pm</small>
 
@@ -222,7 +222,7 @@
 
                 <td>12345</td>
 
-                <td><span class="date">Jan,2025-01-31</span>
+                <td><span class="date">31 Jan, 2025</span>
                     <br>
                     <small class="time">12:00pm</small>
 
@@ -258,7 +258,7 @@
 
                 <td>12345</td>
 
-                <td><span class="date">Jan,2025-01-31</span>
+                <td><span class="date">31 Jan, 2025</span>
                     <br>
                     <small class="time">12:00pm</small>
 
@@ -294,7 +294,7 @@
 
                 <td>12345</td>
 
-                <td><span class="date">Jan,2025-01-31</span>
+                <td><span class="date">31 Jan, 2025</span>
                     <br>
                     <small class="time">12:00pm</small>
 

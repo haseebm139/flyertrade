@@ -196,12 +196,12 @@
                 <label  style='color:#717171;font-weight:500;'>Status</label>
                 <x-custom-select
                     name="roleFilter"
-                    :options="[
-                        ['value' => '', 'label' => 'All Types'],
-                        ['value' => 'admin', 'label' => 'Admin'],
-                        ['value' => 'customer', 'label' => 'Customer'],
-                        ['value' => 'provider', 'label' => 'Provider']
-                    ]"
+                    :options="array_merge(
+                        [['value' => '', 'label' => 'All Types']],
+                        $roles->map(function($role) {
+                            return ['value' => $role->name, 'label' => ucfirst($role->name)];
+                        })->toArray()
+                    )"
                     placeholder="All Types"
                     wireModel="roleFilter"
                     class="form-input mt-2"
@@ -240,12 +240,12 @@
                         <x-custom-select
                             name="user_type"
                             id="userType"
-                            :options="[
-                                ['value' => '', 'label' => 'Select role'],
-                                ['value' => 'customer', 'label' => 'Customer'],
-                                ['value' => 'provider', 'label' => 'Provider'],
-                                ['value' => 'admin', 'label' => 'Admin']
-                            ]"
+                            :options="array_merge(
+                                [['value' => '', 'label' => 'Select role']],
+                                $roles->map(function($role) {
+                                    return ['value' => $role->name, 'label' => ucfirst($role->name)];
+                                })->toArray()
+                            )"
                             placeholder="Select role"
                             wireModel="user_type"
                             class="form-select"

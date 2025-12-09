@@ -127,7 +127,7 @@ class UserShow extends Component
                 'editUser.state' => 'nullable|string|max:100',
                 'editUser.city' => 'nullable|string|max:100',
                 'editUser.country' => 'nullable|string|max:100',
-                'editUser.user_type' => 'required|string|in:customer,provider,admin',
+                'editUser.user_type' => 'required|exists:roles,name',
             ]);
 
             $user = User::findOrFail($this->userId);

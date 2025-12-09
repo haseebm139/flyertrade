@@ -121,9 +121,10 @@
 
                     <label>Role</label>
                     <select class="form-input" wire:model="editUser.user_type">
-                        <option value="customer">Customer</option>
-                        <option value="provider">Provider</option>
-                        <option value="admin">Admin</option>
+                        <option value="">Select role</option>
+                        @foreach($roles as $role)
+                            <option value="{{ $role->name }}">{{ ucfirst($role->name) }}</option>
+                        @endforeach
                     </select>
                     @error('editUser.user_type')
                         <span class="error-message">{{ $message }}</span>

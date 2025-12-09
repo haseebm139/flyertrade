@@ -262,7 +262,7 @@ class UsersTable extends Component
             'email' => 'required|email|max:255|unique:users,email',
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:500',
-            'user_type' => 'required|in:admin,customer,provider',
+            'user_type' => 'required|exists:roles,name',
         ]);
 
         try {

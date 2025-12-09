@@ -1,5 +1,6 @@
 <div>
-    {{-- @if ($show)
+    @if ($show)
+    
         <div class="modal " style="display: flex;" id="userModal" tabindex="-1" aria-labelledby="userModalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered jusoio">
@@ -34,6 +35,6 @@
                 </div>
             </div>
         </div>
-    @endif --}}
+    @endif
 
 </div>

@@ -25,7 +25,7 @@ class UserForm extends Component
         'email' => 'required|email|max:255|unique:users,email',
         'phone' => 'required|string|max:20',
         'address' => 'required|string|max:500',
-        'user_type' => 'required|in:admin,customer,provider',
+        'user_type' => 'required|exists:roles,name',
         'roles' => 'array',
     ];
 

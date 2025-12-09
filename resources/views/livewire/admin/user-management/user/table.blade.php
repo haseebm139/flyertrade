@@ -7,20 +7,20 @@
             <tr>
                 <th><input type="checkbox" wire:model.live="selectAll"></th>
                 <th class="sortable" data-column="0">Customer ID <img src="{{ asset('assets/images/icons/sort.svg') }}"
-                        class="sort-icon" wire:click="sortBy('id')" {{ $sortField === 'id' ? $sortDirection : '' }}>
+                        class="sort-icon" wire:click="sortBy('id')" {{ $sortField === 'id' ? $sortDirection : '-' }}>
                 </th>
                 <th class="sortable" data-column="1">Customer Name <img src="{{ asset('assets/images/icons/sort.svg') }}"
-                        class="sort-icon" wire:click="sortBy('name')" {{ $sortField === 'name' ? $sortDirection : '' }}>
+                        class="sort-icon" wire:click="sortBy('name')" {{ $sortField === 'name' ? $sortDirection : '-' }}>
                 </th>
                 <th class="sortable" data-column="2">Home Address <img src="{{ asset('assets/images/icons/sort.svg') }}"
                         class="sort-icon" wire:click="sortBy('address')"
-                        {{ $sortField === 'address' ? $sortDirection : '' }}></th>
+                        {{ $sortField === 'address' ? $sortDirection : '-' }}></th>
                 <th class="sortable" data-column="3">Phone Number <img src="{{ asset('assets/images/icons/sort.svg') }}"
                         class="sort-icon" wire:click="sortBy('phone')"
-                        {{ $sortField === 'phone' ? $sortDirection : '' }}></th>
+                        {{ $sortField === 'phone' ? $sortDirection : '-' }}></th>
                 <th class="sortable" data-column="4">Status <img src="{{ asset('assets/images/icons/sort.svg') }}"
                         class="sort-icon" wire:click="sortBy('status')"
-                        {{ $sortField === 'status' ? $sortDirection : '' }}></th>
+                        {{ $sortField === 'status' ? $sortDirection : '-' }}></th>
 
                 <th></th>
             </tr>
@@ -35,14 +35,14 @@
                             <img src="{{ asset($item->avatar ?? 'assets/images/icons/person-one.svg') }}"
                                 alt="avatar">
                             <div>
-                                <p class="user-name">{{ $item->name ?? '' }}</p>
-                                <p class="user-email">{{ $item->email ?? '' }}</p>
+                                <p class="user-name">{{ $item->name ?? '-' }}</p>
+                                <p class="user-email">{{ $item->email ?? '-' }}</p>
                             </div>
                         </div>
                     </td>
-                    <td>{{ $item->address ?? '', ' , ', $item->city ?? '', ' , ', $item->state ?? '', ' , ', $item->country ?? '' }}
+                    <td>{{ $item->address ?? '-', ' , ', $item->city ?? '-', ' , ', $item->state ?? '-', ' , ', $item->country ?? '-' }}
                     </td>
-                    <td>{{ $item->phone ?? '' }}</td>
+                    <td>{{ $item->phone ?? '-' }}</td>
                     <td><span
                             class="status {{ $item->status == 'active' ? 'active' : 'inactive' }}">{{ ucfirst($item->status) ?? '' }}</span>
                     </td>

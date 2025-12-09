@@ -8,26 +8,26 @@
             <tr>
                 <th><input type="checkbox" wire:model.live="selectAll"></th>
                 <th class="sortable" data-column="0">User ID <img src="{{ asset('assets/images/icons/sort.svg') }}"
-                        wire:click="sortBy('id')" {{ $sortField === 'id' ? $sortDirection : '' }} class="sort-icon"></th>
+                        wire:click="sortBy('id')" {{ $sortField === 'id' ? $sortDirection : '-' }} class="sort-icon"></th>
                 <th class="sortable" data-column="1">Provider name <img src="{{ asset('assets/images/icons/sort.svg') }}"
-                        wire:click="sortBy('name')" {{ $sortField === 'name' ? $sortDirection : '' }} class="sort-icon">
+                        wire:click="sortBy('name')" {{ $sortField === 'name' ? $sortDirection : '-' }} class="sort-icon">
                 </th>
                 <th class="sortable" data-column="2">Home address <img src="{{ asset('assets/images/icons/sort.svg') }}"
-                        wire:click="sortBy('address')" {{ $sortField === 'address' ? $sortDirection : '' }}
+                        wire:click="sortBy('address')" {{ $sortField === 'address' ? $sortDirection : '-' }}
                         class="sort-icon"></th>
                 <th class="sortable" data-column="3">Phone number <img src="{{ asset('assets/images/icons/sort.svg') }}"
-                        wire:click="sortBy('phone')" {{ $sortField === 'phone' ? $sortDirection : '' }}
+                        wire:click="sortBy('phone')" {{ $sortField === 'phone' ? $sortDirection : '-' }}
                         class="sort-icon">
                 </th>
                 <th class="sortable" data-column="4">Service category <img
                         src="{{ asset('assets/images/icons/sort.svg') }}" wire:click="sortBy('is_verified')"
-                        {{ $sortField === 'is_verified' ? $sortDirection : '' }} class="sort-icon"></th>
+                        {{ $sortField === 'is_verified' ? $sortDirection : '-' }} class="sort-icon"></th>
                 <th class="sortable" data-column="5">Verification status <img
                         src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"
-                        wire:click="sortBy('is_verified')" {{ $sortField === 'is_verified' ? $sortDirection : '' }}>
+                        wire:click="sortBy('is_verified')" {{ $sortField === 'is_verified' ? $sortDirection : '-' }}>
                 </th>
                 <th class="sortable" data-column="6"> Status <img src="{{ asset('assets/images/icons/sort.svg') }}"
-                        wire:click="sortBy('status')" {{ $sortField === 'status' ? $sortDirection : '' }}
+                        wire:click="sortBy('status')" {{ $sortField === 'status' ? $sortDirection : '-' }}
                         class="sort-icon"></th>
                 <th></th>
             </tr>
@@ -42,15 +42,15 @@
                             <img src="{{ asset($item->avatar ?? 'assets/images/icons/person-one.svg') }}"
                                 alt="avatar">
                             <div>
-                                <p class="user-name">{{ $item->name ?? '' }}</p>
-                                <p class="user-email">{{ $item->email ?? '' }}</p>
+                                <p class="user-name">{{ $item->name ?? '-' }}</p>
+                                <p class="user-email">{{ $item->email ?? '-' }}</p>
                             </div>
                         </div>
                     </td>
 
-                    <td>{{ $item->address ?? '', ' , ', $item->city ?? '', ' , ', $item->state ?? '', ' , ', $item->country ?? '' }}
+                    <td>{{ $item->address ?? '-', ' , ', $item->city ?? '-', ' , ', $item->state ?? '-', ' , ', $item->country ?? '-' }}
                     </td>
-                    <td>{{ $item->phone ?? '' }}</td>
+                    <td>{{ $item->phone ?? '-' }}</td>
                     <td>Plumbing <span class="more"> +2 more</span></td>
                     <td><span
                             class="status {{ $item->is_verified == 'verified'
