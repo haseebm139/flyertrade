@@ -396,7 +396,7 @@
             </div>
         </div>
         <div class="service-header-icons">
-            <h4>Service details</h4>
+            <h4 style="font-size:1.2vw;">Service details</h4>
             <h5> <img src="{{ asset('assets/images/icons/download.svg') }}" alt="Download" class="download-icon"> <small
                     style="color:grey;">Download </small></h5>
         </div>

@@ -8,6 +8,9 @@
     table tr:nth-child(3) td {
     border: 0px solid #000;
 }
+.tabs-recently-added-users .nav-link{
+    border: none;
+}
 
 </style>
     <!-- two-column area: left (finance + table) and right (recent activities) -->
@@ -125,11 +128,11 @@
                             <a class="dashboard-view-all" href="#" style="font-weight:400,color:#1b1b1b ,font-size:0.875vw" >View all</a>
                         </div>
                         <nav>
-                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                                <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab"
+                            <div class="nav nav-tabs tabs-recently-added-users" id="nav-tab" role="tablist">
+                                <button class="nav-link tab active" id="nav-home-tab" data-bs-toggle="tab"
                                     data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home"
                                     aria-selected="true">Service users</button>
-                                <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab"
+                                <button class="nav-link tab" id="nav-profile-tab" data-bs-toggle="tab"
                                     data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile"
                                     aria-selected="false">Service providers</button>
                             </div>

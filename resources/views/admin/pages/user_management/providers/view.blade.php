@@ -97,7 +97,7 @@
 </div>
 <!-- personal details -->
 <div id="details" class="tab-content active" style="border: 0.1vw solid #ddd;border-radius: 2vw;">
-    <h3 style="font-size:1.4vw;" class="profile-heading">Profile details</h3>
+    <h3 style="font-weight:500;font-size:1.4vw;color:#1b1b1b;" class="profile-heading">Profile details</h3>
     <div class="profile-details">
         <p><span>Name</span> Johnbosco Davies</p>
         <p><span>Email address</span> Johnboscodaviess@gmail.com</p>
@@ -462,11 +462,11 @@
 <!-- services end-->
 
 <!-- documents -->
-<div id="documents-verifications" class="tab-content" style="border:0.1vw solid #ddd;border-radius:1vw;padding:1vw;">
+<div id="documents-verifications" class="tab-content" style="border:0.1vw solid #ddd;border-radius:1vw;">
 
     <!-- Top toolbar -->
-    <div class="toolbar">
-        <h3 class="toolbar-title">Documents</h3>
+    <div class="toolbar" style="padding:2vw;">
+        <h3 class="toolbar-title" style="font-weight:500;font-size:1.4vw;color:#1b1b1b;">Documents</h3>
         <div class="toolbar-actions" hidden>
             <button class="btn btn-verified" style="font-weight:500" data-action="verified"><i class="fa-solid fa-trash-can"></i>&nbsp; Mark as verified</button>
             <button class="btn btn-declined"  style="font-weight:500" data-action="declined"><i class="fa-solid fa-xmark"></i>&nbsp; Mark as decline</button>
@@ -474,7 +474,7 @@
         </div>
     </div>
 
-    <div class="documents-list">
+    <div class="documents-list"  style="padding:0vw 2vw 2vw;">
         <div class="doc-row" data-id="1">
             <div class="d-flex align-items-center">
                 <label class="check-wrap check-wrap-checkbox">
@@ -484,14 +484,14 @@
                 <span class="doc-title">Valid Emirate ID card</span>
             </div>
 
-            <a href="#" class="doc-link" data-check-modal data-title="ID card"
+            <a href="#" class="doc-link" style="color:#004e42;" data-check-modal data-title="ID card"
                 data-src="{{ asset('assets/images/icons/id_sample.svg') }}">
                 View document
             </a>
 
-            <span class="badge badge-verified badge-pill actions-btn-verified" style="position:relative" data-block='1' data-badge>Verified &nbsp; <i class="fa-solid fa-chevron-down"></i> 
-                          <div class="actions-menu" id="actions-menu-verified-1" style="display: none;left:0px;right:unset;">
-                             <a href="#">Pend</a>
+            <span class="badge badge-verified badge-pill actions-btn-verified" style="position:relative;padding:0.677vw;" data-block='1' data-badge>Verified &nbsp; <i class="fa-solid fa-chevron-down"></i> 
+                          <div class="actions-menu" id="actions-menu-verified-1" style="display: none;left:0px;right:unset;top:2.5vw;min-width: 6.5vw;">
+                             <a href="#">Pending</a>
                                 <a href="#" >Decline</a>
                             </div>
                     </span>
@@ -506,13 +506,13 @@
                     <span class="doc-title">Valid Emirate ID card</span>
                 </div>
               
-                <a href="#" class="doc-link" data-check-modal data-title="ID card"
+                <a href="#" class="doc-link" style="color:#004e42;" data-check-modal data-title="ID card"
                     data-src="{{ asset('assets/images/icons/id_sample.svg') }}">
                     View document
                 </a>
-                     <span class="badge badge-verified badge-pill actions-btn-verified" style="position:relative" data-block='2' data-badge>Verified &nbsp; <i class="fa-solid fa-chevron-down"></i> 
-                          <div class="actions-menu" id="actions-menu-verified-2" style="display: none;left:0px;right:unset;">
-                             <a href="#">Pend</a>
+                     <span class="badge badge-verified badge-pill actions-btn-verified" style="position:relative;padding:0.677vw;" data-block='2' data-badge>Verified &nbsp; <i class="fa-solid fa-chevron-down"></i> 
+                          <div class="actions-menu" id="actions-menu-verified-2" style="display: none;left:0px;right:unset;top:2.5vw;min-width: 6.5vw;">
+                             <a href="#">Pending</a>
                                 <a href="#">Decline</a>
                             </div>
                     </span>
@@ -528,13 +528,13 @@
                     <span class="doc-title">Valid Emirate ID card</span>
                 </div>
               
-                <a href="#" class="doc-link" data-check-modal data-title="ID card"
+                <a href="#" style="color:#004e42;" class="doc-link" data-check-modal data-title="ID card"
                     data-src="{{ asset('assets/images/icons/id_sample.svg') }}">
                     View document
                 </a>
-         <span class="badge badge-verified badge-pill actions-btn-verified" style="position:relative" data-block='3' data-badge>Verified &nbsp; <i class="fa-solid fa-chevron-down"></i> 
-                          <div class="actions-menu" id="actions-menu-verified-3" style="display: none;left:0px;right:unset;">
-                             <a href="#">Pend</a>
+         <span class="badge badge-verified badge-pill actions-btn-verified"  style="position:relative;padding:0.677vw;" data-block='3' data-badge>Verified &nbsp; <i class="fa-solid fa-chevron-down"></i> 
+                          <div class="actions-menu" id="actions-menu-verified-3" style="display: none;left:0px;right:unset;top:2.5vw;min-width: 6.5vw;">
+                             <a href="#">Pending</a>
                                 <a href="#" >Decline</a>
                             </div>
                     </span>
@@ -549,13 +549,13 @@
                     <span class="doc-title">Valid Emirate ID card</span>
                 </div>
               
-                <a href="#" class="doc-link" data-check-modal data-title="ID card"
+                <a href="#" style="color:#004e42;" class="doc-link" data-check-modal data-title="ID card"
                     data-src="{{ asset('assets/images/icons/id_sample.svg') }}">
                     View document
                 </a>
-                <span class="badge badge-verified badge-pill actions-btn-verified" style="position:relative" data-block='4' data-badge>Verified &nbsp; <i class="fa-solid fa-chevron-down"></i> 
-                          <div class="actions-menu" id="actions-menu-verified-4" style="display: none;left:0px;right:unset;">
-                             <a href="#">Pend</a>
+                <span class="badge badge-verified badge-pill actions-btn-verified" style="position:relative;padding:0.677vw;" data-block='4' data-badge>Verified &nbsp; <i class="fa-solid fa-chevron-down"></i> 
+                          <div class="actions-menu" id="actions-menu-verified-4" style="display: none;left:0px;right:unset;top:2.5vw;min-width: 6.5vw;">
+                             <a href="#">Pending</a>
                                 <a href="#" class="showDeleteModal">Decline</a>
                             </div>
                     </span>
@@ -569,13 +569,13 @@
                     <span class="doc-title">Valid Emirate ID card</span>
                 </div>
               
-                <a href="#" class="doc-link" data-check-modal data-title="ID card"
+                <a href="#" style="color:#004e42;" class="doc-link" data-check-modal data-title="ID card"
                     data-src="{{ asset('assets/images/icons/id_sample.svg') }}">
                     View document
                 </a>
-               <span class="badge badge-verified badge-pill actions-btn-verified text-danger border-danger" style="position:relative;background:rgba(251, 55, 72, 0.1);" data-block='5' data-badge>Declined &nbsp; <i class="fa-solid fa-chevron-down"></i> 
-                          <div class="actions-menu" id="actions-menu-verified-5" style="display: none;left:0px;right:unset;">
-                                <a href="#">Pend</a>
+               <span class="badge badge-verified badge-pill actions-btn-verified text-danger border-danger" style="position:relative;background:rgba(251, 55, 72, 0.1);padding:0.677vw;" data-block='5' data-badge>Declined &nbsp; <i class="fa-solid fa-chevron-down"></i> 
+                          <div class="actions-menu" id="actions-menu-verified-5" style="display: none;left:0px;right:unset;top:2.5vw;min-width: 6.5vw;">
+                                <a href="#">Pending</a>
                                 <a href="#" >Verified</a>
                             </div>
                     </span>
@@ -587,13 +587,13 @@
 
 <!-- documents end -->
 
-<div id="charges-fees" class="tab-content" style="border:0.1vw solid #ddd;border-radius:1vw;padding:1vw;">
+<div id="charges-fees" class="tab-content" style="border:0.1vw solid #ddd;border-radius:1vw;">
 
-    <h3 style="font-size:1.4vw;margin:0 0 1vw;" class="profile-heading">
+    <h3 style="font-weight:500;font-size:1.4vw;color:#1b1b1b;" class="profile-heading">
         Charges and fees
     </h3>
 
-    <div class="charges-row">
+    <div class="charges-row" style="padding:0vw 2vw 2vw">
         <div class="charge-col">
             <label class="charge-label">Service fee</label>
             <input type="text" class="charge-input" placeholder="$10">
@@ -606,7 +606,71 @@
     </div>
 </div>
 
+<style>
+    .video-container {
+        position: relative;
+        width: 25%;
+       
+   
+    }
 
+    .custom-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(0, 0, 0, 0.5);
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+    }
+
+    .custom-btn {
+        width: 1.823vw;
+        height: 1.823vw;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    .custom-progress {
+        flex-grow: 1;
+        height: 0.313vw;
+        background: #fff;
+        cursor: pointer;
+    }
+
+    .custom-progress input {
+        width: 100%;
+        height: 100%;
+        -webkit-appearance: none;
+        appearance: none;
+        background: transparent;
+        cursor: pointer;
+            padding: 0px;
+    overflow: visible;
+    }
+
+    .custom-progress input::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 0.625vw;
+        height: 0.625vw;
+        background: #fff;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    .custom-progress input::-moz-range-thumb {
+        width: 0.625vw;
+        height: 0.625vw;
+        background: #fff;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+</style>
 
 
 <!-- Modal: id = check-modal -->
@@ -637,7 +701,9 @@
 
 <div id="service-details-modal" class="service-details-theme">
     <div class="modal-content">
-        <span class="close-btn" id="closeServiceDetails">&times;</span>
+        <span class="close-btn" id="closeServiceDetails" style="line-height: 1;"><svg style="width:0.625vw;height:0.625vw;" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75" stroke="#717171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg></span>
         <h3>Service details</h3>
 
         <label>Name</label>
@@ -652,7 +718,7 @@
             <div><label for="">Minimum price/hr</label><input type="text" value="$40" readonly></div>
         </div>
 
-        <h4>Photos</h4>
+        <h4 style="font-size:0.938vw">Photos</h4>
         <div class="photos">
             <img src="{{ asset('assets/images/icons/service_one.svg') }}" alt="">
             <img src="{{ asset('assets/images/icons/service_four.svg') }}" alt="">
@@ -660,10 +726,36 @@
             <img src="{{ asset('assets/images/icons/service_four.svg') }}" alt="">
         </div>
 
-        <h4>Videos</h4>
+        <h4  style="font-size:0.938vw;margin-top:0.9vw">Videos</h4>
         <div class="videos">
-            <video controls src="assets/videos/video1.mp4"></video>
-            <video controls src="assets/videos/video2.mp4"></video>
+         <div class="video-container">
+    <video class="custom-video" style="width: 100%;" >
+        <source src="{{ asset('assets/videos/video1.mp4') }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <div class="custom-controls">
+        <div class="custom-btn play-btn">▶</div>
+        <div class="custom-progress">
+            <input type="range" class="progress-bar" value="0" max="100">
+        </div>
+    </div>
+</div>
+
+<div class="video-container">
+    <video class="custom-video" style="width: 100%;" >
+        <source src="{{ asset('assets/videos/video1.mp4') }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <div class="custom-controls">
+        <div class="custom-btn play-btn">▶</div>
+        <div class="custom-progress">
+            <input type="range" class="progress-bar" value="0" max="100">
+        </div>
+    </div>
+</div>
+
         </div>
     </div>
 </div>
@@ -680,7 +772,7 @@
             </div>
         </div>
         <div class="service-header-icons">
-            <h4>Service details</h4>
+            <h4  style="font-size:1.2vw;">Service details</h4>
             <h5> <img src="{{ asset('assets/images/icons/download.svg') }}" alt="Download" class="download-icon"> <small
                     style="color:grey;">Download </small></h5>
         </div>
@@ -749,7 +841,37 @@
         </form>
     </div>
 </div>
+<script>
+    // Function to handle play/pause for dynamic videos
+    const videoElements = document.querySelectorAll('.custom-video');
+    videoElements.forEach((videoElement, index) => {
+        const playBtn = videoElement.closest('.video-container').querySelector('.play-btn');
+        const progressBar = videoElement.closest('.video-container').querySelector('.progress-bar');
+        
+        // Play / Pause button functionality
+        playBtn.addEventListener('click', () => {
+            if (videoElement.paused) {
+                videoElement.play();
+                playBtn.textContent = '⏸';  // Change to Pause symbol
+            } else {
+                videoElement.pause();
+                playBtn.textContent = '▶';  // Change to Play symbol
+            }
+        });
 
+        // Update progress bar as the video plays
+        videoElement.addEventListener('timeupdate', () => {
+            const progress = (videoElement.currentTime / videoElement.duration) * 100;
+            progressBar.value = progress;
+        });
+
+        // Seek functionality using the progress bar
+        progressBar.addEventListener('input', () => {
+            const seekTime = (progressBar.value / 100) * videoElement.duration;
+            videoElement.currentTime = seekTime;
+        });
+    });
+</script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const deleteModal = document.getElementById("globalDeleteModal");

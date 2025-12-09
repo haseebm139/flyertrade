@@ -827,7 +827,7 @@ table.dataTable thead th {
 
 .provider-modal-header h6 {
     position: absolute;
-
+font-size:0.833vw;
 
 }
 
@@ -2037,10 +2037,12 @@ img.logo-img {
     top: 0;
     left: 0;
     width: 100vw;
-
+    height: 100vh;
     justify-content: center;
     align-items: center;
     padding: 2vw;
+        background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(1px);
 }
 
 /* Modal box */
@@ -2727,9 +2729,16 @@ button.btn-close {
     cursor: pointer;
     border-radius: 0.5vw 0.5vw 0 0;
     font-size: 1vw;
+        font-weight: 500;
     color: #8E8E8E;
 }
+.tab:hover{
+        background: var(--accent-soft);
 
+    color: var(--accent) !important;
+    font-weight: 500;
+    border-radius: 8px;
+}
 .tab.active {
     background: var(--accent-soft);
 
@@ -2962,7 +2971,7 @@ input::placeholder {
 }
 
 .check-wrap-checkbox {
-    margin-right: 20px;
+    margin-right: 1.042vw;
 }
 
 .doc-row .doc-title {
@@ -3247,10 +3256,10 @@ body.cm-lock {
 }
 
 /* new add */
-
+/* 
 .roles-tab {
     padding: 4px;
-}
+} */
 
 .form-select {
     width: 100%;
@@ -4212,7 +4221,7 @@ span.timestamps {
 
 .nav-tabs .nav-item.show .nav-link,
 .nav-tabs .nav-link.active {
-    background: #004E421A;
+  background: var(--accent-soft);
     color: #004E42;
     border: none;
     border-radius: 8px;
@@ -4411,9 +4420,9 @@ textarea.form-input.error-input:focus {
     .main_content .page-title{
         margin-top:1vw;
     }
-    .tabs-section .tab{
+    /* .tabs-section .tab{
         padding:0.2vw;
-    }
+    } */
     .export-btn  .download-icon img{
         width:100%;
     }

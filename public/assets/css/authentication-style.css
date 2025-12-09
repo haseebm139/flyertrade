@@ -21,15 +21,15 @@ html {
 
 .swal-title {
     font-family: "Clash Display", sans-serif;
-    font-size: 22px;
+    font-size: 1.146vw;
     font-weight: 700;
-    font-size: 13px;
-    margin-top: 5px;
+    font-size: 0.677vw;
+    margin-top: 0.26vw;
 }
 
 .swal-text {
     font-family: "Clash Display", sans-serif;
-    font-size: 16px;
+    font-size: 0.833vw;
     font-weight: 400;
     color: #444;
 }
@@ -48,8 +48,8 @@ html {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    padding: 12px 12px 12px 0;
-    overflow: hidden;
+    padding: 0.625vw 0.625vw 0.625vw 0;
+    /* overflow: hidden; */
     position: relative;
 }
 
@@ -60,7 +60,7 @@ html {
     height: 100%;
     object-fit: contain;
     object-position: center center;
-    border-radius: 20px;
+    border-radius: 1.042vw;
     transition: transform 0.3s ease, opacity 0.3s ease;
     position: relative;
 }
@@ -73,7 +73,7 @@ html {
     width: 80%;
 
     margin: auto;
-    padding: 40px 20px;
+    padding: 2.083vw 1.042vw;
 }
 
 .login-form-wrapper h4 {
@@ -86,7 +86,7 @@ html {
 .login-form-wrapper h2 {
     font-weight: 600;
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1.667vw;
 }
 
 .form-group {
@@ -94,52 +94,57 @@ html {
 }
 
 .form-control {
-    border-radius: 12px;
-    padding: 14px 45px 14px 14px;
-    font-size: 16px;
+    border-radius: 0.625vw;
+    padding: 0.729vw 2.344vw 0.729vw 0.729vw;
+    font-size: 0.833vw;
     font-weight: 400;
 }
 
 .toggle-password {
     position: absolute;
-    right: 15px;
+    right: 0.781vw;
     top: 70% !important;
     transform: translateY(-50%);
     cursor: pointer;
     color: #888;
     z-index: 5;
-    font-size: 16px;
+    font-size: 0.833vw;
 }
 
 .btn-submit {
     background-color: #014d42;
-    color: #fff;
-    border-radius: 8px;
-    padding: 12px;
+    color: #fff !important;
+    border-radius: 0.417vw;
+    padding: 0.625vw;
     width: 100%;
-    margin-top: 20px;
+    margin-top: 1.042vw;
+    font-size: 0.833vw;
+    border:0.052vw solid #014d42;
 }
-
+.btn-submit:hover{
+    color:#014d42 !important;
+    background:#fff;
+}
 .forgot {
     text-align: right;
-    font-size: 16px;
+    font-size: 0.833vw;
     color: #aaa;
-    margin-top: 5px;
+    margin-top: 0.26vw;
     text-decoration: none;
 }
 
 .error-msg {
     color: red;
-    font-size: 13px;
-    margin-top: 5px;
+    font-size: 0.677vw;
+    margin-top: 0.26vw;
 }
 
-.btn-submit:hover {
+/* .btn-submit:hover {
     color: white !important;
-}
+} */
 
 .text-reset {
-    font-size: 22px;
+    font-size: 1.146vw;
     color: #888 !important;
     font-weight: 400;
     text-align: center;
