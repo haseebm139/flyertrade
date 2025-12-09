@@ -72,6 +72,10 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::get('settings',function(){
         return view('admin.pages.settings.index');
     })->name('settings.index');
+
+    Route::get('notification',function(){
+        return view('admin.pages.notification.index');
+    })->name('notification.index');
     // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

@@ -10,7 +10,7 @@
     <!-- Navigation -->
     <nav>
         <!-- Dashboard -->
-        <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+        <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }} {{ request()->routeIs('notification.index') ? 'active' : '' }}">
             <span>
                 <img src="{{ asset('assets/images/icons/' . (request()->routeIs('dashboard') ? 'home-icon.svg' : 'home.svg')) }}"
                     alt="Dashboard" class="nav-icon">

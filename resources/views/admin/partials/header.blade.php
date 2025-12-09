@@ -109,7 +109,7 @@
                 </div>
               
                 <div style="padding: 0.8vw 1.5vw; text-align: left;">
-                    <a href="#"
+                    <a href="{{ route('notification.index') }}"
                         style="color: #00796B; font-size: 0.95vw; font-weight: 500; text-decoration: none; display: flex; align-items: center; gap: 0.3vw;">
                         View all notifications
                         <span style="font-size: 1vw;">&#8250;</span>
