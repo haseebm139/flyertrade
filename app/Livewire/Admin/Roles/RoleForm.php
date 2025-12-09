@@ -6,7 +6,6 @@ use Livewire\Component;
 use Livewire\Attributes\On;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
-use Illuminate\Support\Str;
 
 class RoleForm extends Component
 {
@@ -56,11 +55,6 @@ class RoleForm extends Component
         $role = Role::findOrFail($this->roleId);
         $this->name = $role->name;
         $this->permissions = $role->permissions->pluck('name')->toArray();
-    }
-
-    public function updatedName()
-    {
-        $this->name = Str::slug($this->name, '_');
     }
 
     public function save()
