@@ -9,22 +9,22 @@
                 <th class="sortable">
                     Service category
                     <img src="{{ asset('assets/images/icons/sort.svg') }}" wire:click="sortBy('name')"
-                        class="sort-icon {{ $sortField === 'name' ? $sortDirection : '' }}">
+                        class="sort-icon {{ $sortField === 'name' ? $sortDirection : '-' }}">
                 </th>
                 <th class="sortable">
                     Registered providers
                     <img src="{{ asset('assets/images/icons/sort.svg') }}" wire:click="sortBy('providers_count')"
-                        class="sort-icon {{ $sortField === 'providers_count' ? $sortDirection : '' }}">
+                        class="sort-icon {{ $sortField === 'providers_count' ? $sortDirection : '-' }}">
                 </th>
                 <th class="sortable">
                     Date created
                     <img src="{{ asset('assets/images/icons/sort.svg') }}" wire:click="sortBy('created_at')"
-                        class="sort-icon {{ $sortField === 'created_at' ? $sortDirection : '' }}">
+                        class="sort-icon {{ $sortField === 'created_at' ? $sortDirection : '-' }}">
                 </th>
                 <th class="sortable">
                     Description
                     <img src="{{ asset('assets/images/icons/sort.svg') }}" wire:click="sortBy('description')"
-                        class="sort-icon {{ $sortField === 'description' ? $sortDirection : '' }}">
+                        class="sort-icon {{ $sortField === 'description' ? $sortDirection : '-' }}">
                 </th>
                 <th></th>
             </tr>
@@ -42,7 +42,7 @@
                                 <img src="{{ asset($item->providers[0]->avatar ?? 'assets/images/icons/person-one.svg') }}"
                                     alt="User" class="avatar">
                                 <span class="user-theme-name"
-                                    style="font-weight:500;">{{ $item->providers[0]->name ?? '' }}</span>
+                                    style="font-weight:500;">{{ $item->providers[0]->name ?? '-' }}</span>
                                 <span class="more"> + {{ $item->providers_count - 1 }} more</span>
                             </div>
                         @else

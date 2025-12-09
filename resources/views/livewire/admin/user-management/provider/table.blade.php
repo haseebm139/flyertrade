@@ -59,7 +59,7 @@
                                     ? 'pending'
                                     : ($item->is_verified == 'declined'
                                         ? 'inactive'
-                                        : '')) }}">{{ ucfirst($item->is_verified ?? '') }}</span>
+                                        : '')) }}">{{ ucfirst($item->is_verified ?? '-') }}</span>
                     </td>
                     <td><span
                             class="status {{ $item->status == 'active' ? 'active' : 'inactive' }}">{{ ucfirst($item->status) ?? '' }}</span>

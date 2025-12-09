@@ -18,8 +18,8 @@
                                     <img src="{{ asset($provider->avatar ?? 'assets/images/icons/person-one.svg') }}" class="rounded-circle me-3"
                                         style="width:1.823vw; height:1.823vw; object-fit:cover;" alt="User">
                                     <div>
-                                        <h6 class="mb-0" style="font-size:0.833vw;">{{ $provider->name }}</h6>
-                                        <small class="text-muted" style="font-size:0.729vw;">{{ $provider->email ?? '' }}</small>
+                                        <h6 class="mb-0" style="font-size:0.833vw;">{{ $provider->name ?? '-' }}</h6>
+                                        <small class="text-muted" style="font-size:0.729vw;">{{ $provider->email ?? '-' }}</small>
                                     </div>
                                 </div>
                             @empty
