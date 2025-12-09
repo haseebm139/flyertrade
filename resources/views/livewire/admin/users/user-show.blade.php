@@ -35,7 +35,13 @@
                     class="user-profile-img">
                 <div class="user-infos">
                     <h4 class="user-name-user">{{ $user->name ?? 'Unknown User' }}</h4>
-                    <p class="user-role">{{ $user->roles->first()->name ?? 'No Role' }}</p>
+                    <p class="user-role">
+                        @if ($user->roles && $user->roles->count() > 0)
+                            {{ $user->roles->pluck('name')->map(fn($name) => ucfirst($name))->join(', ') }}
+                        @else
+                            No Role
+                        @endif
+                    </p>
                 </div>
             </div>
         </div>
@@ -63,14 +69,21 @@
     <div id="details" style="border: 0.1vw solid #ddd; border-radius: 2vw; margin-bottom: 2vw;">
         <h3 style="font-size:1.4vw;" class="profile-heading">Profile Details</h3>
         <div class="profile-details">
-            <p><span>Name</span> {{ $user->name ?? '' }}</p>
-            <p><span>Email Address</span> {{ $user->email ?? '' }}</p>
-            <p><span>Phone Number</span> {{ $user->phone ?? '' }}</p>
-            <p><span>State of Residence</span> {{ $user->state ?? '' }}</p>
-            <p><span>Home Address</span> {{ $user->address ?? '' }}</p>
-            <p><span>User Type</span> {{ ucfirst($user->user_type ?? '') }}</p>
-            {{-- <p><span>Country</span> {{ $user->country ?? '' }}</p>
-            <p><span>City</span> {{ $user->city ?? '' }}</p> --}}
+            <p><span>Name</span> {{ $user->name ?? '-' }}</p>
+            <p><span>Email Address</span> {{ $user->email ?? '-' }}</p>
+            <p><span>Phone Number</span> {{ $user->phone ?? '-' }}</p>
+            <p><span>State of Residence</span> {{ $user->state ?? '-' }}</p>
+            <p><span>Home Address</span> {{ $user->address ?? '-' }}</p>
+            <p><span>User Type</span> {{ ucfirst($user->user_type ?? '-') }}</p>
+            <p><span>Roles</span>
+                @if ($user->roles && $user->roles->count() > 0)
+                    {{ $user->roles->pluck('name')->map(fn($name) => ucfirst($name))->join(', ') }}
+                @else
+                    No Role
+                @endif
+            </p>
+            {{-- <p><span>Country</span> {{ $user->country ?? '-' }}</p>
+            <p><span>City</span> {{ $user->city ?? '-' }}</p> --}}
 
         </div>
     </div>
@@ -120,12 +133,15 @@
 
 
                     <label>Role</label>
-                    <select class="form-input" wire:model="editUser.user_type">
-                        <option value="">Select role</option>
-                        @foreach ($roles as $role)
-                            <option value="{{ $role->name }}">{{ ucfirst($role->name) }}</option>
-                        @endforeach
-                    </select>
+                    <x-custom-select-livewire name="user_type" id="userType" :options="array_merge(
+                        [['value' => '', 'label' => 'Select role']],
+                        $roles
+                            ->map(function ($role) {
+                                return ['value' => $role->name, 'label' => ucfirst($role->name)];
+                            })
+                            ->toArray(),
+                    )"
+                        placeholder="Select role" wireModel="editUser.user_type" class="form-select" />
                     @error('editUser.user_type')
                         <span class="error-message">{{ $message }}</span>
                     @enderror
