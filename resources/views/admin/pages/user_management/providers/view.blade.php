@@ -701,7 +701,9 @@
 
 <div id="service-details-modal" class="service-details-theme">
     <div class="modal-content">
-        <span class="close-btn" id="closeServiceDetails">&times;</span>
+        <span class="close-btn" id="closeServiceDetails" style="line-height: 1;"><svg style="width:0.625vw;height:0.625vw;" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75" stroke="#717171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg></span>
         <h3>Service details</h3>
 
         <label>Name</label>
@@ -770,7 +772,7 @@
             </div>
         </div>
         <div class="service-header-icons">
-            <h4>Service details</h4>
+            <h4  style="font-size:1.2vw;">Service details</h4>
             <h5> <img src="{{ asset('assets/images/icons/download.svg') }}" alt="Download" class="download-icon"> <small
                     style="color:grey;">Download </small></h5>
         </div>
