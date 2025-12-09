@@ -188,7 +188,7 @@ if ($selectedValue === null && !empty($normalizedOptions)) {
     }
 
     .custom-select-option-label {
-        font-size: 0.875rem;
+        font-size: 0.833vw;
         color: #374151;
     }
 
@@ -198,8 +198,8 @@ if ($selectedValue === null && !empty($normalizedOptions)) {
     }
 
     .custom-select-checkmark {
-        width: 16px;
-        height: 16px;
+        width: 0.833vw;
+        height: 0.833vw;
         color: #0d9488;
         flex-shrink: 0;
     }
