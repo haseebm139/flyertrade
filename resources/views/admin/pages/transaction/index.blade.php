@@ -639,6 +639,18 @@
             background-position: right 10px center;
             background-size: 20px;
         }
+
+        /* Fix for date input clickability */
+        input[type="date"] {
+            pointer-events: auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .date_field_wraper input[type="date"] {
+            pointer-events: auto !important;
+            z-index: 10;
+        }
     </style>
 
 
@@ -720,9 +732,17 @@
             $("#openFilterModal").removeClass('tab-active');
         })
         $('#filterModal').on('click', function(e) {
-            e.preventDefault();
-            // $('#filterModal').css('display', 'none');
+            // Only prevent default if clicking on the modal backdrop, not on modal content
+            if ($(e.target).is('#filterModal')) {
+                e.preventDefault();
+                // $('#filterModal').css('display', 'none');
+            }
             $("#openFilterModal").removeClass('tab-active');
+        })
+        
+        // Prevent modal click handler from interfering with date inputs
+        $('#filter-theme-modal-content').on('click', function(e) {
+            e.stopPropagation();
         })
         // $("#filter-theme-modal-content").on('click',function(e){
         //      e.preventDefault();

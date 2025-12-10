@@ -45,8 +45,8 @@
     <div class="users-toolbar">
         <div class="toolbar-left">
             <button class="export-btn d-flex align-items-center gap-1" style="color:#004E42; line-height:1">
-                <span class="download-icon"><img src="{{ asset('assets/images/icons/download.svg') }}" alt=""
-                      ></span> &nbsp;Export CSV
+                <span class="download-icon"><img src="{{ asset('assets/images/icons/download.svg') }}"
+                        alt=""></span> &nbsp;Export CSV
             </button>
 
         </div>
@@ -55,10 +55,10 @@
             <button class="filter-btn" id="openFilterModal"> Filter <span class="download-icon"><img
                         src="{{ asset('assets/images/icons/button-icon.svg') }}" class="btn-icons" alt=""
                         class="btn-icons"></span></button>
-                           <a href="#" class="filter_active_btna___">
-                            <span>Active users</span>
-                            <i class="fa-solid fa-xmark"></i>
-                    </a>
+            <a href="#" class="filter_active_btna___">
+                <span>Active users</span>
+                <i class="fa-solid fa-xmark"></i>
+            </a>
         </div>
     </div>
 
@@ -118,8 +118,8 @@
 
                 <style>
                     .unpublished {
-                        color: #D00416!important;
-                        border: 2px solid #D00416!important;
+                        color: #D00416 !important;
+                        border: 2px solid #D00416 !important;
                         background-color: #fb374741 !important;
                     }
                 </style>
@@ -144,7 +144,7 @@
                     <div class="actions-dropdown">
                         <button class="actions-btn" id="open-menu-btn" fdprocessedid="3p4nw"> <img
                                 src="http://127.0.0.1:8000/assets/images/icons/three_dots.svg" class="dots-img "></button>
-                        <div class="actions-menu"  id="open-menu-btn-wrapper"  style="display: none;">
+                        <div class="actions-menu" id="open-menu-btn-wrapper" style="display: none;">
                             <a onclick="openBookingModal()"><img src="http://127.0.0.1:8000/assets/images/icons/eye.svg"
                                     alt="">
                                 View
@@ -202,7 +202,7 @@
                 </div>
             </div>
             <div class="service-header-icons">
-                <h4  style="font-size:1.2vw;">Service details</h4>
+                <h4 style="font-size:1.2vw;">Service details</h4>
                 <h5> <img src="{{ asset('assets/images/icons/download.svg') }}" alt="Download" class="download-icon">
                     <small style="color:grey;">Download </small>
                 </h5>
@@ -253,7 +253,52 @@
             </div>
         </div>
     </div>
+    <!-- Filter Modal -->
+    <div id="filterModal" class="modal filter-theme-modal" style="display:none">
 
+        <div class="modal-content filter-modal">
+            <div class="modal_heaader">
+                <span class="close-modal" id="closeFilterModal" wire:click="closeFilterModal">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75" stroke="#717171"
+                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </span>
+                <h3 class="mt-0">Filter</h3>
+            </div>
+
+            <label style='color:#717171;font-weight:500; '>Select Date</label>
+            <div class=" row mt-3">
+                <div class='col-6'>
+                    <span style="font-weight:500">From:</span>
+                    <div class="date_field_wraper">
+                        <input type="date" class="form-input mt-2 date-input" wire:model="fromDate">
+                    </div>
+
+                </div>
+                <div class='col-6'>
+                    <span style="font-weight:500"> To:</span>
+                    <div class="date_field_wraper">
+                        <input type="date" class="form-input mt-2 date-input" wire:model="toDate">
+                    </div>
+
+                </div>
+            </div>
+            <label style="color:#717171;font-weight:500; margin: 12px 0px 12px 0px;">Status</label>
+            <x-custom-select name="statusFilter" id="statusFilter" :options="[
+                ['value' => '', 'label' => 'Select status'],
+                ['value' => 'resolved', 'label' => 'Resolved'],
+                ['value' => 'unresolved', 'label' => 'Unresolved'],
+            ]" placeholder="Select status"
+                class="form-input mt-2" />
+
+            <div class="form-actions">
+                <button type="button" class="reset-btn" onclick="resetFilters()">Reset</button>
+                <button type="button" class="submit-btn" onclick="applyFilters()">Apply Now</button>
+            </div>
+        </div>
+    </div>
     <style>
         .modal_heaader {
             display: flex;
@@ -310,58 +355,13 @@
 
 
 
-    <!-- Filter Modal -->
-    <div id="filterModal" class="modal filter-theme-modal" style="display:none">
 
-        <div class="modal-content filter-modal">
-            <div class="modal_heaader">
-                <span class="close-modal" id="closeFilterModal" wire:click="closeFilterModal">
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75" stroke="#717171"
-                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-                </span>
-                <h3 class="mt-0">Filter</h3>
-            </div>
-
-            <label style='color:#717171;font-weight:500; '>Select Date</label>
-            <div class=" row mt-3">
-                <div class='col-6'>
-                    <span style="font-weight:500">From:</span>
-                    <div class="date_field_wraper">
-                        <input type="date" class="form-input mt-2 date-input" wire:model="fromDate">
-                    </div>
-
-                </div>
-                <div class='col-6'>
-                    <span style="font-weight:500"> To:</span>
-                    <div class="date_field_wraper">
-                        <input type="date" class="form-input mt-2 date-input" wire:model="toDate">
-                    </div>
-
-                </div>
-            </div>
-            <label style="color:#717171;font-weight:500; margin: 12px 0px 12px 0px;" >Status</label>
-            <x-custom-select name="statusFilter" id="statusFilter" :options="[
-                ['value' => '', 'label' => 'Select status'],
-                ['value' => 'resolved', 'label' => 'Resolved'],
-                ['value' => 'unresolved', 'label' => 'Unresolved'],
-            ]" placeholder="Select status"
-                class="form-input mt-2" />
-
-            <div class="form-actions">
-                <button type="button" class="reset-btn" onclick="resetFilters()">Reset</button>
-                <button type="button" class="submit-btn" onclick="applyFilters()">Apply Now</button>
-            </div>
-        </div>
-    </div>
     <script>
-        $(document).ready(function(){
-            $('#open-menu-btn').on('click',function(e){
+        $(document).ready(function() {
+            $('#open-menu-btn').on('click', function(e) {
                 e.preventDefault();
                 $('#open-menu-btn-wrapper').toggle();
-                
+
             })
         })
         // Filter modal functionality

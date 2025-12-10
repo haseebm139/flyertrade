@@ -27,11 +27,12 @@
         <div class="toolbar-right">
             <input type="text" class="search-user" placeholder="Search user">
             <button class="filter-btn" id="openFilterModal"> Filter <span class="download-icon"><img
-                        src="{{ asset('assets/images/icons/button-icon.svg') }}" class="btn-icons" alt=""></span></button>
-                        <a href="#" class="filter_active_btna___">
-                            <span>Active users</span>
-                            <i class="fa-solid fa-xmark"></i>
-                    </a>
+                        src="{{ asset('assets/images/icons/button-icon.svg') }}" class="btn-icons"
+                        alt=""></span></button>
+            <a href="#" class="filter_active_btna___">
+                <span>Active users</span>
+                <i class="fa-solid fa-xmark"></i>
+            </a>
         </div>
 
     </div>
@@ -373,6 +374,18 @@
             background-position: right 10px center;
             background-size: 20px;
         }
+
+        /* Fix for date input clickability */
+        input[type="date"] {
+            pointer-events: auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .date_field_wraper input[type="date"] {
+            pointer-events: auto !important;
+            z-index: 10;
+        }
     </style>
 
     <!-- Filter Modal -->
@@ -428,9 +441,17 @@
             $("#openFilterModal").removeClass('tab-active');
         })
         $('#filterModal').on('click', function(e) {
-            e.preventDefault();
-            // $('#filterModal').css('display', 'none');
+            // Only prevent default if clicking on the modal backdrop, not on modal content
+            if ($(e.target).is('#filterModal')) {
+                e.preventDefault();
+                // $('#filterModal').css('display', 'none');
+            }
             $("#openFilterModal").removeClass('tab-active');
+        })
+
+        // Prevent modal click handler from interfering with date inputs
+        $('#filter-theme-modal-content').on('click', function(e) {
+            e.stopPropagation();
         })
         $(document).on('click', '.showDeleteModal', function(e) {
             e.preventDefault();
@@ -483,7 +504,6 @@
         //     img.style.marginRight = "0.1vw";
         //     container.appendChild(img);
         // }
-
     </script>
 
 @endsection
