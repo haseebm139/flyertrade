@@ -47,10 +47,24 @@
                 </div>
                 <br />
                 <br />
+                <style>
+                    /* Chrome, Safari, Edge, Opera */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+                </style>
                 <div class="setting-wrapper">
                     <div class="charge-col">
                         <label class="charge-label">Commission Fee</label>
-                        <input type="text" class="charge-input" placeholder="Enter commission fee" />
+                        <input type="number" class="charge-input" placeholder="Enter commission fee" />
                     </div>
                 </div>
                 <br />
@@ -63,21 +77,21 @@
                 <div class="setting-wrapper">
                     <h2 style="font-size: 1.042vw;">Global notification toggle</h2>
                     <div class="permission-item">
-                        <span class="user-name">Can manage dashboard</span>
+                        <span  >Can manage dashboard</span>
                         <label class="toggle-switch">
                             <input type="checkbox" />
                             <span class="slider"></span>
                         </label>
                     </div>
                     <div class="permission-item">
-                        <span class="user-name">Can manage dashboard</span>
+                        <span  >Can manage dashboard</span>
                         <label class="toggle-switch">
                             <input type="checkbox" />
                             <span class="slider"></span>
                         </label>
                     </div>
                     <div class="permission-item">
-                        <span class="user-name">Can manage dashboard</span>
+                        <span  >Can manage dashboard</span>
                         <label class="toggle-switch">
                             <input type="checkbox" />
                             <span class="slider"></span>
@@ -90,23 +104,30 @@
                     <br />
                     <h4 style="font-size: 1vw;">User Service</h4>
                     <div class="permission-item">
-                        <span class="user-name">Upcoming service reminder</span>
+                        <span>Upcoming service reminder</span>
                         <label class="toggle-switch">
                             <input type="checkbox" />
                             <span class="slider"></span>
                         </label>
                     </div>
-                    <div class="permission-items">
-                        <input type="checkbox" />
-                        <span class="user-name">15 minutes before</span>
+                       <div class="permission-item">
+                        <span>Reminder timing</span>
+                        <!-- <label class="toggle-switch">
+                            <input type="checkbox" />
+                            <span class="slider"></span>
+                        </label> -->
                     </div>
                     <div class="permission-items">
                         <input type="checkbox" />
-                        <span class="user-name">30 minutes before</span>
+                        <span >15 minutes before</span>
                     </div>
                     <div class="permission-items">
                         <input type="checkbox" />
-                        <span class="user-name">45 minutes before</span>
+                        <span >30 minutes before</span>
+                    </div>
+                    <div class="permission-items">
+                        <input type="checkbox" />
+                        <span >45 minutes before</span>
                     </div>
                     <br />
                     <h4 style="font-size: 1vw;">Reminder Content</h4>
@@ -153,23 +174,30 @@
                     <br />
                     <h4 style="font-size: 1vw;">Service Providers</h4>
                     <div class="permission-item">
-                        <span class="user-name">Upcoming service reminder</span>
+                        <span >Upcoming service reminder</span>
                         <label class="toggle-switch">
                             <input type="checkbox" />
                             <span class="slider"></span>
                         </label>
                     </div>
-                    <div class="permission-items">
-                        <input type="checkbox" />
-                        <span class="user-name">15 minutes before</span>
+                            <div class="permission-item">
+                        <span>Reminder timing</span>
+                        <!-- <label class="toggle-switch">
+                            <input type="checkbox" />
+                            <span class="slider"></span>
+                        </label> -->
                     </div>
                     <div class="permission-items">
                         <input type="checkbox" />
-                        <span class="user-name">30 minutes before</span>
+                        <span >15 minutes before</span>
                     </div>
                     <div class="permission-items">
                         <input type="checkbox" />
-                        <span class="user-name">45 minutes before</span>
+                        <span >30 minutes before</span>
+                    </div>
+                    <div class="permission-items">
+                        <input type="checkbox" />
+                        <span >45 minutes before</span>
                     </div>
                     <br />
                     <h4 style="font-size: 1vw;">Reminder Content</h4>

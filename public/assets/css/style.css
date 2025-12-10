@@ -2041,7 +2041,7 @@ img.logo-img {
     height: 100vh;
     justify-content: center;
     align-items: center;
-    padding: 2vw;
+    padding: 1.25vw;
         background: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(1px);
 }
@@ -2053,7 +2053,7 @@ img.logo-img {
 
     border-radius: 12px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-    padding: 2vw;
+    padding: 1.25vw;
     position: relative;
     animation: fadeIn 0.3s ease;
     font-family: Arial, sans-serif;
@@ -3303,9 +3303,9 @@ body.cm-lock {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1vw 0;
-    font-size: 1vw;
-    color: #333;
+    padding: 1vw 0px 0px 0px;
+    font-size: 0.938vw;
+    color: #555;
 }
 
 /* Custom checkbox style */
@@ -3543,9 +3543,9 @@ body.cm-lock {
     display: flex;
     justify-content: normal;
     align-items: center;
-    padding: 1vw 0;
-    font-size: 1vw;
-    color: #333;
+    padding: 1vw 0px 0px 0px;
+    font-size: 0.938vw;
+    color: #555;
     gap: 1vw;
 }
 
