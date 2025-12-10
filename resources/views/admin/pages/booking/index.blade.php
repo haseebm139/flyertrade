@@ -5,12 +5,15 @@
 @section('content')
 
     <!-- Top Stat Cards -->
-    <div id="statsContainer">
+    {{-- <div id="statsContainer">
+        <livewire:admin.booking-stats mode="booking" />
+    </div> --}}
+
+
+     <div class="col-lg-9 " id="container-booking">
+
         <livewire:admin.booking-stats mode="booking" />
     </div>
-
-
-     
 
     <!-- Back Button (Hidden by default) -->
 
@@ -167,11 +170,12 @@
 @push('scripts')
     <script>
         function filterByStatus(status, title) {
+            
             // Hide stats container
-            document.getElementById('statsContainer').style.display = 'none';
-
+            document.getElementById('container-booking').style.display = 'none';
+            
             // Show back button
-            document.getElementById('backButtonContainer').style.display = 'flex';
+            document.getElementById('backButtonContainer').style.display = 'block';
 
             // Update page title
             document.getElementById('pageTitle').textContent = title;
@@ -185,7 +189,7 @@
 
         function showAllBookings() {
             // Show stats container
-            document.getElementById('statsContainer').style.display = 'flex';
+            document.getElementById('container-booking').style.display = 'block';
 
             // Hide back button
             document.getElementById('backButtonContainer').style.display = 'none';

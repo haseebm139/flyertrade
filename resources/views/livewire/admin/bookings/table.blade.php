@@ -36,7 +36,7 @@
             @forelse($data as $booking)
                 <tr>
                     <td><input type="checkbox" value="{{ $booking->id }}" wire:model.live="selected"></td>
-                    <td>{{ $booking->booking_ref }}</td>
+                    <td style="cursor: pointer" onclick="openBookingModal({{ $booking->id }})">{{ $booking->booking_ref }}</td>
                     <td>{{ $booking->service->name ?? 'N/A' }}</td>
                     <td><span class="date">{{ $booking->created_at->format('M d, Y') }}</span>
                         <br>

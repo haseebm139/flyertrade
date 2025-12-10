@@ -57,7 +57,7 @@
 
 
         <!-- Bookings -->
-        <a href="javascript:void(0)"
+        <a href="{{ route('booking.index') }}"
             class="nav-link {{ request()->routeIs('booking.*') ? 'active' : '' }}">
             <span>
                 <img
