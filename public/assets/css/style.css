@@ -1900,7 +1900,7 @@ small.time {
 
 .status.active {
     color: #17A55A; 
-    border: 0.052vw solid green;
+    border: 0.052vw solid rgba(23, 165, 90, 1);
 }
 
 .status.inactive {
