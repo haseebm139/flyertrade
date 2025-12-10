@@ -3,6 +3,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
+    
 
     Route::get('user-management/service-users', function () {
         return view('admin.pages.user_management.users.index');
