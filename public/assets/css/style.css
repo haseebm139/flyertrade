@@ -2635,7 +2635,7 @@ button.btn-close {
 /* Active style */
 .status-btn.active {
     color: #17A55A;
-    border: 0.05vw solid #17A55A;
+    border: 0.05vw solid rgba(23, 165, 90, 0.1);
     background: #17A55A1A;
 }
 
