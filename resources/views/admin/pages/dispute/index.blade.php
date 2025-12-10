@@ -67,7 +67,7 @@
         <thead>
             <tr>
                 <th><input type="checkbox"></th>
-                <th class="sortable" data-column="0">Booking ID <img src="{{ asset('assets/images/icons/sort.svg') }}"
+                <th class="sortable" data-column="0" >Booking ID <img src="{{ asset('assets/images/icons/sort.svg') }}"
                         class="sort-icon">
                 </th>
 
@@ -93,7 +93,7 @@
         <tbody>
             <tr>
                 <td><input type="checkbox"></td>
-                <td onclick="openBookingModal()">12345</td>
+                <td onclick="openBookingModal()" style="cursor: pointer">12345</td>
 
                 <td><span class="date">31 Jan, 2025</span>
                     <br>

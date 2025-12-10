@@ -2111,8 +2111,8 @@ img.logo-img {
 }
 
 .status.completed {
-    color: green;
-    border: 0.052 solid green;
+    color: #17A55A;
+    border: 1px solid rgba(23, 165, 90, 1);
     background-color: #e0f5e9;
     width: 7vw;
     padding: 0.3vw 1vw;
