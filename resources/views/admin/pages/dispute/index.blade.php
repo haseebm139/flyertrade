@@ -143,14 +143,14 @@
                 <td>
                     <div class="actions-dropdown">
                         <button class="actions-btn" id="open-menu-btn" fdprocessedid="3p4nw"> <img
-                                src="http://127.0.0.1:8000/assets/images/icons/three_dots.svg" class="dots-img "></button>
+                                src="{{ asset('assets/images/icons/three_dots.svg') }}" class="dots-img "></button>
                         <div class="actions-menu" id="open-menu-btn-wrapper" style="display: none;">
-                            <a onclick="openBookingModal()"><img src="http://127.0.0.1:8000/assets/images/icons/eye.svg"
+                            <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.svg') }} "
                                     alt="">
                                 View
                                 details</a>
                             <a href="#" class="initiateBtn" data-user="Mike Brown">
-                                <img src="http://127.0.0.1:8000/assets/images/icons/init.svg" alt=""> Initiate
+                                <img src="{{ asset('assets/images/icons/init.svg') }}" alt=""> Initiate
                                 payout
                             </a>
 
