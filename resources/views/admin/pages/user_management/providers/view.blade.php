@@ -24,7 +24,7 @@
 <!-- Toolbar -->
 <div class="users-toolbar">
     <div class="toolbar-left" style="position:relative">
-        <button class="reset-btn" id="reset_moda">Reset Password</button>
+        <button class="reset-btn" id="reset_moda" style="background-color: #fff;">Reset Password</button>
         <div id="globalresetModal" class="deleteModal" style="display: none;">
             <div class="delete-card">
                 <div class="delete-card-header">

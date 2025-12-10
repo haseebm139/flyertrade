@@ -6,8 +6,8 @@
     <style>
         
         .profile {
-            width: 2.083vw;
-            height: 2.083vw;
+            width: 2.65vw;
+            height: 2.65vw;
         }
 
         .view-profile-btn {
@@ -79,14 +79,14 @@
  
 @section('content')
 
-    <div class="row g-3">
-        <div class="col-lg-8">
+    <div class="row">
+        <div class="col-6">
             <!-- Review Card -->
             <div class="card border-0 p-3">
                 <h5 class="mb-3 page-title">Review details</h5>
 
                 <!-- Reviewer info -->
-                <div class="d-flex align-items-center justify-content-between border rounded p-3 mb-3">
+                <div class="d-flex align-items-center justify-content-between border rounded p-3" style="margin-bottom: 2vw;">
                     <div class="d-flex align-items-center">
                         <img src="{{ asset('assets/images/icons/person.svg') }}" alt="Reviewer" class="me-3 profile">
                         <div>
@@ -98,7 +98,7 @@
                 </div>
 
                 <!-- Status -->
-                <div class="d-flex align-items-center justify-content-between border rounded p-3 mb-3">
+                <div class="d-flex align-items-center justify-content-between p-3 mb-3" >
                     <div class="d-flex align-items-center">
                         <div>
                             <h6 class="mb-0" style="font-weight: 500; font-size: 0.8vw;">Review Davies</h6>
@@ -107,7 +107,7 @@
 
                     <div class="status-dropdown">
                         <!-- Default: Publish -->
-                        <span class="status active" onclick="toggleDropdown(this)">Publish <svg class="arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0a8754" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <span class="status-btn active" onclick="toggleDropdown(this)">Publish <svg class="arrow" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0a8754" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="6 9 12 15 18 9"></polyline>
                             </svg></span>
                         <ul class="dropdown-menu" style="display: none;">

@@ -26,7 +26,7 @@
 <!-- Toolbar -->
 <div class="users-toolbar">
     <div class="toolbar-left" style="position:relative">
-        <button class="reset-btn" id="reset_moda">Reset Password</button>
+        <button class="reset-btn" id="reset_moda" style="background-color: #fff;">Reset password</button>
         <div id="globalresetModal" class="deleteModal" style="display: none;">
             <div class="delete-card">
                 <div class="delete-card-header">
@@ -41,7 +41,9 @@
             </div>
         </div>
         <button class="edit-btn" id="openAddUserModal">
-            Edit User&nbsp;
+            Edit user
+            &nbsp;
+            &nbsp;
             <span class="download-icon"><img src="{{ asset('assets/images/icons/edit.svg') }}" alt="" class="icons-btn"></span>
         </button>
 

@@ -1455,6 +1455,7 @@ td.user-data.id-number {
     border: none;
     cursor: pointer;
     color: #004E42;
+    font-weight: 500;
 }
 
 .export-btn {
@@ -1898,7 +1899,7 @@ small.time {
 }
 
 .status.active {
-    color: green;
+    color: #17A55A; 
     border: 0.052vw solid green;
 }
 
@@ -2554,8 +2555,8 @@ button.btn-close {
 /* Publish (Green) */
 .status.publish {
     background: #f1fff4;
-    border: 2px solid #0a8754;
-    color: #0a8754;
+    border: 2px solid #17A55A;
+    color: #17A55A;
 }
 
 /* .status.publish:hover {
@@ -2927,7 +2928,7 @@ input::placeholder {
 
 .btn {
     padding: 0.5vw 1.1vw;
-    border-radius: 5px;
+    border-radius: 8px;
 
     border: 0.1vw solid transparent;
     font-size: 0.95vw;
