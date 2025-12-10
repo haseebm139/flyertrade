@@ -5,7 +5,7 @@
             <button class="export-btn" wire:click="exportCsv">
                 <span class="download-icon">
                     <img class="btn-icons" src="{{ asset('assets/images/icons/download.svg') }}" alt="">
-                </span> Export CSV
+                </span> &nbsp;Export CSV
             </button>
             <button class="add-user-btn" wire:click="addRole">
                 <i class="fa-solid fa-plus mr-3"></i> Add Role
@@ -73,11 +73,12 @@
                             Edit
                         </a>
                         <button class="delete-btn showDeleteModal" wire:click="confirmDelete({{ $role->id }})">
-                            <img src="{{ asset('assets/images/icons/delete-icon-active.svg') }}" alt="Delete"
-                                class="eye-icon">
+                        
                             <span
                                 style="font-size: 0.9vw; color: #064f3c; cursor: pointer; font-weight: 400;">
                                 Delete </span>
+                                    <img src="{{ asset('assets/images/icons/delete-icon-active.svg') }}" alt="Delete"
+                                class="eye-icon">
                         </button>
                         @if ($confirmingId === $role->id)
                             <div class="deleteModal delete-card" id="global-delete-modal"

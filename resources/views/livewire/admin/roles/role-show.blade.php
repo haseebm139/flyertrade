@@ -19,10 +19,11 @@
                 </button>
 
                 <button class="delete-btn" wire:click="openDeleteModal">
-                    <span class="download-icon">
+                  
+                    Delete Role&nbsp;
+                      <span class="download-icon">
                         <img src="{{ asset('assets/images/icons/trash.svg') }}" alt="" class="icons-btn">
                     </span>
-                    Delete Role
                 </button>
             @endif
         </div>

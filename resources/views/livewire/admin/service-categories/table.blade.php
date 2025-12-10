@@ -154,6 +154,12 @@
             background-position: right 10px center;
             background-size: 20px;
         }
+        input[type="date"] {
+  pointer-events: auto;
+  position: relative;
+  z-index: 1;
+}
+
     </style>
     @if ($showFilterModal)
         <div class="modal filter-theme-modal" style="display: flex;">
@@ -175,7 +181,7 @@
                     <div class='col-6'>
                         <span style="font-weight:500">From:</span>
                         <div class="date_field_wraper">
-                            <input type="date" class="form-input mt-2 date-input" wire:model="fromDate">
+                            <input type="date" id="date" class="form-input mt-2 date-input" wire:model="fromDate">
                         </div>
 
                     </div>
@@ -205,6 +211,10 @@
 </div>
 
 @push('scripts')
+
+<script>
+  flatpickr("#date", {});
+</script>
     <script>
         $(document).on('click', '.showDeleteModal', function(e) {
             e.preventDefault();

@@ -26,7 +26,7 @@
                            <div class="form-actions justify-content-center" id="first_btns____">
                             <button type="button" class="cancel-btn" wire:click="closeModal">Cancel</button>
                             <button type="button" class="submit-btn add_permission________" id="add_permission________"><i class="fa-solid fa-plus"></i>
-                                {{ $isEdit ? 'Add Permission' : 'Add Permission' }}
+                                {{ $isEdit ? 'Edit Role' : 'Add Role' }}
                             </button>
                         </div>
                     </div>

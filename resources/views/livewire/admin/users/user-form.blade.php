@@ -1,6 +1,11 @@
 <div>
+<style>
 
-
+#addUserModal label{
+        margin-top: 1vw;
+    margin-bottom: 0.2vw;
+}
+</style>
 
     @if ($showModal)
         <div id="addUserModal" class="modal" style="display: flex;">

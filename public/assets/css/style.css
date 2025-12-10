@@ -2077,7 +2077,7 @@ img.logo-img {
 }
 
 .download-icon {
-    width: 1.5vw;
+    width: 1vw;
     cursor: pointer;
 }
 
@@ -2757,11 +2757,11 @@ button.btn-close {
 
 .profile-heading {
     border-bottom: 0.1vw solid #ddd;
-    padding: 2vw;
+    padding: 1.3vw;
 }
 
 .profile-details {
-    padding: 2vw;
+    padding: 1.3vw;
 }
 
 .profile-details {

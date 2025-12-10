@@ -465,7 +465,7 @@
 <div id="documents-verifications" class="tab-content" style="border:0.1vw solid #ddd;border-radius:1vw;">
 
     <!-- Top toolbar -->
-    <div class="toolbar" style="padding:2vw;">
+    <div class="toolbar" style="padding:1.3vw;">
         <h3 class="toolbar-title" style="font-weight:500;font-size:1.4vw;color:#1b1b1b;">Documents</h3>
         <div class="toolbar-actions" hidden>
             <button class="btn btn-verified" style="font-weight:500" data-action="verified"><i class="fa-solid fa-trash-can"></i>&nbsp; Mark as verified</button>
@@ -474,7 +474,7 @@
         </div>
     </div>
 
-    <div class="documents-list"  style="padding:0vw 2vw 2vw;">
+    <div class="documents-list"  style="padding:0vw 1.3vw 1.3vw;">
         <div class="doc-row" data-id="1">
             <div class="d-flex align-items-center">
                 <label class="check-wrap check-wrap-checkbox">
@@ -593,7 +593,7 @@
         Charges and fees
     </h3>
 
-    <div class="charges-row" style="padding:0vw 2vw 2vw">
+    <div class="charges-row" style="padding:0vw 1.3vw 1.3vw">
         <div class="charge-col">
             <label class="charge-label">Service fee</label>
             <input type="text" class="charge-input" placeholder="$10">

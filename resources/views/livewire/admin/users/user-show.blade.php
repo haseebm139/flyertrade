@@ -20,10 +20,11 @@
 
 
                 <button class="delete-btn" wire:click="openDeleteModal">
-                    <span class="download-icon">
+                
+                    Delete User&nbsp;
+                        <span class="download-icon">
                         <img src="{{ asset('assets/images/icons/trash.svg') }}" alt="" class="icons-btn">
                     </span>
-                    Delete User
                 </button>
             @endif
         </div>
@@ -94,15 +95,22 @@
 
     <!-- Delete Modal -->
 
-
+<style>
+    #ediUserModal label{
+            margin-top: 1vw;
+    margin-bottom: 0.2vw;
+    }
+</style>
 
     <!-- Edit Modal -->
     @if ($showEditModal)
-        <div
+        <div id="ediUserModal" 
             style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; display: flex; justify-content: center; align-items: center;">
             <div style="background: white; padding: 2vw; border-radius: 0.6vw; width: 42vw;  position: relative;">
                 <span wire:click="closeEditModal"
-                    style="position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; color: #999;">&times;</span>
+                    style="position: absolute; top: 2vw; right: 2vw; font-size: 24px; cursor: pointer; color: #999;line-height:1;"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75" stroke="#717171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg></span>
                 <h3>Edit User</h3>
                 <form wire:submit.prevent="updateUser">
                     <label>Name</label>

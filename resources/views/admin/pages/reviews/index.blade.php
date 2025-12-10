@@ -19,7 +19,7 @@
         <div class="toolbar-left">
             <button class="export-btn d-flex align-items-center gap-1" style="color:#004E42; line-height:1">
                 <span class="download-icon"><img src="{{ asset('assets/images/icons/download.svg') }}"
-                        alt=""></span> Export
+                        alt=""></span> &nbsp;Export
                 CSV
             </button>
 
