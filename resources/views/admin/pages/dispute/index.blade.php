@@ -247,7 +247,7 @@
                 <h4 style="font-size:0.938vw;font-weight: 500; letter-spacing: -0.04em;">Dispute issue</h4>
 
                 <div class="dispute-text">
-                    <div>Service provider did not show up at the scheduled time and did not provide prior notice.</div>
+                    <div style="color:#717171;">Service provider did not show up at the scheduled time and did not provide prior notice.</div>
 
                 </div>
             </div>
