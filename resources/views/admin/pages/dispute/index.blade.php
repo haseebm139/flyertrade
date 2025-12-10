@@ -144,7 +144,7 @@
                     <div class="actions-dropdown">
                         <button class="actions-btn" id="open-menu-btn" fdprocessedid="3p4nw"> <img
                                 src="{{ asset('assets/images/icons/three_dots.svg') }}" class="dots-img "></button>
-                        <div class="actions-menu" id="open-menu-btn-wrapper" style="display: none;">
+                        <div class="actions-menu" id="open-menu-btn-wrapper" style="display: none; right: 0px !important; top: 32px;!important">
                             <a>
                                 Mark as unresolved</a>
                             {{-- <a href="#" class="initiateBtn" data-user="Mike Brown">
