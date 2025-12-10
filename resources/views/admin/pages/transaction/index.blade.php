@@ -541,15 +541,17 @@
 
     <div id="view-booking" class="view-booking-modal">
         <div class="view-booking-content">
-            <div class="modal-header">
-                <h2 class="page-title">Transaction details</h2>
+        <div class="modal-header" style="margin-bottom:1.563vw">
+                <h2 class="page-title" style="font-size:1.146vw;font-weight: 600;line-height:1;">Transaction details</h2>
                 <div class="header-actions">
 
-                    <span class="close-btn" onclick="closeBookingModal()">&times;</span>
+                    <span class="close-btn" style="line-height:1;" onclick="closeBookingModal()"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75" stroke="#717171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg></span>
                 </div>
             </div>
             <div class="service-header-icons">
-                <h4 style="font-size: 1vw">Transaction info</h4>
+                <h4 style="font-size:0.938vw;font-weight: 500; letter-spacing: -0.04em;">Transaction info</h4>
                 <h5> <img src="{{ asset('assets/images/icons/download.svg') }}" alt="Download" class="download-icon">
                     <small style="color:grey;">Download </small>
                 </h5>
@@ -559,7 +561,7 @@
 
                 <div class="details-grid">
                     <div>Transaction ID</div>
-                    <div>12345</div>
+                    <div style="cursor:pointer">12345</div>
                     <div>Date</div>
                     <div>12 Jan, 2025</div>
                     <div>Time</div>
@@ -573,7 +575,7 @@
                     <div>Associated user</div>
                     <div>Johnbosco Davies</div>
                     <div>Status</div>
-                    <div class="status " style="color: goldenrod; border: 1px solid goldenrod; width:6vw;">Pending</div>
+                    <div class="status "  style="color:#17a55a;border-color:#17a55a;font-weight:500;background:rgba(23, 165, 90, 0.1)">Pending</div>
                 </div>
             </div>
 

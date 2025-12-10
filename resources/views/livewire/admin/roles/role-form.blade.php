@@ -70,7 +70,7 @@
                                     @foreach ($groupPermissions as $permission)
                                         <div class="permission-item">
                                             <span
-                                                class="user-name">{{ ucwords(str_replace(['-', '_'], ' ', $permission->name)) }}</span>
+                                                >{{ ucwords(str_replace(['-', '_'], ' ', $permission->name)) }}</span>
                                             <input type="checkbox" wire:model="permissions"
                                                 value="{{ $permission->name }}" id="permission_{{ $permission->id }}">
                                         </div>
