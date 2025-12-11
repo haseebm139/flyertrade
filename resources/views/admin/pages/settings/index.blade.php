@@ -4,7 +4,15 @@
 @section('header', 'Settings')
 @section('content')
 
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/country-select-js/2.0.1/css/countrySelect.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/country-select-js/2.0.1/js/countrySelect.min.js"></script>
+<style>
+    #country_selector {
+        cursor: pointer;
+        background-color: #fff;
+    }
+</style>
     <div class="row">
         <div class="col-md-2">
             <div class="tabs-vertical-wrapper">
@@ -26,11 +34,14 @@
                 <div class="setting-wrapper">
                     <div class="charge-col">
                         <label class="charge-label">Select Country</label>
-                        <select class="charge-input" style="width: auto;">
+                        <input id="country_selector" style="width:100%"  class="charge-input" type="tel" name="country" class="form-control" readonly>
+
+
+                        <!-- <select class="charge-input" style="width: auto;">
                             <option>United States</option>
                             <option>England</option>
                             <option>Australia</option>
-                        </select>
+                        </select> -->
                     </div>
                 </div>
                 <br />
@@ -390,6 +401,21 @@ input[type=number] {
             </div>
         </div>
     </div>
+<script>
+    var countryInput = $("#country_selector");
+
+    countryInput.countrySelect({
+        preferredCountries: ['us', 'in', 'gb']
+    });
+
+    // make entire field clickable
+    const wrapper = document.querySelector(".country-select");
+
+    wrapper.addEventListener("click", function () {
+        countryInput.countrySelect("open");
+    });
+</script>
+
 
 
 @endsection
