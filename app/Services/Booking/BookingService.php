@@ -53,19 +53,23 @@ class BookingService
 
     public function providerHasService($providerId, $serviceId): bool
     {
-        return ProviderService::where('user_id', $providerId)
+        $providerHasService = ProviderService::where('user_id', $providerId)
             ->where('service_id', $serviceId)
             ->first() ;
+        return $providerHasService ? true : false;
+            
     }
     public function create(array $data) 
     {
          
-        $totalMinutes = 0;
-
+        $totalMinutes = 0; 
         $providerIsAvailable = $this->providerIsAvailable(
             $data['provider_id']
         );
+
+         
         $providerHasService = $this->providerHasService($data['provider_id'], $data['service_id']);
+        
         if (!$providerHasService) {
             return [
                 'error' => true,
@@ -84,7 +88,7 @@ class BookingService
 
         foreach ($data['slots'] as $slot) {
             $status = $this->checkAvailability($slot, $data['provider_id']);
-             
+              
             if ($status !== 'available') {
                 return [
                     'error' => true,
@@ -109,41 +113,42 @@ class BookingService
         // Stripe charge (in cents)
         $amountCents = (int) round($data['total_price'] * 100);
          
-        $intent = $this->stripe->createAndConfirmIntent(
-            amountCents: $amountCents,
-            currency: 'usd',
-            paymentMethodId: $data['payment_method_id'],
-            metadata: [
-                'customer_id' => (string)auth()->user()->id,
-                'provider_id' => (string)$data['provider_id'],
-            ]
-        );
+        // $intent = $this->stripe->createAndConfirmIntent(
+        //     amountCents: $amountCents,
+        //     currency: 'usd',
+        //     paymentMethodId: $data['payment_method_id'],
+        //     metadata: [
+        //         'customer_id' => (string)auth()->user()->id,
+        //         'provider_id' => (string)$data['provider_id'],
+        //     ]
+        // );
         
         // Payment might be requires_action in rare cases; handle by client if needed
-        if (!in_array($intent->status, ['succeeded', 'requires_action'])) {
-            return [
-                'error' => true,
-                'message' => 'Payment could not be confirmed'
-            ];  
-        }
+        // if (!in_array($intent->status, ['succeeded', 'requires_action'])) {
+        //     return [
+        //         'error' => true,
+        //         'message' => 'Payment could not be confirmed'
+        //     ];  
+        // }
         
         // Persist booking + slots
-        return DB::transaction(function () use ($data, $totalMinutes, $intent) {
+        return DB::transaction(function () use ($data, $totalMinutes) {
             $booking = Booking::create([
                 'booking_ref' => $this->makeRef(),
                 'customer_id' => auth()->user()->id,
                 'provider_id' => $data['provider_id'],
                 'service_id' => $data['service_id'],
-                'provider_service_id' => $providerHasService->id,
+                'provider_service_id' => $providerHasService->id ?? null,
                 'booking_address' => $data['booking_address'],
                 'booking_description' => $data['booking_description'] ?? null,
                 'status' => 'awaiting_provider',
                 'booking_working_minutes' => $totalMinutes,
                 'total_price' => $data['total_price'],
                 'service_charges' => $data['service_charges'] ?? 0,
-                'stripe_payment_intent_id' => $intent->id,
-                'stripe_payment_method_id' => $data['payment_method_id'],
-                'paid_at' => $intent->status === 'succeeded' ? now() : null,
+                // 'stripe_payment_intent_id' => $intent->id,
+                // 'stripe_payment_method_id' => $data['payment_method_id'],
+                // 'paid_at' => $intent->status === 'succeeded' ? now() : null,
+                // 'paid_at' => null,
                 'expires_at' => now()->addHours(2),
             ]);
 
