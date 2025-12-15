@@ -83,8 +83,11 @@ class PaymentController extends BaseController
      */
     public function makeDefault($id)
     {
-        $card = UserPaymentMethod::where('user_id', Auth::id())->findOrFail($id);
+        $card = UserPaymentMethod::where('user_id', Auth::id())->find($id);
 
+        if (empty($card)) {
+            return $this->sendError('Card not found.', 404);
+        }
         $user = Auth::user();
         $customerId = $this->stripe->ensureCustomer($user);
 
