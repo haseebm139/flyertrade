@@ -30,7 +30,7 @@ class StoreBookingRequest extends FormRequest
             'total_price' => 'required|numeric|min:0',
             'service_charges' => 'nullable|numeric|min:0',
             'currency' => 'required|string|size:3', // e.g. usd
-            'payment_method_id' => 'required|string', // pm_xxx from Flutter
+            'payment_method_id' => 'nullable|string', // pm_xxx from Flutter
 
             // Multiple-day slots:
             'slots' => 'required|array|min:1',
