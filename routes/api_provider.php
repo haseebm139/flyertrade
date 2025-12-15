@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\Api\Provider\{ProfileController,ProviderServiceController,BookingController as ProviderBookingActionController,ChatController,PayoutController};
+use App\Http\Controllers\Api\PaymentController;
 
 Route::middleware('auth:sanctum')->controller(ProviderBookingActionController::class)->prefix('booking')->group(function () {
     Route::post('{booking}/accept', 'accept');
@@ -42,5 +43,12 @@ Route::prefix('provider')->group(function () {
     // Payouts
     Route::get('payouts', [PayoutController::class,'index']);
     Route::post('payouts/request', [PayoutController::class,'requestPayout']);
+
+    // Provider can also manage their cards (same controller as customer)
+    Route::prefix('payments')->group(function () {
+        Route::post('cards', [PaymentController::class,'addCard']);
+        Route::get('cards', [PaymentController::class,'listCards']);
+        Route::post('cards/{card}/default', [PaymentController::class,'makeDefault']);
+    });
   });
 });

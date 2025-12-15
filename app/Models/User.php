@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\UserPaymentMethod;
 
 use Illuminate\Support\Str;
 
@@ -48,6 +49,11 @@ class User extends Authenticatable
             'password' => 'hashed',
             'is_bookmarked' => 'boolean',
         ];
+    }
+
+    public function paymentMethods()
+    {
+        return $this->hasMany(UserPaymentMethod::class);
     }
     protected static function boot()
     {

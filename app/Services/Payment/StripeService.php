@@ -6,6 +6,7 @@ use Stripe\PaymentIntent;
 use Stripe\Refund; 
 use Stripe\PaymentMethod;
 use Stripe\Customer;
+use App\Models\User;
 
 use Illuminate\Http\JsonResponse;
 class StripeService
@@ -59,6 +60,45 @@ class StripeService
     public function refundByPaymentIntent(string $paymentIntentId): \Stripe\Refund
     {
         return Refund::create(['payment_intent' => $paymentIntentId]);
+    }
+
+    /**
+     * Ensure a Stripe customer exists for the given user and return the id.
+     */
+    public function ensureCustomer(User $user): string
+    {
+        if (!empty($user->stripe_customer_id)) {
+            return $user->stripe_customer_id;
+        }
+
+        $customer = Customer::create([
+            'email' => $user->email,
+            'name'  => $user->name,
+        ]);
+
+        $user->update(['stripe_customer_id' => $customer->id]);
+
+        return $customer->id;
+    }
+
+    /**
+     * Attach a PaymentMethod to customer and optionally set it default.
+     */
+    public function attachPaymentMethod(string $customerId, string $paymentMethodId, bool $makeDefault = false): PaymentMethod
+    {
+        $paymentMethod = PaymentMethod::retrieve($paymentMethodId);
+
+        $paymentMethod->attach(['customer' => $customerId]);
+
+        if ($makeDefault) {
+            Customer::update($customerId, [
+                'invoice_settings' => [
+                    'default_payment_method' => $paymentMethodId,
+                ],
+            ]);
+        }
+
+        return $paymentMethod;
     }
 }
 

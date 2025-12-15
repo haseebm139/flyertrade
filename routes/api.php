@@ -9,7 +9,7 @@ use App\Http\Controllers\Api\ConversationsController;
 use App\Http\Controllers\Api\MessagesController;
 use App\Http\Controllers\Api\OffersController;
 use App\Http\Controllers\Api\ReviewsController;
-
+use App\Http\Controllers\Api\PaymentController;
 
 Route::post('stripe/webhook', [StripeWebhookController::class, 'handle']);
 
@@ -62,6 +62,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::controller(ReviewsController::class)->prefix('reviews')->group(function () {
         Route::get('/', 'index');
     });
+
+    Route::prefix('payments')->group(function () {
+            Route::post('cards', [PaymentController::class,'addCard']);
+            Route::get('cards', [PaymentController::class,'listCards']);
+            Route::post('cards/{card}/default', [PaymentController::class,'makeDefault']);
+        });
 });
 // require __DIR__ .'/auth.php';
 require __DIR__.'/api_customer.php';

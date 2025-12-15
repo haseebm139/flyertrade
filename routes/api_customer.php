@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\Customer\{AuthController,ProviderController,ProfileController,BookingController as CustomerBookingController,ChatController,ReviewController,PaymentController};
+use App\Http\Controllers\Api\Customer\{AuthController,ProviderController,ProfileController,BookingController as CustomerBookingController,ChatController,ReviewController};
+use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\Shared\MediaController;
 
 
@@ -38,6 +39,9 @@ Route::prefix('customer')->group(function () {
         // Payments (Stripe)
         Route::post('payments/intent', [PaymentController::class,'createPaymentIntent']);
         Route::post('payments/confirm', [PaymentController::class,'confirmPayment']); // optional server confirm
+
+        // Customer cards
+        
     });
 
   // Webhooks (Stripe)
