@@ -41,6 +41,13 @@ Route::prefix('customer')->group(function () {
         Route::post('payments/confirm', [PaymentController::class,'confirmPayment']); // optional server confirm
 
         // Customer cards
+        Route::prefix('payments')->group(function () {
+            Route::post('cards', [PaymentController::class,'addCard']);
+            Route::get('cards', [PaymentController::class,'listCards']);
+            Route::post('cards/{card}/default', [PaymentController::class,'makeDefault']);
+            // TEST ONLY: Create test payment_method
+            Route::post('test/create-payment-method', [PaymentController::class,'createTestPaymentMethod']);
+        });
         
     });
 

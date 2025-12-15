@@ -67,6 +67,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('cards', [PaymentController::class,'addCard']);
             Route::get('cards', [PaymentController::class,'listCards']);
             Route::post('cards/{card}/default', [PaymentController::class,'makeDefault']);
+            Route::post('test/create-payment-method', [PaymentController::class,'createTestPaymentMethod']);
         });
 });
 // require __DIR__ .'/auth.php';

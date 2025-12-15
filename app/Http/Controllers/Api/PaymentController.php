@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\BaseController;
 use Illuminate\Http\Request;
 use App\Services\Payment\StripeService;
 use App\Models\UserPaymentMethod;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Stripe\PaymentMethod;
 
-class PaymentController extends Controller
+class PaymentController extends BaseController
 {
     public function __construct(private StripeService $stripe) {}
 
@@ -36,10 +37,7 @@ class PaymentController extends Controller
                 makeDefault: $makeDefault
             );
         } catch (\Throwable $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Stripe error: ' . $e->getMessage(),
-            ], 422);
+            return $this->sendError('Stripe error: '.$e->getMessage(), 422);
         }
 
         $card = $paymentMethod->card;
@@ -64,11 +62,7 @@ class PaymentController extends Controller
             );
         });
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Card added successfully.',
-            'data' => $record,
-        ]);
+        return $this->sendResponse($record, 'Card added successfully.');
     }
 
     /**
@@ -81,10 +75,7 @@ class PaymentController extends Controller
             ->latest()
             ->get();
 
-        return response()->json([
-            'success' => true,
-            'data' => $cards,
-        ]);
+        return $this->sendResponse($cards, 'Cards fetched successfully.');
     }
 
     /**
@@ -100,10 +91,7 @@ class PaymentController extends Controller
         try {
             $this->stripe->attachPaymentMethod($customerId, $card->stripe_payment_method_id, true);
         } catch (\Throwable $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Stripe error: ' . $e->getMessage(),
-            ], 422);
+            return $this->sendError('Stripe error: '.$e->getMessage(), 422);
         }
 
         DB::transaction(function () use ($card) {
@@ -111,10 +99,31 @@ class PaymentController extends Controller
             $card->update(['is_default' => true]);
         });
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Default card updated.',
-        ]);
+        return $this->sendResponse([], 'Default card updated.');
+    }
+
+    /**
+     * TEST ONLY: Create a test payment_method using Stripe test token.
+     * Use this to get a valid payment_method_id for testing addCard API.
+     * Body: { "test_token": "tok_visa" } (optional, defaults to tok_visa)
+     */
+    public function createTestPaymentMethod(Request $request)
+    {
+        $testToken = $request->input('test_token', 'tok_visa'); // Default Stripe test token
+
+        try {
+            $paymentMethod = PaymentMethod::create([
+                'type' => 'card',
+                'card' => ['token' => $testToken],
+            ]);
+
+            return $this->sendResponse([
+                'payment_method_id' => $paymentMethod->id,
+                'message' => 'Test payment_method created. Use this payment_method_id in addCard API.',
+            ], 'Test payment_method created successfully.');
+        } catch (\Throwable $e) {
+            return $this->sendError('Stripe error: '.$e->getMessage(), 422);
+        }
     }
 }
 
