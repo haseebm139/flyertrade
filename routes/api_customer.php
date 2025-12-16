@@ -21,6 +21,7 @@ Route::prefix('customer')->group(function () {
 
         Route::controller(ProviderController::class)->group(function () {
             Route::get('/providers', 'providers');
+            Route::get('/providers/services/{service_id}', 'providersByServices');
             Route::get('/providers/{provider}', 'show');
             Route::get('/bookmarks', 'bookmarks');
             Route::post('/bookmarks', 'toggle');

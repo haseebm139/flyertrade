@@ -67,6 +67,13 @@ class ProviderRepository
             });
         }
 
+        if (!empty($filters['service_id'])) {
+
+            $query->whereHas('providerServices.service', function ($q) use ($filters) {
+                $q->where('id', $filters['service_id'] );
+            });
+        }
+
         // 🔹 Filter by Price Range
         // if (!empty($filters['min_price']) && !empty($filters['max_price'])) {
         //     $query->whereHas('providerServices', function ($q) use ($filters) {

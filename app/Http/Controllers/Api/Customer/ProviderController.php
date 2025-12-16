@@ -23,6 +23,7 @@ class ProviderController extends BaseController
         $filters = $request->only([
             'provider_name',
             'service_name',
+            'service_id',
             'min_price',
             'max_price',
             'min_rating',
