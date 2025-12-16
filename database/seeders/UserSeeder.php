@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-
+use App\Models\ProviderWorkingHour;
 class UserSeeder extends Seeder
 {
 
@@ -54,6 +54,8 @@ class UserSeeder extends Seeder
             'user_type' => $providerRole->name,
         ])->each(function ($user) use ($providerRole) {
             $user->assignRole($providerRole->name);
+            $profile = $user->providerProfile()->create([]);
+            ProviderWorkingHour::seedDefaultHours($user->id, $profile->id);
         });
 
         // Create 5 Customers
