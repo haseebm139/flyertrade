@@ -207,7 +207,6 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the total bookings attribute (as provider)
      *
      * @return int
      */
