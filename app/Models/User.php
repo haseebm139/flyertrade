@@ -197,9 +197,7 @@ class User extends Authenticatable
     {
         // If already loaded via withAvg, use that value
         if (isset($this->attributes['published_reviews_avg_rating'])) {
-            $rating = $this->attributes['published_reviews_avg_rating'];
-            return round((float) $rating, 2);
-            // return round((float) $this->attributes['published_reviews_avg_rating'], 2);
+            return round((float) $this->attributes['published_reviews_avg_rating'], 2);
         }
         
         // Otherwise calculate on the fly
