@@ -196,20 +196,14 @@ class User extends Authenticatable
      */
     public function getOverallRatingAttribute(): float
     {
-        // // If already loaded via withAvg, use that value
-        // if (isset($this->attributes['published_reviews_avg_rating'])) {
-        //     return round((float) $this->attributes['published_reviews_avg_rating'], 2);
-        // }
+        // If already loaded via withAvg, use that value
+        if (isset($this->attributes['published_reviews_avg_rating'])) {
+            return round((float) $this->attributes['published_reviews_avg_rating'], 2);
+        }
         
-        // // Otherwise calculate on the fly
-        // $rating = $this->publishedReviews()->avg('rating') ?? 0;
-        // return round((float) $rating, 2);
-
-        $rating = $this->attributes['published_reviews_avg_rating'] 
-              ?? $this->publishedReviews()->avg('rating') 
-              ?? 0;
-
-        return (float) round((float) $rating, 1);
+        // Otherwise calculate on the fly
+        $rating = $this->publishedReviews()->avg('rating') ?? 0;
+        return round((float) $rating, 2);
     }
 
     /**
