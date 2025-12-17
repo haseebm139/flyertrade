@@ -48,7 +48,6 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_bookmarked' => 'boolean',
-            'published_reviews_avg_rating' => 'double',
         ];
     }
 
@@ -207,6 +206,7 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the total bookings attribute (as provider)
      *
      * @return int
      */
