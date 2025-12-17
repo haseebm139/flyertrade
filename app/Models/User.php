@@ -48,7 +48,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_bookmarked' => 'boolean',
-            'published_reviews_avg_rating' => 'float',
+            'published_reviews_avg_rating' => 'double',
         ];
     }
 
