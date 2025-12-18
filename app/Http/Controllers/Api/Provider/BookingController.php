@@ -62,4 +62,40 @@ class BookingController extends BaseController
         }
         return $this->sendResponse($updated, 'Booking completed successfully.'); 
     }
+
+    public function job(): JsonResponse
+    {
+        $job = $this->bookings->job(auth()->user()->id);
+         
+        return $this->sendResponse($job, 'Job created successfully.'); 
+    }
+
+    public function pending(): JsonResponse
+    {
+        $pending = $this->bookings->pendingBookingsProvider(auth()->user()->id);
+        return $this->sendResponse($pending, 'Pending bookings.');
+    }
+    public function upcoming(): JsonResponse
+    {
+        $upcoming = $this->bookings->upcomingBookingsProvider(auth()->user()->id);
+        return $this->sendResponse($upcoming, 'Upcoming bookings.'); 
+    }
+
+    public function onGoing(): JsonResponse
+    {
+        $ongoing = $this->bookings->ongoingBookingsProvider(auth()->user()->id);
+        return $this->sendResponse($ongoing, 'Ongoing bookings.'); 
+    }
+
+    public function completed(): JsonResponse
+    {
+        $completed = $this->bookings->completedBookingsProvider(auth()->user()->id);
+        return $this->sendResponse($completed, 'Completed bookings.'); 
+    }
+
+    public function totalAmount(): JsonResponse
+    {
+        $amount = $this->bookings->totalAmountProvider(auth()->user()->id);
+        return $this->sendResponse($amount, 'Total amount.'); 
+    }
 }

@@ -33,10 +33,11 @@ class StoreBookingRequest extends FormRequest
             'payment_method_id' => 'nullable|string', // pm_xxx from Flutter
 
             // Multiple-day slots:
-            'slots' => 'required|array|min:1',
-            'slots.*.service_date' => 'required|date_format:Y-m-d',
+            'slots' => 'required|array|min:1', 
+            'slots.*.service_date' => 'required|date_format:Y-m-d|after_or_equal:today',
             'slots.*.start_time' => 'required|date_format:H:i',
             'slots.*.end_time' => 'required|date_format:H:i|after:slots.*.start_time',
+  
         ];
     }
 

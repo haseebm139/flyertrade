@@ -21,26 +21,26 @@ class BookingService
     public function checkAvailability(array $slot, int $providerId): string
     {
         $dayName = strtolower(Carbon::parse($slot['service_date'])->format('l'));
-        
+         
         // 1. Get provider working hours
         $workingHour = ProviderWorkingHour::where('user_id', $providerId)
             ->where('day', $dayName)
             ->first();
             
             
-        
+         
         if (!$workingHour || !$workingHour->is_active) {
             return 'not_available';
         }       
-         
         // 2. Validate slot inside working hours
-        if (
-            $slot['start_time'] < $workingHour->start_time ||
-            $slot['end_time'] > $workingHour->end_time
-        ) {
-             
-            return 'not_available';
-        }
+        // if (
+        //     $slot['start_time'] < $workingHour->start_time ||
+        //     $slot['end_time'] > $workingHour->end_time
+        //     ) {
+                
+                 
+        //         return 'not_available';
+        //     }
 
         // 3. Check if provider is fully booked
         if ($this->providerHasConflict($providerId, $slot['service_date'], $slot['start_time'], $slot['end_time']
@@ -51,12 +51,15 @@ class BookingService
         return 'available';
     }
 
-    public function providerHasService($providerId, $serviceId): bool
+    public function providerHasService($providerId, $serviceId) 
     {
+         
         $providerHasService = ProviderService::where('user_id', $providerId)
             ->where('service_id', $serviceId)
             ->first() ;
-        return $providerHasService ? true : false;
+        return ['status'=>$providerHasService ? true : false, 'data'=>$providerHasService];
+        //     dd($providerHasService);
+        // return $providerHasService ? true : false;
             
     }
     public function create(array $data) 
@@ -69,14 +72,13 @@ class BookingService
 
          
         $providerHasService = $this->providerHasService($data['provider_id'], $data['service_id']);
-        
-        if (!$providerHasService) {
+        if (!$providerHasService['status']) {
             return [
                 'error' => true,
                 'message' => 'Provider does not offer this service.'
             ];
             
-        }
+        } 
         if ($providerIsAvailable == false) {
             return [
                 'error' => true,
@@ -88,7 +90,7 @@ class BookingService
 
         foreach ($data['slots'] as $slot) {
             $status = $this->checkAvailability($slot, $data['provider_id']);
-              
+             
             if ($status !== 'available') {
                 return [
                     'error' => true,
@@ -97,7 +99,7 @@ class BookingService
             }  
              
             $duration = $this->minutesBetween($slot['start_time'], $slot['end_time']);
-              
+             
             if ($duration <= 0) {
                 return [
                     'error' => true,
@@ -130,15 +132,16 @@ class BookingService
         //         'message' => 'Payment could not be confirmed'
         //     ];  
         // }
-        
+          
         // Persist booking + slots
-        return DB::transaction(function () use ($data, $totalMinutes) {
+        return DB::transaction(function () use ($data, $totalMinutes,$providerHasService) {
+              
             $booking = Booking::create([
                 'booking_ref' => $this->makeRef(),
                 'customer_id' => auth()->user()->id,
                 'provider_id' => $data['provider_id'],
                 'service_id' => $data['service_id'],
-                'provider_service_id' => $providerHasService->id ?? null,
+                'provider_service_id' => $providerHasService['data']->id ,
                 'booking_address' => $data['booking_address'],
                 'booking_description' => $data['booking_description'] ?? null,
                 'status' => 'awaiting_provider',
@@ -202,7 +205,8 @@ class BookingService
                 'error' => true,
                 'message' => 'Only confirmed bookings can be started.'
             ]; 
-        }
+        } 
+        
         $booking->update(['status' => 'in_progress', 'started_at' => now()]);
         return $booking->fresh('slots');
     }
@@ -376,11 +380,62 @@ class BookingService
 
     public function providerIsAvailable($providerId)
     {
-        $provider = User::find($providerId);
-        
+        $provider = User::find($providerId); 
         if (!$provider || $provider->providerProfile->availability_status != 'available') {
             return false; 
         }
         return true;
+    }
+    public function job($providerId){
+        $data['pending'] = $this->pendingBookingsProvider($providerId);
+        $data['ongoing'] = $this->onGoingBookingsProvider($providerId);
+        $data['upcoming'] = $this->upcomingBookingsProvider($providerId);
+        $data['completed'] = $this->completedBookingsProvider($providerId);
+        $data['totalAmount'] = $this->totalAmountProvider($providerId);
+        return $data;
+    }
+    public function pendingBookingsProvider($providerId)
+    {
+        return Booking::with('slots', 'provider', 'customer','providerService.service')->where('provider_id', $providerId)->where('status', 'awaiting_provider')->paginate(10);
+    }
+
+    public function onGoingBookingsProvider($providerId)
+    {
+        return Booking::with('slots', 'provider', 'customer','providerService.service')->where('provider_id', $providerId)->where('status', 'in_progress')->first();
+    }
+
+    public function upcomingBookingsProvider($providerId)
+    {
+        return Booking::with('slots', 'provider', 'customer','providerService.service')->where('provider_id', $providerId)->where('status', 'confirmed')->paginate(10);
+    }
+
+    public function completedBookingsProvider($providerId)
+    {
+        return Booking::with('slots', 'provider', 'customer','providerService.service')->where('provider_id', $providerId)->where('status', 'completed')->paginate(10);
+    }
+
+    public function totalAmountProvider($providerId)
+    {
+         
+        return Booking::where('provider_id', $providerId)->where('status', 'completed')->sum('total_price');
+    }
+
+    public function pendingBookingsCustomer($customerId)
+    {
+        return Booking::with('slots', 'provider', 'customer','providerService.service')->where('customer_id', $customerId)->where('status', 'awaiting_provider')->paginate(10);
+    }
+    public function upcomingBookingsCustomer($customerId)
+    {
+        return Booking::with('slots', 'provider', 'customer','providerService.service')->where('customer_id', $customerId)->where('status', 'confirmed')->paginate(10);
+    }
+
+    public function completedBookingsCustomer($customerId)
+    {
+        return Booking::with('slots', 'provider', 'customer','providerService.service')->where('customer_id', $customerId)->where('status', 'completed')->paginate(10);
+    }
+
+    public function cancelledBookingsCustomer($customerId)
+    {
+        return Booking::with('slots', 'provider', 'customer','providerService.service')->where('customer_id', $customerId)->where('status', 'cancelled')->paginate(10);
     }
 }

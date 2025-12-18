@@ -7,6 +7,13 @@ Route::middleware('auth:sanctum')->controller(ProviderBookingActionController::c
     Route::post('{booking}/reject', 'reject');
     Route::post('{booking}/complete', 'complete');
     Route::post('{booking}/start', 'start'); 
+    Route::get('provider/job', 'job');
+    Route::get('provider/upcoming', 'upcoming');
+    Route::get('provider/ongoing', 'ongoing');
+    Route::get('provider/completed', 'completed');
+    Route::get('provider/pending', 'pending');
+    Route::get('provider/total-amount', 'totalAmount');
+
 });
 Route::prefix('provider')->group(function () {
 

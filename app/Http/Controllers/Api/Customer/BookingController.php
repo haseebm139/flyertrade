@@ -71,4 +71,28 @@ class BookingController extends BaseController
             'reschedule' => $data['reschedule'],
         ], 'Reschedule response handled.');
     }
+
+    public function pending(): JsonResponse
+    {
+        $pending = $this->bookingsService->pendingBookingsCustomer(auth()->user()->id);
+        return $this->sendResponse($pending, 'Pending bookings.');
+    }
+    public function upcoming(): JsonResponse
+    {
+        $upcoming = $this->bookingsService->upcomingBookingsCustomer(auth()->user()->id);
+        return $this->sendResponse($upcoming, 'Upcoming bookings.'); 
+    }
+
+    public function completed(): JsonResponse
+    {
+         
+        $upcoming = $this->bookingsService->completedBookingsCustomer(auth()->user()->id);
+        return $this->sendResponse($upcoming, 'Completed bookings.'); 
+    }
+
+    public function cancelled(): JsonResponse
+    {
+        $upcoming = $this->bookingsService->cancelledBookingsCustomer(auth()->user()->id);
+        return $this->sendResponse($upcoming, 'Cancelled bookings.'); 
+    }
 }

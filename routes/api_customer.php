@@ -10,6 +10,10 @@ Route::middleware('auth:sanctum')->controller(CustomerBookingController::class)-
     Route::get('{booking}','show');    // show one
     Route::post('{booking}/reschedule/request','requestReschedule');    // show one
     Route::post('{booking}/reschedule/respond','respondReschedule');    // show one
+    Route::get('customer/pending', 'pending');
+    Route::get('customer/upcoming', 'upcoming');
+    Route::get('customer/completed', 'completed');
+    Route::get('customer/cancelled', 'cancelled');
 });
 Route::prefix('customer')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
