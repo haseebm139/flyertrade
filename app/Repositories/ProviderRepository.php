@@ -49,7 +49,7 @@ class ProviderRepository
             ->withCount([
                 'providerBookings as provider_bookings_count',
                 'providerServices as provider_services_count',
-                // 'publishedReviews as published_reviews_count'
+                'publishedReviews as published_reviews_count'
             ])
             ->withAvg('publishedReviews as published_reviews_avg_rating', 'rating');
 
