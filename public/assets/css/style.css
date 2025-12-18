@@ -1668,7 +1668,8 @@ td.user-data.id-number {
     display: block;
     padding: 0.417vw 0.729vw;
     font-size: 0.677vw;
-    color: #333;
+    color: #1B1B1B;
+    font-weight: 400;
     text-decoration: none;
 }
 

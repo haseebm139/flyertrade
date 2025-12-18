@@ -491,7 +491,7 @@
 
             <span class="badge badge-verified badge-pill actions-btn-verified" style="position:relative;padding:0.677vw;" data-block='1' data-badge>Verified &nbsp; <i class="fa-solid fa-chevron-down"></i> 
                           <div class="actions-menu" id="actions-menu-verified-1" style="display: none;left:0px;right:unset;top:2.5vw;min-width: 6.5vw;">
-                             <a href="#">Pending</a>
+                             <a href="#" >Pending</a>
                                 <a href="#" >Decline</a>
                             </div>
                     </span>
