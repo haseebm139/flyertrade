@@ -34,6 +34,11 @@
     <livewire:admin.bookings.table />
 
 
+<style>
+    .details-grid .status{
+        border-radius: 1.042vw;
+    }
+</style>
 
 
 
@@ -41,9 +46,9 @@
         <div class="view-booking-content">
         <div class="modal-header" style="margin-bottom:1.563vw">
                 <h2 style="font-size:1.146vw;font-weight: 600;line-height:1;">Booking details</h2>
-                <div class="header-actions">
+                <div class="header-actions" style="line-height:1;">
 
-                    <span class="close-btn" style="line-height:1;" onclick="closeBookingModal()"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <span  style="line-height:1;font-weight:0.625vw;" onclick="closeBookingModal()"><svg style="width:0.625vw;height:0.625vw;" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75" stroke="#717171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
                         </svg></span>
                 </div>
@@ -51,7 +56,7 @@
             <div class="service-header-icons">
                 <h4 style="font-size:0.938vw;font-weight: 500; letter-spacing: -0.04em;">Service details</h4>
                 <h5> <img src="{{ asset('assets/images/icons/download.svg') }}" alt="Download" class="download-icon"> <small
-                        style="color:grey;">Download </small></h5>
+                        style="color:grey;font-size:0.938vw;">Download </small></h5>
             </div>
 
             <div class="modal-section">
@@ -72,7 +77,7 @@
                     <div>Service cost</div>
                     <div>$40</div>
                     <div>Status</div>
-                    <div class="status completed" style="color:#17a55a;border-color:#17a55a;font-weight:500;background:rgba(23, 165, 90, 0.1)">Completed</div>
+                    <div class="status completed" style="color:#004e42;border-color:#004e42;font-weight:500;background:rgba(0, 78, 66, 0.1)">Completed</div>
                 </div>
             </div>
 

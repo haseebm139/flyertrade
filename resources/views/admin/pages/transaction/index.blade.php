@@ -553,7 +553,7 @@
             <div class="service-header-icons">
                 <h4 style="font-size:0.938vw;font-weight: 500; letter-spacing: -0.04em;">Transaction info</h4>
                 <h5> <img src="{{ asset('assets/images/icons/download.svg') }}" alt="Download" class="download-icon">
-                    <small style="color:grey;">Download </small>
+                    <small style="color:grey;font-size:0.938vw;">Download </small>
                 </h5>
             </div>
 
