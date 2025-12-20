@@ -95,4 +95,13 @@ class BookingController extends BaseController
         $upcoming = $this->bookingsService->cancelledBookingsCustomer(auth()->user()->id);
         return $this->sendResponse($upcoming, 'Cancelled bookings.'); 
     }
+
+    public function processPayment($id): JsonResponse
+    {
+        $payment = $this->bookingsService->processPayment($id);
+        if ($payment['error'] === true) {
+            return $this->sendError($payment['message']);
+        } 
+        return $this->sendResponse([], 'Payment processed successfully.'); 
+    }
 }

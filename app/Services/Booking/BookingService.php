@@ -438,4 +438,15 @@ class BookingService
     {
         return Booking::with('slots', 'provider', 'customer','providerService.service')->where('customer_id', $customerId)->where('status', 'cancelled')->paginate(10);
     }
+
+    public function processPayment($id): array
+    {
+        $booking = Booking::with('slots')->find($id);
+        if (!$booking) {
+            return ['error' => true, 'message' => 'Booking not found'];
+        }
+        $booking->paid_at = now();
+        $booking->save();
+        return ['error' => false, 'message' => 'Payment processed successfully.'];
+    }
 }
