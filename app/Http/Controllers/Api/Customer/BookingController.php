@@ -35,7 +35,7 @@ class BookingController extends BaseController
         if (!$booking) {
             return $this->sendError('Booking not found', 404);
         }
-        return $this->sendResponse($booking->load('slots'), 'Booking retrieved successfully.'); 
+        return $this->sendResponse($booking->load('slots','customer','provider','providerService.service'), 'Booking retrieved successfully.'); 
     }
     public function requestReschedule(Request $request, $id)
     {

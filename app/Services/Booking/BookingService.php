@@ -165,7 +165,7 @@ class BookingService
                 ]);
             }
 
-            return $booking->load('slots');
+            return $booking->load('slots','customer','provider','providerService.service');
         });
     }
 
