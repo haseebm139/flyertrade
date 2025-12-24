@@ -44,8 +44,12 @@
             width: 0.625vw;
             height: 0.625vw;
         }
+    
+ 
+        
     </style>
 <div class="top-row">
+    <a><i class="fa-solid fa-bars"></i></a>
     <div class="page-title">@yield('header', 'Dashboard')</div>
     <div class="d-flex gap-3">
         <!-- Search Input -->

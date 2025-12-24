@@ -147,11 +147,128 @@
     --bs-nav-link-padding-y: 0.0521vw;
 }
 
+@media(max-width:600px){
+    .sidebar{
+        display:none;
+    }
+    .main{
+        margin-left:0px;
+    }
+    .top-row{
+        padding:10px;
+    }
+    .page-title {
+    font-size: 3.458vw;
+    }
+    .search-box {
+    width: 25vw;
+    padding: 1vw 1.8vw 0.6vw 3vw;
+    font-size: 1.9vw;
+    border-radius: 1.5625vw;
+    border: 0.1vw solid #f1f1f1;
+    background: url(/assets/images/icons/search-icon.svg) no-repeat 0.8vw center;
+    background-size: 1.8vw;
+    outline: none;
+    background-color: #f1f1f1;
+    line-height: 1;
+}
+.icon-btn img {
+    width: 2.75vw !important;
+    height:2.75vw !important;
+}
+.logo-placeholder .admin-img {
+    width: 4.7vw;
+    height: 4.7vw;
+}
+.profile-name, .profile-email {
+
+    font-size: 1.885vw;
+}
+     
+        .icon-box img {
+    width: 5.25vw;
+    height: 5.25vw;
+    margin-top: 1.5vw;
+}
+       .dashboard-card h6 {
+        font-size: 1.8vw;
+    }
+           .dashboard-card h2 {
+    font-size: 5vw;
+
+        }
+            .dashboard-card{
+            height:12vw;
+            margin-bottom:10px;
+                    padding: 2vw;
+        }
+        .card-title {
+    font-weight: 500;
+    font-size: 3.5vw;
+    margin-bottom: 0.625vw;
+    color: #1b1b1b;
+}
+.finance-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4.625vw;
+}
+.stat-title span {
+
+    width: 1.5vw;
+    height: 1.5vw;
+
+}
+.stat-title, .dashboard-view-all {
+    font-size: 2vw;
+}
+.stat-box {
+
+    height: 15vw;
+    padding: 2vw;
+}
+.stat-value, .user-table-card .card-title{
+       font-size: 3.5vw;
+}
+.progress-bar-custom {
+    height: 1vw;
+}
+    .finances-card, .recent-dispute-card {
+        min-height: auto;
+        padding:2vw;
+    }
+    .recent-dispute-header h5 {
+
+    font-size: 3.5vw;
+    }
+    .recent-dispute-header a {
+    font-size: 2vw;
+    }
+  
+    .table td,  .table thead th, .user-info {
+        font-size: 2.9vw;
+    }
+    .user-info img {
+    width: 10vw;
+    height: 10vw;
+    }
+    .user-info {
+        gap: 2.521vw;
+    }
+        .table td, .nav-tabs .nav-link {
+        font-size: 12px;
+        padding: 5px;
+    }
+    .user-table-card table thead th {
+    font-weight: 500;
+    font-size: 2vw;
+    }
+}
     </style>
 </head>
 
 <body>
-    <div id="wrapper_mobile_display_none"></div>
+    <!-- <div id="wrapper_mobile_display_none"></div> -->
 
     @include('admin.partials.sidebar')
     <div class="wrapper">
