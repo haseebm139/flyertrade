@@ -205,7 +205,10 @@ if ($selectedValue === null && !empty($normalizedOptions)) {
     }
     @media(max-width:600px){
         .custom-select-text {
-    font-size: 2vw;
-}
+            font-size: 2vw;
+        }
+        .custom-select-option-label {
+            font-size: 2vw;
+        }
     }
 </style>

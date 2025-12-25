@@ -44,12 +44,84 @@
             width: 0.625vw;
             height: 0.625vw;
         }
-    
+        .flyertrade-admin{
+            margin-top:0.26vw; font-size:0.833vw;
+        }
+        .flyertrade-email{
+            font-size: 0.8125vw;
+        }
+        #notifPopup_____ .popup-title{
+            font-size: 0.8vw;
+        }
+        .view_all_notification{
+            padding: 0.8vw 1.5vw;
+        }
+                .notification-view a{
+                    font-size: 0.95vw;
+                }
+                #back_to_notify_modal{
+                    margin-right:0.521vw;
+                }
+    @media(max-width:600px){
+            #profilePopup svg, #notifPopup_____ svg, #providerModal svg, .modal-content svg {
+                width:2vw;
+                height: 2vw;
+            }
+            #profilePopup{
+                padding: 2vw;
+            }
+            #profileBtn     .profile-arrows {
+                font-size: 1.9vw;
+            }
+            .flyertrade-admin{
+                margin-top:1vw; font-size:2vw;
+            }
+            .flyertrade-email, .logout-btn{
+                font-size: 2vw;
+            }
+            .img-log {
+                width: 2vw !important;
+                height: 2vw !important;
+                margin-right: 2px;
+            }
+            .notification-item img {
+                width: 4vw !important;
+                height: 4vw !important;
+            }
+            .notification-title {
+                font-size: 2vw;
+            }
+                        .notification_item_wrapper{
+                gap:2px;
+            }
+            #notifPopup_____ .popup-title{
+                font-size: 2vw;
+            }
+            .notification-view {
+                font-size: 1.5vw;
+            }
+              .view_all_notification a{
+                    font-size: 1.5vw;
+                }
+                #providerModal .provider-modal-content{
+                    width:60vw;
+                }
+                .provider-modal-body{
+                    width: 100%;
+                }
+                .provider-modal-header h6 {
+                    font-size: 1.5vw;
+                }
+                    #back_to_notify_modal{
+                    margin-right:0.521vw;
+                }
+
+    }
  
         
     </style>
 <div class="top-row">
-    <a><i class="fa-solid fa-bars"></i></a>
+    <a id="menubutton"><i class="fa-solid fa-bars" ></i></a>
     <div class="page-title">@yield('header', 'Dashboard')</div>
     <div class="d-flex gap-3">
         <!-- Search Input -->
@@ -66,7 +138,7 @@
             padding: 1vw 1.5vw 0px; border-bottom: 0vw solid #ddd; background-color: #fff;border-radius: 20px;">
 
                     <span class="popup-title"
-                        style="font-size: 1vw; font-weight: 600; color: #333; letter-spacing: 0.05vw;">
+                        style=" font-weight: 600; color: #333; letter-spacing: 0.05vw;">
                         Notification
                     </span>
 
@@ -112,9 +184,10 @@
                     
                 </div>
               
-                <div style="padding: 0.8vw 1.5vw; text-align: left;">
+                <div class="view_all_notification" style=" text-align: left;">
                     <a href="{{ route('notification.index') }}"
-                        style="color: #00796B; font-size: 0.95vw; font-weight: 500; text-decoration: none; display: flex; align-items: center; gap: 0.3vw;">
+                          
+                    style="color: #00796B;  font-weight: 500; text-decoration: none; display: flex; align-items: center; gap: 0.3vw;">
                         View all notifications
                         <span style="font-size: 1vw;">&#8250;</span>
                     </a>
@@ -129,7 +202,7 @@
                 <!-- Header -->
                 <div class="provider-modal-header">
                     <h6><i class="fa-solid fa-arrow-left" id="back_to_notify_modal"
-                            style="margin-right:10px;cursor:pointer"></i> 3 New Providers Awaiting Document
+                            style="cursor:pointer"></i> 3 New Providers Awaiting Document
                         Verification.</h6>
                     <button class="provider-modal-close" id="provide_modal_close" data-close="providerModal">
                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -195,8 +268,8 @@
             </div>
             <div class="profile-card">
                 <img src="{{ asset('assets/images/icons/person.svg') }}" alt="User">
-                <div style="font-weight:500; margin-top:5px; font-size:0.833vw;">Flyertrade Admin</div>
-                <div class="muted small">flyertrade@example.com</div>
+                <div style="font-weight:500;" class="flyertrade-admin">Flyertrade Admin</div>
+                <div class="muted small flyertrade-email" >flyertrade@example.com</div>
 
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                     @csrf

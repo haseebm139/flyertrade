@@ -4445,3 +4445,9 @@ textarea.form-input.error-input:focus {
         top: 3.7vw !important;
     }
 }
+
+@media(max-width:600px){
+        .popup {
+        top: 9vw !important;
+    }
+}
