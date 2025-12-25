@@ -1,131 +1,157 @@
 <!-- ========== Begin::Header (always open) ========== -->
 <style>
-    .notification_text_wrapper{
+    .notification_text_wrapper {
         display: flex;
         align-items: center;
         justify-content: space-between;
 
     }
-    .notification_item_wrapper{
-       /* padding: 0.8vw 1.5vw; */
-       padding: 0.8vw 1.5vw 0vw 1.5vw;
-         gap:10px;  
-         display: flex;
-         flex-direction: column;
-             /* border-bottom: 0.0625vw solid #f0f0f0; */
+
+    .notification_item_wrapper {
+        /* padding: 0.8vw 1.5vw; */
+        padding: 0.8vw 1.5vw 0vw 1.5vw;
+        gap: 10px;
+        display: flex;
+        flex-direction: column;
+        /* border-bottom: 0.0625vw solid #f0f0f0; */
     }
-    
 </style>
-    <style>
-        .filter_active_btna___{
-            border: 0.052vw solid  rgba(0, 78, 66, 0.3);
-            border-radius: 0.521vw;
-            padding: 0.625vw 1.25vw;
-            background:  rgba(0, 78, 66, 0.3);
-            display: none;
-            gap:0.521vw;
-            align-items: center;
+<style>
+    .filter_active_btna___ {
+        border: 0.052vw solid rgba(0, 78, 66, 0.3);
+        border-radius: 0.521vw;
+        padding: 0.625vw 1.25vw;
+        background: rgba(0, 78, 66, 0.3);
+        display: none;
+        gap: 0.521vw;
+        align-items: center;
 
 
-            font-family:"Clash Display", sans-serif;
-            font-weight: 500;
-            font-size: 0.833vw;
-            line-height: 150%;
-            text-align: center;
-            color: #555;
+        font-family: "Clash Display", sans-serif;
+        font-weight: 500;
+        font-size: 0.833vw;
+        line-height: 150%;
+        text-align: center;
+        color: #555;
 
-            cursor:pointer;
-        }
+        cursor: pointer;
+    }
+
+    #profilePopup svg,
+    #notifPopup_____ svg,
+    #providerModal svg,
+    .modal-content svg {
+        width: 0.625vw;
+        height: 0.625vw;
+    }
+
+    .flyertrade-admin {
+        margin-top: 0.26vw;
+        font-size: 0.833vw;
+    }
+
+    .flyertrade-email {
+        font-size: 0.8125vw;
+    }
+
+    #notifPopup_____ .popup-title {
+        font-size: 0.8vw;
+    }
+
+    .view_all_notification {
+        padding: 0.8vw 1.5vw;
+    }
+
+    .notification-view a {
+        font-size: 0.95vw;
+    }
+
+    #back_to_notify_modal {
+        margin-right: 0.521vw;
+    }
+
+    @media(max-width:600px) {
+
         #profilePopup svg,
         #notifPopup_____ svg,
         #providerModal svg,
-        .modal-content svg
-        {
-            width: 0.625vw;
-            height: 0.625vw;
+        .modal-content svg {
+            width: 2vw;
+            height: 2vw;
         }
-        .flyertrade-admin{
-            margin-top:0.26vw; font-size:0.833vw;
-        }
-        .flyertrade-email{
-            font-size: 0.8125vw;
-        }
-        #notifPopup_____ .popup-title{
-            font-size: 0.8vw;
-        }
-        .view_all_notification{
-            padding: 0.8vw 1.5vw;
-        }
-                .notification-view a{
-                    font-size: 0.95vw;
-                }
-                #back_to_notify_modal{
-                    margin-right:0.521vw;
-                }
-    @media(max-width:600px){
-            #profilePopup svg, #notifPopup_____ svg, #providerModal svg, .modal-content svg {
-                width:2vw;
-                height: 2vw;
-            }
-            #profilePopup{
-                padding: 2vw;
-            }
-            #profileBtn     .profile-arrows {
-                font-size: 1.9vw;
-            }
-            .flyertrade-admin{
-                margin-top:1vw; font-size:2vw;
-            }
-            .flyertrade-email, .logout-btn{
-                font-size: 2vw;
-            }
-            .img-log {
-                width: 2vw !important;
-                height: 2vw !important;
-                margin-right: 2px;
-            }
-            .notification-item img {
-                width: 4vw !important;
-                height: 4vw !important;
-            }
-            .notification-title {
-                font-size: 2vw;
-            }
-                        .notification_item_wrapper{
-                gap:2px;
-            }
-            #notifPopup_____ .popup-title{
-                font-size: 2vw;
-            }
-            .notification-view {
-                font-size: 1.5vw;
-            }
-              .view_all_notification a{
-                    font-size: 1.5vw;
-                }
-                #providerModal .provider-modal-content{
-                    width:60vw;
-                }
-                .provider-modal-body{
-                    width: 100%;
-                }
-                .provider-modal-header h6 {
-                    font-size: 1.5vw;
-                }
-                    #back_to_notify_modal{
-                    margin-right:0.521vw;
-                }
 
+        #profilePopup {
+            padding: 2vw;
+        }
+
+        #profileBtn .profile-arrows {
+            font-size: 1.9vw;
+        }
+
+        .flyertrade-admin {
+            margin-top: 1vw;
+            font-size: 2vw;
+        }
+
+        .flyertrade-email,
+        .logout-btn {
+            font-size: 2vw;
+        }
+
+        .img-log {
+            width: 2vw !important;
+            height: 2vw !important;
+            margin-right: 2px;
+        }
+
+        .notification-item img {
+            width: 4vw !important;
+            height: 4vw !important;
+        }
+
+        .notification-title {
+            font-size: 2vw;
+        }
+
+        .notification_item_wrapper {
+            gap: 2px;
+        }
+
+        #notifPopup_____ .popup-title {
+            font-size: 2vw;
+        }
+
+        .notification-view {
+            font-size: 1.5vw;
+        }
+
+        .view_all_notification a {
+            font-size: 1.5vw;
+        }
+
+        #providerModal .provider-modal-content {
+            width: 60vw;
+        }
+
+        .provider-modal-body {
+            width: 100%;
+        }
+
+        .provider-modal-header h6 {
+            font-size: 1.5vw;
+        }
+
+        #back_to_notify_modal {
+            margin-right: 0.521vw;
+        }
     }
- 
-        
-    </style>
+</style>
 <div class="top-row">
-    <a id="menubutton"><i class="fa-solid fa-bars" ></i></a>
+    <a id="menubutton"><i class="fa-solid fa-bars"></i></a>
     <div class="page-title">@yield('header', 'Dashboard')</div>
     <div class="d-flex gap-3">
         <!-- Search Input -->
-        <input type="text" class="search-box" placeholder="Search" >
+        <input type="text" class="search-box" placeholder="Search">
 
         <!-- Notifications -->
         <!-- Notification Icon -->
@@ -145,49 +171,49 @@
                     <span class="popup-close" id="close_notify_popop"
                         style="cursor: pointer; display: flex; align-items: center;">
                         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75" stroke="#717171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75" stroke="#717171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
                         </svg>
                     </span>
                 </div>
 
                 <div class="notification_item_wrapper">
-                    <div  class="notification-item">
+                    <div class="notification-item">
                         <img src="{{ asset('assets/images/icons/manage.svg') }}" alt="">
                         <div class="notification-content">
                             <div class="notification-title">Document verification</div>
                         </div>
                     </div>
-                    
+
                     <div class="notification_text_wrapper">
                         <div class="notification-text">
-                                3 New Providers Awaiting Document
-                                Verification.
-                            </div>
-                        <div class="notification-view" data-modal="providerModal" >View</div>
+                            3 New Providers Awaiting Document
+                            Verification.
+                        </div>
+                        <div class="notification-view" data-modal="providerModal">View</div>
                     </div>
-                    
+
                 </div>
-                      <div class="notification_item_wrapper ">
-                    <div  class="notification-item">
+                <div class="notification_item_wrapper ">
+                    <div class="notification-item">
                         <img src="{{ asset('assets/images/icons/manage.svg') }}" alt="">
                         <div class="notification-content">
                             <div class="notification-title">High Cancellation Alert</div>
                         </div>
                     </div>
-                    
+
                     <div class="notification_text_wrapper">
                         <div class="notification-text">
-                                David E. has 3 cancellations this week.
-                            </div>
-                        <div class="notification-view" data-modal="providerModal" >View</div>
+                            David E. has 3 cancellations this week.
+                        </div>
+                        <div class="notification-view" data-modal="providerModal">View</div>
                     </div>
-                    
+
                 </div>
-              
+
                 <div class="view_all_notification" style=" text-align: left;">
                     <a href="{{ route('notification.index') }}"
-                          
-                    style="color: #00796B;  font-weight: 500; text-decoration: none; display: flex; align-items: center; gap: 0.3vw;">
+
+                        style="color: #00796B;  font-weight: 500; text-decoration: none; display: flex; align-items: center; gap: 0.3vw;">
                         View all notifications
                         <span style="font-size: 1vw;">&#8250;</span>
                     </a>
@@ -205,8 +231,8 @@
                             style="cursor:pointer"></i> 3 New Providers Awaiting Document
                         Verification.</h6>
                     <button class="provider-modal-close" id="provide_modal_close" data-close="providerModal">
-                       <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75" stroke="#717171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75" stroke="#717171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
                         </svg>
                     </button>
                 </div>
@@ -263,13 +289,13 @@
                 <span class="popup-close" data-close="profilePopup">
                     <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75" stroke="#717171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                        </svg>
-                    </span>
+                    </svg>
+                </span>
             </div>
             <div class="profile-card">
                 <img src="{{ asset('assets/images/icons/person.svg') }}" alt="User">
                 <div style="font-weight:500;" class="flyertrade-admin">Flyertrade Admin</div>
-                <div class="muted small flyertrade-email" >flyertrade@example.com</div>
+                <div class="muted small flyertrade-email">flyertrade@example.com</div>
 
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                     @csrf
@@ -308,7 +334,7 @@
     notifBtn____.addEventListener('click', () => {
 
         notifPopup.style.display = 'block';
-         providerModal.style.display = 'none';
+        providerModal.style.display = 'none';
     });
     // Close modal on close button click
     closeBtn.addEventListener('click', () => {
