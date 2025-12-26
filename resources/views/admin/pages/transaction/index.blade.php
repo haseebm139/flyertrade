@@ -24,7 +24,7 @@
     <div class="users-toolbar">
         <div class="toolbar-left">
             <button class="export-btn d-flex align-items-center gap-1" style="color:#004E42; line-height:1">
-                <span class="download-icon"><img src="{{ asset('assets/images/icons/download.svg') }}"
+                <span class="download-icon"><img class="btn-icons" src="{{ asset('assets/images/icons/download.svg') }}"
                         alt=""></span>&nbsp;
                 Export
                 CSV
@@ -44,468 +44,471 @@
     </div>
 
     <!-- booking -table-->
-    <table class="theme-table">
-        <thead>
-            <tr>
-                <th><input type="checkbox"></th>
-                <th class="sortable" data-column="0">Transaction ID <img src="{{ asset('assets/images/icons/sort.svg') }}"
-                        class="sort-icon">
-                </th>
-                <th class="sortable" data-column="4">Transaction type <img src="{{ asset('assets/images/icons/sort.svg') }}"
-                        class="sort-icon">
-                </th>
-                <th class="sortable">Date and time
-                    <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
-                </th>
+     <div class="table-responsive">
+        <table class="theme-table">
+            <thead>
+                <tr>
+                    <th><input type="checkbox"></th>
+                    <th class="sortable" data-column="0">Transaction ID <img src="{{ asset('assets/images/icons/sort.svg') }}"
+                            class="sort-icon">
+                    </th>
+                    <th class="sortable" data-column="4">Transaction type <img src="{{ asset('assets/images/icons/sort.svg') }}"
+                            class="sort-icon">
+                    </th>
+                    <th class="sortable">Date and time
+                        <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
+                    </th>
 
 
 
-                <th class="sortable" data-column="1">Associated user/provider<img
-                        src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
-                <th class="sortable" data-column="2">Payment method <img src="{{ asset('assets/images/icons/sort.svg') }}"
-                        class="sort-icon">
-                </th>
-                <th class="sortable" data-column="3">Amount Paid <img src="{{ asset('assets/images/icons/sort.svg') }}"
-                        class="sort-icon"></th>
+                    <th class="sortable" data-column="1">Associated user/provider<img
+                            src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
+                    <th class="sortable" data-column="2">Payment method <img src="{{ asset('assets/images/icons/sort.svg') }}"
+                            class="sort-icon">
+                    </th>
+                    <th class="sortable" data-column="3">Amount Paid <img src="{{ asset('assets/images/icons/sort.svg') }}"
+                            class="sort-icon"></th>
 
 
-                <th class="sortable" data-column="6"> Status <img src="{{ asset('assets/images/icons/sort.svg') }}"
-                        class="sort-icon"></th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><input type="checkbox"></td>
-                <td style="font-weight:500;">12345</td>
-                <td style="font-weight:500;">Payout</td>
-                <td><span class="date" style="font-weight:500;">31 Jan, 2025</span>
-                    <br>
-                    <small class="time m-0">12:00pm</small>
+                    <th class="sortable" data-column="6"> Status <img src="{{ asset('assets/images/icons/sort.svg') }}"
+                            class="sort-icon"></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td style="font-weight:500;">12345</td>
+                    <td style="font-weight:500;">Payout</td>
+                    <td><span class="date" style="font-weight:500;">31 Jan, 2025</span>
+                        <br>
+                        <small class="time m-0">12:00pm</small>
 
-                </td>
-
-
-                <td>
-                    <div class="user-info">
-                        <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
-                        <div>
-                            <p class="user-name" style="font-weight:500;">Johnbosco Davies</p>
-
-                        </div>
-                    </div>
-                </td>
-                <td style="font-weight:500;">Mobile money</td>
-                <td style="font-weight:500;">$1200</td>
+                    </td>
 
 
-                <td><span class="status pending">Pending</span></td>
-                <td style="position:relative;">
-                    <div class="actions-dropdown">
-                        <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three_dots.svg') }}"
-                                class="dots-img "></button>
-                        <div class="actions-menu">
-                            <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.svg') }}"
-                                    alt="">
-                                View
-                                details</a>
-                            <a href="#" class="initiateBtn showDeleteModal___" data-id="1" data-user="Mike Brown">
-                                <img style="height:0.7vw;width:0.7vw" src="{{ asset('assets/images/icons/init.svg') }}"
-                                    alt=""> Initiate payout
-                            </a>
+                    <td>
+                        <div class="user-info">
+                            <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
+                            <div>
+                                <p class="user-name" style="font-weight:500;">Johnbosco Davies</p>
 
-                        </div>
-
-                    </div>
-                    <div id="globalDeleteModal__1" class="deleteModal"
-                        style="display: none;position:absolute;    top: 2.5vw; right: 3vw;">
-                        <div class="delete-card">
-                            <div class="delete-card-header">
-                                <h3 class="delete-title">Initiate payout</h3>
-                                <span class="delete-close closeDeleteModal" data-id="1">&times;</span>
-                            </div>
-                            <p class="delete-text">Are you sure you want to initiate payout to this user?</p>
-                            <div class="delete-actions justify-content-start">
-
-                                <button class="cancel-delete-btn" data-id="1">Cancel</button>
-                                <button class="confirm-delete-btn"
-                                    style="background-color:#004E42 !important;color:#fff;">Initiate</button>
                             </div>
                         </div>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td style="font-weight:500;"><input type="checkbox"></td>
-                <td style="font-weight:500;">12345</td>
-                <td style="font-weight:500;">Booking Payment</td>
-                <td><span class="date" style="font-weight:500;">31 Jan, 2025</span>
-                    <br>
-                    <small class="time m-0">12:00pm</small>
-
-                </td>
-
-                <td>
-                    <div class="user-info">
-                        <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
-                        <div>
-                            <p class="user-name" style="font-weight:500;">Johnbosco Davies</p>
-
-                        </div>
-                    </div>
-                </td>
-                <td style="font-weight:500;">Card</td>
-                <td style="font-weight:500;">$1200</td>
+                    </td>
+                    <td style="font-weight:500;">Mobile money</td>
+                    <td style="font-weight:500;">$1200</td>
 
 
+                    <td><span class="status pending">Pending</span></td>
+                    <td style="position:relative;">
+                        <div class="actions-dropdown">
+                            <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three_dots.svg') }}"
+                                    class="dots-img "></button>
+                            <div class="actions-menu">
+                                <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.svg') }}"
+                                        alt="">
+                                    View
+                                    details</a>
+                                <a href="#" class="initiateBtn showDeleteModal___" data-id="1" data-user="Mike Brown">
+                                    <img style="height:0.7vw;width:0.7vw" src="{{ asset('assets/images/icons/init.svg') }}"
+                                        alt=""> Initiate payout
+                                </a>
 
-                <td><span class="status active">Completed</span></td>
-                <td style="position:relative;">
-                    <div class="actions-dropdown">
-                        <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three_dots.svg') }}"
-                                class="dots-img "></button>
-                        <div class="actions-menu">
-                            <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.svg') }}"
-                                    alt="">
-                                View
-                                details</a>
-                            <a href="#" class="initiateBtn showDeleteModal___" data-id="2"
-                                data-user="Mike Brown">
-                                <img style="height:0.7vw;width:0.7vw" src="{{ asset('assets/images/icons/init.svg') }}"
-                                    alt=""> Initiate payout
-                            </a>
-
-                        </div>
-
-                    </div>
-                    <div id="globalDeleteModal__2" class="deleteModal"
-                        style="display: none;position:absolute;    top: 2.5vw; right: 3vw;">
-                        <div class="delete-card">
-                            <div class="delete-card-header">
-                                <h3 class="delete-title">Initiate payout</h3>
-                                <span class="delete-close closeDeleteModal" data-id="2">&times;</span>
                             </div>
-                            <p class="delete-text">Are you sure you want to initiate payout to this user?</p>
-                            <div class="delete-actions justify-content-start">
 
-                                <button class="cancel-delete-btn" data-id="2">Cancel</button>
-                                <button class="confirm-delete-btn"
-                                    style="background-color:#004E42 !important;color:#fff;">Initiate</button>
+                        </div>
+                        <div id="globalDeleteModal__1" class="deleteModal"
+                            style="display: none;position:absolute;    top: 2.5vw; right: 3vw;">
+                            <div class="delete-card">
+                                <div class="delete-card-header">
+                                    <h3 class="delete-title">Initiate payout</h3>
+                                    <span class="delete-close closeDeleteModal" data-id="1">&times;</span>
+                                </div>
+                                <p class="delete-text">Are you sure you want to initiate payout to this user?</p>
+                                <div class="delete-actions justify-content-start">
+
+                                    <button class="cancel-delete-btn" data-id="1">Cancel</button>
+                                    <button class="confirm-delete-btn"
+                                        style="background-color:#004E42 !important;color:#fff;">Initiate</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </td>
-            </tr>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-weight:500;"><input type="checkbox"></td>
+                    <td style="font-weight:500;">12345</td>
+                    <td style="font-weight:500;">Booking Payment</td>
+                    <td><span class="date" style="font-weight:500;">31 Jan, 2025</span>
+                        <br>
+                        <small class="time m-0">12:00pm</small>
 
-            <tr>
-                <td><input type="checkbox"></td>
-                <td style="font-weight:500;">12345</td>
-                <td style="font-weight:500;">Service Charge</td>
-                <td><span class="date" style="font-weight:500;">31 Jan, 2025</span>
-                    <br>
-                    <small class="time m-0">12:00pm</small>
+                    </td>
 
-                </td>
+                    <td>
+                        <div class="user-info">
+                            <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
+                            <div>
+                                <p class="user-name" style="font-weight:500;">Johnbosco Davies</p>
 
-                <td>
-                    <div class="user-info">
-                        <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
-                        <div>
-                            <p class="user-name" style="font-weight:500;">Johnbosco Davies</p>
-
-                        </div>
-                    </div>
-                </td>
-                <td style="font-weight:500;">Pay Stock</td>
-                <td style="font-weight:500;">$1200</td>
-
-
-
-                <td><span class="status active">Completed</span></td>
-                <td style="position:relative;">
-                    <div class="actions-dropdown">
-                        <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three_dots.svg') }}"
-                                class="dots-img "></button>
-                        <div class="actions-menu">
-                            <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.svg') }}"
-                                    alt="">
-                                View
-                                details</a>
-                            <a href="#" class="initiateBtn showDeleteModal___" data-id="3"
-                                data-user="Mike Brown">
-                                <img style="height:0.7vw;width:0.7vw" src="{{ asset('assets/images/icons/init.svg') }}"
-                                    alt=""> Initiate payout
-                            </a>
-
-                        </div>
-
-                    </div>
-                    <div id="globalDeleteModal__3" class="deleteModal"
-                        style="display: none;position:absolute;    top: 2.5vw; right: 3vw;">
-                        <div class="delete-card">
-                            <div class="delete-card-header">
-                                <h3 class="delete-title">Initiate payout</h3>
-                                <span class="delete-close closeDeleteModal" data-id="3">&times;</span>
-                            </div>
-                            <p class="delete-text">Are you sure you want to initiate payout to this user?</p>
-                            <div class="delete-actions justify-content-start">
-
-                                <button class="cancel-delete-btn" data-id="3">Cancel</button>
-                                <button class="confirm-delete-btn"
-                                    style="background-color:#004E42 !important;color:#fff;">Initiate</button>
                             </div>
                         </div>
-                    </div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td><input type="checkbox"></td>
-                <td style="font-weight:500;">12345</td>
-                <td style="font-weight:500;">Refund</td>
-                <td><span class="date" style="font-weight:500;">31 Jan, 2025</span>
-                    <br>
-                    <small class="time m-0">12:00pm</small>
-
-                </td>
-
-                <td>
-                    <div class="user-info">
-                        <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
-                        <div>
-                            <p class="user-name" style="font-weight:500;">Johnbosco Davies</p>
-
-                        </div>
-                    </div>
-                </td>
-                <td style="font-weight:500;">Card</td>
-                <td style="font-weight:500;">$1200</td>
+                    </td>
+                    <td style="font-weight:500;">Card</td>
+                    <td style="font-weight:500;">$1200</td>
 
 
 
-                <td><span class="status active">Completed</span></td>
-                <td style="position:relative;">
-                    <div class="actions-dropdown">
-                        <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three_dots.svg') }}"
-                                class="dots-img "></button>
-                        <div class="actions-menu">
-                            <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.svg') }}"
-                                    alt="">
-                                View
-                                details</a>
-                            <a href="#" class="initiateBtn showDeleteModal___" data-id="4"
-                                data-user="Mike Brown">
-                                <img style="height:0.7vw;width:0.7vw" src="{{ asset('assets/images/icons/init.svg') }}"
-                                    alt=""> Initiate payout
-                            </a>
+                    <td><span class="status active">Completed</span></td>
+                    <td style="position:relative;">
+                        <div class="actions-dropdown">
+                            <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three_dots.svg') }}"
+                                    class="dots-img "></button>
+                            <div class="actions-menu">
+                                <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.svg') }}"
+                                        alt="">
+                                    View
+                                    details</a>
+                                <a href="#" class="initiateBtn showDeleteModal___" data-id="2"
+                                    data-user="Mike Brown">
+                                    <img style="height:0.7vw;width:0.7vw" src="{{ asset('assets/images/icons/init.svg') }}"
+                                        alt=""> Initiate payout
+                                </a>
 
-                        </div>
-
-                    </div>
-                    <div id="globalDeleteModal__4" class="deleteModal"
-                        style="display: none;position:absolute;    top: 2.5vw; right: 3vw;">
-                        <div class="delete-card">
-                            <div class="delete-card-header">
-                                <h3 class="delete-title">Initiate payout</h3>
-                                <span class="delete-close closeDeleteModal" data-id="4">&times;</span>
                             </div>
-                            <p class="delete-text">Are you sure you want to initiate payout to this user?</p>
-                            <div class="delete-actions justify-content-start">
 
-                                <button class="cancel-delete-btn" data-id="4">Cancel</button>
-                                <button class="confirm-delete-btn"
-                                    style="background-color:#004E42 !important;color:#fff;">Initiate</button>
+                        </div>
+                        <div id="globalDeleteModal__2" class="deleteModal"
+                            style="display: none;position:absolute;    top: 2.5vw; right: 3vw;">
+                            <div class="delete-card">
+                                <div class="delete-card-header">
+                                    <h3 class="delete-title">Initiate payout</h3>
+                                    <span class="delete-close closeDeleteModal" data-id="2">&times;</span>
+                                </div>
+                                <p class="delete-text">Are you sure you want to initiate payout to this user?</p>
+                                <div class="delete-actions justify-content-start">
+
+                                    <button class="cancel-delete-btn" data-id="2">Cancel</button>
+                                    <button class="confirm-delete-btn"
+                                        style="background-color:#004E42 !important;color:#fff;">Initiate</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td><input type="checkbox"></td>
-                <td style="font-weight:500;">12345</td>
-                <td style="font-weight:500;">Service Charge</td>
-                <td><span class="date" style="font-weight:500;">31 Jan, 2025</span>
-                    <br>
-                    <small class="time m-0">12:00pm</small>
+                    </td>
+                </tr>
 
-                </td>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td style="font-weight:500;">12345</td>
+                    <td style="font-weight:500;">Service Charge</td>
+                    <td><span class="date" style="font-weight:500;">31 Jan, 2025</span>
+                        <br>
+                        <small class="time m-0">12:00pm</small>
 
-                <td>
-                    <div class="user-info">
-                        <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
-                        <div>
-                            <p class="user-name" style="font-weight:500;">Johnbosco Davies</p>
+                    </td>
 
-                        </div>
-                    </div>
-                </td>
-                <td style="font-weight:500;">Pay Stock</td>
-                <td style="font-weight:500;">$1200</td>
+                    <td>
+                        <div class="user-info">
+                            <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
+                            <div>
+                                <p class="user-name" style="font-weight:500;">Johnbosco Davies</p>
 
-
-
-                <td><span class="status active">Completed</span></td>
-                <td style="position:relative;">
-                    <div class="actions-dropdown">
-                        <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three_dots.svg') }}"
-                                class="dots-img "></button>
-                        <div class="actions-menu">
-                            <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.svg') }}"
-                                    alt="">
-                                View
-                                details</a>
-                            <a href="#" class="initiateBtn showDeleteModal___" data-id="5"
-                                data-user="Mike Brown">
-                                <img style="height:0.7vw;width:0.7vw" src="{{ asset('assets/images/icons/init.svg') }}"
-                                    alt=""> Initiate payout
-                            </a>
-
-                        </div>
-
-                    </div>
-                    <div id="globalDeleteModal__5" class="deleteModal"
-                        style="display: none;position:absolute;    top: 2.5vw; right: 3vw;">
-                        <div class="delete-card">
-                            <div class="delete-card-header">
-                                <h3 class="delete-title">Initiate payout</h3>
-                                <span class="delete-close closeDeleteModal" data-id="5">&times;</span>
-                            </div>
-                            <p class="delete-text">Are you sure you want to initiate payout to this user?</p>
-                            <div class="delete-actions justify-content-start">
-
-                                <button class="cancel-delete-btn" data-id="5">Cancel</button>
-                                <button class="confirm-delete-btn"
-                                    style="background-color:#004E42 !important;color:#fff;">Initiate</button>
                             </div>
                         </div>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td><input type="checkbox"></td>
-                <td style="font-weight:500;">12345</td>
-                <td style="font-weight:500;">Service Charge</td>
-                <td><span class="date" style="font-weight:500;">31 Jan, 2025</span>
-                    <br>
-                    <small class="time m-0">12:00pm</small>
-
-                </td>
-
-                <td>
-                    <div class="user-info">
-                        <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
-                        <div>
-                            <p class="user-name" style="font-weight:500;">Johnbosco Davies</p>
-
-                        </div>
-                    </div>
-                </td>
-                <td style="font-weight:500;">Pay Stock</td>
-                <td style="font-weight:500;">$1200</td>
+                    </td>
+                    <td style="font-weight:500;">Pay Stock</td>
+                    <td style="font-weight:500;">$1200</td>
 
 
 
-                <td><span class="status active">Completed</span></td>
-                <td style="position:relative;">
-                    <div class="actions-dropdown">
-                        <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three_dots.svg') }}"
-                                class="dots-img "></button>
-                        <div class="actions-menu">
-                            <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.svg') }}"
-                                    alt="">
-                                View
-                                details</a>
-                            <a href="#" class="initiateBtn showDeleteModal___" data-id="6"
-                                data-user="Mike Brown">
-                                <img style="height:0.7vw;width:0.7vw" src="{{ asset('assets/images/icons/init.svg') }}"
-                                    alt=""> Initiate payout
-                            </a>
+                    <td><span class="status active">Completed</span></td>
+                    <td style="position:relative;">
+                        <div class="actions-dropdown">
+                            <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three_dots.svg') }}"
+                                    class="dots-img "></button>
+                            <div class="actions-menu">
+                                <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.svg') }}"
+                                        alt="">
+                                    View
+                                    details</a>
+                                <a href="#" class="initiateBtn showDeleteModal___" data-id="3"
+                                    data-user="Mike Brown">
+                                    <img style="height:0.7vw;width:0.7vw" src="{{ asset('assets/images/icons/init.svg') }}"
+                                        alt=""> Initiate payout
+                                </a>
 
-                        </div>
-
-                    </div>
-                    <div id="globalDeleteModal__6" class="deleteModal"
-                        style="display: none;position:absolute;    top: 2.5vw; right: 3vw;">
-                        <div class="delete-card">
-                            <div class="delete-card-header">
-                                <h3 class="delete-title">Initiate payout</h3>
-                                <span class="delete-close closeDeleteModal" data-id="6">&times;</span>
                             </div>
-                            <p class="delete-text">Are you sure you want to initiate payout to this user?</p>
-                            <div class="delete-actions justify-content-start">
 
-                                <button class="cancel-delete-btn" data-id="6">Cancel</button>
-                                <button class="confirm-delete-btn"
-                                    style="background-color:#004E42 !important;color:#fff;">Initiate</button>
+                        </div>
+                        <div id="globalDeleteModal__3" class="deleteModal"
+                            style="display: none;position:absolute;    top: 2.5vw; right: 3vw;">
+                            <div class="delete-card">
+                                <div class="delete-card-header">
+                                    <h3 class="delete-title">Initiate payout</h3>
+                                    <span class="delete-close closeDeleteModal" data-id="3">&times;</span>
+                                </div>
+                                <p class="delete-text">Are you sure you want to initiate payout to this user?</p>
+                                <div class="delete-actions justify-content-start">
+
+                                    <button class="cancel-delete-btn" data-id="3">Cancel</button>
+                                    <button class="confirm-delete-btn"
+                                        style="background-color:#004E42 !important;color:#fff;">Initiate</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td><input type="checkbox"></td>
-                <td style="font-weight:500;">12345</td>
-                <td style="font-weight:500;">Payout</td>
-                <td><span class="date" style="font-weight:500;">31 Jan, 2025</span>
-                    <br>
-                    <small class="time m-0">12:00pm</small>
-
-                </td>
+                    </td>
+                </tr>
 
 
-                <td>
-                    <div class="user-info">
-                        <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
-                        <div>
-                            <p class="user-name" style="font-weight:500;">Johnbosco Davies</p>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td style="font-weight:500;">12345</td>
+                    <td style="font-weight:500;">Refund</td>
+                    <td><span class="date" style="font-weight:500;">31 Jan, 2025</span>
+                        <br>
+                        <small class="time m-0">12:00pm</small>
 
-                        </div>
-                    </div>
-                </td>
-                <td style="font-weight:500;">Mobile money</td>
-                <td style="font-weight:500;">$1200</td>
+                    </td>
 
+                    <td>
+                        <div class="user-info">
+                            <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
+                            <div>
+                                <p class="user-name" style="font-weight:500;">Johnbosco Davies</p>
 
-                <td><span class="status pending">Pending</span></td>
-                <td style="position:relative;">
-                    <div class="actions-dropdown">
-                        <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three_dots.svg') }}"
-                                class="dots-img "></button>
-                        <div class="actions-menu">
-                            <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.svg') }}"
-                                    alt="">
-                                View
-                                details</a>
-                            <a href="#" class="initiateBtn showDeleteModal___" data-id="7"
-                                data-user="Mike Brown">
-                                <img style="height:0.7vw;width:0.7vw" src="{{ asset('assets/images/icons/init.svg') }}"
-                                    alt=""> Initiate payout
-                            </a>
-
-                        </div>
-
-                    </div>
-                    <div id="globalDeleteModal__7" class="deleteModal"
-                        style="display: none;position:absolute;    top: 2.5vw; right: 3vw;">
-                        <div class="delete-card">
-                            <div class="delete-card-header">
-                                <h3 class="delete-title">Initiate payout</h3>
-                                <span class="delete-close closeDeleteModal" data-id="7">&times;</span>
-                            </div>
-                            <p class="delete-text">Are you sure you want to initiate payout to this user?</p>
-                            <div class="delete-actions justify-content-start">
-
-                                <button class="cancel-delete-btn" data-id="7">Cancel</button>
-                                <button class="confirm-delete-btn"
-                                    style="background-color:#004E42 !important;color:#fff;">Initiate</button>
                             </div>
                         </div>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                    </td>
+                    <td style="font-weight:500;">Card</td>
+                    <td style="font-weight:500;">$1200</td>
+
+
+
+                    <td><span class="status active">Completed</span></td>
+                    <td style="position:relative;">
+                        <div class="actions-dropdown">
+                            <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three_dots.svg') }}"
+                                    class="dots-img "></button>
+                            <div class="actions-menu">
+                                <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.svg') }}"
+                                        alt="">
+                                    View
+                                    details</a>
+                                <a href="#" class="initiateBtn showDeleteModal___" data-id="4"
+                                    data-user="Mike Brown">
+                                    <img style="height:0.7vw;width:0.7vw" src="{{ asset('assets/images/icons/init.svg') }}"
+                                        alt=""> Initiate payout
+                                </a>
+
+                            </div>
+
+                        </div>
+                        <div id="globalDeleteModal__4" class="deleteModal"
+                            style="display: none;position:absolute;    top: 2.5vw; right: 3vw;">
+                            <div class="delete-card">
+                                <div class="delete-card-header">
+                                    <h3 class="delete-title">Initiate payout</h3>
+                                    <span class="delete-close closeDeleteModal" data-id="4">&times;</span>
+                                </div>
+                                <p class="delete-text">Are you sure you want to initiate payout to this user?</p>
+                                <div class="delete-actions justify-content-start">
+
+                                    <button class="cancel-delete-btn" data-id="4">Cancel</button>
+                                    <button class="confirm-delete-btn"
+                                        style="background-color:#004E42 !important;color:#fff;">Initiate</button>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td style="font-weight:500;">12345</td>
+                    <td style="font-weight:500;">Service Charge</td>
+                    <td><span class="date" style="font-weight:500;">31 Jan, 2025</span>
+                        <br>
+                        <small class="time m-0">12:00pm</small>
+
+                    </td>
+
+                    <td>
+                        <div class="user-info">
+                            <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
+                            <div>
+                                <p class="user-name" style="font-weight:500;">Johnbosco Davies</p>
+
+                            </div>
+                        </div>
+                    </td>
+                    <td style="font-weight:500;">Pay Stock</td>
+                    <td style="font-weight:500;">$1200</td>
+
+
+
+                    <td><span class="status active">Completed</span></td>
+                    <td style="position:relative;">
+                        <div class="actions-dropdown">
+                            <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three_dots.svg') }}"
+                                    class="dots-img "></button>
+                            <div class="actions-menu">
+                                <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.svg') }}"
+                                        alt="">
+                                    View
+                                    details</a>
+                                <a href="#" class="initiateBtn showDeleteModal___" data-id="5"
+                                    data-user="Mike Brown">
+                                    <img style="height:0.7vw;width:0.7vw" src="{{ asset('assets/images/icons/init.svg') }}"
+                                        alt=""> Initiate payout
+                                </a>
+
+                            </div>
+
+                        </div>
+                        <div id="globalDeleteModal__5" class="deleteModal"
+                            style="display: none;position:absolute;    top: 2.5vw; right: 3vw;">
+                            <div class="delete-card">
+                                <div class="delete-card-header">
+                                    <h3 class="delete-title">Initiate payout</h3>
+                                    <span class="delete-close closeDeleteModal" data-id="5">&times;</span>
+                                </div>
+                                <p class="delete-text">Are you sure you want to initiate payout to this user?</p>
+                                <div class="delete-actions justify-content-start">
+
+                                    <button class="cancel-delete-btn" data-id="5">Cancel</button>
+                                    <button class="confirm-delete-btn"
+                                        style="background-color:#004E42 !important;color:#fff;">Initiate</button>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td style="font-weight:500;">12345</td>
+                    <td style="font-weight:500;">Service Charge</td>
+                    <td><span class="date" style="font-weight:500;">31 Jan, 2025</span>
+                        <br>
+                        <small class="time m-0">12:00pm</small>
+
+                    </td>
+
+                    <td>
+                        <div class="user-info">
+                            <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
+                            <div>
+                                <p class="user-name" style="font-weight:500;">Johnbosco Davies</p>
+
+                            </div>
+                        </div>
+                    </td>
+                    <td style="font-weight:500;">Pay Stock</td>
+                    <td style="font-weight:500;">$1200</td>
+
+
+
+                    <td><span class="status active">Completed</span></td>
+                    <td style="position:relative;">
+                        <div class="actions-dropdown">
+                            <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three_dots.svg') }}"
+                                    class="dots-img "></button>
+                            <div class="actions-menu">
+                                <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.svg') }}"
+                                        alt="">
+                                    View
+                                    details</a>
+                                <a href="#" class="initiateBtn showDeleteModal___" data-id="6"
+                                    data-user="Mike Brown">
+                                    <img style="height:0.7vw;width:0.7vw" src="{{ asset('assets/images/icons/init.svg') }}"
+                                        alt=""> Initiate payout
+                                </a>
+
+                            </div>
+
+                        </div>
+                        <div id="globalDeleteModal__6" class="deleteModal"
+                            style="display: none;position:absolute;    top: 2.5vw; right: 3vw;">
+                            <div class="delete-card">
+                                <div class="delete-card-header">
+                                    <h3 class="delete-title">Initiate payout</h3>
+                                    <span class="delete-close closeDeleteModal" data-id="6">&times;</span>
+                                </div>
+                                <p class="delete-text">Are you sure you want to initiate payout to this user?</p>
+                                <div class="delete-actions justify-content-start">
+
+                                    <button class="cancel-delete-btn" data-id="6">Cancel</button>
+                                    <button class="confirm-delete-btn"
+                                        style="background-color:#004E42 !important;color:#fff;">Initiate</button>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td style="font-weight:500;">12345</td>
+                    <td style="font-weight:500;">Payout</td>
+                    <td><span class="date" style="font-weight:500;">31 Jan, 2025</span>
+                        <br>
+                        <small class="time m-0">12:00pm</small>
+
+                    </td>
+
+
+                    <td>
+                        <div class="user-info">
+                            <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
+                            <div>
+                                <p class="user-name" style="font-weight:500;">Johnbosco Davies</p>
+
+                            </div>
+                        </div>
+                    </td>
+                    <td style="font-weight:500;">Mobile money</td>
+                    <td style="font-weight:500;">$1200</td>
+
+
+                    <td><span class="status pending">Pending</span></td>
+                    <td style="position:relative;">
+                        <div class="actions-dropdown">
+                            <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three_dots.svg') }}"
+                                    class="dots-img "></button>
+                            <div class="actions-menu">
+                                <a onclick="openBookingModal()"><img src="{{ asset('assets/images/icons/eye.svg') }}"
+                                        alt="">
+                                    View
+                                    details</a>
+                                <a href="#" class="initiateBtn showDeleteModal___" data-id="7"
+                                    data-user="Mike Brown">
+                                    <img style="height:0.7vw;width:0.7vw" src="{{ asset('assets/images/icons/init.svg') }}"
+                                        alt=""> Initiate payout
+                                </a>
+
+                            </div>
+
+                        </div>
+                        <div id="globalDeleteModal__7" class="deleteModal"
+                            style="display: none;position:absolute;    top: 2.5vw; right: 3vw;">
+                            <div class="delete-card">
+                                <div class="delete-card-header">
+                                    <h3 class="delete-title">Initiate payout</h3>
+                                    <span class="delete-close closeDeleteModal" data-id="7">&times;</span>
+                                </div>
+                                <p class="delete-text">Are you sure you want to initiate payout to this user?</p>
+                                <div class="delete-actions justify-content-start">
+
+                                    <button class="cancel-delete-btn" data-id="7">Cancel</button>
+                                    <button class="confirm-delete-btn"
+                                        style="background-color:#004E42 !important;color:#fff;">Initiate</button>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+     </div>
+
 
 
     <!-- Pagination -->

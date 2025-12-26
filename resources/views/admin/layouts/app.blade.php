@@ -425,6 +425,10 @@
             .notification-text {
                 font-size: 1.5vw;
             }
+      #rows, #perPage {
+        background-position: right 2px center;
+        background-size: 3px;
+     }
 
         }
     </style>

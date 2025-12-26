@@ -45,7 +45,7 @@
     <div class="users-toolbar">
         <div class="toolbar-left">
             <button class="export-btn d-flex align-items-center gap-1" style="color:#004E42; line-height:1">
-                <span class="download-icon"><img src="{{ asset('assets/images/icons/download.svg') }}"
+                <span class="download-icon"><img class="btn-icons" src="{{ asset('assets/images/icons/download.svg') }}"
                         alt=""></span> &nbsp;&nbsp;Export CSV
             </button>
 
@@ -61,104 +61,106 @@
             </a>
         </div>
     </div>
+    <div class="table-responsive">
+        <table class="theme-table">
+            <thead>
+                <tr>
+                    <th><input type="checkbox"></th>
+                    <th class="sortable" data-column="0" >Booking ID <img src="{{ asset('assets/images/icons/sort.svg') }}"
+                            class="sort-icon">
+                    </th>
 
+                    <th class="sortable">Date created
+                        <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
+                    </th>
+
+
+
+                    <th class="sortable" data-column="1">Affected user<img src="{{ asset('assets/images/icons/sort.svg') }}"
+                            class="sort-icon"></th>
+                    <th class="sortable" data-column="2">Service Typer <img src="{{ asset('assets/images/icons/sort.svg') }}"
+                            class="sort-icon"></th>
+                    <th class="sortable" data-column="3">Dispute issue <img src="{{ asset('assets/images/icons/sort.svg') }}"
+                            class="sort-icon"></th>
+
+
+                    <th class="sortable" data-column="6"> Status <img src="{{ asset('assets/images/icons/sort.svg') }}"
+                            class="sort-icon"></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td onclick="openBookingModal()" style="cursor: pointer">12345</td>
+
+                    <td><span class="date">31 Jan, 2025</span>
+                        <br>
+                        <small class="time">12:00pm</small>
+
+                    </td>
+                    <td>
+                        <div class="user-info">
+                            <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
+                            <div>
+                                <span class="user-theme-name ">Johnbosco Davies</span>
+
+                            </div>
+                        </div>
+                    </td>
+
+                    <td>Plubming</td>
+                    <td class="min-width-200"> Lorem ipsum dolor sit amet consectetur adipisicing elit. Non, voluptates? Lorem ipsum dolor sit amet.
+
+                    </td>
+
+
+                    <style>
+                        .unpublished {
+                            color: #D00416 !important;
+                            border: 2px solid #D00416 !important;
+                            background-color: #fb374741 !important;
+                        }
+                    </style>
+                    <td>
+                        <div class="status-dropdown status-dropdown-resolve">
+                            <span class="status active Resolved" onclick="toggleDropdown(this)">
+                                Resolved
+                                <svg class="arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                    viewBox="0 0 24 24" fill="none" stroke="#0a8754" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </span>
+                            <ul class="dropdown-menu" style="display: none;">
+                                <li onclick="setStatus(this, 'Resolved')">Resolved</li>
+                                <li onclick="setStatus(this, 'Unresolved')">Unresolved</li>
+                            </ul>
+                        </div>
+                    </td>
+
+                    <td>
+                        <div class="actions-dropdown">
+                            <button class="actions-btn" id="open-menu-btn" fdprocessedid="3p4nw"> <img
+                                    src="{{ asset('assets/images/icons/three_dots.svg') }}" class="dots-img "></button>
+                            <div class="actions-menu" id="open-menu-btn-wrapper" style="display: none; right: 0px !important; top: 32px;!important">
+                                <a>
+                                    Mark as unresolved</a>
+                                {{-- <a href="#" class="initiateBtn" data-user="Mike Brown">
+                                    <img src="{{ asset('assets/images/icons/init.svg') }}" alt=""> Initiate
+                                    payout
+                                </a> --}}
+
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
     <!-- booking -table-->
-    <table class="theme-table">
-        <thead>
-            <tr>
-                <th><input type="checkbox"></th>
-                <th class="sortable" data-column="0" >Booking ID <img src="{{ asset('assets/images/icons/sort.svg') }}"
-                        class="sort-icon">
-                </th>
 
-                <th class="sortable">Date created
-                    <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
-                </th>
-
-
-
-                <th class="sortable" data-column="1">Affected user<img src="{{ asset('assets/images/icons/sort.svg') }}"
-                        class="sort-icon"></th>
-                <th class="sortable" data-column="2">Service Typer <img src="{{ asset('assets/images/icons/sort.svg') }}"
-                        class="sort-icon"></th>
-                <th class="sortable" data-column="3">Dispute issue <img src="{{ asset('assets/images/icons/sort.svg') }}"
-                        class="sort-icon"></th>
-
-
-                <th class="sortable" data-column="6"> Status <img src="{{ asset('assets/images/icons/sort.svg') }}"
-                        class="sort-icon"></th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><input type="checkbox"></td>
-                <td onclick="openBookingModal()" style="cursor: pointer">12345</td>
-
-                <td><span class="date">31 Jan, 2025</span>
-                    <br>
-                    <small class="time">12:00pm</small>
-
-                </td>
-                <td>
-                    <div class="user-info">
-                        <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
-                        <div>
-                            <span class="user-theme-name ">Johnbosco Davies</span>
-
-                        </div>
-                    </div>
-                </td>
-
-                <td>Plubming</td>
-                <td> Lorem ipsum dolor sit amet consectetur adipisicing elit. Non, voluptates? Lorem ipsum dolor sit amet.
-
-                </td>
-
-
-                <style>
-                    .unpublished {
-                        color: #D00416 !important;
-                        border: 2px solid #D00416 !important;
-                        background-color: #fb374741 !important;
-                    }
-                </style>
-                <td>
-                    <div class="status-dropdown status-dropdown-resolve">
-                        <span class="status active Resolved" onclick="toggleDropdown(this)">
-                            Resolved
-                            <svg class="arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                viewBox="0 0 24 24" fill="none" stroke="#0a8754" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <polyline points="6 9 12 15 18 9"></polyline>
-                            </svg>
-                        </span>
-                        <ul class="dropdown-menu" style="display: none;">
-                            <li onclick="setStatus(this, 'Resolved')">Resolved</li>
-                            <li onclick="setStatus(this, 'Unresolved')">Unresolved</li>
-                        </ul>
-                    </div>
-                </td>
-
-                <td>
-                    <div class="actions-dropdown">
-                        <button class="actions-btn" id="open-menu-btn" fdprocessedid="3p4nw"> <img
-                                src="{{ asset('assets/images/icons/three_dots.svg') }}" class="dots-img "></button>
-                        <div class="actions-menu" id="open-menu-btn-wrapper" style="display: none; right: 0px !important; top: 32px;!important">
-                            <a>
-                                Mark as unresolved</a>
-                            {{-- <a href="#" class="initiateBtn" data-user="Mike Brown">
-                                <img src="{{ asset('assets/images/icons/init.svg') }}" alt=""> Initiate
-                                payout
-                            </a> --}}
-
-                        </div>
-                    </div>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
 
 
     <!-- Pagination -->

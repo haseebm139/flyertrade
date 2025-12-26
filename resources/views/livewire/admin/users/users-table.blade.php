@@ -20,8 +20,8 @@
             </button>
         </div>
     </div>
-
-    <!-- Table -->
+    <div class="table-responsive">
+  <!-- Table -->
     <table class="theme-table roles">
         <thead>
             <tr>
@@ -112,6 +112,8 @@
             @endforelse
         </tbody>
     </table>
+    </div>
+  
 
     <!-- Pagination -->
     {{ $users->links('vendor.pagination.custom') }}

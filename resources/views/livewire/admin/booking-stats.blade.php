@@ -1,7 +1,7 @@
  <div class="row ">
 
      @foreach ($stats as $stat)
-         <div class=" col-md-3">
+         <div class="col-md-3 col-sm-6 col-6">
              <div class="dashboard-card" onclick="{{ $stat['onclick'] ?? '' }}">
                  <div>
                      <h6>{{ $stat['label'] }}</h6>

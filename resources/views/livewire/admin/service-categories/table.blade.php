@@ -1,105 +1,107 @@
 <div>
     <livewire:admin.components.toolbar label="Service categories" button_label="Service category" search_label="user" />
-
-    <!-- Begin::Table -->
+    <div class="table-responsive">
     <table class="theme-table">
-        <thead>
-            <tr>
-                <th><input type="checkbox" wire:model.live="selectAll"></th>
-                <th class="sortable">
-                    Service category
-                    <img src="{{ asset('assets/images/icons/sort.svg') }}" wire:click="sortBy('name')"
-                        class="sort-icon {{ $sortField === 'name' ? $sortDirection : '-' }}">
-                </th>
-                <th class="sortable">
-                    Registered providers
-                    <img src="{{ asset('assets/images/icons/sort.svg') }}" wire:click="sortBy('providers_count')"
-                        class="sort-icon {{ $sortField === 'providers_count' ? $sortDirection : '-' }}">
-                </th>
-                <th class="sortable">
-                    Date created
-                    <img src="{{ asset('assets/images/icons/sort.svg') }}" wire:click="sortBy('created_at')"
-                        class="sort-icon {{ $sortField === 'created_at' ? $sortDirection : '-' }}">
-                </th>
-                <th class="sortable">
-                    Description
-                    <img src="{{ asset('assets/images/icons/sort.svg') }}" wire:click="sortBy('description')"
-                        class="sort-icon {{ $sortField === 'description' ? $sortDirection : '-' }}">
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse ($data as $item)
+            <thead>
                 <tr>
-                    <td><input type="checkbox" value="{{ $item->id }}" wire:model.live="selected"></td>
-                    <td style="font-weight:500;">{{ $item->name }}</td>
+                    <th><input type="checkbox" wire:model.live="selectAll"></th>
+                    <th class="sortable">
+                        Service category
+                        <img src="{{ asset('assets/images/icons/sort.svg') }}" wire:click="sortBy('name')"
+                            class="sort-icon {{ $sortField === 'name' ? $sortDirection : '-' }}">
+                    </th>
+                    <th class="sortable">
+                        Registered providers
+                        <img src="{{ asset('assets/images/icons/sort.svg') }}" wire:click="sortBy('providers_count')"
+                            class="sort-icon {{ $sortField === 'providers_count' ? $sortDirection : '-' }}">
+                    </th>
+                    <th class="sortable">
+                        Date created
+                        <img src="{{ asset('assets/images/icons/sort.svg') }}" wire:click="sortBy('created_at')"
+                            class="sort-icon {{ $sortField === 'created_at' ? $sortDirection : '-' }}">
+                    </th>
+                    <th class="sortable min-width-200">
+                        Description
+                        <img src="{{ asset('assets/images/icons/sort.svg') }}" wire:click="sortBy('description')"
+                            class="sort-icon {{ $sortField === 'description' ? $sortDirection : '-' }}">
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($data as $item)
+                    <tr>
+                        <td><input type="checkbox" value="{{ $item->id }}" wire:model.live="selected"></td>
+                        <td style="font-weight:500;">{{ $item->name }}</td>
 
-                    <td style="cursor:pointer;"
-                        @if ($item->providers_count > 0) wire:click="$dispatch('open-user-providers-modal', { serviceId: {{ $item->id }} })" @endif>
-                        @if ($item->providers_count > 0)
-                            <div class="user-info">
-                                <img src="{{ asset($item->providers[0]->avatar ?? 'assets/images/icons/person-one.svg') }}"
-                                    alt="User" class="avatar">
-                                <span class="user-theme-name"
-                                    style="font-weight:500;">{{ $item->providers[0]->name ?? '-' }}</span>
-                                <span class="more"> + {{ $item->providers_count - 1 }} more</span>
-                            </div>
-                        @else
-                            <div class="user-info">
-                                <img src="{{ asset('assets/images/icons/person-one.svg' ?? 'assets/images/icons/person-one.svg') }}"
-                                    alt="User" class="avatar">
-                                <span class="user-theme-name"
-                                    style="font-weight:500;">{{ $item->providers[0]->name ?? 'John Johnson' }}</span>
-                                <span class="more"> + 1 more</span>
-                            </div>
-                        @endif
-                    </td>
+                        <td style="cursor:pointer;"
+                            @if ($item->providers_count > 0) wire:click="$dispatch('open-user-providers-modal', { serviceId: {{ $item->id }} })" @endif>
+                            @if ($item->providers_count > 0)
+                                <div class="user-info">
+                                    <img src="{{ asset($item->providers[0]->avatar ?? 'assets/images/icons/person-one.svg') }}"
+                                        alt="User" class="avatar">
+                                    <span class="user-theme-name"
+                                        style="font-weight:500;">{{ $item->providers[0]->name ?? '-' }}</span>
+                                    <span class="more"> + {{ $item->providers_count - 1 }} more</span>
+                                </div>
+                            @else
+                                <div class="user-info">
+                                    <img src="{{ asset('assets/images/icons/person-one.svg' ?? 'assets/images/icons/person-one.svg') }}"
+                                        alt="User" class="avatar">
+                                    <span class="user-theme-name"
+                                        style="font-weight:500;">{{ $item->providers[0]->name ?? 'John Johnson' }}</span>
+                                    <span class="more"> + 1 more</span>
+                                </div>
+                            @endif
+                        </td>
 
-                    <td><span class="date" style="font-weight:500;">{{ dateFormat($item->created_at) }}</span></td>
-                    <td><span class="desf" style="color:#717171;">{{ $item->description }}</span></td>
+                        <td><span class="date" style="font-weight:500;">{{ dateFormat($item->created_at) }}</span></td>
+                        <td><span class="desf" style="color:#717171;">{{ $item->description }}</span></td>
 
-                    <td>
+                        <td>
 
-                        <span class="desf d-flex" style="position:relative;">
-                            <button class="edit-btn" wire:click="edit({{ $item->id }})"
-                                style="border: 0 !important">
-                                <img src="{{ asset('assets/images/icons/edit-icon.svg') }}" alt="Edit"
-                                    class="action-icon">
-                            </button>
-                            <!-- ✅ Global Delete Modal -->
-                            <div id="globalDeleteModal{{ $item->id }}" class="deleteModal"
-                                style="display: none;position:absolute;    top: 2vw; right: 7vw;">
-                                <div class="delete-card">
-                                    <div class="delete-card-header">
-                                        <h3 class="delete-title">Delete Service Category?</h3>
-                                        <span class="delete-close closeDeleteModal"
-                                            data-id="{{ $item->id }}">&times;</span>
-                                    </div>
-                                    <p class="delete-text">Are you sure you want to delete this service category?</p>
-                                    <div class="delete-actions justify-content-start">
-                                        <button class="confirm-delete-btn" wire:click="delete({{ $item->id }})"
-                                            data-id="{{ $item->id }}">Delete</button>
-                                        <button class="cancel-delete-btn" data-id="{{ $item->id }}">Cancel</button>
+                            <span class="desf d-flex" style="position:relative;">
+                                <button class="edit-btn" wire:click="edit({{ $item->id }})"
+                                    style="border: 0 !important">
+                                    <img src="{{ asset('assets/images/icons/edit-icon.svg') }}" alt="Edit"
+                                        class="action-icon">
+                                </button>
+                                <!-- ✅ Global Delete Modal -->
+                                <div id="globalDeleteModal{{ $item->id }}" class="deleteModal"
+                                    style="display: none;position:absolute;    top: 2vw; right: 7vw;">
+                                    <div class="delete-card">
+                                        <div class="delete-card-header">
+                                            <h3 class="delete-title">Delete Service Category?</h3>
+                                            <span class="delete-close closeDeleteModal"
+                                                data-id="{{ $item->id }}">&times;</span>
+                                        </div>
+                                        <p class="delete-text">Are you sure you want to delete this service category?</p>
+                                        <div class="delete-actions justify-content-start">
+                                            <button class="confirm-delete-btn" wire:click="delete({{ $item->id }})"
+                                                data-id="{{ $item->id }}">Delete</button>
+                                            <button class="cancel-delete-btn" data-id="{{ $item->id }}">Cancel</button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <!-- ✅ Delete button -->
-                            <button type="button" class="delete-btn showDeleteModal" data-id="{{ $item->id }}">
-                                <img src="{{ asset('assets/images/icons/delete-icon.svg') }}" alt="Delete"
-                                    class="action-icon">
-                            </button>
-                        </span>
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="6">No categories found.</td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
+                                <!-- ✅ Delete button -->
+                                <button type="button" class="delete-btn showDeleteModal" data-id="{{ $item->id }}">
+                                    <img src="{{ asset('assets/images/icons/delete-icon.svg') }}" alt="Delete"
+                                        class="action-icon">
+                                </button>
+                            </span>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="6">No categories found.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
 
+    </div>
+    <!-- Begin::Table -->
+  
     {{ $data->links('vendor.pagination.custom') }}
 
 
