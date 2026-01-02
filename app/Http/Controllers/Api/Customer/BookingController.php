@@ -9,7 +9,7 @@ use App\Http\Requests\Api\Booking\StoreBookingRequest;
 use App\Models\Booking;
 use App\Services\Booking\BookingService;
 use Illuminate\Http\JsonResponse;
-
+use Validator;
 use App\Http\Controllers\Api\BaseController;
 class BookingController extends BaseController
 {
@@ -36,6 +36,33 @@ class BookingController extends BaseController
             return $this->sendError('Booking not found', 404);
         }
         return $this->sendResponse($booking->load('slots','customer','provider','providerService.service'), 'Booking retrieved successfully.'); 
+    }
+
+    /**
+     * Cancel a booking
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function cancel(Request $request,  $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'cancelled_reason' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first());
+        }
+
+        $validated = $validator->validated();
+        $booking = Booking::with('slots')->find($id);
+        if (!$booking) {
+            return $this->sendError('Booking not found', 404);
+        }
+        $data = $this->bookingsService->cancel($booking, $validated['cancelled_reason']);
+        // Return a success response
+        return $this->sendResponse($data, 'Booking cancelled successfully.');
     }
     public function requestReschedule(Request $request, $id)
     {

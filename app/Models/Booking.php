@@ -11,7 +11,7 @@ class Booking extends Model
     protected $fillable = [
         'booking_ref','customer_id','provider_id','service_id','provider_service_id','booking_address','booking_description',
         'status','booking_working_minutes','total_price','service_charges',
-        'stripe_payment_intent_id','stripe_payment_method_id','paid_at','expires_at','booking_type'
+        'stripe_payment_intent_id','stripe_payment_method_id','paid_at','expires_at','booking_type','cancelled_reason','cancelled_at'
     ];
 
     protected $casts = [

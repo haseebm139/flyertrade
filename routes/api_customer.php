@@ -8,6 +8,8 @@ use App\Http\Controllers\Api\Shared\MediaController;
 Route::middleware('auth:sanctum')->controller(CustomerBookingController::class)->prefix('booking')->group(function () {
     Route::post('/', 'store');          // create & pay
     Route::get('{booking}','show');    // show one
+    
+    Route::post('{booking}/cancel', 'cancel');
     Route::post('{booking}/reschedule/request','requestReschedule');    // show one
     Route::post('{booking}/reschedule/respond','respondReschedule');    // show one
     Route::get('customer/pending', 'pending');

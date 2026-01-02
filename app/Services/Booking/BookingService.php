@@ -210,6 +210,17 @@ class BookingService
         $booking->update(['status' => 'in_progress', 'started_at' => now()]);
         return $booking->fresh('slots');
     }
+
+    public function cancel(Booking $booking, string $cancelReason){
+        // if ($booking->status !== 'in_progress') {
+        //      return [
+        //         'error' => true,
+        //         'message' => 'Only in progress bookings can be cancelled.'
+        //     ]; 
+        // } 
+        $booking->update(['status' => 'cancelled', 'cancelled_at' => now(), 'cancelled_reason' => $cancelReason]);
+        return $booking->load('slots');
+    }
     public function complete(Booking $booking) 
     {
         if ($booking->status !== 'in_progress') {
