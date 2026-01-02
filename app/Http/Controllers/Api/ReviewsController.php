@@ -14,17 +14,19 @@ class ReviewsController extends BaseController
     /**
      * Create a review for a completed booking
      */
-    public function store(Request $request, $bookingId)
+    public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'rating' => 'required|integer|min:1|max:5',
             'review' => 'nullable|string|max:1000',
+            'booking_id' => 'required|exists:bookings,id',
         ]);
 
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), 422);
         }
 
+        $bookingId = $request->booking_id;
         $customer = auth()->user();
         
         // Find the booking
@@ -35,20 +37,20 @@ class ReviewsController extends BaseController
         }
 
         // Verify the booking belongs to the customer
-        if ($booking->customer_id !== $customer->id) {
-            return $this->sendError('Unauthorized. This booking does not belong to you.', 403);
-        }
+        // if ($booking->customer_id !== $customer->id) {
+        //     return $this->sendError('Unauthorized. This booking does not belong to you.', 403);
+        // }
 
         // Check if booking is completed
-        if ($booking->status !== 'completed') {
-            return $this->sendError('You can only review completed bookings.', 400);
-        }
+        // if ($booking->status !== 'completed') {
+        //     return $this->sendError('You can only review completed bookings.', 400);
+        // }
 
         // Check if review already exists for this booking
-        $existingReview = Review::where('booking_id', $bookingId)->first();
-        if ($existingReview) {
-            return $this->sendError('You have already reviewed this booking.', 400);
-        }
+        // $existingReview = Review::where('booking_id', $bookingId)->first();
+        // if ($existingReview) {
+        //     return $this->sendError('You have already reviewed this booking.', 400);
+        // }
 
         // Create the review
         $review = Review::create([

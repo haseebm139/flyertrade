@@ -61,6 +61,7 @@ Route::middleware('auth:sanctum')->group(function () {
          
     Route::controller(ReviewsController::class)->prefix('reviews')->group(function () {
         Route::get('/', 'index');
+        Route::post('/', 'store');
     });
 
     Route::prefix('payments')->group(function () {
