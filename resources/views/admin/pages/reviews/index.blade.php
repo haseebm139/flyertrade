@@ -3,7 +3,18 @@
 @section('title', 'Reviews & Ratings')
 @section('header', 'Reviews & Ratings')
 @section('content')
-
+    <style>
+        .stars-rating img{
+            width:1vw;
+            height:1vw;
+        }
+        @media(max-width:600px){
+                  .stars-rating img{
+            width:2vw;
+            height:2vw;
+        } 
+        }
+    </style>
     <div class="container" bis_skin_checked="1">
         <h1 class="page-title">All Reviews</h1>
     </div>
@@ -18,7 +29,7 @@
     <div class="users-toolbar">
         <div class="toolbar-left">
             <button class="export-btn d-flex align-items-center gap-1" style="color:#004E42; line-height:1">
-                <span class="download-icon"><img src="{{ asset('assets/images/icons/download.svg') }}"
+                <span class="download-icon"><img class="btn-icons" src="{{ asset('assets/images/icons/download.svg') }}"
                         alt=""></span> &nbsp;Export
                 CSV
             </button>
@@ -38,7 +49,7 @@
     </div>
 
     <div id="users" class="tab-content active">
-
+        <div class="table-responsive">
         <table class="theme-table">
             <thead>
                 <tr>
@@ -101,17 +112,17 @@
                     </td>
 
 
-                    <td>
+                    <td class="min-width-200">
 
                         <div class="stars-rating">
                             <img src="{{ asset('assets/images/icons/star.svg') }}" alt="star"
-                                style="width: 1vw; height: 1vw; margin-right: 0.1vw;">
+                                style=" margin-right: 0.1vw;">
                             <img src="{{ asset('assets/images/icons/star.svg') }}" alt="star"
-                                style="width: 1vw; height: 1vw; margin-right: 0.1vw;"><img
+                                style=" margin-right: 0.1vw;"><img
                                 src="{{ asset('assets/images/icons/star.svg') }}" alt="star"
-                                style="width: 1vw; height: 1vw; margin-right: 0.1vw;"><img
+                                style=" margin-right: 0.1vw;"><img
                                 src="{{ asset('assets/images/icons/star.svg') }}" alt="star"
-                                style="width: 1vw; height: 1vw; margin-right: 0.1vw;">
+                                style=" margin-right: 0.1vw;">
                         </div>
                         Lorem ipsum dolor sit amet consectetur adipisicing
                         elit. Non, voluptates? Lorem
@@ -180,147 +191,151 @@
 
             </tbody>
         </table>
+        </div>
+
 
     </div>
 
     <div id="providers" class="tab-content ">
+        <div class="table-responsive">
+            <table class="theme-table">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox"></th>
+                        <th class="sortable" data-column="0">Service type <img
+                                src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
+                        </th>
 
-        <table class="theme-table">
-            <thead>
-                <tr>
-                    <th><input type="checkbox"></th>
-                    <th class="sortable" data-column="0">Service type <img
-                            src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
-                    </th>
-
-                    <th class="sortable">Date and time
-                        <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
-                    </th>
-
-
-
-                    <th class="sortable" data-column="1">Reviewer<img src="{{ asset('assets/images/icons/sort.svg') }}"
-                            class="sort-icon">
-                    </th>
-                    <th class="sortable" data-column="1">Reviewed Provider<img
-                            src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
-                    </th>
+                        <th class="sortable">Date and time
+                            <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
+                        </th>
 
 
 
-                    <th class="sortable" data-column="6"> Review <img src="{{ asset('assets/images/icons/sort.svg') }}"
-                            class="sort-icon">
-                    </th>
-                    <th class="sortable" data-column="6"> Status <img src="{{ asset('assets/images/icons/sort.svg') }}"
-                            class="sort-icon">
-                    </th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><input type="checkbox"></td>
-                    <td>12345</td>
-
-                    <td><span class="date">31 Jan, 2025</span>
-                        <br>
-                        <small class="time">12:00pm</small>
-
-                    </td>
-                    <td>
-                        <div class="user-info" bis_skin_checked="1">
-                            <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
-                            <div bis_skin_checked="1">
-                                <span class="user-theme-name ">Johnbosco Davies</span>
-
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="user-info" bis_skin_checked="1">
-                            <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
-                            <div bis_skin_checked="1">
-                                <span class="user-theme-name ">Johnbosco Davies</span>
-
-                            </div>
-                        </div>
-                    </td>
+                        <th class="sortable" data-column="1">Reviewer<img src="{{ asset('assets/images/icons/sort.svg') }}"
+                                class="sort-icon">
+                        </th>
+                        <th class="sortable" data-column="1">Reviewed Provider<img
+                                src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
+                        </th>
 
 
-                    <td>
 
-                        <div class="stars-rating">
-                            <img src="{{ asset('assets/images/icons/star.svg') }}" alt="star"
-                                style="width: 1vw; height: 1vw; margin-right: 0.1vw;">
-                            <img src="{{ asset('assets/images/icons/star.svg') }}" alt="star"
-                                style="width: 1vw; height: 1vw; margin-right: 0.1vw;">
-                            <img src="{{ asset('assets/images/icons/star.svg') }}" alt="star"
-                                style="width: 1vw; height: 1vw; margin-right: 0.1vw;">
-                            <img src="{{ asset('assets/images/icons/star.svg') }}" alt="star"
-                                style="width: 1vw; height: 1vw; margin-right: 0.1vw;">
-                        </div>
-                        Lorem ipsum dolor sit amet consectetur adipisicing
-                        elit. Non, voluptates? Lorem
-                        ipsum
-                        dolor sit amet.
+                        <th class="sortable" data-column="6"> Review <img src="{{ asset('assets/images/icons/sort.svg') }}"
+                                class="sort-icon">
+                        </th>
+                        <th class="sortable" data-column="6"> Status <img src="{{ asset('assets/images/icons/sort.svg') }}"
+                                class="sort-icon">
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>12345</td>
 
-                    </td>
+                        <td><span class="date">31 Jan, 2025</span>
+                            <br>
+                            <small class="time">12:00pm</small>
 
+                        </td>
+                        <td>
+                            <div class="user-info" bis_skin_checked="1">
+                                <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
+                                <div bis_skin_checked="1">
+                                    <span class="user-theme-name ">Johnbosco Davies</span>
 
-                    <td>
-                        <div class="status-dropdown">
-                            <span class="status publish" onclick="toggleDropdown(this)">
-                                Publish
-                                <svg class="arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                    viewBox="0 0 24 24" fill="none" stroke="#0a8754" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="6 9 12 15 18 9"></polyline>
-                                </svg>
-                            </span>
-                            <ul class="dropdown-menu">
-                                <li onclick="setStatus(this, 'Pending')">Pending</li>
-                                <li onclick="setStatus(this, 'Publish')">Publish</li>
-
-                            </ul>
-                        </div>
-                    </td>
-
-                    <td style="position:relative;">
-                        <div class="actions-dropdown" bis_skin_checked="1">
-                            <button class="actions-btn"><img src="{{ asset('assets/images/icons/three_dots.svg') }}"
-                                    class="dots-img" alt=""></button>
-                            <div class="actions-menu" bis_skin_checked="1">
-                                <a href="{{ route('reviews.show') }}"><img
-                                        src="{{ asset('assets/images/icons/eye.svg') }}" alt="">
-                                    View
-                                    Details</a>
-                                <a href="" class="showDeleteModal" data-id="1"><img
-                                        src="{{ asset('assets/images/icons/delete-icon.svg') }}" alt="">
-                                    Deleted
-                                </a>
-
-                            </div>
-                        </div>
-                        <div id="globalDeleteModal1" class="deleteModal"
-                            style="display: none;position:absolute;    top: 1vw; right: 3vw;">
-                            <div class="delete-card">
-                                <div class="delete-card-header">
-                                    <h3 class="delete-title">Delete review</h3>
-                                    <span class="delete-close closeDeleteModal" data-id="1">&times;</span>
-                                </div>
-                                <p class="delete-text">Are you sure you want to delete this review?</p>
-                                <div class="delete-actions justify-content-start">
-                                    <button class="confirm-delete-btn" wire:click="delete(1)"
-                                        data-id="1">Delete</button>
-                                    <button class="cancel-delete-btn" data-id="1">Cancel</button>
                                 </div>
                             </div>
-                        </div>
-                    </td>
-                </tr>
+                        </td>
+                        <td>
+                            <div class="user-info" bis_skin_checked="1">
+                                <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
+                                <div bis_skin_checked="1">
+                                    <span class="user-theme-name ">Johnbosco Davies</span>
 
-            </tbody>
-        </table>
+                                </div>
+                            </div>
+                        </td>
+
+
+                        <td  class="min-width-200">
+
+                            <div class="stars-rating">
+                                <img src="{{ asset('assets/images/icons/star.svg') }}" alt="star"
+                                    style=" margin-right: 0.1vw;">
+                                <img src="{{ asset('assets/images/icons/star.svg') }}" alt="star"
+                                    style="margin-right: 0.1vw;">
+                                <img src="{{ asset('assets/images/icons/star.svg') }}" alt="star"
+                                    style="margin-right: 0.1vw;">
+                                <img src="{{ asset('assets/images/icons/star.svg') }}" alt="star"
+                                    style=" margin-right: 0.1vw;">
+                            </div>
+                            Lorem ipsum dolor sit amet consectetur adipisicing
+                            elit. Non, voluptates? Lorem
+                            ipsum
+                            dolor sit amet.
+
+                        </td>
+
+
+                        <td>
+                            <div class="status-dropdown">
+                                <span class="status publish" onclick="toggleDropdown(this)">
+                                    Publish
+                                    <svg class="arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                        viewBox="0 0 24 24" fill="none" stroke="#0a8754" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                </span>
+                                <ul class="dropdown-menu">
+                                    <li onclick="setStatus(this, 'Pending')">Pending</li>
+                                    <li onclick="setStatus(this, 'Publish')">Publish</li>
+
+                                </ul>
+                            </div>
+                        </td>
+
+                        <td style="position:relative;">
+                            <div class="actions-dropdown" bis_skin_checked="1">
+                                <button class="actions-btn"><img src="{{ asset('assets/images/icons/three_dots.svg') }}"
+                                        class="dots-img" alt=""></button>
+                                <div class="actions-menu" bis_skin_checked="1">
+                                    <a href="{{ route('reviews.show') }}"><img
+                                            src="{{ asset('assets/images/icons/eye.svg') }}" alt="">
+                                        View
+                                        Details</a>
+                                    <a href="" class="showDeleteModal" data-id="1"><img
+                                            src="{{ asset('assets/images/icons/delete-icon.svg') }}" alt="">
+                                        Deleted
+                                    </a>
+
+                                </div>
+                            </div>
+                            <div id="globalDeleteModal1" class="deleteModal"
+                                style="display: none;position:absolute;    top: 1vw; right: 3vw;">
+                                <div class="delete-card">
+                                    <div class="delete-card-header">
+                                        <h3 class="delete-title">Delete review</h3>
+                                        <span class="delete-close closeDeleteModal" data-id="1">&times;</span>
+                                    </div>
+                                    <p class="delete-text">Are you sure you want to delete this review?</p>
+                                    <div class="delete-actions justify-content-start">
+                                        <button class="confirm-delete-btn" wire:click="delete(1)"
+                                            data-id="1">Delete</button>
+                                        <button class="cancel-delete-btn" data-id="1">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
 
     </div>
     <style>

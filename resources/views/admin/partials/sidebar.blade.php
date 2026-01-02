@@ -1,10 +1,13 @@
 <!-- ========== Begin::SIDEBAR (always open) ========== -->
 <aside class="sidebar">
     <!-- Brand / Logo -->
-    <div class="brand" style="margin-bottom:1.125vw;">
+    <div class="brand" style="margin-bottom:1.125vw;position:relative;">
         <a href="{{ route('dashboard') }}" class="logo-link">
             <img src="{{ asset('assets/images/icons/logo.svg') }}" alt="Company Logo" class="logo-img">
         </a>
+        <a id="closemenumutton"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75" stroke="#717171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg></a>
     </div>
 
     <!-- Navigation -->
@@ -57,7 +60,7 @@
 
 
         <!-- Bookings -->
-        <a href="javascript:void(0)"
+        <a href="{{ route('booking.index') }}"
             class="nav-link {{ request()->routeIs('booking.*') ? 'active' : '' }}">
             <span>
                 <img
@@ -165,7 +168,7 @@
 
                     <div class="profile-info">
                         <div class="profile-name">Flyertrade</div>
-                        <div class="profile-email" style="font-size:0.8vw; font-weight:400;">flyertrade@gmail.com</div>
+                        <div class="profile-email" style="font-weight:400;">flyertrade@gmail.com</div>
                     </div>
 
                     <div class="profile-arrows">

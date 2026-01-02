@@ -203,4 +203,12 @@ if ($selectedValue === null && !empty($normalizedOptions)) {
         color: #0d9488;
         flex-shrink: 0;
     }
+    @media(max-width:600px){
+        .custom-select-text {
+            font-size: 2vw;
+        }
+        .custom-select-option-label {
+            font-size: 2vw;
+        }
+    }
 </style>

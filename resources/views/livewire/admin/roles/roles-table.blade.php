@@ -20,93 +20,95 @@
             </button>
         </div>
     </div>
-
-    <!-- Table -->
-    <table class="theme-table roles" style="position: relative">
-        <thead>
-            <tr>
-                <th><input type="checkbox"></th>
-                <th wire:click="sortBy('name')" class="sortable" style="cursor: pointer;">
-                    Role
-                    <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
-                </th>
-                <th wire:click="sortBy('users_count')" class="sortable" style="cursor: pointer;">
-                    Assignees
-                    <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
-                </th>
-
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse($roles as $role)
+    <div class="table-responsive">
+        <!-- Table -->
+        <table class="theme-table roles" style="position: relative">
+            <thead>
                 <tr>
-                    <td><input type="checkbox" value="{{ $role->id }}" wire:model.live="selected"></td>
-                    <td>
-                        <div class="role-info">
-                            <span class="role-name" style='font-weight:500;'>{{ ucfirst($role->name) ?? 'N/A' }}</span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="users-info">
-                            @if ($role->users->count() > 0)
-                                <div class="user-avatar">
-                                    <img src="{{ asset($role->users->first()->avatar) ?? asset('assets/images/icons/person-one.svg') }}"
-                                        alt="User" class="avatar-small">
-                                    <span class="more">+{{ $role->users_count - 1 }} users</span>
-                                </div>
-                            @else
-                            <img src="{{  asset('assets/images/icons/person-one.svg') }}"
-                                        alt="User" class="avatar-small">
-                                <span class="users-count more">{{ $role->users_count }} users</span>
-                            @endif
-                        </div>
-                    </td>
+                    <th><input type="checkbox"></th>
+                    <th wire:click="sortBy('name')" class="sortable" style="cursor: pointer;">
+                        Role
+                        <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
+                    </th>
+                    <th wire:click="sortBy('users_count')" class="sortable" style="cursor: pointer;">
+                        Assignees
+                        <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
+                    </th>
 
-                    <td class="viw-parent theme-parent-class">
-                        <a href="javascript:void(0);" class="view-btn" wire:click="viewRole({{ $role->id }})">
-                            <img src="{{ asset('assets/images/icons/eye_icon.svg') }}" alt="View" class="eye-icon">
-                            View
-                        </a>
-                        <a href="javascript:void(0);" class="view-btn" wire:click="editRole({{ $role->id }})">
-                            <img src="{{ asset('assets/images/icons/edit.svg') }}" alt="Edit" class="eye-icon">
-                            Edit
-                        </a>
-                        <button class="delete-btn showDeleteModal" wire:click="confirmDelete({{ $role->id }})">
-                        
-                            <span
-                                style="font-size: 0.9vw; color: #064f3c; cursor: pointer; font-weight: 400;">
-                                Delete </span>
-                                    <img src="{{ asset('assets/images/icons/delete-icon-active.svg') }}" alt="Delete"
-                                class="eye-icon">
-                        </button>
-                        @if ($confirmingId === $role->id)
-                            <div class="deleteModal delete-card" id="global-delete-modal"
-                                style=" position: absolute; right: 12vw; top: 1vw; z-index: 99; ">
-                                <div class="delete-card-header">
-                                    <h3 class="delete-title">Delete Role</h3>
-                                    <span class="delete-close" wire:click="$set('confirmingId', null)">&times;</span>
-                                </div>
-                                <p class="delete-text">Are you sure you want to delete role
-                                    <strong>{{ $role->name }}</strong>?
-                                </p>
-                                <div class="delete-actions  justify-content-start">
-                                    <button class="confirm-delete-btn"
-                                        wire:click="deleteRole({{ $role->id }})">Delete</button>
-                                    <button class="cancel-delete-btn"
-                                        wire:click="$set('confirmingId', null)">Cancel</button>
-                                </div>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($roles as $role)
+                    <tr>
+                        <td><input type="checkbox" value="{{ $role->id }}" wire:model.live="selected"></td>
+                        <td>
+                            <div class="role-info">
+                                <span class="role-name" style='font-weight:500;'>{{ ucfirst($role->name) ?? 'N/A' }}</span>
                             </div>
-                        @endif
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="5" class="text-center">No roles found.</td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
+                        </td>
+                        <td>
+                            <div class="users-info">
+                                @if ($role->users->count() > 0)
+                                    <div class="user-avatar">
+                                        <img src="{{ asset($role->users->first()->avatar) ?? asset('assets/images/icons/person-one.svg') }}"
+                                            alt="User" class="avatar-small">
+                                        <span class="more">+{{ $role->users_count - 1 }} users</span>
+                                    </div>
+                                @else
+                                <img src="{{  asset('assets/images/icons/person-one.svg') }}"
+                                            alt="User" class="avatar-small">
+                                    <span class="users-count more">{{ $role->users_count }} users</span>
+                                @endif
+                            </div>
+                        </td>
+
+                        <td class="viw-parent theme-parent-class">
+                            <a href="javascript:void(0);" class="view-btn" wire:click="viewRole({{ $role->id }})">
+                                <img src="{{ asset('assets/images/icons/eye_icon.svg') }}" alt="View" class="eye-icon">
+                                View
+                            </a>
+                            <a href="javascript:void(0);" class="view-btn" wire:click="editRole({{ $role->id }})">
+                                <img src="{{ asset('assets/images/icons/edit.svg') }}" alt="Edit" class="eye-icon">
+                                Edit
+                            </a>
+                            <button class="delete-btn showDeleteModal" wire:click="confirmDelete({{ $role->id }})">
+                            
+                                <span
+                                    style="font-size: 0.9vw; color: #064f3c; cursor: pointer; font-weight: 400;">
+                                    Delete </span>
+                                        <img src="{{ asset('assets/images/icons/delete-icon-active.svg') }}" alt="Delete"
+                                    class="eye-icon">
+                            </button>
+                            @if ($confirmingId === $role->id)
+                                <div class="deleteModal delete-card" id="global-delete-modal"
+                                    style=" position: absolute; right: 12vw; top: 1vw; z-index: 99; ">
+                                    <div class="delete-card-header">
+                                        <h3 class="delete-title">Delete Role</h3>
+                                        <span class="delete-close" wire:click="$set('confirmingId', null)">&times;</span>
+                                    </div>
+                                    <p class="delete-text">Are you sure you want to delete role
+                                        <strong>{{ $role->name }}</strong>?
+                                    </p>
+                                    <div class="delete-actions  justify-content-start">
+                                        <button class="confirm-delete-btn"
+                                            wire:click="deleteRole({{ $role->id }})">Delete</button>
+                                        <button class="cancel-delete-btn"
+                                            wire:click="$set('confirmingId', null)">Cancel</button>
+                                    </div>
+                                </div>
+                            @endif
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="5" class="text-center">No roles found.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+
 
     <!-- Pagination -->
     {{ $roles->links('vendor.pagination.custom') }}

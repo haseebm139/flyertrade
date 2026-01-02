@@ -4,6 +4,59 @@
 @section('header', 'Settings')
 @section('content')
 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    
+<link rel="stylesheet" href="{{ asset('assets/js/contry-picker/js/dependancies/bootstrap-select-1.12.4/dist/css/bootstrap-select.min.css') }}">
+<style>
+    #country_selector {
+        cursor: pointer;
+        background-color: #fff;
+    }
+    .bootstrap-select>.dropdown-toggle{
+        padding:0.6vw;
+        border-radius: 0.5vw;
+            border: 0.1vw solid #ddd;
+              font-size: 1vw;
+    }
+    .dropdown-toggle::after {
+            margin-left: -1vw;
+                font-size: 0.9vw;
+    }
+    .caret{
+        display: none;
+    }
+    .bootstrap-select.btn-group .dropdown-toggle .filter-option{
+        font-size: 1vw;
+            color: #333;
+    }
+    .btn-default.active, .btn-default:active, .open>.dropdown-toggle.btn-default {
+    color: #333;
+    background-color: #e6e6e6;
+        background-color: #fff;
+            border-color: #0b63c9;
+    box-shadow: 0 0 0.3vw rgba(11, 99, 201, 0.4);
+    }
+    .btn-default.active.focus, .btn-default.active:focus, .btn-default.active:hover, .btn-default:active.focus, .btn-default:active:focus, .btn-default:active:hover, .open>.dropdown-toggle.btn-default.focus, .open>.dropdown-toggle.btn-default:focus, .open>.dropdown-toggle.btn-default:hover {
+    color: #333;
+    background-color: #fff;
+    border-color: #8c8c8c;
+        border-color: #0b63c9;
+    box-shadow: 0 0 0.3vw rgba(11, 99, 201, 0.4);
+}
+.btn-default:hover{
+    background-color: #fff;
+        border-color: #ddd;
+
+}
+.bootstrap-select .dropdown-toggle:focus {
+   background-color: #fff!important;
+    outline: 5px auto #fff !important;
+    outline-offset: -2px;
+        border-color: #ddd;
+        
+  
+}
+</style>
 
     <div class="row">
         <div class="col-md-2">
@@ -26,11 +79,20 @@
                 <div class="setting-wrapper">
                     <div class="charge-col">
                         <label class="charge-label">Select Country</label>
-                        <select class="charge-input" style="width: auto;">
+                        <!-- <input id="country_selector" style="width:100%"  class="charge-input" type="tel" name="country" class="form-control" readonly> -->
+
+               <select id="country"
+        class="selectpicker countrypicker w-100"
+        data-live-search="true"
+        data-flag="true"
+        title="Select Country">
+</select>
+
+              <!-- <select class="charge-input" style="width: auto;">
                             <option>United States</option>
                             <option>England</option>
                             <option>Australia</option>
-                        </select>
+                        </select> -->
                     </div>
                 </div>
                 <br />
@@ -391,5 +453,9 @@ input[type=number] {
         </div>
     </div>
 
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+     <script src="{{ asset('assets/js/contry-picker/js/dependancies/bootstrap-select-1.12.4/dist/js/bootstrap-select.min.js') }}"></script>
+
+<script src="{{ asset('assets/js/contry-picker/js/countrypicker.js') }}"></script>
 
 @endsection
