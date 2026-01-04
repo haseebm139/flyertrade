@@ -178,7 +178,7 @@ class BookingService
             ];  
         }
         $booking->update(['status' => 'confirmed', 'confirmed_at' => now()]);
-        return $booking->fresh('slots');
+        return $booking->fresh('slots', 'provider', 'customer','providerService.service');
     }
 
     public function reject(Booking $booking) 
@@ -196,7 +196,7 @@ class BookingService
         }
 
         $booking->update(['status' => 'rejected','rejected_at' => now()]);
-        return $booking->fresh('slots');
+        return $booking->fresh('slots', 'provider', 'customer','providerService.service');
     }
     public function start(Booking $booking) 
     {
@@ -207,8 +207,8 @@ class BookingService
             ]; 
         } 
         
-        $booking->update(['status' => 'in_progress', 'started_at' => now()]);
-        return $booking->fresh('slots');
+        $booking->update(['status' => 'in_progress', 'started_at' => now()]); 
+        return $booking->fresh('slots', 'provider', 'customer','providerService.service');
     }
 
     public function cancel(Booking $booking, string $cancelReason){
@@ -219,7 +219,7 @@ class BookingService
         //     ]; 
         // } 
         $booking->update(['status' => 'cancelled', 'cancelled_at' => now(), 'cancelled_reason' => $cancelReason]);
-        return $booking->load('slots');
+        return $booking->load('slots', 'provider', 'customer','providerService.service');
     }
     public function complete(Booking $booking) 
     {
@@ -230,7 +230,7 @@ class BookingService
             ]; 
         }
         $booking->update(['status' => 'completed', 'completed_at' => now()]);
-        return $booking->fresh('slots');
+        return $booking->fresh('slots', 'provider', 'customer','providerService.service');
     }
 
     public function requestReschedule(Booking $booking, array $newSlots): array

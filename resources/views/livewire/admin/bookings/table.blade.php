@@ -85,7 +85,7 @@
                         </td>
                         <td>
                             <button class="view-btn" onclick="openBookingModal({{ $booking->id }})">
-                                view <img src="{{ asset('assets/images/icons/eye_icon.svg') }}" alt="View"
+                                View <img src="{{ asset('assets/images/icons/eye_icon.svg') }}" alt="View"
                                     class="action-icon">
                             </button>
 
