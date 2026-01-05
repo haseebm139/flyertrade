@@ -30,7 +30,7 @@
                     type<img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
                 </th>
 
-                <th class="sortable" wire:click="sortBy('name')" style="cursor: pointer;">User name
+                <th class="sortable " wire:click="sortBy('name')" style="cursor: pointer;">User name
                     <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
                 </th>
 
@@ -74,7 +74,7 @@
                         </a>
                         <button class="delete-btn showDeleteModal" wire:click="confirmDelete({{ $user->id }})">
                            
-                            <span style="    font-size: 0.9vw;
+                            <span style="    
     color: #064f3c;
     cursor: pointer;     font-weight: 400;"> Delete </span>
      <img src="{{ asset('assets/images/icons/delete-icon-active.svg') }}" alt="Delete"

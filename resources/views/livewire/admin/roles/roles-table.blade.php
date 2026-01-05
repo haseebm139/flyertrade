@@ -1,5 +1,37 @@
 <div>
-    <!-- Toolbar -->
+<style>
+    .delete-btn span{
+        font-size: 0.9vw;
+    }
+    @media(max-width:600px){
+        .eye-icon {
+            width: 3vw !important;
+            height: 3vw !important;
+        }
+        .delete-btn{
+            width: 50px;
+            font-size: 2vw;
+        }
+         .delete-btn span{
+            font-size: 2vw;
+        }
+        .avater_image{
+            min-width:100px;
+        }
+        .theme-parent-class{
+            right: 0px;
+        }
+        .viw-parent a, 
+        .viw-parent button 
+        {
+            min-width:13vw;
+        }
+    }
+
+</style>
+
+
+<!-- Toolbar -->
     <div class="users-toolbar">
         <div class="toolbar-left">
             <button class="export-btn" wire:click="exportCsv">
@@ -30,7 +62,7 @@
                         Role
                         <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
                     </th>
-                    <th wire:click="sortBy('users_count')" class="sortable" style="cursor: pointer;">
+                    <th wire:click="sortBy('users_count')" class="sortable avater_image" style="cursor: pointer;">
                         Assignees
                         <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
                     </th>
@@ -75,7 +107,7 @@
                             <button class="delete-btn showDeleteModal" wire:click="confirmDelete({{ $role->id }})">
                             
                                 <span
-                                    style="font-size: 0.9vw; color: #064f3c; cursor: pointer; font-weight: 400;">
+                                    style=" color: #064f3c; cursor: pointer; font-weight: 400;">
                                     Delete </span>
                                         <img src="{{ asset('assets/images/icons/delete-icon-active.svg') }}" alt="Delete"
                                     class="eye-icon">
@@ -223,6 +255,12 @@
         .users-count {
             font-size: 0.729vw;
             color: #666;
+        }
+        @media(max-width:600px){
+                   .avatar-small{
+            width: 4vw;
+            height: 4vw;
+        }
         }
     </style>
 

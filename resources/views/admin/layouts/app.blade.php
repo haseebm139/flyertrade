@@ -432,6 +432,8 @@
 
         }
     </style>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+
 </head>
 
 <body>
@@ -605,7 +607,38 @@ closeMenuButton.addEventListener('click', function () {
     sidebar.style.left = '-600px';
 });
 </script>
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
+    <script>
+        new Swiper('.photos', {
+            loop: true,
+            autoplay: {
+                delay: 2000,
+                disableOnInteraction: false,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            slidesPerView:4,
+            spaceBetween: 20,
+        });
+
+    new Swiper('.videos', {
+            loop: true,
+            autoplay: {
+                delay: 2000,
+                disableOnInteraction: false,
+            },
+            navigation: {
+                nextEl: '.video-swiper-button-next',
+                prevEl: '.video-swiper-button-prev',
+            },
+            slidesPerView:4,
+            spaceBetween: 20,
+        });
+    </script>
 </body>
 
 </html>

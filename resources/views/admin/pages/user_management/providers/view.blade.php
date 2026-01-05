@@ -8,9 +8,9 @@
 
 
 <style>
-    #addUserModal label{
+    #addUserModal label {
         margin-top: 1vw;
-         margin-bottom: 0.2vw;
+        margin-bottom: 0.2vw;
     }
 </style>
 <div class="users-toolbar">
@@ -29,7 +29,7 @@
             <div class="delete-card">
                 <div class="delete-card-header">
                     <h3 class="delete-title">Reset password</h3>
-                    <span class="delete-close close_resset" >&times;</span>
+                    <span class="delete-close close_resset">&times;</span>
                 </div>
                 <p class="delete-text">Are you sure you want to reset this user password?</p>
                 <div class="delete-actions justify-content-start">
@@ -469,12 +469,12 @@
         <h3 class="toolbar-title" style="font-weight:500;font-size:1.4vw;color:#1b1b1b;">Documents</h3>
         <div class="toolbar-actions" hidden>
             <button class="btn btn-verified" style="font-weight:500" data-action="verified"><i class="fa-solid fa-trash-can"></i>&nbsp; Mark as verified</button>
-            <button class="btn btn-declined"  style="font-weight:500" data-action="declined"><i class="fa-solid fa-xmark"></i>&nbsp; Mark as decline</button>
-            <button class="btn btn-pending"  style="font-weight:500" data-action="pending"><i class="fa-solid fa-minus"></i>&nbsp; Mark as pending</button>
+            <button class="btn btn-declined" style="font-weight:500" data-action="declined"><i class="fa-solid fa-xmark"></i>&nbsp; Mark as decline</button>
+            <button class="btn btn-pending" style="font-weight:500" data-action="pending"><i class="fa-solid fa-minus"></i>&nbsp; Mark as pending</button>
         </div>
     </div>
 
-    <div class="documents-list"  style="padding:0vw 1.3vw 1.3vw;">
+    <div class="documents-list" style="padding:0vw 1.3vw 1.3vw;">
         <div class="doc-row" data-id="1">
             <div class="d-flex align-items-center">
                 <label class="check-wrap check-wrap-checkbox">
@@ -489,98 +489,98 @@
                 View document
             </a>
 
-            <span class="badge badge-verified badge-pill actions-btn-verified" style="position:relative;padding:0.677vw;" data-block='1' data-badge>Verified &nbsp; <i class="fa-solid fa-chevron-down"></i> 
-                          <div class="actions-menu" id="actions-menu-verified-1" style="display: none;left:0px;right:unset;top:2.5vw;min-width: 6.5vw;">
-                             <a href="#">Pending</a>
-                                <a href="#" >Decline</a>
-                            </div>
-                    </span>
+            <span class="badge badge-verified badge-pill actions-btn-verified" style="position:relative;padding:0.677vw;" data-block='1' data-badge>Verified &nbsp; <i class="fa-solid fa-chevron-down"></i>
+                <div class="actions-menu" id="actions-menu-verified-1" style="display: none;left:0px;right:unset;top:2.5vw;min-width: 6.5vw;">
+                    <a href="#">Pending</a>
+                    <a href="#">Decline</a>
+                </div>
+            </span>
         </div>
 
-            <div class="doc-row" data-id="2">
-                         <div class="d-flex align-items-center">
-                    <label class="check-wrap check-wrap-checkbox">
-                        <input type="checkbox" class="row-check">
-                        <span class="checkmark"></span>
-                    </label>
-                    <span class="doc-title">Valid Emirate ID card</span>
-                </div>
-              
-                <a href="#" class="doc-link" style="color:#004e42;" data-check-modal data-title="ID card"
-                    data-src="{{ asset('assets/images/icons/id_sample.svg') }}">
-                    View document
-                </a>
-                     <span class="badge badge-verified badge-pill actions-btn-verified" style="position:relative;padding:0.677vw;" data-block='2' data-badge>Verified &nbsp; <i class="fa-solid fa-chevron-down"></i> 
-                          <div class="actions-menu" id="actions-menu-verified-2" style="display: none;left:0px;right:unset;top:2.5vw;min-width: 6.5vw;">
-                             <a href="#">Pending</a>
-                                <a href="#">Decline</a>
-                            </div>
-                    </span>
-          
+        <div class="doc-row" data-id="2">
+            <div class="d-flex align-items-center">
+                <label class="check-wrap check-wrap-checkbox">
+                    <input type="checkbox" class="row-check">
+                    <span class="checkmark"></span>
+                </label>
+                <span class="doc-title">Valid Emirate ID card</span>
             </div>
 
-            <div class="doc-row" data-id="3">
-                        <div class="d-flex align-items-center">
-                    <label class="check-wrap check-wrap-checkbox">
-                        <input type="checkbox" class="row-check">
-                        <span class="checkmark"></span>
-                    </label>
-                    <span class="doc-title">Valid Emirate ID card</span>
+            <a href="#" class="doc-link" style="color:#004e42;" data-check-modal data-title="ID card"
+                data-src="{{ asset('assets/images/icons/id_sample.svg') }}">
+                View document
+            </a>
+            <span class="badge badge-verified badge-pill actions-btn-verified" style="position:relative;padding:0.677vw;" data-block='2' data-badge>Verified &nbsp; <i class="fa-solid fa-chevron-down"></i>
+                <div class="actions-menu" id="actions-menu-verified-2" style="display: none;left:0px;right:unset;top:2.5vw;min-width: 6.5vw;">
+                    <a href="#">Pending</a>
+                    <a href="#">Decline</a>
                 </div>
-              
-                <a href="#" style="color:#004e42;" class="doc-link" data-check-modal data-title="ID card"
-                    data-src="{{ asset('assets/images/icons/id_sample.svg') }}">
-                    View document
-                </a>
-         <span class="badge badge-verified badge-pill actions-btn-verified"  style="position:relative;padding:0.677vw;" data-block='3' data-badge>Verified &nbsp; <i class="fa-solid fa-chevron-down"></i> 
-                          <div class="actions-menu" id="actions-menu-verified-3" style="display: none;left:0px;right:unset;top:2.5vw;min-width: 6.5vw;">
-                             <a href="#">Pending</a>
-                                <a href="#" >Decline</a>
-                            </div>
-                    </span>
-            </div>
+            </span>
 
-            <div class="doc-row" data-id="4">
-                        <div class="d-flex align-items-center">
-                    <label class="check-wrap check-wrap-checkbox">
-                        <input type="checkbox" class="row-check">
-                        <span class="checkmark"></span>
-                    </label>
-                    <span class="doc-title">Valid Emirate ID card</span>
-                </div>
-              
-                <a href="#" style="color:#004e42;" class="doc-link" data-check-modal data-title="ID card"
-                    data-src="{{ asset('assets/images/icons/id_sample.svg') }}">
-                    View document
-                </a>
-                <span class="badge badge-verified badge-pill actions-btn-verified" style="position:relative;padding:0.677vw;" data-block='4' data-badge>Verified &nbsp; <i class="fa-solid fa-chevron-down"></i> 
-                          <div class="actions-menu" id="actions-menu-verified-4" style="display: none;left:0px;right:unset;top:2.5vw;min-width: 6.5vw;">
-                             <a href="#">Pending</a>
-                                <a href="#" class="showDeleteModal">Decline</a>
-                            </div>
-                    </span>
-            </div>
-            <div class="doc-row" data-id="5">
-                          <div class="d-flex align-items-center">
-                    <label class="check-wrap check-wrap-checkbox">
-                        <input type="checkbox" class="row-check">
-                        <span class="checkmark"></span>
-                    </label>
-                    <span class="doc-title">Valid Emirate ID card</span>
-                </div>
-              
-                <a href="#" style="color:#004e42;" class="doc-link" data-check-modal data-title="ID card"
-                    data-src="{{ asset('assets/images/icons/id_sample.svg') }}">
-                    View document
-                </a>
-               <span class="badge badge-verified badge-pill actions-btn-verified text-danger border-danger" style="position:relative;background:rgba(251, 55, 72, 0.1);padding:0.677vw;" data-block='5' data-badge>Declined &nbsp; <i class="fa-solid fa-chevron-down"></i> 
-                          <div class="actions-menu" id="actions-menu-verified-5" style="display: none;left:0px;right:unset;top:2.5vw;min-width: 6.5vw;">
-                                <a href="#">Pending</a>
-                                <a href="#" >Verified</a>
-                            </div>
-                    </span>
-            </div>
         </div>
+
+        <div class="doc-row" data-id="3">
+            <div class="d-flex align-items-center">
+                <label class="check-wrap check-wrap-checkbox">
+                    <input type="checkbox" class="row-check">
+                    <span class="checkmark"></span>
+                </label>
+                <span class="doc-title">Valid Emirate ID card</span>
+            </div>
+
+            <a href="#" style="color:#004e42;" class="doc-link" data-check-modal data-title="ID card"
+                data-src="{{ asset('assets/images/icons/id_sample.svg') }}">
+                View document
+            </a>
+            <span class="badge badge-verified badge-pill actions-btn-verified" style="position:relative;padding:0.677vw;" data-block='3' data-badge>Verified &nbsp; <i class="fa-solid fa-chevron-down"></i>
+                <div class="actions-menu" id="actions-menu-verified-3" style="display: none;left:0px;right:unset;top:2.5vw;min-width: 6.5vw;">
+                    <a href="#">Pending</a>
+                    <a href="#">Decline</a>
+                </div>
+            </span>
+        </div>
+
+        <div class="doc-row" data-id="4">
+            <div class="d-flex align-items-center">
+                <label class="check-wrap check-wrap-checkbox">
+                    <input type="checkbox" class="row-check">
+                    <span class="checkmark"></span>
+                </label>
+                <span class="doc-title">Valid Emirate ID card</span>
+            </div>
+
+            <a href="#" style="color:#004e42;" class="doc-link" data-check-modal data-title="ID card"
+                data-src="{{ asset('assets/images/icons/id_sample.svg') }}">
+                View document
+            </a>
+            <span class="badge badge-verified badge-pill actions-btn-verified" style="position:relative;padding:0.677vw;" data-block='4' data-badge>Verified &nbsp; <i class="fa-solid fa-chevron-down"></i>
+                <div class="actions-menu" id="actions-menu-verified-4" style="display: none;left:0px;right:unset;top:2.5vw;min-width: 6.5vw;">
+                    <a href="#">Pending</a>
+                    <a href="#" class="showDeleteModal">Decline</a>
+                </div>
+            </span>
+        </div>
+        <div class="doc-row" data-id="5">
+            <div class="d-flex align-items-center">
+                <label class="check-wrap check-wrap-checkbox">
+                    <input type="checkbox" class="row-check">
+                    <span class="checkmark"></span>
+                </label>
+                <span class="doc-title">Valid Emirate ID card</span>
+            </div>
+
+            <a href="#" style="color:#004e42;" class="doc-link" data-check-modal data-title="ID card"
+                data-src="{{ asset('assets/images/icons/id_sample.svg') }}">
+                View document
+            </a>
+            <span class="badge badge-verified badge-pill actions-btn-verified text-danger border-danger" style="position:relative;background:rgba(251, 55, 72, 0.1);padding:0.677vw;" data-block='5' data-badge>Declined &nbsp; <i class="fa-solid fa-chevron-down"></i>
+                <div class="actions-menu" id="actions-menu-verified-5" style="display: none;left:0px;right:unset;top:2.5vw;min-width: 6.5vw;">
+                    <a href="#">Pending</a>
+                    <a href="#">Verified</a>
+                </div>
+            </span>
+        </div>
+    </div>
 
 
 </div>
@@ -610,8 +610,8 @@
     .video-container {
         position: relative;
         width: 25%;
-       
-   
+
+
     }
 
     .custom-controls {
@@ -649,8 +649,8 @@
         appearance: none;
         background: transparent;
         cursor: pointer;
-            padding: 0px;
-    overflow: visible;
+        padding: 0px;
+        overflow: visible;
     }
 
     .custom-progress input::-webkit-slider-thumb {
@@ -702,8 +702,8 @@
 <div id="service-details-modal" class="service-details-theme">
     <div class="modal-content">
         <span class="close-btn" id="closeServiceDetails" style="line-height: 1;"><svg style="width:0.625vw;height:0.625vw;" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75" stroke="#717171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                        </svg></span>
+                <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75" stroke="#717171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg></span>
         <h3>Service details</h3>
 
         <label>Name</label>
@@ -719,42 +719,73 @@
         </div>
 
         <h4 style="font-size:0.938vw">Photos</h4>
-        <div class="photos">
-            <img src="{{ asset('assets/images/icons/service_one.svg') }}" alt="">
-            <img src="{{ asset('assets/images/icons/service_four.svg') }}" alt="">
-            <img src="{{ asset('assets/images/icons/service_three.svg') }}" alt="">
-            <img src="{{ asset('assets/images/icons/service_four.svg') }}" alt="">
+        <!-- Slider -->
+        <div class="swiper photos w-100">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <img class="w-100" src="{{ asset('assets/images/icons/service_one.svg') }}" alt="">
+                </div>
+                <div class="swiper-slide">
+                    <img class="w-100" src="{{ asset('assets/images/icons/service_four.svg') }}" alt="">
+                </div>
+                <div class="swiper-slide">
+                    <img class="w-100" src="{{ asset('assets/images/icons/service_three.svg') }}" alt="">
+                </div>
+                <div class="swiper-slide">
+                    <img class="w-100" src="{{ asset('assets/images/icons/service_four.svg') }}" alt="">
+                </div>
+
+            </div>
+
+            <!-- Navigation Arrows -->
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
         </div>
 
-        <h4  style="font-size:0.938vw;margin-top:0.9vw">Videos</h4>
-        <div class="videos">
-         <div class="video-container">
-    <video class="custom-video" style="width: 100%;" >
-        <source src="{{ asset('assets/videos/video1.mp4') }}" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
+        <h4 style="font-size:0.938vw;margin-top:0.9vw">Videos</h4>
+        <div class="videos swiper w-100">
+                  <!-- Navigation Arrows -->
+            <div class="swiper-button-next video-swiper-button-next"></div>
+            <div class="swiper-button-prev video-swiper-button-prev"></div>
+            <div class="swiper-wrapper">
+            <div class="video-container swiper-slide">
+                <video class="custom-video" style="width: 100%;">
+                    <source src="{{ asset('assets/videos/video1.mp4') }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
 
-    <div class="custom-controls">
-        <div class="custom-btn play-btn">▶</div>
-        <div class="custom-progress">
-            <input type="range" class="progress-bar" value="0" max="100">
-        </div>
-    </div>
-</div>
+                <div class="custom-controls">
+                    <div class="custom-btn play-btn">▶</div>
+                    <div class="custom-progress">
+                        <input type="range" class="progress-bar" value="0" max="100">
+                    </div>
+                </div>
+            </div>
 
-<div class="video-container">
-    <video class="custom-video" style="width: 100%;" >
-        <source src="{{ asset('assets/videos/video1.mp4') }}" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
+            <div class="video-container swiper-slide">
+                <video class="custom-video" style="width: 100%;">
+                    <source src="{{ asset('assets/videos/video1.mp4') }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
 
-    <div class="custom-controls">
-        <div class="custom-btn play-btn">▶</div>
-        <div class="custom-progress">
-            <input type="range" class="progress-bar" value="0" max="100">
-        </div>
-    </div>
-</div>
+                <div class="custom-controls">
+                    <div class="custom-btn play-btn">▶</div>
+                    <div class="custom-progress">
+                        <input type="range" class="progress-bar" value="0" max="100">
+                    </div>
+                </div>
+            </div>
+
+
+            
+
+           
+
+
+            
+
+         
+            <div>
 
         </div>
     </div>
@@ -770,11 +801,11 @@
 
                 <span class="close-btn" style="line-height:1;" onclick="closeBookingModal()"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75" stroke="#717171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                        </svg></span>
+                    </svg></span>
             </div>
         </div>
         <div class="service-header-icons">
-            <h4  style="font-size:0.938vw;font-weight: 500; letter-spacing: -0.04em;">Service details</h4>
+            <h4 style="font-size:0.938vw;font-weight: 500; letter-spacing: -0.04em;">Service details</h4>
             <h5> <img src="{{ asset('assets/images/icons/download.svg') }}" alt="Download" class="download-icon"> <small
                     style="color:grey;font-size:0.938vw;">Download </small></h5>
         </div>
@@ -824,8 +855,8 @@
 <div id="addUserModal" class="modal">
     <div class="modal-content add-user-modal">
         <span class="close-modal" id="closeAddUserModal"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75" stroke="#717171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                        </svg></span>
+                <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75" stroke="#717171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg></span>
         <h3>Edit User</h3>
         <form>
             <label>Name</label>
@@ -849,15 +880,15 @@
     videoElements.forEach((videoElement, index) => {
         const playBtn = videoElement.closest('.video-container').querySelector('.play-btn');
         const progressBar = videoElement.closest('.video-container').querySelector('.progress-bar');
-        
+
         // Play / Pause button functionality
         playBtn.addEventListener('click', () => {
             if (videoElement.paused) {
                 videoElement.play();
-                playBtn.textContent = '⏸';  // Change to Pause symbol
+                playBtn.textContent = '⏸'; // Change to Pause symbol
             } else {
                 videoElement.pause();
-                playBtn.textContent = '▶';  // Change to Play symbol
+                playBtn.textContent = '▶'; // Change to Play symbol
             }
         });
 
@@ -905,33 +936,33 @@
 </script>
 <style>
     .deleteModal {
-  /* display: none;
+        /* display: none;
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.4);
   justify-content: center;
   align-items: center;
   z-index: 999; */
-  position: absolute;
-    top: -5px;
-    right: -5px;
-}
+        position: absolute;
+        top: -5px;
+        right: -5px;
+    }
 
-.delete-card {
-  /* background: #fff;
+    .delete-card {
+        /* background: #fff;
   padding: 20px;
   border-radius: 10px;
   min-width: 300px; */
-}
+    }
 </style>
 <script>
-        $('#reset_moda').on('click',function(e){
+    $('#reset_moda').on('click', function(e) {
         e.preventDefault();
         $('#globalresetModal').toggle();
     })
-    $('.close_resset').on('click',function(e){
+    $('.close_resset').on('click', function(e) {
         e.preventDefault();
-       $('#globalresetModal').toggle();
+        $('#globalresetModal').toggle();
     })
     document.addEventListener("DOMContentLoaded", function() {
         const actionButtons = document.querySelectorAll(".actions-btn-verified");
