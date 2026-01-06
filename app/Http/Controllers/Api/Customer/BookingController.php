@@ -30,7 +30,7 @@ class BookingController extends BaseController
     // Show booking
     public function show($id): JsonResponse
     {
-        $booking = Booking::with('slots')->find($id);
+        $booking = Booking::with('slots,customer,provider,providerService.service')->find($id);
 
         if (!$booking) {
             return $this->sendError('Booking not found', 404);
@@ -130,5 +130,11 @@ class BookingController extends BaseController
             return $this->sendError($payment['message']);
         } 
         return $this->sendResponse([], 'Payment processed successfully.'); 
+    }
+
+    public function onGoing(): JsonResponse
+    {
+        $ongoing = $this->bookingsService->ongoingBookingsCustomer(auth()->user()->id);
+        return $this->sendResponse($ongoing, 'Ongoing bookings.'); 
     }
 }

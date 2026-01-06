@@ -460,4 +460,8 @@ class BookingService
         $booking->save();
         return ['error' => false, 'message' => 'Payment processed successfully.'];
     }
+    public function onGoingBookingsCustomer($customerId)
+    {
+        return Booking::with('slots', 'provider', 'customer','providerService.service')->where('customer_id', $customerId)->where('status', 'in_progress')->paginate(10);
+    }
 }

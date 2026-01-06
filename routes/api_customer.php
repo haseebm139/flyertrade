@@ -13,7 +13,8 @@ Route::middleware('auth:sanctum')->controller(CustomerBookingController::class)-
     Route::post('{booking}/reschedule/request','requestReschedule');    // show one
     Route::post('{booking}/reschedule/respond','respondReschedule');    // show one
     Route::get('customer/pending', 'pending');
-    Route::get('customer/upcoming', 'upcoming');
+    Route::get('customer/upcoming', 'upcoming');    
+    Route::get('customer/ongoing', 'ongoing');
     Route::get('customer/completed', 'completed');
     Route::get('customer/cancelled', 'cancelled');
     Route::post('{booking_id}/customer/payment', 'processPayment');
