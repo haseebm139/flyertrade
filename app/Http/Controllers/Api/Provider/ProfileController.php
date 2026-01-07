@@ -33,7 +33,7 @@ class ProfileController extends BaseController
     public function store(CreateProviderProfileRequest $request)
     {
         // return $this->sendResponse($request->validated(), 'Provider profile saved successfully.');
-
+         
         $result = $this->profileService->createOrUpdateProfile($request->validated(), auth()->user());
         if (isset($result['error']) && $result['error'] === true) {
             return $this->sendError($result['message']);

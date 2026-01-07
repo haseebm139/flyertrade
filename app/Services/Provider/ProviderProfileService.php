@@ -13,6 +13,7 @@ class ProviderProfileService
 {
     public function createOrUpdateProfile(array $data, $user)
     {
+        $user = $user->load('providerProfile');
         // Check if services data exists and has service_id
         if (!empty($data['services']) && isset($data['services']['service_id'])) {
             $existingService = ProviderService::where('user_id', $user->id)
@@ -53,7 +54,7 @@ class ProviderProfileService
             $path = $data['cover_photo']->store('provider/profile', 'public');
             $coverPhotoPath = 'storage/' . $path;
         }
-
+        
         $profileData['about_me'] = isset($data['services']['about']) ? $data['services']['about'] : null;
         if (isset($data['office_address'])) {
             $data['address'] = $data['office_address'];
@@ -72,10 +73,66 @@ class ProviderProfileService
         if ($coverPhotoPath !== null) {
             $updateData['cover_photo'] = $coverPhotoPath;
         }
-        
         if (!empty($updateData)) {
             $user->update($updateData);
+             
         }
+
+        $idPhotoPath = null;
+        
+        if (isset($data['id_photo'])) {
+            // Delete old cover photo if exists
+            if ($user->providerProfile->id_photo) {
+                $oldPath = str_replace('storage/', '', $user->providerProfile->id_photo);
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
+                }
+            }
+
+            $path = $data['id_photo']->store('provider/profile', 'public');
+            $idPhotoPath = 'storage/' . $path;
+        }
+        $passportPath = null;
+        
+        if (isset($data['passport'])) {
+            // Delete old cover photo if exists
+            if ($user->providerProfile->passport) {
+                $oldPath = str_replace('storage/', '', $user->providerProfile->passport);
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
+                }
+            }
+
+            $path = $data['passport']->store('provider/profile', 'public');
+            $passportPath = 'storage/' . $path;
+        }
+
+        $workPermitPath = null;
+         
+        if (isset($data['work_permit'])) {
+            // Delete old cover photo if exists
+            if ($user->providerProfile->work_permit) {
+                $oldPath = str_replace('storage/', '', $user->providerProfile->work_permit);
+                if (Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
+                }
+            }
+
+            $path = $data['work_permit']->store('provider/profile', 'public');
+            $workPermitPath = 'storage/' . $path;
+        }
+        if ($idPhotoPath !== null) {
+            $profileData['id_photo'] = $idPhotoPath;
+        }
+
+        if ($idPhotoPath !== null) {
+            $profileData['passport'] = $passportPath;
+        }
+        if ($workPermitPath !== null) {
+            $profileData['work_permit'] = $workPermitPath;
+        }
+         
+         
         $profile = ProviderProfile::updateOrCreate(
             ['user_id' => $user->id],
             $profileData
