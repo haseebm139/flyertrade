@@ -70,14 +70,36 @@ class ReviewsController extends BaseController
     {
         $provider = auth()->user();
         
-        $query = Review::with(['service', 'reviewedProvider', 'booking'])
-            ->where('receiver_id', $provider->id);
-
+        $query = Review::with(['service','reviewer', 'reviewedProvider', 'booking'])
+            ->where('receiver_id', $provider->id); 
         // Filter by status
         if ($request->has('status') && in_array($request->status, ['pending', 'published', 'unpublished'])) {
             $query->where('status', $request->status);
         }
+        // Filter by rating (stars) - exact match
+        if ($request->has('rating')) {
+            $rating = (int) $request->rating;
+            // Validate rating is between 1 and 5
+            if ($rating >= 1 && $rating <= 5) {
+                $query->where('rating', $rating);
+            }
+        }
 
+        // Filter by minimum rating
+        if ($request->has('min_rating')) {
+            $minRating = (int) $request->min_rating;
+            if ($minRating >= 1 && $minRating <= 5) {
+                $query->where('rating', '>=', $minRating);
+            }
+        }
+
+        // Filter by maximum rating
+        if ($request->has('max_rating')) {
+            $maxRating = (int) $request->max_rating;
+            if ($maxRating >= 1 && $maxRating <= 5) {
+                $query->where('rating', '<=', $maxRating);
+            }
+        }
         // // Sort by date (default: newest first)
         // $sortBy = $request->get('sort_by', 'created_at');
         // $sortOrder = $request->get('sort_order', 'desc');
@@ -86,7 +108,7 @@ class ReviewsController extends BaseController
         // Pagination
         $perPage = $request->get('per_page', 10);
         $reviews = $query->paginate($perPage);
-
+         
         return $this->sendResponse([
             'reviews' => $reviews->items(),
             'pagination' => [
