@@ -3,6 +3,11 @@
 namespace App\Services\Customer;
 
 use App\Models\User;
+use App\Models\Review;
+ 
+use App\Models\Bookmark; 
+use App\Models\ProviderService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class CustomerOnlyProfileService
@@ -101,6 +106,19 @@ class CustomerOnlyProfileService
      */
     public function getProfile(User $user)
     {
+         
+        $user->load([
+            'providerProfile',
+            'workingHours',  
+            
+        ])
+        ->loadCount([
+                'providerBookings as provider_bookings_count',
+                'providerServices as provider_services_count',
+                'publishedReviews as published_reviews_count'
+            ])
+            ->loadAvg('publishedReviews as published_reviews_avg_rating', 'rating');
+         
         return $user;
     }
 
