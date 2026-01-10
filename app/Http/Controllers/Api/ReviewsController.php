@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Api\BaseController;
 use App\Models\Review;
 use App\Models\Booking; 
+use App\Models\User; 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
 class ReviewsController extends BaseController
@@ -20,6 +21,7 @@ class ReviewsController extends BaseController
             'rating' => 'required|integer|min:1|max:5',
             'review' => 'nullable|string|max:1000',
             'booking_id' => 'required|exists:bookings,id',
+            
         ]);
 
         if ($validator->fails()) {
@@ -68,13 +70,21 @@ class ReviewsController extends BaseController
 
     public function index(Request $request): JsonResponse
     {
-        $provider = auth()->user();
+        if($request->has('user_id')) {
+            $provider = User::find($request->user_id);
+        }else{
+
+            $provider = auth()->user();
+        }
         
         $query = Review::with(['service','reviewer', 'reviewedProvider', 'booking'])
             ->where('receiver_id', $provider->id); 
         // Filter by status
         if ($request->has('status') && in_array($request->status, ['pending', 'published', 'unpublished'])) {
             $query->where('status', $request->status);
+        }
+        if($request->has('service_id')) {
+            $query->where('service_id', $request->service_id);
         }
         // Filter by rating (stars) - exact match
         if ($request->has('rating')) {

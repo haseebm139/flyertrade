@@ -31,4 +31,12 @@ class Booking extends Model
     {
         return round(($this->booking_working_minutes ?? 0) / 60, 2);
     }
+
+    /**
+     * Check if review has been given for this booking
+     */
+    public function getIsReviewGivenAttribute(): bool
+    {
+        return $this->review()->exists();
+    }
 }

@@ -7,6 +7,7 @@ use App\Models\BookingSlot;
 use App\Models\ProviderWorkingHour;
 use App\Models\BookingReschedule;
 use App\Models\ProviderService;
+use App\Models\Review;
 
 use Carbon\Carbon;
 use Illuminate\Support\Str; 
@@ -169,10 +170,13 @@ class BookingService
                 ]);
             }
 
-            $booking = $booking->load('slots','customer','provider','providerService.service');
+            $booking = $booking->load('slots','customer','provider','providerService.service', 'review');
             
             // Send notifications
             // $this->notificationService->notifyBookingCreated($booking);
+
+            // Add review status
+            $booking = $this->addReviewStatus($booking);
 
             return $booking;
         });
@@ -180,17 +184,20 @@ class BookingService
 
     public function accept(Booking $booking) 
     {
-        if ($booking->status !== 'awaiting_provider') {
-            return [
-                'error' => true,
-                'message' => 'Booking not awaiting provider.'
-            ];  
-        }
-        $booking->update(['status' => 'confirmed', 'confirmed_at' => now()]);
-        $booking = $booking->fresh('slots', 'provider', 'customer','providerService.service');
+        // if ($booking->status !== 'awaiting_provider') {
+        //     return [
+        //         'error' => true,
+        //         'message' => 'Booking not awaiting provider.'
+        //     ];  
+        // }
+        // $booking->update(['status' => 'confirmed', 'confirmed_at' => now()]);
+        $booking = $booking->fresh('slots', 'provider', 'customer','providerService.service', 'review');
         
         // Send notification
         // $this->notificationService->notifyBookingConfirmed($booking);
+        
+        // Add review status
+        $booking = $this->addReviewStatus($booking);
         
         return $booking;
     }
@@ -250,7 +257,7 @@ class BookingService
             ]; 
         }
         $booking->update(['status' => 'completed', 'completed_at' => now()]);
-        $booking = $booking->fresh('slots', 'provider', 'customer','providerService.service');
+        $booking = $booking->fresh('slots', 'provider', 'customer','providerService.service', 'review');
         
         // Send notifications
         $customer = User::find($booking->customer_id);
@@ -265,6 +272,9 @@ class BookingService
             //     ['booking_id' => $booking->id, 'booking_ref' => $booking->booking_ref]
             // );
         }
+        
+        // Add review status
+        $booking = $this->addReviewStatus($booking);
         
         return $booking;
     }
@@ -478,7 +488,12 @@ class BookingService
 
     public function completedBookingsCustomer($customerId)
     {
-        return Booking::with('slots', 'provider', 'customer','providerService.service')->where('customer_id', $customerId)->where('status', 'completed')->paginate(10);
+        $bookings = Booking::with('slots', 'provider', 'customer','providerService.service', 'review')
+            ->where('customer_id', $customerId)
+            ->where('status', 'completed')
+            ->paginate(10);
+        
+        return $this->addReviewStatus($bookings);
     }
 
     public function cancelledBookingsCustomer($customerId)
@@ -509,5 +524,46 @@ class BookingService
     public function onGoingBookingsCustomer($customerId)
     {
         return Booking::with('slots', 'provider', 'customer','providerService.service')->where('customer_id', $customerId)->where('status', 'in_progress')->paginate(10);
+    }
+
+    /**
+     * Check if review has been given for a booking
+     * 
+     * @param int|Booking $booking
+     * @return bool
+     */
+    public function isReviewGiven($booking): bool
+    {
+        if ($booking instanceof Booking) {
+            return $booking->review()->exists();
+        }
+        
+        return Review::where('booking_id', $booking)->exists();
+    }
+
+    /**
+     * Add is_review_given status to booking(s)
+     * 
+     * @param Booking|\Illuminate\Database\Eloquent\Collection $bookings
+     * @return Booking|\Illuminate\Database\Eloquent\Collection
+     */
+    public function addReviewStatus($bookings)
+    {
+        if ($bookings instanceof Booking) {
+            $bookings->setAttribute('is_review_given', $this->isReviewGiven($bookings));
+            return $bookings;
+        }
+
+        // For collections/paginated results
+        $bookingIds = $bookings->pluck('id')->toArray();
+        $reviewedBookingIds = Review::whereIn('booking_id', $bookingIds)
+            ->pluck('booking_id')
+            ->toArray();
+
+        foreach ($bookings as $booking) {
+            $booking->setAttribute('is_review_given', in_array($booking->id, $reviewedBookingIds));
+        }
+
+        return $bookings;
     }
 }
