@@ -12,11 +12,15 @@ use Carbon\Carbon;
 use Illuminate\Support\Str; 
 use Illuminate\Support\Facades\Auth;
 use App\Services\Payment\StripeService;
+use App\Services\Notification\NotificationService;
 use Illuminate\Support\Facades\DB; 
 
 class BookingService
 {
-    public function __construct(private StripeService $stripe) {}
+    public function __construct(
+        private StripeService $stripe,
+        private NotificationService $notificationService
+    ) {}
 
     public function checkAvailability(array $slot, int $providerId): string
     {
@@ -165,7 +169,12 @@ class BookingService
                 ]);
             }
 
-            return $booking->load('slots','customer','provider','providerService.service');
+            $booking = $booking->load('slots','customer','provider','providerService.service');
+            
+            // Send notifications
+            // $this->notificationService->notifyBookingCreated($booking);
+
+            return $booking;
         });
     }
 
@@ -178,7 +187,12 @@ class BookingService
             ];  
         }
         $booking->update(['status' => 'confirmed', 'confirmed_at' => now()]);
-        return $booking->fresh('slots', 'provider', 'customer','providerService.service');
+        $booking = $booking->fresh('slots', 'provider', 'customer','providerService.service');
+        
+        // Send notification
+        // $this->notificationService->notifyBookingConfirmed($booking);
+        
+        return $booking;
     }
 
     public function reject(Booking $booking) 
@@ -218,8 +232,14 @@ class BookingService
         //         'message' => 'Only in progress bookings can be cancelled.'
         //     ]; 
         // } 
+        $cancelledBy = Auth::id() === $booking->customer_id ? 'customer' : 'provider';
         $booking->update(['status' => 'cancelled', 'cancelled_at' => now(), 'cancelled_reason' => $cancelReason]);
-        return $booking->load('slots', 'provider', 'customer','providerService.service');
+        $booking = $booking->load('slots', 'provider', 'customer','providerService.service');
+        
+        // Send notification
+        // $this->notificationService->notifyBookingCancelled($booking, $cancelledBy);
+        
+        return $booking;
     }
     public function complete(Booking $booking) 
     {
@@ -230,7 +250,23 @@ class BookingService
             ]; 
         }
         $booking->update(['status' => 'completed', 'completed_at' => now()]);
-        return $booking->fresh('slots', 'provider', 'customer','providerService.service');
+        $booking = $booking->fresh('slots', 'provider', 'customer','providerService.service');
+        
+        // Send notifications
+        $customer = User::find($booking->customer_id);
+        if ($customer) {
+            // $this->notificationService->send(
+            //     $customer,
+            //     'booking_completed',
+            //     'Booking Completed',
+            //     "Your booking #{$booking->booking_ref} has been completed",
+            //     'customer',
+            //     $booking,
+            //     ['booking_id' => $booking->id, 'booking_ref' => $booking->booking_ref]
+            // );
+        }
+        
+        return $booking;
     }
 
     public function requestReschedule(Booking $booking, array $newSlots): array
@@ -458,6 +494,16 @@ class BookingService
         }
         $booking->paid_at = now();
         $booking->save();
+        
+        // Send notification (if transaction exists)
+        $transaction = \App\Models\Transaction::where('booking_id', $booking->id)
+            ->where('status', 'succeeded')
+            ->first();
+        
+        if ($transaction) {
+            // $this->notificationService->notifyPaymentSuccess($transaction);
+        }
+        
         return ['error' => false, 'message' => 'Payment processed successfully.'];
     }
     public function onGoingBookingsCustomer($customerId)

@@ -11,6 +11,7 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\UserPaymentMethod;
+use App\Models\Notification;
 
 use Illuminate\Support\Str;
 
@@ -251,6 +252,22 @@ class User extends Authenticatable
         
         // Otherwise calculate on the fly
         return $this->publishedReviews()->count();
+    }
+
+    /**
+     * Get notifications for this user
+     */
+    public function notifications(): HasMany
+    {
+        return $this->hasMany(Notification::class);
+    }
+
+    /**
+     * Get unread notifications count
+     */
+    public function unreadNotifications(): HasMany
+    {
+        return $this->hasMany(Notification::class)->whereNull('read_at');
     }
 
 }

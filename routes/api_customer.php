@@ -1,6 +1,6 @@
 <?php
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\Customer\{AuthController,ProviderController,ProfileController,BookingController as CustomerBookingController,ChatController,ReviewController};
+use App\Http\Controllers\Api\Customer\{AuthController,ProviderController,ProfileController,BookingController as CustomerBookingController,ChatController,ReviewController,NotificationController};
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\Shared\MediaController;
 
@@ -56,6 +56,15 @@ Route::prefix('customer')->group(function () {
             Route::post('cards/{card}/default', [PaymentController::class,'makeDefault']);
             // TEST ONLY: Create test payment_method
             Route::post('test/create-payment-method', [PaymentController::class,'createTestPaymentMethod']);
+        });
+
+        // Notifications
+        Route::controller(NotificationController::class)->prefix('notifications')->group(function () {
+            Route::get('/', 'index');
+            Route::get('/unread-count', 'unreadCount');
+            Route::post('/{id}/read', 'markAsRead');
+            Route::post('/mark-all-read', 'markAllAsRead');
+            Route::delete('/{id}', 'destroy');
         });
         
     });
