@@ -515,9 +515,9 @@ class BookingService
         //     ->where('status', 'succeeded')
         //     ->first();
         
-        if ($transaction) {
-            // $this->notificationService->notifyPaymentSuccess($transaction);
-        }
+        // if ($transaction) {
+        //     // $this->notificationService->notifyPaymentSuccess($transaction);
+        // }
         
         return ['error' => false, 'message' => 'Payment processed successfully.'];
     }
