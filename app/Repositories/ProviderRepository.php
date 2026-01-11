@@ -309,8 +309,22 @@ class ProviderRepository
      */
     public function getBookmarks(int $userId)
     {  
-        return Bookmark::with('provider.providerProfile','provider.providerServices.service','provider.providerServices.media','provider.providerServices.certificates','provider.providerProfile.workingHours') // eager load provider info
-            ->where('user_id', $userId)
-            ->get();
+        return Bookmark::with([
+            'provider.providerProfile',
+            'provider.providerServices.service',
+            'provider.providerServices.media',
+            'provider.providerServices.certificates',
+            'provider.providerProfile.workingHours',
+            'provider' => function($q) {
+                $q->withCount([
+                    'providerBookings as provider_bookings_count',
+                    'providerServices as provider_services_count',
+                    'publishedReviews as published_reviews_count'
+                ])
+                ->withAvg('publishedReviews as published_reviews_avg_rating', 'rating');
+            }
+        ])
+        ->where('user_id', $userId)
+        ->get();
     }
 }
