@@ -18,6 +18,10 @@ Route::middleware('auth:sanctum')->controller(CustomerBookingController::class)-
     Route::get('customer/completed', 'completed');
     Route::get('customer/cancelled', 'cancelled');
     Route::post('{booking_id}/customer/payment', 'processPayment');
+    
+    // Late provider actions
+    Route::get('{booking}/check-late', 'checkProviderLate');
+    Route::post('{booking}/late-action', 'handleLateAction');
 });
 Route::prefix('customer')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {

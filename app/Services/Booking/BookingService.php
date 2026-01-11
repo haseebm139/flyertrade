@@ -184,13 +184,13 @@ class BookingService
 
     public function accept(Booking $booking) 
     {
-        // if ($booking->status !== 'awaiting_provider') {
-        //     return [
-        //         'error' => true,
-        //         'message' => 'Booking not awaiting provider.'
-        //     ];  
-        // }
-        // $booking->update(['status' => 'confirmed', 'confirmed_at' => now()]);
+        if ($booking->status !== 'awaiting_provider') {
+            return [
+                'error' => true,
+                'message' => 'Booking not awaiting provider.'
+            ];  
+        }
+        $booking->update(['status' => 'confirmed', 'confirmed_at' => now()]);
         $booking = $booking->fresh('slots', 'provider', 'customer','providerService.service', 'review');
         
         // Send notification
@@ -483,7 +483,19 @@ class BookingService
     }
     public function upcomingBookingsCustomer($customerId)
     {
-        return Booking::with('slots', 'provider', 'customer','providerService.service')->where('customer_id', $customerId)->where('status', 'confirmed')->paginate(10);
+        $bookings = Booking::with('slots', 'provider', 'customer','providerService.service')
+            // ->where('customer_id', $customerId)
+            ->where('status', 'confirmed')
+            ->paginate(10);
+        
+        // Add late status for each booking
+        foreach ($bookings as $booking) {
+            $lateCheck = $this->isProviderLate($booking);
+            $booking->setAttribute('is_provider_late', $lateCheck['is_late']);
+            $booking->setAttribute('can_take_late_action', $lateCheck['can_take_action'] ?? false);
+        }
+        
+        return $bookings;
     }
 
     public function completedBookingsCustomer($customerId)
@@ -565,5 +577,180 @@ class BookingService
         }
 
         return $bookings;
+    }
+
+    /**
+     * Check if provider is late for an upcoming booking
+     * 
+     * @param Booking $booking
+     * @param int $lateMinutesThreshold Minutes after start time to consider late (default: 15)
+     * @return array
+     */
+    public function isProviderLate(Booking $booking, int $lateMinutesThreshold = 15): array
+    {
+        // Only check for confirmed/upcoming bookings
+        if (!in_array($booking->status, ['confirmed'])) {
+            return [
+                'is_late' => false,
+                'message' => 'Booking is not in upcoming status.'
+            ];
+        }
+
+        // Get the first slot (earliest date/time)
+        $firstSlot = $booking->slots()
+            ->orderBy('service_date', 'asc')
+            ->orderBy('start_time', 'asc')
+            ->first();
+
+        if (!$firstSlot) {
+            return [
+                'is_late' => false,
+                'message' => 'No slots found for this booking.'
+            ];
+        }
+
+        // Combine date and time to create datetime
+        $slotDateTime = Carbon::parse($firstSlot->service_date . ' ' . $firstSlot->start_time);
+        $now = Carbon::now();
+
+        // Check if slot time has passed
+        if ($now->lt($slotDateTime)) {
+            return [
+                'is_late' => false,
+                'message' => 'Booking time has not arrived yet.',
+                'slot_datetime' => $slotDateTime->toDateTimeString(),
+                'minutes_until_slot' => $now->diffInMinutes($slotDateTime, false)
+            ];
+        }
+
+        // Check if provider is late (past start time + threshold)
+        $lateThreshold = $slotDateTime->copy()->addMinutes($lateMinutesThreshold);
+        $isLate = $now->gte($lateThreshold);
+        $minutesLate = $isLate ? $now->diffInMinutes($slotDateTime, false) : 0;
+
+        return [
+            'is_late' => $isLate,
+            'message' => $isLate ? 'Provider is running late.' : 'Provider is on time.',
+            'slot_datetime' => $slotDateTime->toDateTimeString(),
+            'minutes_late' => $minutesLate,
+            'late_threshold_minutes' => $lateMinutesThreshold,
+            'can_take_action' => $isLate && !$booking->late_action_taken
+        ];
+    }
+
+    /**
+     * Handle late action for a booking
+     * 
+     * @param Booking $booking
+     * @param string $action 'wait', 'reschedule', or 'escalate'
+     * @param array|null $newSlots Required if action is 'reschedule'
+     * @return array
+     */
+    public function handleLateAction(Booking $booking, string $action, ?array $newSlots = null): array
+    {
+        // Validate booking status
+        if ($booking->status !== 'confirmed') {
+            return [
+                'error' => true,
+                'message' => 'Only confirmed/upcoming bookings can have late actions.'
+            ];
+        }
+
+        // Check if action already taken
+        if ($booking->late_action_taken) {
+            return [
+                'error' => true,
+                'message' => 'Late action has already been taken for this booking.',
+                'previous_action' => $booking->late_action_type
+            ];
+        }
+
+        // Validate action type
+        if (!in_array($action, ['wait', 'reschedule', 'escalate'])) {
+            return [
+                'error' => true,
+                'message' => 'Invalid action. Must be: wait, reschedule, or escalate.'
+            ];
+        }
+
+        // Check if provider is actually late
+        $lateCheck = $this->isProviderLate($booking);
+        if (!$lateCheck['is_late']) {
+            return [
+                'error' => true,
+                'message' => 'Provider is not late. Action cannot be taken.',
+                'late_check' => $lateCheck
+            ];
+        }
+
+        // Handle different actions
+        switch ($action) {
+            case 'wait':
+                // Customer chooses to wait - just mark action taken
+                $booking->update([
+                    'late_action_taken' => true,
+                    'late_action_type' => 'wait',
+                    'late_action_at' => now()
+                ]);
+
+                return [
+                    'error' => false,
+                    'message' => 'You have chosen to wait for the provider.',
+                    'booking' => $booking->fresh(['slots', 'provider', 'customer', 'providerService.service'])
+                ];
+
+            case 'reschedule':
+                // Customer wants to reschedule - use existing reschedule logic
+                if (!$newSlots || empty($newSlots)) {
+                    return [
+                        'error' => true,
+                        'message' => 'New slots are required for rescheduling.'
+                    ];
+                }
+
+                // Use existing requestReschedule method
+                $rescheduleResult = $this->requestReschedule($booking, $newSlots);
+                
+                if ($rescheduleResult['error']) {
+                    return $rescheduleResult;
+                }
+
+                // Mark late action
+                $booking->update([
+                    'late_action_taken' => true,
+                    'late_action_type' => 'reschedule',
+                    'late_action_at' => now()
+                ]);
+
+                return [
+                    'error' => false,
+                    'message' => 'Reschedule request sent due to provider being late.',
+                    'booking' => $booking->fresh(['slots', 'provider', 'customer', 'providerService.service']),
+                    'reschedule' => $rescheduleResult['reschedule']
+                ];
+
+            case 'escalate':
+                // Escalate to admin - mark action and potentially notify admin
+                $booking->update([
+                    'late_action_taken' => true,
+                    'late_action_type' => 'escalate',
+                    'late_action_at' => now()
+                ]);
+
+                // TODO: Send notification to admin about escalation
+                // $this->notificationService->notifyAdminEscalation($booking);
+
+                return [
+                    'error' => false,
+                    'message' => 'Issue has been escalated. Admin will be notified.',
+                    'booking' => $booking->fresh(['slots', 'provider', 'customer', 'providerService.service'])
+                ];
+
+            default:
+                return [
+                    'error' => true,
+                    'message' => 'Invalid action type.'
+                ];
+        }
     }
 }

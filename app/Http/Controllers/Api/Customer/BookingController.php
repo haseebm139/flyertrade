@@ -35,7 +35,17 @@ class BookingController extends BaseController
         if (!$booking) {
             return $this->sendError('Booking not found', 404);
         }
-        return $this->sendResponse($booking->load('slots','customer','provider','providerService.service'), 'Booking retrieved successfully.'); 
+        
+        $booking = $booking->load('slots','customer','provider','providerService.service');
+        
+        // Add late status for upcoming bookings
+        if ($booking->status === 'confirmed') {
+            $lateCheck = $this->bookingsService->isProviderLate($booking);
+            $booking->setAttribute('is_provider_late', $lateCheck['is_late']);
+            $booking->setAttribute('late_status', $lateCheck);
+        }
+        
+        return $this->sendResponse($booking, 'Booking retrieved successfully.'); 
     }
 
     /**
@@ -136,5 +146,73 @@ class BookingController extends BaseController
     {
         $ongoing = $this->bookingsService->ongoingBookingsCustomer(auth()->user()->id);
         return $this->sendResponse($ongoing, 'Ongoing bookings.'); 
+    }
+
+    /**
+     * Check if provider is late for a booking
+     * 
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function checkProviderLate($id): JsonResponse
+    {
+        $booking = Booking::with('slots')->find($id);
+        
+        if (!$booking) {
+            return $this->sendError('Booking not found', 404);
+        }
+
+        // Ensure customer owns this booking
+        if ($booking->customer_id !== auth()->id()) {
+            return $this->sendError('Unauthorized access to this booking.', 403);
+        }
+
+        $lateCheck = $this->bookingsService->isProviderLate($booking);
+        
+        return $this->sendResponse($lateCheck, 'Provider late status checked.');
+    }
+
+    /**
+     * Handle late action for a booking
+     * 
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function handleLateAction(Request $request, $id): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'action' => 'required|in:wait,reschedule,escalate',
+            // 'new_slots' => 'required_if:action,reschedule|array',
+            // 'new_slots.*.service_date' => 'required_if:action,reschedule|date_format:Y-m-d|after_or_equal:today',
+            // 'new_slots.*.start_time' => 'required_if:action,reschedule|date_format:H:i',
+            // 'new_slots.*.end_time' => 'required_if:action,reschedule|date_format:H:i|after:new_slots.*.start_time',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), 422);
+        }
+
+        $booking = Booking::with('slots')->find($id);
+        
+        if (!$booking) {
+            return $this->sendError('Booking not found', 404);
+        }
+
+        // Ensure customer owns this booking
+        if ($booking->customer_id !== auth()->id()) {
+            return $this->sendError('Unauthorized access to this booking.', 403);
+        }
+
+        $action = $request->input('action');
+        $newSlots = $request->input('new_slots');
+
+        $result = $this->bookingsService->handleLateAction($booking, $action, $newSlots);
+
+        if ($result['error'] === true) {
+            return $this->sendError($result['message'], 400);
+        }
+
+        return $this->sendResponse($result, 'Late action handled successfully.');
     }
 }
