@@ -701,19 +701,19 @@ class BookingService
 
             case 'reschedule':
                 // Customer wants to reschedule - use existing reschedule logic
-                if (!$newSlots || empty($newSlots)) {
-                    return [
-                        'error' => true,
-                        'message' => 'New slots are required for rescheduling.'
-                    ];
-                }
+                // if (!$newSlots || empty($newSlots)) {
+                //     return [
+                //         'error' => true,
+                //         'message' => 'New slots are required for rescheduling.'
+                //     ];
+                // }
 
                 // Use existing requestReschedule method
-                $rescheduleResult = $this->requestReschedule($booking, $newSlots);
+                // $rescheduleResult = $this->requestReschedule($booking, $newSlots);
                 
-                if ($rescheduleResult['error']) {
-                    return $rescheduleResult;
-                }
+                // if ($rescheduleResult['error']) {
+                //     return $rescheduleResult;
+                // }
 
                 // Mark late action
                 $booking->update([
