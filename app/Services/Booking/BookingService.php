@@ -726,7 +726,7 @@ class BookingService
                     'error' => false,
                     'message' => 'Reschedule request sent due to provider being late.',
                     'booking' => $booking->fresh(['slots', 'provider', 'customer', 'providerService.service']),
-                    'reschedule' => $rescheduleResult['reschedule']
+                    // 'reschedule' => $rescheduleResult['reschedule']
                 ];
 
             case 'escalate':
