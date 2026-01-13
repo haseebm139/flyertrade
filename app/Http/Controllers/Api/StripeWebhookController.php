@@ -51,8 +51,9 @@ class StripeWebhookController extends Controller
                             'stripe_charge_id' => $pi->charges->data[0]->id ?? null,
                         ]);
                         
-                        // Send notification
-                        // $this->notificationService->notifyPaymentSuccess($transaction);
+                        // Send notifications
+                        $this->notificationService->notifyPaymentSuccess($transaction);
+                        $this->notificationService->notifyPaymentSuccessful($transaction);
                     }
                 });
                 break;
@@ -72,7 +73,7 @@ class StripeWebhookController extends Controller
                         ]);
                         
                         // Send notification
-                        // $this->notificationService->notifyPaymentFailed($transaction);
+                        $this->notificationService->notifyPaymentFailed($transaction);
                     }
                 });
                 break;
@@ -95,7 +96,7 @@ class StripeWebhookController extends Controller
                             $transaction->update(['status' => 'refunded']);
                             
                             // Create refund transaction
-                            Transaction::create([
+                            $refundTransaction = Transaction::create([
                                 'booking_id' => $transaction->booking_id,
                                 'customer_id' => $transaction->customer_id,
                                 'provider_id' => $transaction->provider_id,
@@ -109,6 +110,9 @@ class StripeWebhookController extends Controller
                                 'stripe_charge_id' => $charge->id,
                                 'completed_at' => now(),
                             ]);
+                            
+                            // Send notification
+                            $this->notificationService->notifyRefundProcessed($refundTransaction);
                         }
                     });
                 }

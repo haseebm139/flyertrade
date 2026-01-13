@@ -64,8 +64,9 @@ class ReviewController extends BaseController
             'status' => 'pending', // Default status, can be changed by admin/provider
         ]);
 
-        // Send notification to provider
-        // $this->notificationService->notifyReviewReceived($review);
+        // Send notifications
+        $this->notificationService->notifyReviewReceived($review);
+        $this->notificationService->notifyNewReviewPosted($review);
 
         return $this->sendResponse($review->load(['reviewer', 'service', 'reviewedProvider']), 'Review submitted successfully.');
     }

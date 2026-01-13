@@ -173,7 +173,8 @@ class BookingService
             $booking = $booking->load('slots','customer','provider','providerService.service', 'review');
             
             // Send notifications
-            // $this->notificationService->notifyBookingCreated($booking);
+            $this->notificationService->notifyNewBookingCreated($booking);
+            $this->notificationService->notifyBookingCreated($booking);
 
             // Add review status
             $booking = $this->addReviewStatus($booking);
@@ -194,7 +195,7 @@ class BookingService
         $booking = $booking->fresh('slots', 'provider', 'customer','providerService.service', 'review');
         
         // Send notification
-        // $this->notificationService->notifyBookingConfirmed($booking);
+        $this->notificationService->notifyBookingConfirmed($booking);
         
         // Add review status
         $booking = $this->addReviewStatus($booking);
@@ -217,7 +218,12 @@ class BookingService
         }
 
         $booking->update(['status' => 'rejected','rejected_at' => now()]);
-        return $booking->fresh('slots', 'provider', 'customer','providerService.service');
+        $booking = $booking->fresh('slots', 'provider', 'customer','providerService.service');
+        
+        // Send notification
+        $this->notificationService->notifyBookingRejected($booking);
+        
+        return $booking;
     }
     public function start(Booking $booking) 
     {
@@ -228,8 +234,13 @@ class BookingService
             ]; 
         } 
         
-        $booking->update(['status' => 'in_progress', 'started_at' => now()]); 
-        return $booking->fresh('slots', 'provider', 'customer','providerService.service');
+        $booking->update(['status' => 'in_progress', 'started_at' => now()]);
+        $booking = $booking->fresh('slots', 'provider', 'customer','providerService.service');
+        
+        // Send notification
+        $this->notificationService->notifyBookingStarted($booking);
+        
+        return $booking;
     }
 
     public function cancel(Booking $booking, string $cancelReason){
@@ -244,7 +255,7 @@ class BookingService
         $booking = $booking->load('slots', 'provider', 'customer','providerService.service');
         
         // Send notification
-        // $this->notificationService->notifyBookingCancelled($booking, $cancelledBy);
+        $this->notificationService->notifyBookingCancelled($booking, $cancelledBy);
         
         return $booking;
     }
@@ -260,18 +271,7 @@ class BookingService
         $booking = $booking->fresh('slots', 'provider', 'customer','providerService.service', 'review');
         
         // Send notifications
-        $customer = User::find($booking->customer_id);
-        if ($customer) {
-            // $this->notificationService->send(
-            //     $customer,
-            //     'booking_completed',
-            //     'Booking Completed',
-            //     "Your booking #{$booking->booking_ref} has been completed",
-            //     'customer',
-            //     $booking,
-            //     ['booking_id' => $booking->id, 'booking_ref' => $booking->booking_ref]
-            // );
-        }
+        $this->notificationService->notifyJobCompleted($booking);
         
         // Add review status
         $booking = $this->addReviewStatus($booking);
@@ -309,6 +309,9 @@ class BookingService
         $booking->update([
             'status' => $isCustomer ? 'reschedule_pending_provider' : 'reschedule_pending_customer',
         ]);
+        
+        // Send notification
+        $this->notificationService->notifyRescheduleRequested($booking, $reschedule, $isCustomer ? 'customer' : 'provider');
         
         return [
             'error' => false, 
@@ -368,10 +371,16 @@ class BookingService
              
             $booking->update(['status' => 'confirmed']);
             $reschedule->update(['status' => 'accepted']);
+            
+            // Send notification
+            $this->notificationService->notifyRescheduleAccepted($booking, $reschedule);
 
         } elseif ($response === 'reject') {
             $booking->update(['status' => 'confirmed']);
             $reschedule->update(['status' => 'rejected']);
+            
+            // Send notification
+            $this->notificationService->notifyRescheduleRejected($booking, $reschedule);
 
         } else {
             return [
@@ -397,6 +406,7 @@ class BookingService
             foreach ($bookings as $booking) {
                 try {
                     $this->reject($booking);
+                    $this->notificationService->notifyBookingExpired($booking);
                     $count++;
                 } catch (\Throwable) {}
             }
@@ -523,13 +533,14 @@ class BookingService
         $booking->save();
         
         // Send notification (if transaction exists)
-        // $transaction = \App\Models\Transaction::where('booking_id', $booking->id)
-        //     ->where('status', 'succeeded')
-        //     ->first();
+        $transaction = \App\Models\Transaction::where('booking_id', $booking->id)
+            ->where('status', 'succeeded')
+            ->first();
         
-        // if ($transaction) {
-        //     // $this->notificationService->notifyPaymentSuccess($transaction);
-        // }
+        if ($transaction) {
+            $this->notificationService->notifyPaymentSuccess($transaction);
+            $this->notificationService->notifyPaymentSuccessful($transaction);
+        }
         
         return ['error' => false, 'message' => 'Payment processed successfully.'];
     }
@@ -731,6 +742,7 @@ class BookingService
 
             case 'escalate':
                 // Escalate to admin - mark action and potentially notify admin
+                $this->notificationService->notifyProviderLateEscalation($booking);
                 $booking->update([
                     'late_action_taken' => true,
                     'late_action_type' => 'escalate',
