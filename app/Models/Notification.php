@@ -11,6 +11,8 @@ class Notification extends Model
     protected $fillable = [
         'user_id',
         'type',
+        'icon',
+        'category',
         'title',
         'message',
         'recipient_type',
@@ -79,5 +81,60 @@ class Notification extends Model
     public function scopeForRecipient($query, string $type)
     {
         return $query->where('recipient_type', $type)->orWhere('recipient_type', 'all');
+    }
+
+    /**
+     * Get icon URL for the notification
+     * Returns the full URL path to the icon file
+     */
+    public function getIconUrlAttribute(): string
+    {
+        $iconPath = $this->getIconPath($this->icon ?? 'system_alert');
+        return asset($iconPath);
+    }
+
+    /**
+     * Get icon path based on icon identifier
+     */
+    private function getIconPath(string $icon): string
+    {
+        $iconMap = [
+            'document_verification' => 'assets/images/icons/notification-document-verification.svg',
+            'document_pending' => 'assets/images/icons/notification-document-pending.svg',
+            'booking_created' => 'assets/images/icons/notification-booking-created.svg',
+            'booking_confirmed' => 'assets/images/icons/notification-booking-confirmed.svg',
+            'booking_cancelled' => 'assets/images/icons/notification-booking-cancelled.svg',
+            'booking_completed' => 'assets/images/icons/notification-booking-completed.svg',
+            'job_completed' => 'assets/images/icons/notification-job-completed.svg',
+            'payment_success' => 'assets/images/icons/notification-payment-success.svg',
+            'payment_failed' => 'assets/images/icons/notification-payment-failed.svg',
+            'transaction' => 'assets/images/icons/notification-transaction.svg',
+            'review_received' => 'assets/images/icons/notification-review-received.svg',
+            'review_pending' => 'assets/images/icons/notification-review-pending.svg',
+            'high_cancellation_alert' => 'assets/images/icons/notification-cancellation-alert.svg',
+            'system_alert' => 'assets/images/icons/notification-system-alert.svg',
+            'warning' => 'assets/images/icons/notification-warning.svg',
+            'admin_action' => 'assets/images/icons/notification-admin-action.svg',
+            'escalation' => 'assets/images/icons/notification-escalation.svg',
+            'message_received' => 'assets/images/icons/notification-message.svg',
+            'special_offer' => 'assets/images/icons/notification-special-offer.svg',
+            'promotion' => 'assets/images/icons/notification-promotion.svg',
+            'new_service' => 'assets/images/icons/notification-new-service.svg',
+            'booking_reminder' => 'assets/images/icons/notification-reminder.svg',
+            'reminder' => 'assets/images/icons/notification-reminder.svg',
+        ];
+
+        return $iconMap[$icon] ?? $iconMap['system_alert'];
+    }
+
+    /**
+     * Get icon component name (for React/Vue components)
+     */
+    public function getIconComponentAttribute(): string
+    {
+        // Convert snake_case to PascalCase for component names
+        $parts = explode('_', $this->icon ?? 'system_alert');
+        $component = implode('', array_map('ucfirst', $parts));
+        return $component . 'Icon';
     }
 }

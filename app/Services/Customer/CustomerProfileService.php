@@ -106,6 +106,9 @@ class CustomerProfileService
             $updateData['longitude'] = $data['longitude'];
         }
 
+        if(isset($data['fcm_token'])) {
+            $updateData['fcm_token'] = $data['fcm_token'];
+        }
         $user->update($updateData);
 
         // If user is a provider, also update ProviderProfile

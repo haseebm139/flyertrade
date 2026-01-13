@@ -14,18 +14,9 @@ return new class extends Migration
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->enum('type', [
-                'booking_created',
-                'booking_confirmed',
-                'booking_cancelled',
-                'booking_completed',
-                'payment_success',
-                'payment_failed',
-                'review_received',
-                'message_received',
-                'offer_received',
-                'system_announcement'
-            ]);
+            $table->string('type'); // Changed from enum to string for flexibility
+            $table->string('icon')->nullable();
+            $table->string('category')->nullable(); // 'all', 'reviews', 'bookings', 'transactions', 'admin_actions'
             $table->string('title');
             $table->text('message');
             $table->enum('recipient_type', ['admin', 'customer', 'provider', 'all'])->default('customer');
@@ -38,6 +29,7 @@ return new class extends Migration
             $table->index(['user_id', 'read_at']);
             $table->index(['recipient_type', 'created_at']);
             $table->index('type');
+            $table->index('category');
         });
     }
 

@@ -737,8 +737,8 @@ class BookingService
                     'late_action_at' => now()
                 ]);
 
-                // TODO: Send notification to admin about escalation
-                // $this->notificationService->notifyAdminEscalation($booking);
+                // Send notification to admin about escalation
+                // $this->notificationService->notifyProviderLateEscalation($booking);
 
                 return [
                     'error' => false,

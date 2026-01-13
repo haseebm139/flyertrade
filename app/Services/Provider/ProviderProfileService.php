@@ -14,6 +14,22 @@ class ProviderProfileService
     public function createOrUpdateProfile(array $data, $user)
     {
         $user = $user->load('providerProfile');
+        
+        // Check if user is actually a provider
+        $isProvider = $user->hasRole('provider') || 
+                     $user->user_type === 'provider' || 
+                     $user->user_type === 'multi';
+        
+         
+        
+        // Ensure provider profile exists (only for providers)
+        if ($isProvider && !$user->providerProfile) {
+            $user->providerProfile = ProviderProfile::create([
+                'user_id' => $user->id,
+            ]);
+            $user->load('providerProfile');
+        }
+        
         // Check if services data exists and has service_id
         if (!empty($data['services']) && isset($data['services']['service_id'])) {
             $existingService = ProviderService::where('user_id', $user->id)
@@ -73,6 +89,12 @@ class ProviderProfileService
         if ($coverPhotoPath !== null) {
             $updateData['cover_photo'] = $coverPhotoPath;
         }
+
+        // Save FCM token if provided
+        if (isset($data['fcm_token'])) {
+            $updateData['fcm_token'] = $data['fcm_token'];
+        }
+
         if (!empty($updateData)) {
             $user->update($updateData);
              
@@ -82,7 +104,7 @@ class ProviderProfileService
         
         if (isset($data['id_photo'])) {
             // Delete old cover photo if exists
-            if ($user->providerProfile->id_photo) {
+            if ($user->providerProfile && $user->providerProfile->id_photo) {
                 $oldPath = str_replace('storage/', '', $user->providerProfile->id_photo);
                 if (Storage::disk('public')->exists($oldPath)) {
                     Storage::disk('public')->delete($oldPath);
@@ -95,8 +117,8 @@ class ProviderProfileService
         $passportPath = null;
         
         if (isset($data['passport'])) {
-            // Delete old cover photo if exists
-            if ($user->providerProfile->passport) {
+            // Delete old passport if exists
+            if ($user->providerProfile && $user->providerProfile->passport) {
                 $oldPath = str_replace('storage/', '', $user->providerProfile->passport);
                 if (Storage::disk('public')->exists($oldPath)) {
                     Storage::disk('public')->delete($oldPath);
@@ -110,8 +132,8 @@ class ProviderProfileService
         $workPermitPath = null;
          
         if (isset($data['work_permit'])) {
-            // Delete old cover photo if exists
-            if ($user->providerProfile->work_permit) {
+            // Delete old work permit if exists
+            if ($user->providerProfile && $user->providerProfile->work_permit) {
                 $oldPath = str_replace('storage/', '', $user->providerProfile->work_permit);
                 if (Storage::disk('public')->exists($oldPath)) {
                     Storage::disk('public')->delete($oldPath);
@@ -125,7 +147,7 @@ class ProviderProfileService
             $profileData['id_photo'] = $idPhotoPath;
         }
 
-        if ($idPhotoPath !== null) {
+        if ($passportPath !== null) {
             $profileData['passport'] = $passportPath;
         }
         if ($workPermitPath !== null) {
@@ -210,6 +232,19 @@ class ProviderProfileService
     public function getProfile($user)
     {
         $user = User::find($user);
+        
+        // Check if user is actually a provider
+        $isProvider = $user->hasRole('provider') || 
+                     $user->user_type === 'provider' || 
+                     $user->user_type === 'multi';
+        
+        // Only create provider profile if user is a provider
+        if ($isProvider && !$user->providerProfile) {
+            $user->providerProfile = ProviderProfile::create([
+                'user_id' => $user->id,
+            ]);
+        }
+        
         return $user->load(
             'providerProfile',
             // 'providerProfile.services',

@@ -4,6 +4,7 @@ namespace App\Services\Notification;
 
 use App\Models\Notification;
 use App\Models\User;
+use App\Helpers\NotificationIcon;
 use Illuminate\Support\Facades\DB;
 
 class NotificationService
@@ -27,11 +28,15 @@ class NotificationService
         string $message,
         string $recipientType = 'customer',
         $notifiable = null,
-        array $data = []
+        array $data = [],
+        ?string $icon = null,
+        ?string $category = null
     ): Notification {
         return Notification::create([
             'user_id' => $user->id,
             'type' => $type,
+            'icon' => $icon ?? NotificationIcon::getIconForType($type),
+            'category' => $category ?? NotificationIcon::getCategoryForType($type),
             'title' => $title,
             'message' => $message,
             'recipient_type' => $recipientType,
@@ -60,16 +65,22 @@ class NotificationService
         string $message,
         string $recipientType = 'customer',
         $notifiable = null,
-        array $data = []
+        array $data = [],
+        ?string $icon = null,
+        ?string $category = null
     ): int {
         $notifications = [];
         $notifiableType = $notifiable ? get_class($notifiable) : null;
         $notifiableId = $notifiable ? $notifiable->id : null;
+        $icon = $icon ?? NotificationIcon::getIconForType($type);
+        $category = $category ?? NotificationIcon::getCategoryForType($type);
 
         foreach ($userIds as $userId) {
             $notifications[] = [
                 'user_id' => $userId,
                 'type' => $type,
+                'icon' => $icon,
+                'category' => $category,
                 'title' => $title,
                 'message' => $message,
                 'recipient_type' => $recipientType,
@@ -99,7 +110,9 @@ class NotificationService
         string $title,
         string $message,
         $notifiable = null,
-        array $data = []
+        array $data = [],
+        ?string $icon = null,
+        ?string $category = null
     ): int {
         $adminIds = User::where('role_id', 'admin')
             ->orWhere('user_type', 'admin')
@@ -110,7 +123,7 @@ class NotificationService
             return 0;
         }
 
-        return $this->sendToMany($adminIds, $type, $title, $message, 'admin', $notifiable, $data);
+        return $this->sendToMany($adminIds, $type, $title, $message, 'admin', $notifiable, $data, $icon, $category);
     }
 
     /**
@@ -368,5 +381,232 @@ class NotificationService
                 ]
             );
         }
+    }
+
+    /**
+     * Notify admin about document verification pending
+     */
+    public function notifyDocumentVerificationPending(int $count = 0): int
+    {
+        return $this->sendToAdmins(
+            'document_verification',
+            'Document verification',
+            $count > 0 ? "{$count} New Providers Awaiting Document Verification." : "New Providers Awaiting Document Verification.",
+            null,
+            ['count' => $count, 'action_url' => '/admin/providers/pending-verification'],
+            NotificationIcon::DOCUMENT_VERIFICATION,
+            'admin_actions'
+        );
+    }
+
+    /**
+     * Notify admin about high cancellation alert
+     */
+    public function notifyHighCancellationAlert(string $providerName, int $cancellationCount, int $providerId): int
+    {
+        return $this->sendToAdmins(
+            'high_cancellation_alert',
+            'High Cancellation Alert',
+            "{$providerName} has {$cancellationCount} cancellations this week.",
+            null,
+            [
+                'provider_id' => $providerId,
+                'provider_name' => $providerName,
+                'cancellation_count' => $cancellationCount,
+                'action_url' => "/admin/providers/{$providerId}"
+            ],
+            NotificationIcon::HIGH_CANCELLATION_ALERT,
+            'admin_actions'
+        );
+    }
+
+    /**
+     * Notify admin about provider late escalation
+     */
+    public function notifyProviderLateEscalation($booking): int
+    {
+        return $this->sendToAdmins(
+            'provider_late_escalation',
+            'Provider Late Escalation',
+            "Customer #{$booking->customer_id} has escalated a late provider issue for booking #{$booking->booking_ref}.",
+            $booking,
+            [
+                'booking_id' => $booking->id,
+                'booking_ref' => $booking->booking_ref,
+                'customer_id' => $booking->customer_id,
+                'provider_id' => $booking->provider_id,
+                'action_url' => "/admin/bookings/{$booking->id}"
+            ],
+            NotificationIcon::ESCALATION,
+            'admin_actions'
+        );
+    }
+
+    /**
+     * Notify customer about job completion
+     */
+    public function notifyJobCompleted($booking): void
+    {
+        $customer = User::find($booking->customer_id);
+        if ($customer) {
+            $this->send(
+                $customer,
+                'job_completed',
+                'Job completed',
+                "Don't forget to rate your service provider.",
+                'customer',
+                $booking,
+                [
+                    'booking_id' => $booking->id,
+                    'booking_ref' => $booking->booking_ref,
+                    'provider_id' => $booking->provider_id,
+                    'action_url' => "/bookings/{$booking->id}/review"
+                ],
+                NotificationIcon::JOB_COMPLETED,
+                'bookings'
+            );
+        }
+    }
+
+    /**
+     * Notify customer about special offer
+     */
+    public function notifySpecialOffer(User $customer, string $offerMessage, ?int $discountPercent = null, array $data = []): void
+    {
+        $title = $discountPercent ? "Today's special offer" : "Special Offer";
+        $message = $discountPercent 
+            ? "Get {$discountPercent}% discount for your booking today!"
+            : $offerMessage;
+
+        $this->send(
+            $customer,
+            'special_offer',
+            $title,
+            $message,
+            'customer',
+            null,
+            array_merge([
+                'discount_percent' => $discountPercent,
+                'action_url' => '/offers'
+            ], $data),
+            NotificationIcon::SPECIAL_OFFER,
+            'promotions'
+        );
+    }
+
+    /**
+     * Notify customer about promotion
+     */
+    public function notifyPromotion(User $customer, string $promotionTitle, string $promotionMessage, array $data = []): void
+    {
+        $this->send(
+            $customer,
+            'promotion',
+            $promotionTitle,
+            $promotionMessage,
+            'customer',
+            null,
+            array_merge([
+                'action_url' => '/promotions'
+            ], $data),
+            NotificationIcon::PROMOTION,
+            'promotions'
+        );
+    }
+
+    /**
+     * Notify customer about new service available
+     */
+    public function notifyNewService(User $customer, string $serviceName, string $area = null, array $data = []): void
+    {
+        $message = $area 
+            ? "{$serviceName} now available in your area."
+            : "{$serviceName} now available.";
+
+        $this->send(
+            $customer,
+            'new_service',
+            'New service!',
+            $message,
+            'customer',
+            null,
+            array_merge([
+                'service_name' => $serviceName,
+                'area' => $area,
+                'action_url' => '/services'
+            ], $data),
+            NotificationIcon::NEW_SERVICE,
+            'services'
+        );
+    }
+
+    /**
+     * Notify customer about upcoming booking reminder
+     */
+    public function notifyBookingReminder($booking, string $timeUntil = null): void
+    {
+        $customer = User::find($booking->customer_id);
+        if (!$customer) {
+            return;
+        }
+
+        $providerName = $booking->provider->name ?? 'your service provider';
+        $message = $timeUntil 
+            ? "Your booking with {$providerName} is coming up in {$timeUntil}."
+            : "Your booking with {$providerName} is coming up soon.";
+
+        $this->send(
+            $customer,
+            'booking_reminder',
+            'Reminder',
+            $message,
+            'customer',
+            $booking,
+            [
+                'booking_id' => $booking->id,
+                'booking_ref' => $booking->booking_ref,
+                'provider_id' => $booking->provider_id,
+                'provider_name' => $providerName,
+                'time_until' => $timeUntil,
+                'action_url' => "/bookings/{$booking->id}"
+            ],
+            NotificationIcon::BOOKING_REMINDER,
+            'bookings'
+        );
+    }
+
+    /**
+     * Notify customer about payment success (mobile app style)
+     */
+    public function notifyPaymentSuccessful($transaction): void
+    {
+        $customer = User::find($transaction->customer_id);
+        if (!$customer) {
+            return;
+        }
+
+        // Get service name from booking if available
+        $serviceName = 'your service';
+        if ($transaction->booking && $transaction->booking->providerService) {
+            $serviceName = $transaction->booking->providerService->service->name ?? 'your service';
+        }
+
+        $this->send(
+            $customer,
+            'payment_successful',
+            'Payment Successful',
+            "You have made payment for your {$serviceName}.",
+            'customer',
+            $transaction,
+            [
+                'transaction_id' => $transaction->id,
+                'amount' => $transaction->amount,
+                'currency' => $transaction->currency,
+                'booking_id' => $transaction->booking_id,
+                'action_url' => "/transactions/{$transaction->id}"
+            ],
+            NotificationIcon::PAYMENT_SUCCESS,
+            'transactions'
+        );
     }
 }

@@ -93,6 +93,28 @@ class CustomerOnlyProfileService
             $updateData['address'] = $data['address'];
         }
 
+        if(isset($data['country'])) {
+            $updateData['country'] = $data['country'];
+        }
+        if(isset($data['city'])) {
+            $updateData['city'] = $data['city'];
+        }
+        if(isset($data['state'])) {
+            $updateData['state'] = $data['state'];
+        }
+        if(isset($data['zip'])) {
+            $updateData['zip'] = $data['zip'];
+        }
+        if(isset($data['latitude'])) {
+            $updateData['latitude'] = $data['latitude'];
+        }
+        if(isset($data['longitude'])) {
+            $updateData['longitude'] = $data['longitude'];
+        }
+
+        if(isset($data['fcm_token'])) {
+            $updateData['fcm_token'] = $data['fcm_token'];
+        }
         $user->update($updateData); 
         
         return $user->load('providerProfile');

@@ -1,0 +1,98 @@
+<?php
+
+namespace App\Helpers;
+
+/**
+ * Notification Icon Constants
+ * Icons are represented as string identifiers that can be mapped to actual icon components in frontend
+ */
+class NotificationIcon
+{
+    // Document/Verification Icons
+    const DOCUMENT_VERIFICATION = 'document_verification'; // Green document with checkmark
+    const DOCUMENT_PENDING = 'document_pending'; // Document icon
+    
+    // Booking Icons
+    const BOOKING_CREATED = 'booking_created';
+    const BOOKING_CONFIRMED = 'booking_confirmed';
+    const BOOKING_CANCELLED = 'booking_cancelled'; // Documents with arrow down
+    const BOOKING_COMPLETED = 'booking_completed';
+    
+    // Payment/Transaction Icons
+    const PAYMENT_SUCCESS = 'payment_success';
+    const PAYMENT_FAILED = 'payment_failed';
+    const TRANSACTION = 'transaction';
+    
+    // Review Icons
+    const REVIEW_RECEIVED = 'review_received';
+    const REVIEW_PENDING = 'review_pending';
+    
+    // Alert Icons
+    const HIGH_CANCELLATION_ALERT = 'high_cancellation_alert'; // Documents with arrow down
+    const SYSTEM_ALERT = 'system_alert';
+    const WARNING = 'warning';
+    
+    // Admin Action Icons
+    const ADMIN_ACTION = 'admin_action';
+    const ESCALATION = 'escalation';
+    
+    // Message Icons
+    const MESSAGE_RECEIVED = 'message_received';
+    
+    // Promotion/Offer Icons
+    const SPECIAL_OFFER = 'special_offer'; // Yellow percentage icon
+    const PROMOTION = 'promotion'; // Yellow starburst with percentage
+    
+    // Service Icons
+    const NEW_SERVICE = 'new_service'; // Green briefcase
+    const JOB_COMPLETED = 'job_completed'; // Green face with checkmark
+    
+    // Reminder Icons
+    const BOOKING_REMINDER = 'booking_reminder'; // Bell icon
+    const REMINDER = 'reminder'; // Bell icon (generic)
+    
+    /**
+     * Get icon for notification type
+     */
+    public static function getIconForType(string $type): string
+    {
+        return match($type) {
+            'document_verification', 'document_pending' => self::DOCUMENT_VERIFICATION,
+            'booking_created' => self::BOOKING_CREATED,
+            'booking_confirmed' => self::BOOKING_CONFIRMED,
+            'booking_cancelled' => self::BOOKING_CANCELLED,
+            'booking_completed' => self::BOOKING_COMPLETED,
+            'job_completed', 'service_completed' => self::JOB_COMPLETED,
+            'payment_success', 'payment_successful' => self::PAYMENT_SUCCESS,
+            'payment_failed' => self::PAYMENT_FAILED,
+            'transaction_created', 'transaction_completed' => self::TRANSACTION,
+            'review_received', 'review_pending' => self::REVIEW_RECEIVED,
+            'high_cancellation_alert' => self::HIGH_CANCELLATION_ALERT,
+            'provider_late_escalation' => self::ESCALATION,
+            'message_received' => self::MESSAGE_RECEIVED,
+            'special_offer', 'todays_offer' => self::SPECIAL_OFFER,
+            'promotion', 'promotion_offer' => self::PROMOTION,
+            'new_service', 'service_available' => self::NEW_SERVICE,
+            'booking_reminder', 'reminder' => self::BOOKING_REMINDER,
+            default => self::SYSTEM_ALERT,
+        };
+    }
+    
+    /**
+     * Get category for notification type
+     */
+    public static function getCategoryForType(string $type): string
+    {
+        return match($type) {
+            'document_verification', 'document_pending' => 'admin_actions',
+            'booking_created', 'booking_confirmed', 'booking_cancelled', 'booking_completed', 'job_completed', 'service_completed', 'booking_reminder', 'reminder' => 'bookings',
+            'payment_success', 'payment_successful', 'payment_failed', 'transaction_created', 'transaction_completed' => 'transactions',
+            'review_received', 'review_pending' => 'reviews',
+            'high_cancellation_alert', 'provider_late_escalation', 'admin_action' => 'admin_actions',
+            'message_received' => 'messages',
+            'special_offer', 'todays_offer', 'promotion', 'promotion_offer' => 'promotions',
+            'new_service', 'service_available' => 'services',
+            default => 'all',
+        };
+    }
+}

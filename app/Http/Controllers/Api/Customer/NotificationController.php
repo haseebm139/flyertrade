@@ -21,6 +21,12 @@ class NotificationController extends BaseController
             ->orderBy('created_at', 'desc')
             ->paginate($perPage);
         
+        // Add icon_url to each notification
+        $notifications->getCollection()->transform(function ($notification) {
+            $notification->icon_url = $notification->icon_url;
+            return $notification;
+        });
+        
         return $this->sendResponse($notifications, 'Notifications retrieved successfully.');
     }
 
