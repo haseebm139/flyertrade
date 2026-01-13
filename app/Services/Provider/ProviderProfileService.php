@@ -24,9 +24,11 @@ class ProviderProfileService
         
         // Ensure provider profile exists (only for providers)
         if ($isProvider && !$user->providerProfile) {
-            $user->providerProfile = ProviderProfile::create([
+            ProviderProfile::create([
                 'user_id' => $user->id,
             ]);
+            // Reload the relationship after creating
+            $user->refresh();
             $user->load('providerProfile');
         }
         
@@ -244,9 +246,12 @@ class ProviderProfileService
         
         // Only create provider profile if user is a provider
         if ($isProvider && !$user->providerProfile) {
-            $user->providerProfile = ProviderProfile::create([
+            ProviderProfile::create([
                 'user_id' => $user->id,
             ]);
+            // Reload the relationship after creating
+            $user->refresh();
+            $user->load('providerProfile');
         }
         
         return $user->load(
