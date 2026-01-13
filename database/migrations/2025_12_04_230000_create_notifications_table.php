@@ -20,7 +20,8 @@ return new class extends Migration
             $table->string('title');
             $table->text('message');
             $table->enum('recipient_type', ['admin', 'customer', 'provider', 'all'])->default('customer');
-            $table->morphs('notifiable'); // notifiable_type, notifiable_id (polymorphic)
+            $table->string('notifiable_type')->nullable(); // Polymorphic type
+            $table->unsignedBigInteger('notifiable_id')->nullable(); // Polymorphic ID
             $table->json('data')->nullable(); // Additional data (booking_id, amount, etc.)
             $table->timestamp('read_at')->nullable();
             $table->timestamps();

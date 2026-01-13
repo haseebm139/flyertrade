@@ -69,30 +69,58 @@ class NotificationService
         ?string $icon = null,
         ?string $category = null
     ): int {
-        $notifications = [];
+        if (empty($userIds)) {
+            \Log::warning('sendToMany called with empty userIds array');
+            return 0;
+        }
+
+        // Only set notifiable if provided, otherwise leave them out (will be null in DB)
         $notifiableType = $notifiable ? get_class($notifiable) : null;
         $notifiableId = $notifiable ? $notifiable->id : null;
         $icon = $icon ?? NotificationIcon::getIconForType($type);
         $category = $category ?? NotificationIcon::getCategoryForType($type);
 
+        $count = 0;
+        $errors = [];
+
+        // Use individual create() instead of bulk insert for better reliability
         foreach ($userIds as $userId) {
-            $notifications[] = [
-                'user_id' => $userId,
-                'type' => $type,
-                'icon' => $icon,
-                'category' => $category,
-                'title' => $title,
-                'message' => $message,
-                'recipient_type' => $recipientType,
-                'notifiable_type' => $notifiableType,
-                'notifiable_id' => $notifiableId,
-                'data' => json_encode($data),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
+            try {
+                $notificationData = [
+                    'user_id' => $userId,
+                    'type' => $type,
+                    'icon' => $icon,
+                    'category' => $category,
+                    'title' => $title,
+                    'message' => $message,
+                    'recipient_type' => $recipientType,
+                    'data' => $data, // Eloquent will automatically cast to JSON
+                ];
+                
+                // Only add notifiable fields if notifiable is provided
+                if ($notifiableType && $notifiableId) {
+                    $notificationData['notifiable_type'] = $notifiableType;
+                    $notificationData['notifiable_id'] = $notifiableId;
+                }
+                
+                Notification::create($notificationData);
+                $count++;
+            } catch (\Exception $e) {
+                $errors[] = "User ID {$userId}: " . $e->getMessage();
+                \Log::error("Failed to create notification for user {$userId}: " . $e->getMessage());
+                \Log::error("Stack trace: " . $e->getTraceAsString());
+            }
         }
 
-        return Notification::insert($notifications);
+        if ($count > 0) {
+            \Log::info("Successfully created {$count} notifications of type '{$type}'");
+        }
+
+        if (!empty($errors)) {
+            \Log::warning('Some notifications failed to create: ' . implode('; ', $errors));
+        }
+
+        return $count;
     }
 
     /**
@@ -114,15 +142,21 @@ class NotificationService
         ?string $icon = null,
         ?string $category = null
     ): int {
-        $adminIds = User::where('role_id', 'admin')
-            ->orWhere('user_type', 'admin')
+        // Get admin IDs - check both role_id and user_type
+        $adminIds = User::where(function($query) {
+                $query->where('role_id', 'admin')
+                      ->orWhere('user_type', 'admin');
+            })
             ->pluck('id')
             ->toArray();
 
         if (empty($adminIds)) {
+            \Log::warning('No admin users found in database. Cannot send admin notification.');
             return 0;
         }
 
+        \Log::info('Sending notification to ' . count($adminIds) . ' admin(s): ' . implode(', ', $adminIds));
+        
         return $this->sendToMany($adminIds, $type, $title, $message, 'admin', $notifiable, $data, $icon, $category);
     }
 
@@ -388,6 +422,8 @@ class NotificationService
      */
     public function notifyDocumentVerificationPending(int $count = 0): int
     {
+
+     
         return $this->sendToAdmins(
             'document_verification',
             'Document verification',

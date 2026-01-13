@@ -59,7 +59,7 @@ class BookingService
             ->where('service_id', $serviceId)
             ->first() ;
         return ['status'=>$providerHasService ? true : false, 'data'=>$providerHasService];
-        //     dd($providerHasService);
+        
         // return $providerHasService ? true : false;
             
     }

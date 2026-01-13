@@ -8,9 +8,11 @@ use App\Models\ProviderCertificate;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\Shared\UserResource;
+use App\Services\Notification\NotificationService;
 use DB;
 class ProviderProfileService
 {
+    public function __construct(private NotificationService $notificationService) {}
     public function createOrUpdateProfile(array $data, $user)
     {
         $user = $user->load('providerProfile');
@@ -147,14 +149,20 @@ class ProviderProfileService
         }
         if ($idPhotoPath !== null) {
             $profileData['id_photo'] = $idPhotoPath;
+            $profileData['id_photo_status'] = 'pending'; // Set status to pending when uploaded
         }
 
         if ($passportPath !== null) {
             $profileData['passport'] = $passportPath;
+            $profileData['passport_status'] = 'pending'; // Set status to pending when uploaded
         }
         if ($workPermitPath !== null) {
             $profileData['work_permit'] = $workPermitPath;
+            $profileData['work_permit_status'] = 'pending'; // Set status to pending when uploaded
         }
+         
+        // Track if any document was uploaded
+        $documentUploaded = $idPhotoPath !== null || $passportPath !== null || $workPermitPath !== null;
          
         // Final check: Only allow provider profile creation/update for providers
         if ($isProvider) {
@@ -163,6 +171,18 @@ class ProviderProfileService
                 ['user_id' => $user->id],
                 $profileData
             );
+            // Send notification to admin if any document was uploaded
+            if ($documentUploaded) {
+                try {
+                    $result = $this->notificationService->notifyDocumentVerificationPending();
+                     
+                    \Log::info('Document verification notification sent. Count: ' . $result);
+                } catch (\Exception $e) {
+                    // Log error but don't break profile creation
+                    \Log::error('Failed to send document verification notification: ' . $e->getMessage());
+                    \Log::error('Stack trace: ' . $e->getTraceAsString());
+                }
+            }
             // ✅ Save services
             if (!empty($data['services']) && isset($data['services']['service_id'])) {
                 $service = ProviderService::create([
@@ -237,7 +257,14 @@ class ProviderProfileService
 
     public function getProfile($user)
     {
-        $user = User::find($user);
+        // Handle both User model instance and user ID
+        if (!$user instanceof User) {
+            $user = User::find($user);
+        }
+        
+        if (!$user) {
+            throw new \Exception('User not found');
+        }
         
         // Check if user is actually a provider
         $isProvider = $user->hasRole('provider') || 

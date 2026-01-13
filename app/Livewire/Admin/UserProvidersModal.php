@@ -15,8 +15,7 @@ class UserProvidersModal extends Component
 
     public function openModal($itemId)
     {
-
-        dd($itemId);
+ 
         $item = User::with('providers')->findOrFail($itemId);
 
         $this->providers = $item->providers->map(function ($provider) {
