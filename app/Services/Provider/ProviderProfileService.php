@@ -154,72 +154,76 @@ class ProviderProfileService
             $profileData['work_permit'] = $workPermitPath;
         }
          
-         
-        $profile = ProviderProfile::updateOrCreate(
-            ['user_id' => $user->id],
-            $profileData
-        );
-        // ✅ Save services
-        if (!empty($data['services']) && isset($data['services']['service_id'])) {
-            $service = ProviderService::create([
-                'user_id'             => $user->id,
-                'service_id'          => $data['services']['service_id'],
-                'provider_profile_id' => $profile->id,
-                'is_primary'          => $data['services']['is_primary'] ?? false,
-                'title'               => $data['services']['title'] ?? null,
-                'description'         => $data['services']['description'] ?? null,
-                'staff_count'         => $data['services']['staff_count'] ?? null,
-                'rate_min'            => $data['services']['rate_min'] ?? null,
-                'rate_max'            => $data['services']['rate_max'] ?? null,
-            ]);
-
-            // Photos
-            if (!empty($data['services']['photos'])) {
-                foreach ($data['services']['photos'] as $photo) {
-                    $path = $photo->store('provider/services/photos', 'public');
-
-                    $service->media()->create([
-                        'provider_service_id' => $service->id,
-                        'provider_profile_id' => $profile->id,
-                        'user_id'    => $user->id,
-                        'file_path'  => 'storage/' . $path,
-                        // 'file_path'  => Storage::disk('s3')->url($path),
-                        'type'       => 'photo',
-                    ]);
+        // Final check: Only allow provider profile creation/update for providers
+        if ($isProvider) {
+             
+            $profile = ProviderProfile::updateOrCreate(
+                ['user_id' => $user->id],
+                $profileData
+            );
+            // ✅ Save services
+            if (!empty($data['services']) && isset($data['services']['service_id'])) {
+                $service = ProviderService::create([
+                    'user_id'             => $user->id,
+                    'service_id'          => $data['services']['service_id'],
+                    'provider_profile_id' => $profile->id,
+                    'is_primary'          => $data['services']['is_primary'] ?? false,
+                    'title'               => $data['services']['title'] ?? null,
+                    'description'         => $data['services']['description'] ?? null,
+                    'staff_count'         => $data['services']['staff_count'] ?? null,
+                    'rate_min'            => $data['services']['rate_min'] ?? null,
+                    'rate_max'            => $data['services']['rate_max'] ?? null,
+                ]);
+    
+                // Photos
+                if (!empty($data['services']['photos'])) {
+                    foreach ($data['services']['photos'] as $photo) {
+                        $path = $photo->store('provider/services/photos', 'public');
+    
+                        $service->media()->create([
+                            'provider_service_id' => $service->id,
+                            'provider_profile_id' => $profile->id,
+                            'user_id'    => $user->id,
+                            'file_path'  => 'storage/' . $path,
+                            // 'file_path'  => Storage::disk('s3')->url($path),
+                            'type'       => 'photo',
+                        ]);
+                    }
                 }
-            }
-
-            // Videos
-            if (!empty($data['services']['videos'])) {
-
-                foreach ($data['services']['videos'] as $video) {
-                    $path = $video->store('provider/services/videos', 'public');
-                    $service->media()->create([
-                        'provider_service_id' => $service->id,
-                        'provider_profile_id' => $profile->id,
-                        'user_id'    => $user->id,
-                        'file_path'  => 'storage/' . $path,
-                        // 'file_path'  => Storage::disk('s3')->url($path),
-                        'type'       => 'video',
-                    ]);
+    
+                // Videos
+                if (!empty($data['services']['videos'])) {
+    
+                    foreach ($data['services']['videos'] as $video) {
+                        $path = $video->store('provider/services/videos', 'public');
+                        $service->media()->create([
+                            'provider_service_id' => $service->id,
+                            'provider_profile_id' => $profile->id,
+                            'user_id'    => $user->id,
+                            'file_path'  => 'storage/' . $path,
+                            // 'file_path'  => Storage::disk('s3')->url($path),
+                            'type'       => 'video',
+                        ]);
+                    }
                 }
-            }
-            if (!empty($data['services']['certificates'])) {
-                foreach ($data['services']['certificates'] as $certData) {
-
-                    $path = $certData->store('provider/certificates', 'public');
-                    ProviderCertificate::create([
-                        'provider_service_id' => $service->id,
-                        'user_id'             => $user->id,
-                        'provider_profile_id' => $profile->id,
-                        'file_path'           => 'storage/' . $path?? null,
-                        // 'file_path'           => Storage::disk('s3')->url($path),
-                        'status'              => 'pending',
-                    ]);
-
+                if (!empty($data['services']['certificates'])) {
+                    foreach ($data['services']['certificates'] as $certData) {
+    
+                        $path = $certData->store('provider/certificates', 'public');
+                        ProviderCertificate::create([
+                            'provider_service_id' => $service->id,
+                            'user_id'             => $user->id,
+                            'provider_profile_id' => $profile->id,
+                            'file_path'           => 'storage/' . $path?? null,
+                            // 'file_path'           => Storage::disk('s3')->url($path),
+                            'status'              => 'pending',
+                        ]);
+    
+                    }
                 }
             }
         }
+         
         return $this->getProfile($user->id);
         // return $user->load(
         //     'providerProfile',

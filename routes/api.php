@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\MessagesController;
 use App\Http\Controllers\Api\OffersController;
 use App\Http\Controllers\Api\ReviewsController;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\MediaController;
 
 Route::post('stripe/webhook', [StripeWebhookController::class, 'handle']);
 
@@ -51,6 +52,13 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
         // Messages
         Route::get('/conversations/{conversationId}/messages', [MessagesController::class, 'index']);
         Route::post('/conversations/{conversationId}/messages', [MessagesController::class, 'store']);
+
+        // Media Upload (for chat - images and videos)
+        Route::prefix('chat')->controller(MediaController::class)->group(function () {
+            Route::post('/upload-image', 'uploadImage');
+            Route::post('/upload-video', 'uploadVideo');
+            Route::post('/upload-media', 'uploadMedia'); // Auto-detect image or video
+        });
 
         // Offers
         Route::post('/conversations/{conversationId}/offers', [OffersController::class, 'create']);
