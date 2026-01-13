@@ -32,14 +32,22 @@ class MediaController extends BaseController
             $userId = auth()->id();
             
             // Generate unique filename
-            $filename = 'chat/images/' . $userId . '/' . Str::uuid() . '.' . $file->getClientOriginalExtension();
+            $directory = 'chat/images/' . $userId;
+            $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
+            
+            // Ensure directory exists
+            Storage::disk('public')->makeDirectory($directory);
             
             // Store file in public storage
-            $path = $file->storeAs('public', $filename);
+            $path = $file->storeAs($directory, $filename, 'public');
             
-            // Get full URL path
-            $url = Storage::url($filename);
-            $fullPath = asset('storage/' . $filename);
+            // Verify file was stored successfully
+            if (!Storage::disk('public')->exists($path)) {
+                return $this->sendError('Failed to store file. Please check storage permissions.', 500);
+            }
+            
+            // Get full URL path - use Storage::url() which handles the storage link
+            $fullPath = Storage::disk('public')->url($path);
             
             // Get image dimensions
             $manager = new ImageManager(new Driver());
@@ -50,9 +58,10 @@ class MediaController extends BaseController
             $mimeType = $file->getMimeType();
             
             return $this->sendResponse([
-                'path' => $filename, // Relative path for Firebase upload (use this path to read file and upload to Firebase)
-                'url' => $fullPath, // Full URL (temporary, until uploaded to Firebase)
-                'storage_path' => $path, // Storage path
+                'path' => $path, // Relative path for Firebase upload (use this path to read file from storage/app/public/{path})
+                'url' => $fullPath, // Full URL (accessible via storage link: https://flyertrade.com/storage/{path})
+                'storage_path' => 'storage/app/public/' . $path, // Full storage path for reading file
+                'absolute_path' => storage_path('app/public/' . $path), // Absolute path on server
                 'mime_type' => $mimeType,
                 'size' => $size,
                 'width' => $width,
@@ -84,14 +93,22 @@ class MediaController extends BaseController
             $userId = auth()->id();
             
             // Generate unique filename
-            $filename = 'chat/videos/' . $userId . '/' . Str::uuid() . '.' . $file->getClientOriginalExtension();
+            $directory = 'chat/videos/' . $userId;
+            $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
+            
+            // Ensure directory exists
+            Storage::disk('public')->makeDirectory($directory);
             
             // Store file in public storage
-            $path = $file->storeAs('public', $filename);
+            $path = $file->storeAs($directory, $filename, 'public');
             
-            // Get full URL path
-            $url = Storage::url($filename);
-            $fullPath = asset('storage/' . $filename);
+            // Verify file was stored successfully
+            if (!Storage::disk('public')->exists($path)) {
+                return $this->sendError('Failed to store file. Please check storage permissions.', 500);
+            }
+            
+            // Get full URL path - use Storage::url() which handles the storage link
+            $fullPath = Storage::disk('public')->url($path);
             
             $size = $file->getSize();
             $mimeType = $file->getMimeType();
@@ -101,9 +118,10 @@ class MediaController extends BaseController
             // You can add video duration extraction here if needed
             
             return $this->sendResponse([
-                'path' => $filename, // Relative path for Firebase upload
-                'url' => $fullPath, // Full URL (temporary, until uploaded to Firebase)
-                'storage_path' => $path, // Storage path
+                'path' => $path, // Relative path for Firebase upload (use this path to read file from storage/app/public/{path})
+                'url' => $fullPath, // Full URL (accessible via storage link: https://flyertrade.com/storage/{path})
+                'storage_path' => 'storage/app/public/' . $path, // Full storage path for reading file
+                'absolute_path' => storage_path('app/public/' . $path), // Absolute path on server
                 'mime_type' => $mimeType,
                 'size' => $size,
                 'duration_ms' => $duration,
@@ -144,17 +162,29 @@ class MediaController extends BaseController
             }
             
             $folder = $isImage ? 'chat/images' : 'chat/videos';
-            $filename = $folder . '/' . $userId . '/' . Str::uuid() . '.' . $file->getClientOriginalExtension();
+            $directory = $folder . '/' . $userId;
+            $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
             
-            // Store file
-            $path = $file->storeAs('public', $filename);
-            $fullPath = asset('storage/' . $filename);
+            // Ensure directory exists
+            Storage::disk('public')->makeDirectory($directory);
+            
+            // Store file in public storage
+            $path = $file->storeAs($directory, $filename, 'public');
+            
+            // Verify file was stored successfully
+            if (!Storage::disk('public')->exists($path)) {
+                return $this->sendError('Failed to store file. Please check storage permissions.', 500);
+            }
+            
+            // Get full URL path - use Storage::url() which handles the storage link
+            $fullPath = Storage::disk('public')->url($path);
             
             $size = $file->getSize();
             $response = [
-                'path' => $filename,
-                'url' => $fullPath,
-                'storage_path' => $path,
+                'path' => $path, // Relative path for Firebase upload
+                'url' => $fullPath, // Full URL (accessible via storage link: https://flyertrade.com/storage/{path})
+                'storage_path' => 'storage/app/public/' . $path, // Full storage path for reading file
+                'absolute_path' => storage_path('app/public/' . $path), // Absolute path on server
                 'mime_type' => $mimeType,
                 'size' => $size,
                 'type' => $isImage ? 'image' : 'video',
