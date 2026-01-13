@@ -18,55 +18,55 @@ Route::post('stripe/webhook', [StripeWebhookController::class, 'handle']);
 Route::get('providers/{providerId}/reviews', [ReviewsController::class, 'getProviderReviews']);
 
 Route::prefix('auth')->controller(AuthController::class)->group(function () {
-        Route::post('register','register');
-        Route::post('login', 'login');
-        Route::post('guest', 'guestLogin');
-        Route::post('{proverder}/login','socialLogin');
-        Route::post('facebook_login', 'facebookLogin');
-        Route::post('apple_login', 'appleLogin');
-        Route::post('send-code-to-email', 'sendCodeToEmail');
-        Route::post('update-password', 'updatePassword');
-    });
-    Route::middleware('auth:sanctum')->group(function () {
-        Route::post('location', [AuthController::class,'updateLocation']);
-        Route::post('logout', [AuthController::class,'logout']);
-        Route::post('/change-password', [AuthController::class,'changePassword']);
-    });
-
-
-    Route::middleware('auth:sanctum')->group(function () {
-
-        Route::controller(HomeController::class)->group(function () {
-            Route::get('/services', 'services');
-        });
-
-         
-    });
-
-    // Chat & Offers API
-    Route::middleware('auth:sanctum')->group(function () {
-        // Conversations
-        Route::get('/conversations', [ConversationsController::class, 'index']);
-        Route::post('/conversations', [ConversationsController::class, 'store']);
-
-        // Messages
-        Route::get('/conversations/{conversationId}/messages', [MessagesController::class, 'index']);
-        Route::post('/conversations/{conversationId}/messages', [MessagesController::class, 'store']);
-
-        // Media Upload (for chat - images and videos)
-        Route::prefix('chat')->controller(MediaController::class)->group(function () {
-            Route::post('/upload-image', 'uploadImage');
-            Route::post('/upload-video', 'uploadVideo');
-            Route::post('/upload-media', 'uploadMedia'); // Auto-detect image or video
-        });
-
-        // Offers
-        Route::post('/conversations/{conversationId}/offers', [OffersController::class, 'create']);
-        Route::post('/offers/{offerId}/respond', [OffersController::class, 'respond']);
-        Route::post('/offers/{offerId}/finalize', [OffersController::class, 'finalize']);
-    });
+    Route::post('register','register');
+    Route::post('login', 'login');
+    Route::post('guest', 'guestLogin');
+    Route::post('{proverder}/login','socialLogin');
+    Route::post('facebook_login', 'facebookLogin');
+    Route::post('apple_login', 'appleLogin');
+    Route::post('send-code-to-email', 'sendCodeToEmail');
+    Route::post('update-password', 'updatePassword');
+});
 Route::middleware('auth:sanctum')->group(function () {
-         
+    Route::post('location', [AuthController::class,'updateLocation']);
+    Route::post('logout', [AuthController::class,'logout']);
+    Route::post('/change-password', [AuthController::class,'changePassword']);
+});
+
+
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::controller(HomeController::class)->group(function () {
+        Route::get('/services', 'services');
+    });
+
+        
+});
+
+// Chat & Offers API
+Route::middleware('auth:sanctum')->group(function () {
+    // Conversations
+    Route::get('/conversations', [ConversationsController::class, 'index']);
+    Route::post('/conversations', [ConversationsController::class, 'store']);
+
+    // Messages
+    Route::get('/conversations/{conversationId}/messages', [MessagesController::class, 'index']);
+    Route::post('/conversations/{conversationId}/messages', [MessagesController::class, 'store']);
+
+    // Media Upload (for chat - images and videos)
+    Route::prefix('chat')->controller(MediaController::class)->group(function () {
+        Route::post('/upload-image', 'uploadImage');
+        Route::post('/upload-video', 'uploadVideo');
+        Route::post('/upload-media', 'uploadMedia'); // Auto-detect image or video
+    });
+
+    // Offers
+    Route::post('/conversations/{conversationId}/offers', [OffersController::class, 'create']);
+    Route::post('/offers/{offerId}/respond', [OffersController::class, 'respond']);
+    Route::post('/offers/{offerId}/finalize', [OffersController::class, 'finalize']);
+});
+Route::middleware('auth:sanctum')->group(function () {
+        
     Route::controller(ReviewsController::class)->prefix('reviews')->group(function () {
         Route::get('/', 'index');
         Route::post('/', 'store');

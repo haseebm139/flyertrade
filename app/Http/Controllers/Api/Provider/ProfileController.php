@@ -34,14 +34,14 @@ class ProfileController extends BaseController
     {
         $user = auth()->user();
         
-        // // Verify user is a provider
-        // $isProvider = $user->hasRole('provider') || 
-        //              $user->user_type === 'provider' || 
-        //              $user->user_type === 'multi';
+        // Verify user is a provider
+        $isProvider = $user->hasRole('provider') || 
+                     $user->user_type === 'provider' || 
+                     $user->user_type === 'multi';
         
-        // if (!$isProvider) {
-        //     return $this->sendError('Only providers can create or update provider profiles.', 403);
-        // }
+        if (!$isProvider) {
+            return $this->sendError('Only providers can create or update provider profiles.', 403);
+        }
          
         $result = $this->profileService->createOrUpdateProfile($request->validated(), $user);
         if (isset($result['error']) && $result['error'] === true) {

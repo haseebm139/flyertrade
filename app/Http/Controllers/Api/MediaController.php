@@ -18,9 +18,13 @@ class MediaController extends BaseController
      */
     public function uploadImage(Request $request): JsonResponse
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'image' => 'required|image|mimes:jpeg,jpg,png,gif,webp|max:10240', // 10MB max
         ]);
+        
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), 422);
+        }
 
         try {
             $file = $request->file('image');
@@ -66,10 +70,14 @@ class MediaController extends BaseController
      */
     public function uploadVideo(Request $request): JsonResponse
     {
-        $request->validate([
-            'video' => 'required|mimes:mp4,avi,mov,wmv,flv,webm|max:51200', // 50MB max
+        
+        $validator = Validator::make($request->all(), [
+            'video' => 'required|mimes:mp4,avi,mov,wmv,flv,webm|max:51200', // 50MB max 
         ]);
-
+        
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), 422);
+        }
         try {
             $file = $request->file('video');
             $userId = auth()->id();
@@ -112,9 +120,14 @@ class MediaController extends BaseController
      */
     public function uploadMedia(Request $request): JsonResponse
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'file' => 'required|file|mimes:jpeg,jpg,png,gif,webp,mp4,avi,mov,wmv,flv,webm|max:51200', // 50MB max
         ]);
+        
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), 422);
+        }
+        
 
         try {
             $file = $request->file('file');
