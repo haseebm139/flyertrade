@@ -111,6 +111,8 @@ class Notification extends Model
             'transaction' => 'assets/images/icons/notification-transaction.svg',
             'review_received' => 'assets/images/icons/notification-review-received.svg',
             'review_pending' => 'assets/images/icons/notification-review-pending.svg',
+            'dispute' => 'assets/images/icons/notification-dispute.svg',
+            'provider_registered' => 'assets/images/icons/notification-provider-registered.svg',
             'high_cancellation_alert' => 'assets/images/icons/notification-cancellation-alert.svg',
             'system_alert' => 'assets/images/icons/notification-system-alert.svg',
             'warning' => 'assets/images/icons/notification-warning.svg',

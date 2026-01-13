@@ -443,6 +443,132 @@ class NotificationService
     }
 
     /**
+     * Notify admin about new booking created
+     */
+    public function notifyNewBookingCreated($booking): void
+    {
+        $customer = User::find($booking->customer_id);
+        $provider = User::find($booking->provider_id);
+        $serviceName = 'Service';
+        
+        if ($booking->providerService && $booking->providerService->service) {
+            $serviceName = $booking->providerService->service->name;
+        }
+        
+        $customerName = $customer ? $customer->name : 'Customer';
+        $providerName = $provider ? $provider->name : 'Provider';
+        
+        $this->sendToAdmins(
+            'booking_created',
+            'New Booking Created:',
+            "{$customerName} just booked {$serviceName} with {$providerName}.",
+            $booking,
+            [
+                'booking_id' => $booking->id,
+                'booking_ref' => $booking->booking_ref,
+                'customer_id' => $booking->customer_id,
+                'provider_id' => $booking->provider_id,
+                'service_name' => $serviceName,
+                'action_url' => "/admin/bookings/{$booking->id}"
+            ],
+            NotificationIcon::BOOKING_CREATED,
+            'bookings'
+        );
+    }
+
+    /**
+     * Notify admin about new service provider registered
+     */
+    public function notifyNewProviderRegistered(User $provider): void
+    {
+        $serviceName = 'Service Provider';
+        
+        // Get provider's primary service if available
+        if ($provider->providerServices && $provider->providerServices->isNotEmpty()) {
+            $primaryService = $provider->providerServices->where('is_primary', true)->first();
+            if ($primaryService && $primaryService->service) {
+                $serviceName = $primaryService->service->name;
+            } elseif ($provider->providerServices->first() && $provider->providerServices->first()->service) {
+                $serviceName = $provider->providerServices->first()->service->name;
+            }
+        }
+        
+        $this->sendToAdmins(
+            'provider_registered',
+            'New Service Provider Registered:',
+            "{$provider->name} just signed up as a {$serviceName}",
+            $provider,
+            [
+                'provider_id' => $provider->id,
+                'provider_name' => $provider->name,
+                'service_name' => $serviceName,
+                'action_url' => "/admin/providers/{$provider->id}"
+            ],
+            NotificationIcon::PROVIDER_REGISTERED,
+            'admin_actions'
+        );
+    }
+
+    /**
+     * Notify admin about new dispute
+     */
+    public function notifyNewDispute($dispute, $booking = null): void
+    {
+        $bookingRef = $booking ? $booking->booking_ref : ($dispute->booking_ref ?? 'N/A');
+        $reason = $dispute->reason ?? 'Unknown reason';
+        
+        $this->sendToAdmins(
+            'dispute_created',
+            'New dispute:',
+            "Dispute raised for Booking #{$bookingRef} - Reason - {$reason}",
+            $dispute,
+            [
+                'dispute_id' => $dispute->id,
+                'booking_id' => $dispute->booking_id ?? null,
+                'booking_ref' => $bookingRef,
+                'reason' => $reason,
+                'action_url' => "/admin/disputes/{$dispute->id}"
+            ],
+            NotificationIcon::DISPUTE,
+            'admin_actions'
+        );
+    }
+
+    /**
+     * Notify admin about new review posted
+     */
+    public function notifyNewReviewPosted($review): void
+    {
+        $reviewer = User::find($review->reviewer_id ?? $review->user_id);
+        $provider = User::find($review->receiver_id);
+        $serviceName = 'Service';
+        
+        if ($review->service) {
+            $serviceName = $review->service->name;
+        }
+        
+        $reviewerName = $reviewer ? $reviewer->name : 'Customer';
+        $providerName = $provider ? $provider->name : 'Provider';
+        
+        $this->sendToAdmins(
+            'review_received',
+            'New Review Posted:',
+            "{$reviewerName} rated {$providerName} '{$serviceName}' service {$review->rating} stars",
+            $review,
+            [
+                'review_id' => $review->id,
+                'reviewer_id' => $review->reviewer_id ?? $review->user_id,
+                'provider_id' => $review->receiver_id,
+                'rating' => $review->rating,
+                'service_name' => $serviceName,
+                'action_url' => "/admin/reviews/{$review->id}"
+            ],
+            NotificationIcon::REVIEW_RECEIVED,
+            'reviews'
+        );
+    }
+
+    /**
      * Notify customer about job completion
      */
     public function notifyJobCompleted($booking): void

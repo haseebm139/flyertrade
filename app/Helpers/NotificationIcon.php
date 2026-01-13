@@ -35,6 +35,10 @@ class NotificationIcon
     // Admin Action Icons
     const ADMIN_ACTION = 'admin_action';
     const ESCALATION = 'escalation';
+    const DISPUTE = 'dispute'; // Flag icon for disputes
+    
+    // Provider Registration Icons
+    const PROVIDER_REGISTERED = 'provider_registered'; // Multiple people icon
     
     // Message Icons
     const MESSAGE_RECEIVED = 'message_received';
@@ -69,6 +73,8 @@ class NotificationIcon
             'review_received', 'review_pending' => self::REVIEW_RECEIVED,
             'high_cancellation_alert' => self::HIGH_CANCELLATION_ALERT,
             'provider_late_escalation' => self::ESCALATION,
+            'dispute_created', 'new_dispute', 'dispute' => self::DISPUTE,
+            'provider_registered', 'new_provider_registered' => self::PROVIDER_REGISTERED,
             'message_received' => self::MESSAGE_RECEIVED,
             'special_offer', 'todays_offer' => self::SPECIAL_OFFER,
             'promotion', 'promotion_offer' => self::PROMOTION,
@@ -88,7 +94,8 @@ class NotificationIcon
             'booking_created', 'booking_confirmed', 'booking_cancelled', 'booking_completed', 'job_completed', 'service_completed', 'booking_reminder', 'reminder' => 'bookings',
             'payment_success', 'payment_successful', 'payment_failed', 'transaction_created', 'transaction_completed' => 'transactions',
             'review_received', 'review_pending' => 'reviews',
-            'high_cancellation_alert', 'provider_late_escalation', 'admin_action' => 'admin_actions',
+            'high_cancellation_alert', 'provider_late_escalation', 'admin_action', 'dispute_created', 'new_dispute', 'dispute' => 'admin_actions',
+            'provider_registered', 'new_provider_registered' => 'admin_actions',
             'message_received' => 'messages',
             'special_offer', 'todays_offer', 'promotion', 'promotion_offer' => 'promotions',
             'new_service', 'service_available' => 'services',
