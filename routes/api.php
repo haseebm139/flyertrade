@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\OffersController;
 use App\Http\Controllers\Api\ReviewsController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\MediaController;
+use App\Http\Controllers\Api\Shared\NotificationController;
 
 Route::post('stripe/webhook', [StripeWebhookController::class, 'handle']);
 
@@ -78,6 +79,15 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('cards/{card}/default', [PaymentController::class,'makeDefault']);
             Route::post('test/create-payment-method', [PaymentController::class,'createTestPaymentMethod']);
         });
+
+    // Notifications (Shared for Customer and Provider)
+    Route::controller(NotificationController::class)->prefix('notifications')->group(function () {
+        Route::get('/', 'index');
+        Route::get('/unread-count', 'unreadCount');
+        Route::post('/{id}/read', 'markAsRead');
+        Route::post('/mark-all-read', 'markAllAsRead');
+        Route::delete('/{id}', 'destroy');
+    });
 });
 // require __DIR__ .'/auth.php';
 require __DIR__.'/api_customer.php';

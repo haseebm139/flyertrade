@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Customer;
+namespace App\Http\Controllers\Api\Shared;
 
 use App\Http\Controllers\Api\BaseController;
 use App\Models\Notification;

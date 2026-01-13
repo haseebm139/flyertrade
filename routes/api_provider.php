@@ -59,5 +59,6 @@ Route::prefix('provider')->group(function () {
         // TEST ONLY: Create test payment_method
         Route::post('test/create-payment-method', [PaymentController::class,'createTestPaymentMethod']);
     });
+
   });
 });

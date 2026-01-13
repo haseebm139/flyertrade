@@ -26,7 +26,7 @@ class BookingService
     public function checkAvailability(array $slot, int $providerId): string
     {
         $dayName = strtolower(Carbon::parse($slot['service_date'])->format('l'));
-         
+           
         // 1. Get provider working hours
         $workingHour = ProviderWorkingHour::where('user_id', $providerId)
             ->where('day', $dayName)
@@ -94,12 +94,12 @@ class BookingService
 
 
         foreach ($data['slots'] as $slot) {
-            $status = $this->checkAvailability($slot, $data['provider_id']);
+            $status = $this->checkAvailability($slot, $data['provider_id']); 
              
             if ($status !== 'available') {
                 return [
                     'error' => true,
-                    'message' => "Provider already booked on {$slot['service_date']} between {$slot['start_time']} - {$slot['end_time']}."
+                    'message' => "Provider is not available on {$slot['service_date']} between {$slot['start_time']} - {$slot['end_time']}."
                 ]; 
             }  
              
@@ -173,7 +173,9 @@ class BookingService
             $booking = $booking->load('slots','customer','provider','providerService.service', 'review');
             
             // Send notifications
-            $this->notificationService->notifyNewBookingCreated($booking);
+            // notifyNewBookingCreated sends to admin only
+            // notifyBookingCreated sends to provider, customer, and admin
+            // So we only need notifyBookingCreated to avoid duplicate admin notifications
             $this->notificationService->notifyBookingCreated($booking);
 
             // Add review status
