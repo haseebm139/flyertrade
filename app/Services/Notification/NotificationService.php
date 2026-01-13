@@ -735,4 +735,531 @@ class NotificationService
             'transactions'
         );
     }
+
+    /**
+     * Notify customer when booking is rejected by provider
+     */
+    public function notifyBookingRejected($booking): void
+    {
+        $customer = User::find($booking->customer_id);
+        if ($customer) {
+            $this->send(
+                $customer,
+                'booking_rejected',
+                'Booking Rejected',
+                "Your booking #{$booking->booking_ref} has been rejected by the provider",
+                'customer',
+                $booking,
+                [
+                    'booking_id' => $booking->id,
+                    'booking_ref' => $booking->booking_ref,
+                    'provider_id' => $booking->provider_id,
+                    'action_url' => "/bookings/{$booking->id}"
+                ],
+                NotificationIcon::BOOKING_CANCELLED,
+                'bookings'
+            );
+        }
+
+        // Notify admin
+        $this->sendToAdmins(
+            'booking_rejected',
+            'Booking Rejected',
+            "Booking #{$booking->booking_ref} has been rejected by provider",
+            $booking,
+            [
+                'booking_id' => $booking->id,
+                'booking_ref' => $booking->booking_ref,
+                'customer_id' => $booking->customer_id,
+                'provider_id' => $booking->provider_id,
+                'action_url' => "/admin/bookings/{$booking->id}"
+            ],
+            NotificationIcon::BOOKING_CANCELLED,
+            'bookings'
+        );
+    }
+
+    /**
+     * Notify customer when provider starts the booking
+     */
+    public function notifyBookingStarted($booking): void
+    {
+        $customer = User::find($booking->customer_id);
+        if ($customer) {
+            $providerName = $booking->provider->name ?? 'Provider';
+            $this->send(
+                $customer,
+                'booking_started',
+                'Service Started',
+                "{$providerName} has started your booking #{$booking->booking_ref}",
+                'customer',
+                $booking,
+                [
+                    'booking_id' => $booking->id,
+                    'booking_ref' => $booking->booking_ref,
+                    'provider_id' => $booking->provider_id,
+                    'action_url' => "/bookings/{$booking->id}"
+                ],
+                NotificationIcon::BOOKING_CONFIRMED,
+                'bookings'
+            );
+        }
+    }
+
+    /**
+     * Notify when reschedule is requested
+     */
+    public function notifyRescheduleRequested($booking, $reschedule, $requestedBy = 'customer'): void
+    {
+        if ($requestedBy === 'customer') {
+            // Notify provider
+            $provider = User::find($booking->provider_id);
+            if ($provider) {
+                $this->send(
+                    $provider,
+                    'reschedule_requested',
+                    'Reschedule Request',
+                    "Customer has requested to reschedule booking #{$booking->booking_ref}",
+                    'provider',
+                    $booking,
+                    [
+                        'booking_id' => $booking->id,
+                        'booking_ref' => $booking->booking_ref,
+                        'reschedule_id' => $reschedule->id,
+                        'action_url' => "/bookings/{$booking->id}/reschedule"
+                    ],
+                    NotificationIcon::RESCHEDULE_REQUEST,
+                    'bookings'
+                );
+            }
+        } else {
+            // Notify customer
+            $customer = User::find($booking->customer_id);
+            if ($customer) {
+                $this->send(
+                    $customer,
+                    'reschedule_requested',
+                    'Reschedule Request',
+                    "Provider has requested to reschedule booking #{$booking->booking_ref}",
+                    'customer',
+                    $booking,
+                    [
+                        'booking_id' => $booking->id,
+                        'booking_ref' => $booking->booking_ref,
+                        'reschedule_id' => $reschedule->id,
+                        'action_url' => "/bookings/{$booking->id}/reschedule"
+                    ],
+                    NotificationIcon::RESCHEDULE_REQUEST,
+                    'bookings'
+                );
+            }
+        }
+    }
+
+    /**
+     * Notify when reschedule is accepted
+     */
+    public function notifyRescheduleAccepted($booking, $reschedule): void
+    {
+        $customer = User::find($booking->customer_id);
+        $provider = User::find($booking->provider_id);
+
+        if ($customer) {
+            $this->send(
+                $customer,
+                'reschedule_accepted',
+                'Reschedule Accepted',
+                "Your reschedule request for booking #{$booking->booking_ref} has been accepted",
+                'customer',
+                $booking,
+                [
+                    'booking_id' => $booking->id,
+                    'booking_ref' => $booking->booking_ref,
+                    'reschedule_id' => $reschedule->id,
+                    'action_url' => "/bookings/{$booking->id}"
+                ],
+                NotificationIcon::RESCHEDULE_ACCEPTED,
+                'bookings'
+            );
+        }
+
+        if ($provider) {
+            $this->send(
+                $provider,
+                'reschedule_accepted',
+                'Reschedule Accepted',
+                "Reschedule request for booking #{$booking->booking_ref} has been accepted",
+                'provider',
+                $booking,
+                [
+                    'booking_id' => $booking->id,
+                    'booking_ref' => $booking->booking_ref,
+                    'reschedule_id' => $reschedule->id,
+                    'action_url' => "/bookings/{$booking->id}"
+                ],
+                NotificationIcon::RESCHEDULE_ACCEPTED,
+                'bookings'
+            );
+        }
+    }
+
+    /**
+     * Notify when reschedule is rejected
+     */
+    public function notifyRescheduleRejected($booking, $reschedule): void
+    {
+        $customer = User::find($booking->customer_id);
+        $provider = User::find($booking->provider_id);
+
+        if ($customer) {
+            $this->send(
+                $customer,
+                'reschedule_rejected',
+                'Reschedule Rejected',
+                "Your reschedule request for booking #{$booking->booking_ref} has been rejected",
+                'customer',
+                $booking,
+                [
+                    'booking_id' => $booking->id,
+                    'booking_ref' => $booking->booking_ref,
+                    'reschedule_id' => $reschedule->id,
+                    'action_url' => "/bookings/{$booking->id}"
+                ],
+                NotificationIcon::RESCHEDULE_REJECTED,
+                'bookings'
+            );
+        }
+
+        if ($provider) {
+            $this->send(
+                $provider,
+                'reschedule_rejected',
+                'Reschedule Rejected',
+                "Reschedule request for booking #{$booking->booking_ref} has been rejected",
+                'provider',
+                $booking,
+                [
+                    'booking_id' => $booking->id,
+                    'booking_ref' => $booking->booking_ref,
+                    'reschedule_id' => $reschedule->id,
+                    'action_url' => "/bookings/{$booking->id}"
+                ],
+                NotificationIcon::RESCHEDULE_REJECTED,
+                'bookings'
+            );
+        }
+    }
+
+    /**
+     * Notify when booking expires (auto-rejected)
+     */
+    public function notifyBookingExpired($booking): void
+    {
+        $customer = User::find($booking->customer_id);
+        if ($customer) {
+            $this->send(
+                $customer,
+                'booking_rejected',
+                'Booking Expired',
+                "Your booking #{$booking->booking_ref} has expired as provider did not respond in time",
+                'customer',
+                $booking,
+                [
+                    'booking_id' => $booking->id,
+                    'booking_ref' => $booking->booking_ref,
+                    'action_url' => "/bookings/{$booking->id}"
+                ],
+                NotificationIcon::BOOKING_CANCELLED,
+                'bookings'
+            );
+        }
+
+        // Notify admin
+        $this->sendToAdmins(
+            'booking_rejected',
+            'Booking Expired',
+            "Booking #{$booking->booking_ref} has expired (auto-rejected)",
+            $booking,
+            [
+                'booking_id' => $booking->id,
+                'booking_ref' => $booking->booking_ref,
+                'action_url' => "/admin/bookings/{$booking->id}"
+            ],
+            NotificationIcon::BOOKING_CANCELLED,
+            'bookings'
+        );
+    }
+
+    /**
+     * Notify when refund is processed
+     */
+    public function notifyRefundProcessed($transaction): void
+    {
+        $customer = User::find($transaction->customer_id);
+        if ($customer) {
+            $this->send(
+                $customer,
+                'refund_processed',
+                'Refund Processed',
+                "Refund of {$transaction->currency} {$transaction->amount} has been processed successfully",
+                'customer',
+                $transaction,
+                [
+                    'transaction_id' => $transaction->id,
+                    'amount' => $transaction->amount,
+                    'currency' => $transaction->currency,
+                    'booking_id' => $transaction->booking_id,
+                    'action_url' => "/transactions/{$transaction->id}"
+                ],
+                NotificationIcon::REFUND_PROCESSED,
+                'transactions'
+            );
+        }
+
+        // Notify admin
+        $bookingRef = $transaction->booking ? $transaction->booking->booking_ref : 'N/A';
+        $this->sendToAdmins(
+            'refund_processed',
+            'Refund Processed',
+            "Refund of {$transaction->currency} {$transaction->amount} processed for booking #{$bookingRef}",
+            $transaction,
+            [
+                'transaction_id' => $transaction->id,
+                'booking_id' => $transaction->booking_id,
+                'action_url' => "/admin/transactions/{$transaction->id}"
+            ],
+            NotificationIcon::REFUND_PROCESSED,
+            'transactions'
+        );
+    }
+
+    /**
+     * Notify when refund fails
+     */
+    public function notifyRefundFailed($transaction, string $reason = null): void
+    {
+        $customer = User::find($transaction->customer_id);
+        if ($customer) {
+            $message = $reason 
+                ? "Refund of {$transaction->currency} {$transaction->amount} failed: {$reason}"
+                : "Refund of {$transaction->currency} {$transaction->amount} failed";
+            
+            $this->send(
+                $customer,
+                'refund_failed',
+                'Refund Failed',
+                $message,
+                'customer',
+                $transaction,
+                [
+                    'transaction_id' => $transaction->id,
+                    'amount' => $transaction->amount,
+                    'currency' => $transaction->currency,
+                    'booking_id' => $transaction->booking_id,
+                    'failure_reason' => $reason,
+                    'action_url' => "/transactions/{$transaction->id}"
+                ],
+                NotificationIcon::REFUND_FAILED,
+                'transactions'
+            );
+        }
+
+        // Notify admin
+        $this->sendToAdmins(
+            'refund_failed',
+            'Refund Failed',
+            "Refund failed for transaction #{$transaction->transaction_ref}",
+            $transaction,
+            [
+                'transaction_id' => $transaction->id,
+                'booking_id' => $transaction->booking_id,
+                'failure_reason' => $reason,
+                'action_url' => "/admin/transactions/{$transaction->id}"
+            ],
+            NotificationIcon::REFUND_FAILED,
+            'transactions'
+        );
+    }
+
+    /**
+     * Notify provider when document is approved
+     */
+    public function notifyDocumentApproved(User $provider, string $documentType): void
+    {
+        $documentName = ucfirst(str_replace('_', ' ', $documentType));
+        $this->send(
+            $provider,
+            'document_approved',
+            'Document Approved',
+            "Your {$documentName} has been approved",
+            'provider',
+            $provider,
+            [
+                'provider_id' => $provider->id,
+                'document_type' => $documentType,
+                'action_url' => "/provider/profile"
+            ],
+            NotificationIcon::DOCUMENT_VERIFICATION,
+            'admin_actions'
+        );
+    }
+
+    /**
+     * Notify provider when document is rejected
+     */
+    public function notifyDocumentRejected(User $provider, string $documentType, string $reason = null): void
+    {
+        $documentName = ucfirst(str_replace('_', ' ', $documentType));
+        $message = $reason 
+            ? "Your {$documentName} has been rejected. Reason: {$reason}"
+            : "Your {$documentName} has been rejected. Please upload a new document.";
+        
+        $this->send(
+            $provider,
+            'document_rejected',
+            'Document Rejected',
+            $message,
+            'provider',
+            $provider,
+            [
+                'provider_id' => $provider->id,
+                'document_type' => $documentType,
+                'rejection_reason' => $reason,
+                'action_url' => "/provider/profile"
+            ],
+            NotificationIcon::WARNING,
+            'admin_actions'
+        );
+    }
+
+    /**
+     * Notify provider when profile is completed
+     */
+    public function notifyProviderProfileCompleted(User $provider): void
+    {
+        $this->send(
+            $provider,
+            'provider_profile_completed',
+            'Profile Completed',
+            "Congratulations! Your provider profile has been completed and is now active",
+            'provider',
+            $provider,
+            [
+                'provider_id' => $provider->id,
+                'action_url' => "/provider/profile"
+            ],
+            NotificationIcon::DOCUMENT_VERIFICATION,
+            'admin_actions'
+        );
+    }
+
+    /**
+     * Notify when review is published
+     */
+    public function notifyReviewPublished($review): void
+    {
+        $provider = User::find($review->receiver_id);
+        if ($provider) {
+            $this->send(
+                $provider,
+                'review_published',
+                'Review Published',
+                "A new review has been published for your service",
+                'provider',
+                $review,
+                [
+                    'review_id' => $review->id,
+                    'rating' => $review->rating,
+                    'action_url' => "/provider/reviews/{$review->id}"
+                ],
+                NotificationIcon::REVIEW_RECEIVED,
+                'reviews'
+            );
+        }
+    }
+
+    /**
+     * Notify when review is unpublished
+     */
+    public function notifyReviewUnpublished($review): void
+    {
+        $provider = User::find($review->receiver_id);
+        if ($provider) {
+            $this->send(
+                $provider,
+                'review_unpublished',
+                'Review Unpublished',
+                "A review has been unpublished from your profile",
+                'provider',
+                $review,
+                [
+                    'review_id' => $review->id,
+                    'action_url' => "/provider/reviews"
+                ],
+                NotificationIcon::REVIEW_PENDING,
+                'reviews'
+            );
+        }
+    }
+
+    /**
+     * Notify when dispute is resolved
+     */
+    public function notifyDisputeResolved($dispute, $booking = null): void
+    {
+        $customer = User::find($dispute->customer_id ?? $booking->customer_id ?? null);
+        $provider = User::find($dispute->provider_id ?? $booking->provider_id ?? null);
+        $bookingRef = $booking ? $booking->booking_ref : ($dispute->booking_ref ?? 'N/A');
+
+        if ($customer) {
+            $this->send(
+                $customer,
+                'dispute_resolved',
+                'Dispute Resolved',
+                "Your dispute for booking #{$bookingRef} has been resolved",
+                'customer',
+                $dispute,
+                [
+                    'dispute_id' => $dispute->id,
+                    'booking_id' => $dispute->booking_id ?? null,
+                    'action_url' => "/disputes/{$dispute->id}"
+                ],
+                NotificationIcon::ADMIN_ACTION,
+                'admin_actions'
+            );
+        }
+
+        if ($provider) {
+            $this->send(
+                $provider,
+                'dispute_resolved',
+                'Dispute Resolved',
+                "Dispute for booking #{$bookingRef} has been resolved",
+                'provider',
+                $dispute,
+                [
+                    'dispute_id' => $dispute->id,
+                    'booking_id' => $dispute->booking_id ?? null,
+                    'action_url' => "/disputes/{$dispute->id}"
+                ],
+                NotificationIcon::ADMIN_ACTION,
+                'admin_actions'
+            );
+        }
+
+        // Notify admin
+        $this->sendToAdmins(
+            'dispute_resolved',
+            'Dispute Resolved',
+            "Dispute #{$dispute->id} for booking #{$bookingRef} has been resolved",
+            $dispute,
+            [
+                'dispute_id' => $dispute->id,
+                'booking_id' => $dispute->booking_id ?? null,
+                'action_url' => "/admin/disputes/{$dispute->id}"
+            ],
+            NotificationIcon::ADMIN_ACTION,
+            'admin_actions'
+        );
+    }
 }

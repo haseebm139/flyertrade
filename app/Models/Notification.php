@@ -124,6 +124,11 @@ class Notification extends Model
             'new_service' => 'assets/images/icons/notification-new-service.svg',
             'booking_reminder' => 'assets/images/icons/notification-reminder.svg',
             'reminder' => 'assets/images/icons/notification-reminder.svg',
+            'reschedule_request' => 'assets/images/icons/notification-reschedule-request.svg',
+            'reschedule_accepted' => 'assets/images/icons/notification-reschedule-accepted.svg',
+            'reschedule_rejected' => 'assets/images/icons/notification-reschedule-rejected.svg',
+            'refund_processed' => 'assets/images/icons/notification-refund-processed.svg',
+            'refund_failed' => 'assets/images/icons/notification-refund-failed.svg',
         ];
 
         return $iconMap[$icon] ?? $iconMap['system_alert'];
