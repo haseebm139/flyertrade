@@ -63,6 +63,7 @@ class CreateProviderProfileRequest extends FormRequest
             'id_photo'                   => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
             'passport'                   => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
             'work_permit'                => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
+            'fcm_token'                  => 'nullable|string',
         ];
     }
 }

@@ -34,6 +34,7 @@ class CustomerProfileRequest extends FormRequest
             'zip'            => 'nullable|string|max:20', 
             'latitude'       => 'nullable|numeric',
             'longitude'      => 'nullable|numeric',
+            'fcm_token'      => 'nullable|string',
         ];
     }
 }
