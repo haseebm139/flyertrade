@@ -157,7 +157,13 @@
 #closemenumutton, #menubutton{
     display: none;
 }
+.table-responsive {
 
+    height: 100%;
+    min-height: 388px;
+    max-height: 100%;
+
+}
         @media(max-width:600px) {
             .sidebar {
                 display: block;
