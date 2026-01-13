@@ -58,10 +58,8 @@ class MediaController extends BaseController
             $mimeType = $file->getMimeType();
             
             return $this->sendResponse([
-                'path' => $path, // Relative path for Firebase upload (use this path to read file from storage/app/public/{path})
-                'url' => $fullPath, // Full URL (accessible via storage link: https://flyertrade.com/storage/{path})
-                'storage_path' => 'storage/app/public/' . $path, // Full storage path for reading file
-                'absolute_path' => storage_path('app/public/' . $path), // Absolute path on server
+                'path' => 'storage/app/public/' . $path, // Full storage path for reading file
+                'url' => $fullPath, // Full URL (accessible via storage link: https://flyertrade.com/storage/{path})                 
                 'mime_type' => $mimeType,
                 'size' => $size,
                 'width' => $width,
@@ -118,10 +116,8 @@ class MediaController extends BaseController
             // You can add video duration extraction here if needed
             
             return $this->sendResponse([
-                'path' => $path, // Relative path for Firebase upload (use this path to read file from storage/app/public/{path})
-                'url' => $fullPath, // Full URL (accessible via storage link: https://flyertrade.com/storage/{path})
-                'storage_path' => 'storage/app/public/' . $path, // Full storage path for reading file
-                'absolute_path' => storage_path('app/public/' . $path), // Absolute path on server
+                'path' => 'storage/app/public/' . $path, // Relative path for Firebase upload (use this path to read file from storage/app/public/{path})
+                'url' => $fullPath, // Full URL (accessible via storage link: https://flyertrade.com/storage/{path})               
                 'mime_type' => $mimeType,
                 'size' => $size,
                 'duration_ms' => $duration,
@@ -181,10 +177,8 @@ class MediaController extends BaseController
             
             $size = $file->getSize();
             $response = [
-                'path' => $path, // Relative path for Firebase upload
-                'url' => $fullPath, // Full URL (accessible via storage link: https://flyertrade.com/storage/{path})
-                'storage_path' => 'storage/app/public/' . $path, // Full storage path for reading file
-                'absolute_path' => storage_path('app/public/' . $path), // Absolute path on server
+                'path' => 'storage/app/public/' . $path, // Full storage path for reading file
+                'url' => $fullPath, // Full URL (accessible via storage link: https://flyertrade.com/storage/{path})                 
                 'mime_type' => $mimeType,
                 'size' => $size,
                 'type' => $isImage ? 'image' : 'video',
