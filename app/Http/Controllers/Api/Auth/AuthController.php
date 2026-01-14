@@ -242,7 +242,7 @@ class AuthController extends BaseController
         ];
 
 
-        Mail::to($email)->queue(new OtpCodeMail($mailData));
+        Mail::to($email)->send(new OtpCodeMail($mailData));
         return true;
 
     }

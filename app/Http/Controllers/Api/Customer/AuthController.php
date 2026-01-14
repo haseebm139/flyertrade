@@ -212,6 +212,6 @@ class AuthController extends BaseController
             'logo'  => asset('assets/logos/email_logo.png')
         ];
 
-        Mail::to($email)->queue(new OtpCodeMail($mailData));
+        Mail::to($email)->send(new OtpCodeMail($mailData));
     }
 }

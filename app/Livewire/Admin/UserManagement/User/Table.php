@@ -34,6 +34,7 @@ class Table extends Component
         'openFilterModal'    => 'openFilterModal',
         'searchUpdated'      => 'updatingSearch',
         'addItemRequested'   => 'openAddModal',
+        'removeFilter'       => 'removeFilter',
     ];
 
     # -------------------- SEARCH + FILTER --------------------
@@ -92,10 +93,15 @@ class Table extends Component
 
     public function delete($id)
     {
-        User::findOrFail($id)->delete();
-         $this->confirmingId = null;
-        $this->dispatch('showToastr', 'success', 'Service category deleted successfully.', 'Success');
-        
+        try {
+            $user = User::findOrFail($id);
+            $user->delete();
+            $this->confirmingId = null;
+            $this->dispatch('showToastr', 'success', 'Service User deleted successfully.', 'Success');
+            $this->dispatch('categoryUpdated');
+        } catch (\Exception $e) {
+            $this->dispatch('showToastr', 'error', 'Error deleting user: ' . $e->getMessage(), 'Error');
+        }
     }
 
     public function edit($id)
@@ -133,6 +139,9 @@ class Table extends Component
         
         $this->resetPage();
         $this->closeFilterModal();
+        
+        // Dispatch event to update toolbar with new active filters
+        $this->dispatch('filtersUpdated', $this->getActiveFilters());
     }
     
     public function resetFilters()
@@ -146,6 +155,64 @@ class Table extends Component
         $this->toDate = '';
         $this->resetPage();
         $this->closeFilterModal();
+        
+        // Dispatch event to update toolbar (filters cleared)
+        $this->dispatch('filtersUpdated', $this->getActiveFilters());
+    }
+
+    /**
+     * Remove a specific filter by key
+     */
+    public function removeFilter($key = null)
+    {
+        // Handle array parameter from Livewire event
+        if (is_array($key) && isset($key['key'])) {
+            $key = $key['key'];
+        }
+        
+        if ($key === 'date') {
+            $this->fromDate = '';
+            $this->toDate = '';
+        } elseif ($key === 'status') {
+            $this->status = '';
+        }
+        
+        $this->resetPage();
+        
+        // Dispatch event to update toolbar with new active filters
+        $this->dispatch('filtersUpdated', $this->getActiveFilters());
+    }
+
+    /**
+     * Get active filters for display in toolbar
+     */
+    public function getActiveFilters()
+    {
+        $filters = [];
+        
+        // Date range filter
+        if ($this->fromDate && $this->toDate) {
+            $filters[] = [
+                'type' => 'date',
+                'label' => date('d M, Y', strtotime($this->fromDate)) . ' - ' . date('d M, Y', strtotime($this->toDate)),
+                'key' => 'date'
+            ];
+        }
+        
+        // Status filter
+        if ($this->status) {
+            $statusLabels = [
+                'active' => 'Active',
+                'inactive' => 'Inactive',
+            ];
+            $filters[] = [
+                'type' => 'status',
+                'label' => ($statusLabels[$this->status] ?? ucfirst($this->status)) . ' users',
+                'key' => 'status'
+            ];
+        }
+        
+        return $filters;
     }
     
 
@@ -177,8 +244,15 @@ class Table extends Component
     public function render()
     {
         $data = $this->getDataQuery()->paginate($this->perPage);
+        $activeFilters = $this->getActiveFilters();
+        
+        // Dispatch event to update toolbar with current active filters
+        $this->dispatch('filtersUpdated', $activeFilters);
          
-        return view('livewire.admin.user-management.user.table',compact('data'));
+        return view('livewire.admin.user-management.user.table', [
+            'data' => $data,
+            'activeFilters' => $activeFilters,
+        ]);
     }  
 
     # -------------------- Export -------------------- 

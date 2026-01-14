@@ -115,7 +115,12 @@ function initializeTables() {
     // Export to CSV functionality
     const exportBtns = document.querySelectorAll('.export-btn');
     exportBtns.forEach(btn => {
-        btn.addEventListener('click', function () {
+        // Skip if button has wire:click (Livewire handles it) or is inside Livewire component
+        if (btn.closest('[wire\\:id]') || btn.hasAttribute('wire:click') || btn.getAttribute('wire:click')) {
+            return;
+        }
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
             exportToCSV();
         });
     });

@@ -1,5 +1,5 @@
 <div>
-    <livewire:admin.components.toolbar label="service users" button_label="Users" search_label="user" />
+    <livewire:admin.components.toolbar label="service users" button_label="Users" search_label="user" :active-filters="$activeFilters" />
 
     <!-- Users Table -->
     <div class="table-responsive">
@@ -30,19 +30,19 @@
             </thead>
             <tbody>
                 @forelse ($data as $item)
-                    <tr>
-                        <td><input type="checkbox" value="{{ $item->id }}" wire:model.live="selected"></td>
-                        <td>{{ $item->id }}</td>
-                        <td>
-                            <div class="user-info">
-                                <img src="{{ asset($item->avatar ?? 'assets/images/icons/person-one.svg') }}"
-                                    alt="avatar">
-                                <div>
-                                    <p class="user-name">{{ $item->name ?? '-' }}</p>
-                                    <p class="user-email">{{ $item->email ?? '-' }}</p>
-                                </div>
+                <tr>
+                    <td><input type="checkbox" value="{{ $item->id }}" wire:model.live="selected"></td>
+                    <td>{{ $item->id }}</td>
+                    <td>
+                        <div class="user-info">
+                            <img src="{{ asset($item->avatar ?? 'assets/images/icons/person-one.svg') }}"
+                                alt="avatar">
+                            <div>
+                                <p class="user-name">{{ $item->name ?? '-' }}</p>
+                                <p class="user-email">{{ $item->email ?? '-' }}</p>
                             </div>
-                        </td>
+                        </div>
+                    </td>
                         <td>
                             @php
                                 $addressParts = array_filter([
@@ -54,17 +54,17 @@
                                 $fullAddress = !empty($addressParts) ? implode(', ', $addressParts) : '-';
                             @endphp
                             {{ $fullAddress }}
-                        </td>
-                        <td>{{ $item->phone ?? '-' }}</td>
-                        <td><span
-                                class="status {{ $item->status == 'active' ? 'active' : 'inactive' }}">{{ ucfirst($item->status) ?? '' }}</span>
-                        </td>
-                        <td style="position:relative">
-                            <div class="actions-dropdown">
+                    </td>
+                    <td>{{ $item->phone ?? '-' }}</td>
+                    <td><span
+                            class="status {{ $item->status == 'active' ? 'active' : 'inactive' }}">{{ ucfirst($item->status) ?? '' }}</span>
+                    </td>
+                    <td style="position:relative">
+                        <div class="actions-dropdown">
                                 <button class="actions-btn"> <img
                                         src="{{ asset('assets/images/icons/three_dots.svg') }}"
-                                        class="dots-img "></button>
-                                <div class="actions-menu">
+                                    class="dots-img "></button>
+                            <div class="actions-menu" style="display: none;">
                                     <a href="{{ route('user-management.service.users.view', ['id' => $item->id]) }}"><img
                                             src="{{ asset('assets/images/icons/eye.svg') }}" alt="View User"
                                             class="w-5 h-5"> View user</a>
@@ -74,32 +74,32 @@
                                     <a href="#" class="showDeleteModal___" data-id="{{ $item->id }}"><img
                                             src="{{ asset('assets/images/icons/delete-icon.svg') }}" alt="Delete User"
                                             class="w-5 h-5"> Delete user</a>
-                                </div>
-                                <!-- ✅ Global Delete Modal -->
+                            </div>
+                            <!-- ✅ Global Delete Modal -->
 
-                            </div>
-                            <div id="globalDeleteModal__{{ $item->id }}" class="deleteModal"
-                                style="display: none;position:absolute;    top: 2.5vw; right: 1vw;">
-                                <div class="delete-card">
-                                    <div class="delete-card-header">
-                                        <h3 class="delete-title">Delete Service User?</h3>
-                                        <span class="delete-close closeDeleteModal"
-                                            data-id="{{ $item->id }}">&times;</span>
-                                    </div>
-                                    <p class="delete-text">Are you sure you want to delete this service user?</p>
-                                    <div class="delete-actions justify-content-start">
-                                        <button class="confirm-delete-btn">Delete</button>
-                                        <button class="cancel-delete-btn" data-id="{{ $item->id }}">Cancel</button>
-                                    </div>
+                        </div>
+                        <div id="globalDeleteModal__{{ $item->id }}" class="deleteModal"
+                            style="display: none;position:absolute;    top: 2.5vw; right: 1vw;">
+                            <div class="delete-card">
+                                <div class="delete-card-header">
+                                    <h3 class="delete-title">Delete Service User?</h3>
+                                    <span class="delete-close closeDeleteModal"
+                                        data-id="{{ $item->id }}">&times;</span>
+                                </div>
+                                <p class="delete-text">Are you sure you want to delete this service user?</p>
+                                <div class="delete-actions justify-content-start">
+                                    <button class="confirm-delete-btn" wire:click="delete({{ $item->id }})" data-id="{{ $item->id }}">Delete</button>
+                                    <button class="cancel-delete-btn" data-id="{{ $item->id }}">Cancel</button>
                                 </div>
                             </div>
-                        </td>
-                    </tr>
+                        </div>
+                    </td>
+                </tr>
 
                 @empty
-                    <tr>
-                        <td>No Service User found.</td>
-                    </tr>
+                <tr>
+                    <td>No Service User found.</td>
+                </tr>
                 @endforelse
             </tbody>
         </table>
@@ -162,71 +162,153 @@
     </style>
 
     @if ($showFilterModal)
-        <div class="modal filter-theme-modal" style="display: flex;">
-            <div class="modal-content filter-modal">
-                <div class="modal_heaader">
-                    <span class="close-modal" wire:click="closeFilterModal">
+    <div class="modal filter-theme-modal" style="display: flex;">
+        <div class="modal-content filter-modal">
+            <div class="modal_heaader">
+                <span class="close-modal" wire:click="closeFilterModal">
                         <svg width="12" height="12" viewBox="0 0 12 12" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75"
                                 stroke="#717171" stroke-width="1.5" stroke-linecap="round"
                                 stroke-linejoin="round" />
-                        </svg>
-                    </span>
-                    <h3 class="mt-0">Filter</h3>
-                </div>
+                    </svg>
+                </span>
+                <h3 class="mt-0">Filter</h3>
+            </div>
 
-                <label style='color:#717171;font-weight:500;'>Select Date</label>
-                <div class=" row mt-3">
-                    <div class='col-6'>
-                        <span style="font-weight:500">From:</span>
-                        <div class="date_field_wraper">
+            <label style='color:#717171;font-weight:500;'>Select Date</label>
+            <div class=" row mt-3">
+                <div class='col-6'>
+                    <span style="font-weight:500">From:</span>
+                    <div class="date_field_wraper">
                             <input type="date" class="form-input mt-2 date-input" wire:model="tempFromDate">
-                        </div>
-
                     </div>
-                    <div class='col-6'>
-                        <span style="font-weight:500"> To:</span>
-                        <div class="date_field_wraper">
-                            <input type="date" class="form-input mt-2 date-input" wire:model="tempToDate">
-                        </div>
 
-                    </div>
                 </div>
-                <label style="color:#717171;font-weight:500">Status</label>
+                <div class='col-6'>
+                    <span style="font-weight:500"> To:</span>
+                    <div class="date_field_wraper">
+                            <input type="date" class="form-input mt-2 date-input" wire:model="tempToDate">
+                    </div>
+
+                </div>
+            </div>
+            <label style="color:#717171;font-weight:500">Status</label>
                 <x-custom-select-livewire name="tempStatus" :options="[
                     ['value' => '', 'label' => 'Select status'],
                     ['value' => 'active', 'label' => 'Active'],
                     ['value' => 'inactive', 'label' => 'Inactive'],
                 ]" placeholder="Select status"
                     wireModel="tempStatus" :value="$tempStatus" class="form-input mt-2" />
-                <div class="form-actions">
+            <div class="form-actions">
                     <button type="button" class="reset-btn filter_modal_reset"
                         wire:click="resetFilters">Reset</button>
-                    <button type="button" class="submit-btn" wire:click="applyFilters">Apply Now</button>
-                </div>
+                <button type="button" class="submit-btn" wire:click="applyFilters">Apply Now</button>
             </div>
         </div>
+    </div>
     @endif
 </div>
 <script>
+    // Actions dropdown - Works with Livewire updates
+    (function() {
+        // Single event delegation handler (works for all buttons, even after Livewire updates)
+        document.addEventListener('click', function(e) {
+            // Check if clicked on actions button
+            const btn = e.target.closest('.actions-btn');
+            if (btn) {
+                e.stopPropagation();
+                e.preventDefault();
+                
+                const dropdown = btn.closest('.actions-dropdown');
+                if (!dropdown) return false;
+                
+                const menu = dropdown.querySelector('.actions-menu');
+                if (!menu) return false;
+                
+                const isActive = dropdown.classList.contains('active');
+                
+                // Close all other menus
+                document.querySelectorAll('.actions-dropdown').forEach(d => {
+                    if (d !== dropdown) {
+                        d.classList.remove('active');
+                        const otherMenu = d.querySelector('.actions-menu');
+                        if (otherMenu) otherMenu.style.display = 'none';
+                    }
+                });
+                
+                // Toggle current menu
+                if (isActive) {
+                    dropdown.classList.remove('active');
+                    menu.style.display = 'none';
+                } else {
+                    dropdown.classList.add('active');
+                    menu.style.display = 'block';
+                }
+                
+                return false;
+            }
+            
+            // Close dropdowns when clicking outside
+            if (!e.target.closest('.actions-dropdown') && !e.target.closest('.actions-menu')) {
+                document.querySelectorAll('.actions-dropdown').forEach(dropdown => {
+                    dropdown.classList.remove('active');
+                    const menu = dropdown.querySelector('.actions-menu');
+                    if (menu) menu.style.display = 'none';
+                });
+            }
+        }, true); // Use capture phase to run before main.js
+        
+        // Ensure menus stay hidden after Livewire updates
+        if (typeof Livewire !== 'undefined') {
+            document.addEventListener('livewire:init', function() {
+                Livewire.hook('morph.updated', () => {
+                    // Close all menus after Livewire update
+                    setTimeout(() => {
+                        document.querySelectorAll('.actions-dropdown').forEach(dropdown => {
+                            dropdown.classList.remove('active');
+                            const menu = dropdown.querySelector('.actions-menu');
+                            if (menu) menu.style.display = 'none';
+                        });
+                    }, 10);
+                });
+            });
+        }
+    })();
+
+    // Delete modal handlers
     $(document).on('click', '.showDeleteModal___', function(e) {
-
         e.preventDefault();
+        e.stopPropagation();
+        
+        // Close actions dropdown
+        $(this).closest('.actions-dropdown').removeClass('active');
+        $(this).closest('.actions-dropdown').find('.actions-menu').css('display', 'none');
+        
         let id = $(this).data('id');
-
         $('#globalDeleteModal__' + id).css('display', 'block');
-    })
+    });
+    
     $(document).on('click', '.closeDeleteModal', function(e) {
         e.preventDefault();
         let id = $(this).data('id');
         $('#globalDeleteModal__' + id).css('display', 'none');
-    })
+    });
+    
     $(document).on('click', '.cancel-delete-btn', function(e) {
         e.preventDefault();
         let id = $(this).data('id');
         $('#globalDeleteModal__' + id).css('display', 'none');
-    })
+    });
+    
+    $(document).on('click', '.confirm-delete-btn', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        let id = $(this).data('id');
+        $('#globalDeleteModal__' + id).css('display', 'none');
+        // Livewire wire:click will handle the delete
+    });
+    
     $(document).on('click', function(e) {
         if (!$(e.target).closest('.showDeleteModal___, .deleteModal').length) {
             $('.deleteModal').hide();

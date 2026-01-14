@@ -12,6 +12,21 @@ class Toolbar extends Component
     public string $button_label = ''; // default label
     public string $search_label = ''; // default label
     public bool $showAddButton = true; // Control button visibility
+    public array $activeFilters = []; // Active filters to display in toolbar
+    
+    protected $listeners = [
+        'filtersUpdated' => 'updateFilters',
+    ];
+    
+    public function mount($activeFilters = [])
+    {
+        $this->activeFilters = $activeFilters;
+    }
+    
+    public function updateFilters($filters)
+    {
+        $this->activeFilters = $filters ?? [];
+    }
     
     public function addItem()
     {

@@ -18,23 +18,45 @@
 </style>
 <style>
     .filter_active_btna___ {
-        border: 0.052vw solid rgba(0, 78, 66, 0.3);
-        border-radius: 0.521vw;
-        padding: 0.625vw 1.25vw;
-        background: rgba(0, 78, 66, 0.3);
-        display: none;
-        gap: 0.521vw;
-        align-items: center;
 
+        border: 0.052vw solid rgba(0, 78, 66, 0.3);
+
+        border-radius: 0.521vw;
+
+        padding: 0.625vw 1.25vw;
+
+        background: rgba(0, 78, 66, 0.1);
+
+        display: inline-flex;
+        gap: 0.833vw;
+
+        align-items: center;
+        height: 2.708vw;
+
+        min-width: auto;
 
         font-family: "Clash Display", sans-serif;
         font-weight: 500;
         font-size: 0.833vw;
         line-height: 150%;
-        text-align: center;
         color: #555;
+        text-decoration: none;
 
         cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .filter_active_btna___:hover {
+        background: rgba(0, 78, 66, 0.15);
+    }
+
+    .filter_active_btna___ span {
+        white-space: nowrap;
+    }
+
+    .filter_active_btna___ i {
+        color: #004E42;
+        font-size: 0.833vw;
     }
 
     #profilePopup svg,
@@ -163,15 +185,17 @@
                     style="display: flex; align-items: center; justify-content: space-between; 
             padding: 1vw 1.5vw 0px; border-bottom: 0vw solid #ddd; background-color: #fff;border-radius: 20px;">
 
-                    <span class="popup-title"
-                        style=" font-weight: 600; color: #333; letter-spacing: 0.05vw;">
+                    <span class="popup-title" style=" font-weight: 600; color: #333; letter-spacing: 0.05vw;">
                         Notification
                     </span>
 
                     <span class="popup-close" id="close_notify_popop"
                         style="cursor: pointer; display: flex; align-items: center;">
-                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75" stroke="#717171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75"
+                                stroke="#717171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            </path>
                         </svg>
                     </span>
                 </div>
@@ -212,7 +236,6 @@
 
                 <div class="view_all_notification" style=" text-align: left;">
                     <a href="{{ route('notification.index') }}"
-
                         style="color: #00796B;  font-weight: 500; text-decoration: none; display: flex; align-items: center; gap: 0.3vw;">
                         View all notifications
                         <span style="font-size: 1vw;">&#8250;</span>
@@ -227,12 +250,15 @@
             <div class="provider-modal-content">
                 <!-- Header -->
                 <div class="provider-modal-header">
-                    <h6><i class="fa-solid fa-arrow-left" id="back_to_notify_modal"
-                            style="cursor:pointer"></i> 3 New Providers Awaiting Document
+                    <h6><i class="fa-solid fa-arrow-left" id="back_to_notify_modal" style="cursor:pointer"></i> 3 New
+                        Providers Awaiting Document
                         Verification.</h6>
                     <button class="provider-modal-close" id="provide_modal_close" data-close="providerModal">
-                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75" stroke="#717171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75"
+                                stroke="#717171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            </path>
                         </svg>
                     </button>
                 </div>
@@ -287,8 +313,11 @@
             style="display: none; position: absolute; top: 100%; right: 0; background: white; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); z-index: 9999999; min-width: 200px;">
             <div class="popup-header">
                 <span class="popup-close" data-close="profilePopup">
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75" stroke="#717171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75"
+                            stroke="#717171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        </path>
                     </svg>
                 </span>
             </div>

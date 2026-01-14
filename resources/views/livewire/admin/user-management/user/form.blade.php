@@ -45,8 +45,8 @@
 
                     <div class="form-group">
                         <label>Phone Number</label>
-                        <input type="number" class="form-input @error('phone') error-input @enderror"
-                            placeholder="Enter phone number" wire:model="phone">
+                        <input type="text" class="form-input @error('phone') error-input @enderror"
+                            placeholder="Enter phone number (e.g., +1234567890)" wire:model="phone">
                         @error('phone')
                             <div class="error-message">
                                 <i class="fa-solid fa-circle-exclamation"></i>

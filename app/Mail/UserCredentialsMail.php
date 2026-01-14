@@ -9,18 +9,20 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class OtpCodeMail extends Mailable
+class UserCredentialsMail extends Mailable
 {
     use Queueable, SerializesModels;
-    public $mailData;
+    
+    public $user;
+    public $password;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($mailData)
+    public function __construct($user, $password)
     {
-
-        $this->mailData = $mailData;
+        $this->user = $user;
+        $this->password = $password;
     }
 
     /**
@@ -29,7 +31,7 @@ class OtpCodeMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: $this->mailData['title'] ?? 'OTP Code Mail',
+            subject: 'Welcome to FlyerTrade - Your Account Credentials',
         );
     }
 
@@ -38,11 +40,11 @@ class OtpCodeMail extends Mailable
      */
     public function content(): Content
     {
-
         return new Content(
-            view: 'emails.reset-password-email',
+            view: 'emails.user-credentials',
             with: [
-                'mailData' => $this->mailData
+                'user' => $this->user,
+                'password' => $this->password,
             ]
         );
     }
