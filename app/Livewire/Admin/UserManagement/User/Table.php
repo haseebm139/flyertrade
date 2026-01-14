@@ -13,9 +13,15 @@ class Table extends Component
     public $confirmingId ;
     public $search = '';
     public $perPage = 10;  
-    public $status = '';    
-    public $fromDate = '';
-    public $toDate = ''; 
+    public $status = '';    // Applied filter status
+    public $fromDate = '';  // Applied filter fromDate
+    public $toDate = '';    // Applied filter toDate
+    
+    // Temporary filter values (only used in modal, not applied until Apply button clicked)
+    public $tempStatus = '';
+    public $tempFromDate = '';
+    public $tempToDate = '';
+    
     public $sortField = 'created_at';  
     public $sortDirection = 'desc';
     public $selected = [];  
@@ -35,9 +41,10 @@ class Table extends Component
         $this->search = $value;
         $this->resetPage(); 
     }
-    public function updatingStatus() { $this->resetPage(); }
-    public function updatingFromDate() { $this->resetPage(); }
-    public function updatingToDate() { $this->resetPage(); }  
+    // Remove these - filters should only apply on Apply button click
+    // public function updatingStatus() { $this->resetPage(); }
+    // public function updatingFromDate() { $this->resetPage(); }
+    // public function updatingToDate() { $this->resetPage(); }  
 
 
     # -------------------- SELECT ALL --------------------
@@ -105,25 +112,40 @@ class Table extends Component
 
 
     # -------------------- FILTER MODAL --------------------
-    public function openFilterModal() {  $this->showFilterModal = true;   }
+    public function openFilterModal() {  
+        // Load current applied filters into temporary variables
+        $this->tempStatus = $this->status;
+        $this->tempFromDate = $this->fromDate;
+        $this->tempToDate = $this->toDate;
+        $this->showFilterModal = true;   
+    }
 
-    public function closeFilterModal() { $this->showFilterModal = false;  }
+    public function closeFilterModal() { 
+        $this->showFilterModal = false;  
+    }
 
     public function applyFilters()
     {
-    
+        // Apply temporary filters to actual filters
+        $this->status = $this->tempStatus;
+        $this->fromDate = $this->tempFromDate;
+        $this->toDate = $this->tempToDate;
+        
         $this->resetPage();
         $this->closeFilterModal();
     }
-    public function clearFilters()
-    {
-        $this->reset(['status', 'fromDate', 'toDate']);
-        
-    }
+    
     public function resetFilters()
     {
-        $this->reset(['status', 'fromDate', 'toDate']);
+        // Reset both temporary and applied filters
+        $this->tempStatus = '';
+        $this->tempFromDate = '';
+        $this->tempToDate = '';
+        $this->status = '';
+        $this->fromDate = '';
+        $this->toDate = '';
         $this->resetPage();
+        $this->closeFilterModal();
     }
     
 

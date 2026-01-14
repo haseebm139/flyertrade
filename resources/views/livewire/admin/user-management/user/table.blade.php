@@ -8,17 +8,19 @@
                 <tr>
                     <th><input type="checkbox" wire:model.live="selectAll"></th>
                     <th class="sortable" data-column="0">Customer ID <img src="{{ asset('assets/images/icons/sort.svg') }}"
-                            class="sort-icon" wire:click="sortBy('id')" {{ $sortField === 'id' ? $sortDirection : '-' }}>
+                            class="sort-icon" wire:click="sortBy('id')"
+                            {{ $sortField === 'id' ? $sortDirection : '-' }}>
                     </th>
-                    <th class="sortable" data-column="1">Customer Name <img src="{{ asset('assets/images/icons/sort.svg') }}"
-                            class="sort-icon" wire:click="sortBy('name')" {{ $sortField === 'name' ? $sortDirection : '-' }}>
+                    <th class="sortable" data-column="1">Customer Name <img
+                            src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"
+                            wire:click="sortBy('name')" {{ $sortField === 'name' ? $sortDirection : '-' }}>
                     </th>
-                    <th class="sortable" data-column="2">Home Address <img src="{{ asset('assets/images/icons/sort.svg') }}"
-                            class="sort-icon" wire:click="sortBy('address')"
-                            {{ $sortField === 'address' ? $sortDirection : '-' }}></th>
-                    <th class="sortable" data-column="3">Phone Number <img src="{{ asset('assets/images/icons/sort.svg') }}"
-                            class="sort-icon" wire:click="sortBy('phone')"
-                            {{ $sortField === 'phone' ? $sortDirection : '-' }}></th>
+                    <th class="sortable" data-column="2">Home Address <img
+                            src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"
+                            wire:click="sortBy('address')" {{ $sortField === 'address' ? $sortDirection : '-' }}></th>
+                    <th class="sortable" data-column="3">Phone Number <img
+                            src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"
+                            wire:click="sortBy('phone')" {{ $sortField === 'phone' ? $sortDirection : '-' }}></th>
                     <th class="sortable" data-column="4">Status <img src="{{ asset('assets/images/icons/sort.svg') }}"
                             class="sort-icon" wire:click="sortBy('status')"
                             {{ $sortField === 'status' ? $sortDirection : '-' }}></th>
@@ -28,59 +30,76 @@
             </thead>
             <tbody>
                 @forelse ($data as $item)
-                <tr>
-                    <td><input type="checkbox" value="{{ $item->id }}" wire:model.live="selected"></td>
-                    <td>{{ $item->id }}</td>
-                    <td>
-                        <div class="user-info">
-                            <img src="{{ asset($item->avatar ?? 'assets/images/icons/person-one.svg') }}"
-                                alt="avatar">
-                            <div>
-                                <p class="user-name">{{ $item->name ?? '-' }}</p>
-                                <p class="user-email">{{ $item->email ?? '-' }}</p>
+                    <tr>
+                        <td><input type="checkbox" value="{{ $item->id }}" wire:model.live="selected"></td>
+                        <td>{{ $item->id }}</td>
+                        <td>
+                            <div class="user-info">
+                                <img src="{{ asset($item->avatar ?? 'assets/images/icons/person-one.svg') }}"
+                                    alt="avatar">
+                                <div>
+                                    <p class="user-name">{{ $item->name ?? '-' }}</p>
+                                    <p class="user-email">{{ $item->email ?? '-' }}</p>
+                                </div>
                             </div>
-                        </div>
-                    </td>
-                    <td>{{ $item->address ?? '-', ' , ', $item->city ?? '-', ' , ', $item->state ?? '-', ' , ', $item->country ?? '-' }}
-                    </td>
-                    <td>{{ $item->phone ?? '-' }}</td>
-                    <td><span
-                            class="status {{ $item->status == 'active' ? 'active' : 'inactive' }}">{{ ucfirst($item->status) ?? '' }}</span>
-                    </td>
-                    <td style="position:relative">
-                        <div class="actions-dropdown">
-                            <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three_dots.svg') }}"
-                                    class="dots-img "></button>
-                            <div class="actions-menu">
-                                <a href="{{ route('user-management.service.users.view', ['id' => $item->id]) }}"><img src="{{ asset('assets/images/icons/eye.svg') }}" alt="View User" class="w-5 h-5"> View user</a>
-                                <a href="#" wire:click="edit({{ $item->id }}) "><img src="{{ asset('assets/images/icons/edit-icon.svg') }}" alt="Edit User" class="w-5 h-5"> Edit user</a>
-                                <a href="#" class="showDeleteModal___" data-id="{{ $item->id }}"><img src="{{ asset('assets/images/icons/delete-icon.svg') }}" alt="Delete User" class="w-5 h-5"> Delete user</a>
-                            </div>
-                            <!-- ✅ Global Delete Modal -->
+                        </td>
+                        <td>
+                            @php
+                                $addressParts = array_filter([
+                                    $item->address ?? null,
+                                    $item->city ?? null,
+                                    $item->state ?? null,
+                                    $item->country ?? null,
+                                ]);
+                                $fullAddress = !empty($addressParts) ? implode(', ', $addressParts) : '-';
+                            @endphp
+                            {{ $fullAddress }}
+                        </td>
+                        <td>{{ $item->phone ?? '-' }}</td>
+                        <td><span
+                                class="status {{ $item->status == 'active' ? 'active' : 'inactive' }}">{{ ucfirst($item->status) ?? '' }}</span>
+                        </td>
+                        <td style="position:relative">
+                            <div class="actions-dropdown">
+                                <button class="actions-btn"> <img
+                                        src="{{ asset('assets/images/icons/three_dots.svg') }}"
+                                        class="dots-img "></button>
+                                <div class="actions-menu">
+                                    <a href="{{ route('user-management.service.users.view', ['id' => $item->id]) }}"><img
+                                            src="{{ asset('assets/images/icons/eye.svg') }}" alt="View User"
+                                            class="w-5 h-5"> View user</a>
+                                    <a href="#" wire:click="edit({{ $item->id }}) "><img
+                                            src="{{ asset('assets/images/icons/edit-icon.svg') }}" alt="Edit User"
+                                            class="w-5 h-5"> Edit user</a>
+                                    <a href="#" class="showDeleteModal___" data-id="{{ $item->id }}"><img
+                                            src="{{ asset('assets/images/icons/delete-icon.svg') }}" alt="Delete User"
+                                            class="w-5 h-5"> Delete user</a>
+                                </div>
+                                <!-- ✅ Global Delete Modal -->
 
-                        </div>
-                        <div id="globalDeleteModal__{{ $item->id }}" class="deleteModal"
-                            style="display: none;position:absolute;    top: 2.5vw; right: 1vw;">
-                            <div class="delete-card">
-                                <div class="delete-card-header">
-                                    <h3 class="delete-title">Delete Service User?</h3>
-                                    <span class="delete-close closeDeleteModal"
-                                        data-id="{{ $item->id }}">&times;</span>
-                                </div>
-                                <p class="delete-text">Are you sure you want to delete this service user?</p>
-                                <div class="delete-actions justify-content-start">
-                                    <button class="confirm-delete-btn">Delete</button>
-                                    <button class="cancel-delete-btn" data-id="{{ $item->id }}">Cancel</button>
+                            </div>
+                            <div id="globalDeleteModal__{{ $item->id }}" class="deleteModal"
+                                style="display: none;position:absolute;    top: 2.5vw; right: 1vw;">
+                                <div class="delete-card">
+                                    <div class="delete-card-header">
+                                        <h3 class="delete-title">Delete Service User?</h3>
+                                        <span class="delete-close closeDeleteModal"
+                                            data-id="{{ $item->id }}">&times;</span>
+                                    </div>
+                                    <p class="delete-text">Are you sure you want to delete this service user?</p>
+                                    <div class="delete-actions justify-content-start">
+                                        <button class="confirm-delete-btn">Delete</button>
+                                        <button class="cancel-delete-btn" data-id="{{ $item->id }}">Cancel</button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
 
                 @empty
-                <tr>
-                    <td>No Service User found.</td>
-                </tr>
+                    <tr>
+                        <td>No Service User found.</td>
+                    </tr>
                 @endforelse
             </tbody>
         </table>
@@ -143,47 +162,51 @@
     </style>
 
     @if ($showFilterModal)
-    <div class="modal filter-theme-modal" style="display: flex;">
-        <div class="modal-content filter-modal">
-            <div class="modal_heaader">
-                <span class="close-modal" wire:click="closeFilterModal">
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75" stroke="#717171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-                </span>
-                <h3 class="mt-0">Filter</h3>
-            </div>
-
-            <label style='color:#717171;font-weight:500;'>Select Date</label>
-            <div class=" row mt-3">
-                <div class='col-6'>
-                    <span style="font-weight:500">From:</span>
-                    <div class="date_field_wraper">
-                        <input type="date" class="form-input mt-2 date-input" wire:model="fromDate">
-                    </div>
-
+        <div class="modal filter-theme-modal" style="display: flex;">
+            <div class="modal-content filter-modal">
+                <div class="modal_heaader">
+                    <span class="close-modal" wire:click="closeFilterModal">
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75"
+                                stroke="#717171" stroke-width="1.5" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                    </span>
+                    <h3 class="mt-0">Filter</h3>
                 </div>
-                <div class='col-6'>
-                    <span style="font-weight:500"> To:</span>
-                    <div class="date_field_wraper">
-                        <input type="date" class="form-input mt-2 date-input" wire:model="toDate">
-                    </div>
 
+                <label style='color:#717171;font-weight:500;'>Select Date</label>
+                <div class=" row mt-3">
+                    <div class='col-6'>
+                        <span style="font-weight:500">From:</span>
+                        <div class="date_field_wraper">
+                            <input type="date" class="form-input mt-2 date-input" wire:model="tempFromDate">
+                        </div>
+
+                    </div>
+                    <div class='col-6'>
+                        <span style="font-weight:500"> To:</span>
+                        <div class="date_field_wraper">
+                            <input type="date" class="form-input mt-2 date-input" wire:model="tempToDate">
+                        </div>
+
+                    </div>
                 </div>
-            </div>
-            <label style="color:#717171;font-weight:500">Status</label>
-            <x-custom-select name="status" :options="[
+                <label style="color:#717171;font-weight:500">Status</label>
+                <x-custom-select-livewire name="tempStatus" :options="[
                     ['value' => '', 'label' => 'Select status'],
                     ['value' => 'active', 'label' => 'Active'],
                     ['value' => 'inactive', 'label' => 'Inactive'],
-                ]" placeholder="Select status" wireModel="status"
-                class="form-input mt-2" />
-            <div class="form-actions">
-                <button type="button" class="reset-btn filter_modal_reset" wire:click="resetFilters">Reset</button>
-                <button type="button" class="submit-btn" wire:click="applyFilters">Apply Now</button>
+                ]" placeholder="Select status"
+                    wireModel="tempStatus" :value="$tempStatus" class="form-input mt-2" />
+                <div class="form-actions">
+                    <button type="button" class="reset-btn filter_modal_reset"
+                        wire:click="resetFilters">Reset</button>
+                    <button type="button" class="submit-btn" wire:click="applyFilters">Apply Now</button>
+                </div>
             </div>
         </div>
-    </div>
     @endif
 </div>
 <script>
