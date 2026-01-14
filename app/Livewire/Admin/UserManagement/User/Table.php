@@ -94,6 +94,7 @@ class Table extends Component
     public function delete($id)
     {
         try {
+            
             $user = User::findOrFail($id);
             $user->delete();
             $this->confirmingId = null;
