@@ -120,7 +120,7 @@ if ($selectedValue === null && !empty($normalizedOptions)) {
 
     .custom-select-text {
         font-size: 0.833vw;
-        color: #AAAAAA !important;
+        color: #1b1b1b !important;
         flex: 1;
     }
 

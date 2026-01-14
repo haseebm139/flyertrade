@@ -9,8 +9,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         return view('admin.pages.user_management.users.index');
     })->name('user-management.service.users.index');
 
-    Route::get('user-management/service-users/{id}', function () {
-        return view('admin.pages.user_management.users.view');
+    Route::get('user-management/service-users/{id}', function ($id) {
+        return view('admin.pages.user_management.users.view', ['id' => $id]);
     })->name('user-management.service.users.view');
     Route::get('user-management/service-provider', function () {
         return view('admin.pages.user_management.providers.index');
