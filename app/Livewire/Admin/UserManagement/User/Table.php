@@ -97,10 +97,10 @@ class Table extends Component
             $user = User::findOrFail($id);
             $user->delete();
             $this->confirmingId = null;
-            $this->dispatch('showToastr', 'success', 'Service User deleted successfully.', 'Success');
+            $this->dispatch('showSweetAlert', 'success', 'Service User deleted successfully.', 'Success');
             $this->dispatch('categoryUpdated');
         } catch (\Exception $e) {
-            $this->dispatch('showToastr', 'error', 'Error deleting user: ' . $e->getMessage(), 'Error');
+            $this->dispatch('showSweetAlert', 'error', 'Error deleting user: ' . $e->getMessage(), 'Error');
         }
     }
 

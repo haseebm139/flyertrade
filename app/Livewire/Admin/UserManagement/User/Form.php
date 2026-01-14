@@ -47,18 +47,19 @@ class Form extends Component
 
     public function save()
     {
-        try {
-            $this->validate([
-                'name'      => 'required|string',
-                'email'     => 'required|email|unique:users,email',
-                'phone'     => 'required|string|regex:/^[0-9+\-() ]+$/|min:10|max:20',
-                'address'   => 'required',
-            ], [
-                'phone.regex' => 'The phone number format is invalid. Only digits, +, -, spaces, and parentheses are allowed.',
-                'phone.min' => 'The phone number must be at least 10 characters.',
-                'phone.max' => 'The phone number must not exceed 20 characters.',
-            ]);
+        // Validate first - validation errors will show under fields automatically
+        $this->validate([
+            'name'      => 'required|string',
+            'email'     => 'required|email|unique:users,email',
+            'phone'     => 'required|string|regex:/^[0-9+\-() ]+$/|min:10|max:20',
+            'address'   => 'required',
+        ], [
+            'phone.regex' => 'The phone number format is invalid. Only digits, +, -, spaces, and parentheses are allowed.',
+            'phone.min' => 'The phone number must be at least 10 characters.',
+            'phone.max' => 'The phone number must not exceed 20 characters.',
+        ]);
 
+        try {
             // Generate random password (8-12 characters with letters and numbers)
             $password = Str::random(10);
             $hashedPassword = Hash::make($password);
@@ -75,20 +76,22 @@ class Form extends Component
 
             $user->assignRole('customer');
 
-            // Send email with credentials
-            try {
-                // Use send() instead of queue() for immediate sending
-                Mail::to($user->email)->send(new UserCredentialsMail($user, $password));
-            } catch (\Exception $e) {
-                \Log::error('Failed to send credentials email to user: ' . $user->email . ' - ' . $e->getMessage());
-                // Continue even if email fails
-            }
+            // Send email with credentials in background (non-blocking)
+            // Dispatch email sending to avoid delay in user response
+            dispatch(function () use ($user, $password) {
+                try {
+                    Mail::to($user->email)->send(new UserCredentialsMail($user, $password));
+                } catch (\Exception $e) {
+                    \Log::error('Failed to send credentials email to user: ' . $user->email . ' - ' . $e->getMessage());
+                }
+            })->afterResponse();
 
-            $this->dispatch('showToastr', 'success', 'Service User Created Successfully. Credentials sent to email.', 'Success');
+            $this->dispatch('showSweetAlert', 'success', 'Service User Created Successfully. Credentials sent to email.', 'Success');
             $this->dispatch('categoryUpdated');
             $this->close();
         } catch (\Exception $e) {
-            $this->dispatch('showToastr', 'error', 'Error creating user: ' . $e->getMessage(), 'Error');
+            // Only show toastr for non-validation errors (database errors, etc.)
+            $this->dispatch('showSweetAlert', 'error', 'Error creating user: ' . $e->getMessage(), 'Error');
         }
     } 
 
@@ -109,7 +112,7 @@ class Form extends Component
         $user = User::where('id',$this->userId)
         ->where('user_type','customer')->first();
         if(!$user) {
-            $this->dispatch('showToastr', 'error', 'Service User not found.', 'Error');
+            $this->dispatch('showSweetAlert', 'error', 'Service User not found.', 'Error');
             $this->close();
         }
         $user->update([
@@ -119,7 +122,7 @@ class Form extends Component
             'address' => $this->address,
         ]);         
 
-        $this->dispatch('showToastr', 'success', 'Service User updated successfully.', 'Success');
+        $this->dispatch('showSweetAlert', 'success', 'Service User updated successfully.', 'Success');
         $this->dispatch('categoryUpdated');
         $this->close();
     }
