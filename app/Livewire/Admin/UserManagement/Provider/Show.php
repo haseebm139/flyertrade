@@ -27,6 +27,8 @@ class Show extends Component
     public $perPage = 10;
     public $search = '';
 
+    public $selectedDocs = [];
+
     public $bookingSortField = 'created_at';
     public $bookingSortDirection = 'desc';
     public $serviceSortField = 'created_at';
@@ -203,6 +205,63 @@ class Show extends Component
     {
         $this->showServiceModal = false;
         $this->selectedService = null;
+    }
+
+    public function updateDocumentStatus($field, $status)
+    {
+        try {
+            if (!$this->user->providerProfile) {
+                $this->dispatch('showSweetAlert', 'error', 'Provider profile not found.', 'Error');
+                return;
+            }
+
+            // Map UI status to DB status
+            $dbStatus = $status;
+            if ($status === 'verified') $dbStatus = 'approved';
+            if ($status === 'declined') $dbStatus = 'rejected';
+
+            $this->user->providerProfile->update([
+                $field . '_status' => $dbStatus
+            ]);
+
+            $this->dispatch('showSweetAlert', 'success', 'Document status updated to ' . ucfirst($status) . '.', 'Success');
+        } catch (\Exception $e) {
+            \Log::error('Error updating document status: ' . $e->getMessage());
+            $this->dispatch('showSweetAlert', 'error', 'Error updating document status: ' . $e->getMessage(), 'Error');
+        }
+    }
+
+    public function bulkUpdateDocumentStatus($status)
+    {
+        try {
+            if (empty($this->selectedDocs)) {
+                $this->dispatch('showSweetAlert', 'error', 'No documents selected.', 'Error');
+                return;
+            }
+
+            if (!$this->user->providerProfile) {
+                $this->dispatch('showSweetAlert', 'error', 'Provider profile not found.', 'Error');
+                return;
+            }
+
+            // Map UI status to DB status
+            $dbStatus = $status;
+            if ($status === 'verified') $dbStatus = 'approved';
+            if ($status === 'declined') $dbStatus = 'rejected';
+
+            $updateData = [];
+            foreach ($this->selectedDocs as $field) {
+                $updateData[$field . '_status'] = $dbStatus;
+            }
+
+            $this->user->providerProfile->update($updateData);
+            $this->selectedDocs = [];
+
+            $this->dispatch('showSweetAlert', 'success', 'Selected documents updated to ' . ucfirst($status) . '.', 'Success');
+        } catch (\Exception $e) {
+            \Log::error('Error bulk updating document status: ' . $e->getMessage());
+            $this->dispatch('showSweetAlert', 'error', 'Error updating document status: ' . $e->getMessage(), 'Error');
+        }
     }
 
     public function render()

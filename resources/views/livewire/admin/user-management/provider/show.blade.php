@@ -274,16 +274,16 @@
                                     src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
                             <th class="sortable" wire:click="sortBy('created_at', 'booking')">Date created <img
                                     src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
-                            <th class="sortable">Service User <img
-                                    src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
+                            <th class="sortable">Service User <img src="{{ asset('assets/images/icons/sort.svg') }}"
+                                    class="sort-icon"></th>
                             <th class="sortable">Service Category <img
                                     src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
                             <th class="sortable" wire:click="sortBy('booking_address', 'booking')">Location <img
                                     src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
                             <th class="sortable" wire:click="sortBy('total_price', 'booking')">Amount Paid <img
                                     src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
-                            <th class="sortable" wire:click="sortBy('booking_working_minutes', 'booking')">Duration <img
-                                    src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
+                            <th class="sortable" wire:click="sortBy('booking_working_minutes', 'booking')">Duration
+                                <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
 
                             <th></th>
                         </tr>
@@ -392,51 +392,90 @@
             <!-- Top toolbar -->
             <div class="toolbar" style="padding:1.3vw;">
                 <h3 class="toolbar-title" style="font-weight:500;font-size:1.4vw;color:#1b1b1b;">Documents</h3>
-                <div class="toolbar-actions" hidden>
-                    <button class="btn btn-verified" style="font-weight:500" data-action="verified"><i
-                            class="fa-solid fa-trash-can"></i>&nbsp; Mark as verified</button>
-                    <button class="btn btn-declined" style="font-weight:500" data-action="declined"><i
-                            class="fa-solid fa-xmark"></i>&nbsp; Mark as decline</button>
-                    <button class="btn btn-pending" style="font-weight:500" data-action="pending"><i
-                            class="fa-solid fa-minus"></i>&nbsp; Mark as pending</button>
+                <div class="toolbar-actions" {{ empty($selectedDocs) ? 'hidden' : '' }}>
+                    <button class="btn btn-verified" style="font-weight:500"
+                        wire:click="bulkUpdateDocumentStatus('verified')"><i class="fa-solid fa-trash-can"></i>&nbsp;
+                        Mark as verified</button>
+                    <button class="btn btn-declined" style="font-weight:500"
+                        wire:click="bulkUpdateDocumentStatus('declined')"><i class="fa-solid fa-xmark"></i>&nbsp;
+                        Mark as decline</button>
+                    <button class="btn btn-pending" style="font-weight:500"
+                        wire:click="bulkUpdateDocumentStatus('pending')"><i class="fa-solid fa-minus"></i>&nbsp;
+                        Mark as pending</button>
                 </div>
             </div>
 
             <div class="documents-list" style="padding:0vw 1.3vw 1.3vw;">
                 @php
+                    $profile = $user->providerProfile;
                     $docs = [
-                        ['id' => 1, 'title' => 'Valid Emirate ID card', 'status' => 'verified'],
-                        ['id' => 2, 'title' => 'Trade License', 'status' => 'pending'],
-                        ['id' => 3, 'title' => 'Insurance Document', 'status' => 'declined'],
+                        [
+                            'id' => 'id_photo',
+                            'title' => 'Valid Emirate ID card',
+                            'file' => $profile->id_photo ?? null,
+                            'status' => $profile->id_photo_status ?? 'pending',
+                        ],
+                        [
+                            'id' => 'passport',
+                            'title' => 'Passport',
+                            'file' => $profile->passport ?? null,
+                            'status' => $profile->passport_status ?? 'pending',
+                        ],
+                        [
+                            'id' => 'work_permit',
+                            'title' => 'Work Permit',
+                            'file' => $profile->work_permit ?? null,
+                            'status' => $profile->work_permit_status ?? 'pending',
+                        ],
                     ];
                 @endphp
                 @foreach ($docs as $doc)
+                    @php
+                        $uiStatus = $doc['status'];
+                        if ($doc['status'] === 'approved') {
+                            $uiStatus = 'verified';
+                        }
+                        if ($doc['status'] === 'rejected') {
+                            $uiStatus = 'declined';
+                        }
+                    @endphp
                     <div class="doc-row" data-id="{{ $doc['id'] }}">
                         <div class="d-flex align-items-center">
                             <label class="check-wrap check-wrap-checkbox">
-                                <input type="checkbox" class="row-check">
+                                <input type="checkbox" class="row-check" value="{{ $doc['id'] }}"
+                                    wire:model.live="selectedDocs">
                                 <span class="checkmark"></span>
                             </label>
                             <span class="doc-title">{{ $doc['title'] }}</span>
                         </div>
 
-                        <a href="#" class="doc-link" style="color:#004e42;">
-                            View document
-                        </a>
+                        @if ($doc['file'])
+                            <a href="#" class="doc-link view-doc-btn" style="color:#004e42;"
+                                data-src="{{ asset($doc['file']) }}" data-title="{{ $doc['title'] }}">
+                                View document
+                            </a>
+                        @else
+                            <span class="text-muted" style="font-size: 0.9vw;">No document uploaded</span>
+                        @endif
 
-                        <span class="badge badge-{{ $doc['status'] }} badge-pill actions-btn-verified"
-                            style="position:relative;padding:0.677vw;" data-block='{{ $doc['id'] }}' data-badge>
-                            {{ ucfirst($doc['status']) }} &nbsp; <i class="fa-solid fa-chevron-down"></i>
+                        <span
+                            class="badge badge-{{ $uiStatus }} badge-pill actions-btn-verified {{ $uiStatus === 'declined' ? 'text-danger border-danger' : '' }}"
+                            style="position:relative;padding:0.677vw; {{ $uiStatus === 'declined' ? 'background:rgba(251, 55, 72, 0.1);' : '' }}"
+                            data-block='{{ $doc['id'] }}' data-badge>
+                            {{ ucfirst($uiStatus) }} &nbsp; <i class="fa-solid fa-chevron-down"></i>
                             <div class="actions-menu" id="actions-menu-verified-{{ $doc['id'] }}"
                                 style="display: none;left:0px;right:unset;top:2.5vw;min-width: 6.5vw;">
-                                @if ($doc['status'] !== 'pending')
-                                    <a href="#">Pending</a>
+                                @if ($uiStatus !== 'pending')
+                                    <a href="#"
+                                        wire:click.prevent="updateDocumentStatus('{{ $doc['id'] }}', 'pending')">Pending</a>
                                 @endif
-                                @if ($doc['status'] !== 'verified')
-                                    <a href="#">Verified</a>
+                                @if ($uiStatus !== 'verified')
+                                    <a href="#"
+                                        wire:click.prevent="updateDocumentStatus('{{ $doc['id'] }}', 'approved')">Verified</a>
                                 @endif
-                                @if ($doc['status'] !== 'declined')
-                                    <a href="#">Decline</a>
+                                @if ($uiStatus !== 'declined')
+                                    <a href="#"
+                                        wire:click.prevent="updateDocumentStatus('{{ $doc['id'] }}', 'rejected')">Decline</a>
                                 @endif
                             </div>
                         </span>
@@ -664,6 +703,26 @@
         </div>
     </div> --}}
 
+    <!-- Document Preview Modal -->
+    <div id="check-modal" class="cm-modal" aria-hidden="true">
+        <div class="cm-backdrop"></div>
+        <div class="cm-dialog" role="dialog" aria-modal="true" aria-labelledby="cm-title">
+            <div class="cm-head">
+                <h4 id="cm-title" class="cm-title">Document</h4>
+                <button type="button" class="cm-close" aria-label="Close">×</button>
+            </div>
+            <div class="cm-body">
+                <img id="cm-img" class="cm-img" alt="Preview" />
+                <div id="cm-ph" class="cm-placeholder" hidden>
+                    <svg viewBox="0 0 24 24" class="cm-ph-icon">
+                        <circle cx="8" cy="8" r="3"></circle>
+                        <path d="M2 20l6-7 4 4 3-3 7 6" fill="none" stroke="currentColor" stroke-width="2" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Modals (Scripts to trigger them) -->
     <script>
         document.addEventListener('livewire:initialized', () => {
@@ -711,18 +770,32 @@
                 menu.toggle();
             });
 
-            $(document).on('click', function() {
+            $(document).on('click', '.view-doc-btn', function(e) {
+                e.preventDefault();
+                const src = $(this).data('src');
+                const title = $(this).data('title');
+                $('#cm-img').attr('src', src);
+                $('#cm-title').text(title);
+                $('#check-modal').addClass('is-open');
+                $('body').addClass('cm-lock');
+            });
+
+            $(document).on('click', '.cm-close, .cm-backdrop', function() {
+                $('#check-modal').removeClass('is-open');
+                $('body').removeClass('cm-lock');
+            });
+
+            $(document).on('click', function(e) {
+                if ($(e.target).hasClass('cm-modal')) {
+                    $('#check-modal').removeClass('is-open');
+                    $('body').removeClass('cm-lock');
+                }
                 $('.actions-menu').hide();
             });
 
             // Toolbar checkboxes logic
             $(document).on('change', '.row-check', function() {
-                const checkedCount = $('.row-check:checked').length;
-                if (checkedCount > 0) {
-                    $('.toolbar-actions').removeAttr('hidden');
-                } else {
-                    $('.toolbar-actions').attr('hidden', true);
-                }
+                // Handled by Livewire but keeping for UI interaction if needed
             });
         });
     </script>
