@@ -4,10 +4,10 @@
 @section('header', 'User Management')
 
 @section('content')
-<div class="col-lg-9">
+    <div class="col-lg-9">
 
-  <livewire:admin.user-stats mode="customers"/>
-</div>
+        <livewire:admin.user-stats mode="customers" />
+    </div>
     <br>
     <div class="container">
         <h1 class="page-title">Service Users</h1>
@@ -15,8 +15,44 @@
     <livewire:admin.user-management.user.table />
     <livewire:admin.user-management.user.form />
 
-     
-    
+    @if (session()->has('success_delete'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    toast: true,
+                    background: '#FFFFFF',
+                    position: 'top-end',
+                    title: 'Success',
+                    text: "{{ session('success_delete') }}",
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 5000,
+                    timerProgressBar: true
+                });
+            });
+        </script>
+    @endif
+
+    @if (session()->has('error'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    toast: true,
+                    background: '#FFFFFF',
+                    position: 'top-end',
+                    title: 'Error',
+                    text: "{{ session('error') }}",
+                    icon: 'error',
+                    showConfirmButton: false,
+                    timer: 5000,
+                    timerProgressBar: true
+                });
+            });
+        </script>
+    @endif
+
+
+
     <div id="globalDeleteModal" class="deleteModal" style="display: none;">
         <div class="delete-card">
             <div class="delete-card-header">
@@ -31,33 +67,33 @@
         </div>
     </div>
     <script>
-document.addEventListener("DOMContentLoaded", function() {
-  const deleteModal = document.getElementById("globalDeleteModal");
-  const showButtons = document.querySelectorAll(".showDeleteModal");
-  const closeButton = document.getElementById("closeDeleteModal");
-  const cancelButton = document.querySelector(".cancel-delete-btn");
+        document.addEventListener("DOMContentLoaded", function() {
+            const deleteModal = document.getElementById("globalDeleteModal");
+            const showButtons = document.querySelectorAll(".showDeleteModal");
+            const closeButton = document.getElementById("closeDeleteModal");
+            const cancelButton = document.querySelector(".cancel-delete-btn");
 
-  // Jab kisi showDeleteModal button pr click ho
-  showButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
-      deleteModal.style.display = "flex"; // modal show karo
-    });
-  });
+            // Jab kisi showDeleteModal button pr click ho
+            showButtons.forEach(btn => {
+                btn.addEventListener("click", () => {
+                    deleteModal.style.display = "flex"; // modal show karo
+                });
+            });
 
-  // Close button ya cancel button pr click hone pr modal hide karo
-  [closeButton, cancelButton].forEach(btn => {
-    btn.addEventListener("click", () => {
-      deleteModal.style.display = "none";
-    });
-  });
+            // Close button ya cancel button pr click hone pr modal hide karo
+            [closeButton, cancelButton].forEach(btn => {
+                btn.addEventListener("click", () => {
+                    deleteModal.style.display = "none";
+                });
+            });
 
-  // Optional: backdrop click se bhi band ho
-  deleteModal.addEventListener("click", (e) => {
-    if (e.target === deleteModal) {
-      deleteModal.style.display = "none";
-    }
-  });
-});
-</script>
+            // Optional: backdrop click se bhi band ho
+            deleteModal.addEventListener("click", (e) => {
+                if (e.target === deleteModal) {
+                    deleteModal.style.display = "none";
+                }
+            });
+        });
+    </script>
 
 @endsection

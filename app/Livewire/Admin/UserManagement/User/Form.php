@@ -109,22 +109,27 @@ class Form extends Component
             'phone.max' => 'The phone number must not exceed 20 characters.',
         ]);
 
-        $user = User::where('id',$this->userId)
-        ->where('user_type','customer')->first();
-        if(!$user) {
-            $this->dispatch('showSweetAlert', 'error', 'Service User not found.', 'Error');
-            $this->close();
-        }
-        $user->update([
-            'name'    => $this->name,
-            'email'   => $this->email,
-            'phone'   => $this->phone,
-            'address' => $this->address,
-        ]);         
+        try {
+            $user = User::where('id',$this->userId)
+            ->where('user_type','customer')->first();
+            if(!$user) {
+                $this->dispatch('showSweetAlert', 'error', 'Service User not found.', 'Error');
+                $this->close();
+                return;
+            }
+            $user->update([
+                'name'    => $this->name,
+                'email'   => $this->email,
+                'phone'   => $this->phone,
+                'address' => $this->address,
+            ]);         
 
-        $this->dispatch('showSweetAlert', 'success', 'Service User updated successfully.', 'Success');
-        $this->dispatch('categoryUpdated');
-        $this->close();
+            $this->dispatch('showSweetAlert', 'success', 'Service User updated successfully.', 'Success');
+            $this->dispatch('categoryUpdated');
+            $this->close();
+        } catch (\Exception $e) {
+            $this->dispatch('showSweetAlert', 'error', 'Error updating user: ' . $e->getMessage(), 'Error');
+        }
     }
     private function resetForm()
     {
