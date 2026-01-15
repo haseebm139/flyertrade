@@ -535,14 +535,14 @@ class BookingService
         $booking->save();
         
         // Send notification (if transaction exists)
-        $transaction = \App\Models\Transaction::where('booking_id', $booking->id)
-            ->where('status', 'succeeded')
-            ->first();
+        // $transaction = \App\Models\Transaction::where('booking_id', $booking->id)
+        //     ->where('status', 'succeeded')
+        //     ->first();
         
-        if ($transaction) {
-            $this->notificationService->notifyPaymentSuccess($transaction);
-            $this->notificationService->notifyPaymentSuccessful($transaction);
-        }
+        // if ($transaction) {
+        //     $this->notificationService->notifyPaymentSuccess($transaction);
+        //     $this->notificationService->notifyPaymentSuccessful($transaction);
+        // }
         
         return ['error' => false, 'message' => 'Payment processed successfully.'];
     }
