@@ -95,7 +95,7 @@ class AuthController extends BaseController
 
         return $this->sendResponse([
             'token' => $user->createToken('guest_token')->plainTextToken,
-            'user'  => $user
+            'user'  => $user->load('providerProfile')
         ], 'Login successful');
 
     }
@@ -140,7 +140,7 @@ class AuthController extends BaseController
             $profile = $user->providerProfile()->create([]);
             ProviderWorkingHour::seedDefaultHours($user->id, $profile->id);
         }
-        return $user->load('providerProfile');
+        return $user;
     }
     public function guestLogin()
     {
