@@ -200,7 +200,7 @@ class BookingController extends BaseController
         }
 
         // Ensure customer owns this booking
-        if ($booking->customer_id !== auth()->id()) {
+        if ($booking->customer_id != auth()->id()) {
             return $this->sendError('Unauthorized access to this booking.', 403);
         }
 
