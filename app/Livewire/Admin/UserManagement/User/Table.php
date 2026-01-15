@@ -220,7 +220,7 @@ class Table extends Component
     # -------------------- QUERY --------------------
     private function getDataQuery()
     {   
-         
+                 
         return User::query()
             ->where('user_type', 'customer')
             ->when($this->search, fn($q) =>
@@ -231,8 +231,8 @@ class Table extends Component
                 })
             )->when($this->fromDate && $this->toDate, fn($q) =>
                 $q->whereBetween('created_at', [
-                    $this->fromDate.'00:00:00',
-                    $this->toDate.'23:59:59'
+                    $this->fromDate,
+                    $this->toDate 
                 ])
             )
              

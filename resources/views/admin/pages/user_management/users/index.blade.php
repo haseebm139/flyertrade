@@ -53,46 +53,11 @@
 
 
 
-    <div id="globalDeleteModal" class="deleteModal" style="display: none;">
-        <div class="delete-card">
-            <div class="delete-card-header">
-                <h3 class="delete-title">Delete Service User?</h3>
-                <span class="delete-close" id="closeDeleteModal">&times;</span>
-            </div>
-            <p class="delete-text">Are you sure you want to delete this service user?</p>
-            <div class="delete-actions justify-content-start">
-                <button class="confirm-delete-btn">Delete</button>
-                <button class="cancel-delete-btn">Cancel</button>
-            </div>
-        </div>
-    </div>
+     
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const deleteModal = document.getElementById("globalDeleteModal");
-            const showButtons = document.querySelectorAll(".showDeleteModal");
-            const closeButton = document.getElementById("closeDeleteModal");
-            const cancelButton = document.querySelector(".cancel-delete-btn");
-
-            // Jab kisi showDeleteModal button pr click ho
-            showButtons.forEach(btn => {
-                btn.addEventListener("click", () => {
-                    deleteModal.style.display = "flex"; // modal show karo
-                });
-            });
-
-            // Close button ya cancel button pr click hone pr modal hide karo
-            [closeButton, cancelButton].forEach(btn => {
-                btn.addEventListener("click", () => {
-                    deleteModal.style.display = "none";
-                });
-            });
-
-            // Optional: backdrop click se bhi band ho
-            deleteModal.addEventListener("click", (e) => {
-                if (e.target === deleteModal) {
-                    deleteModal.style.display = "none";
-                }
-            });
+            // These scripts are now handled within the Livewire components
+            // or by event delegation in the table view.
         });
     </script>
 

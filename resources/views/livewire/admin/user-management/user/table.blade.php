@@ -281,32 +281,35 @@
         e.preventDefault();
         e.stopPropagation();
         
+        const id = $(this).attr('data-id');
+        if (!id) return;
+        
         // Close actions dropdown
         $(this).closest('.actions-dropdown').removeClass('active');
-        $(this).closest('.actions-dropdown').find('.actions-menu').css('display', 'none');
+        $(this).closest('.actions-dropdown').find('.actions-menu').hide();
         
-        let id = $(this).data('id');
-        $('#globalDeleteModal__' + id).css('display', 'block');
+        // Hide any other open modals first
+        $('.deleteModal').hide();
+        
+        // Show the specific modal
+        const modal = $('#globalDeleteModal__' + id);
+        if (modal.length) {
+            modal.css('display', 'flex'); // Use flex to match original design if needed, or just show()
+        }
     });
     
-    $(document).on('click', '.closeDeleteModal', function(e) {
+    $(document).on('click', '.closeDeleteModal, .cancel-delete-btn', function(e) {
         e.preventDefault();
-        let id = $(this).data('id');
-        $('#globalDeleteModal__' + id).css('display', 'none');
-    });
-    
-    $(document).on('click', '.cancel-delete-btn', function(e) {
-        e.preventDefault();
-        let id = $(this).data('id');
-        $('#globalDeleteModal__' + id).css('display', 'none');
+        e.stopPropagation();
+        const id = $(this).attr('data-id');
+        $('#globalDeleteModal__' + id).hide();
     });
     
     $(document).on('click', '.confirm-delete-btn', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        let id = $(this).data('id');
-        $('#globalDeleteModal__' + id).css('display', 'none');
-        // Livewire wire:click will handle the delete
+        // We don't call preventDefault here to allow wire:click to work
+        // but we can hide the modal
+        const id = $(this).attr('data-id');
+        $('#globalDeleteModal__' + id).hide();
     });
     
     $(document).on('click', function(e) {
