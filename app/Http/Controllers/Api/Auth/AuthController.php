@@ -140,7 +140,7 @@ class AuthController extends BaseController
             $profile = $user->providerProfile()->create([]);
             ProviderWorkingHour::seedDefaultHours($user->id, $profile->id);
         }
-        return $user;
+        return $user->load('providerProfile');
     }
     public function guestLogin()
     {
