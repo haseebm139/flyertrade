@@ -33,15 +33,17 @@
                 <tr>
                     <td><input type="checkbox" value="{{ $item->id }}" wire:model.live="selected"></td>
                     <td>{{ $item->id }}</td>
-                    <td>
-                        <div class="user-info">
-                            <img src="{{ asset($item->avatar ?? 'assets/images/icons/person-one.svg') }}"
-                                alt="avatar">
-                            <div>
-                                <p class="user-name">{{ $item->name ?? '-' }}</p>
-                                <p class="user-email">{{ $item->email ?? '-' }}</p>
+                    <td style="padding: 0;">
+                        <a href="{{ route('user-management.service.users.view', ['id' => $item->id]) }}" class="user-info-link" style="padding: 0.75rem 1rem;">
+                            <div class="user-info">
+                                <img src="{{ asset($item->avatar ?? 'assets/images/icons/person-one.svg') }}"
+                                    alt="avatar">
+                                <div>
+                                    <p class="user-name">{{ $item->name ?? '-' }}</p>
+                                    <p class="user-email">{{ $item->email ?? '-' }}</p>
+                                </div>
                             </div>
-                        </div>
+                        </a>
                     </td>
                         <td>
                             @php
@@ -109,6 +111,15 @@
     {{ $data->links('vendor.pagination.custom') }}
 
     <style>
+        .user-info-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            transition: background-color 0.2s;
+        }
+        .user-info-link:hover {
+            background-color: rgba(0, 0, 0, 0.03);
+        }
         .modal_heaader {
             display: flex;
             position: relative;

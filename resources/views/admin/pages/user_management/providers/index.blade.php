@@ -21,31 +21,7 @@
 
     <script>
     // document.addEventListener("DOMContentLoaded", function() {
-    //     const deleteModal = document.getElementById("globalDeleteModal");
-    //     const showButtons = document.querySelectorAll(".showDeleteModal");
-    //     const closeButton = document.getElementById("closeDeleteModal");
-    //     const cancelButton = document.querySelector(".cancel-delete-btn");
-
-    //     // Jab kisi showDeleteModal button pr click ho
-    //     showButtons.forEach(btn => {
-    //         btn.addEventListener("click", () => {
-    //             deleteModal.style.display = "flex"; // modal show karo
-    //         });
-    //     });
-
-    //     // Close button ya cancel button pr click hone pr modal hide karo
-    //     [closeButton, cancelButton].forEach(btn => {
-    //         btn.addEventListener("click", () => {
-    //             deleteModal.style.display = "none";
-    //         });
-    //     });
-
-    //     // Optional: backdrop click se bhi band ho
-    //     deleteModal.addEventListener("click", (e) => {
-    //         if (e.target === deleteModal) {
-    //             deleteModal.style.display = "none";
-    //         }
-    //     });
+    //     // These scripts are now handled within the Livewire components
     // });
 </script>
 

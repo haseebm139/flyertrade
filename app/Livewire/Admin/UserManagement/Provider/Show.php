@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Admin\UserManagement\User;
+namespace App\Livewire\Admin\UserManagement\Provider;
 
 use Livewire\Component;
 use App\Models\User;
@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use App\Mail\PasswordResetByAdminMail;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\DB;
 
 class Show extends Component
 {
@@ -19,13 +20,17 @@ class Show extends Component
     public $showResetModal = false;
     public $showDeleteModal = false;
     public $showBookingModal = false;
+    public $showServiceModal = false;
     public $selectedBooking = null;
+    public $selectedService = null;
     public $activeTab = 'details';
     public $perPage = 10;
     public $search = '';
 
-    public $sortField = 'created_at';
-    public $sortDirection = 'desc';
+    public $bookingSortField = 'created_at';
+    public $bookingSortDirection = 'desc';
+    public $serviceSortField = 'created_at';
+    public $serviceSortDirection = 'desc';
 
     protected $listeners = ['categoryUpdated' => '$refresh'];
 
@@ -33,39 +38,54 @@ class Show extends Component
     {
         $this->userId = $userId;
 
-        // Optional: Pre-check if user exists
         if (!User::where('id', $this->userId)->exists()) {
-            session()->flash('error', 'User not found.');
-            return redirect()->route('user-management.service.users.index');
+            session()->flash('error', 'Provider not found.');
+            return redirect()->route('user-management.service.providers.index');
         }
     }
 
-    public function sortBy($field)
+    public function sortBy($field, $type = 'booking')
     {
-        if ($this->sortField === $field) {
-            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        if ($type === 'booking') {
+            if ($this->bookingSortField === $field) {
+                $this->bookingSortDirection = $this->bookingSortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                $this->bookingSortField = $field;
+                $this->bookingSortDirection = 'asc';
+            }
         } else {
-            $this->sortField = $field;
-            $this->sortDirection = 'asc';
+            if ($this->serviceSortField === $field) {
+                $this->serviceSortDirection = $this->serviceSortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                $this->serviceSortField = $field;
+                $this->serviceSortDirection = 'asc';
+            }
         }
     }
 
     public function getUserProperty()
     {
-        return User::withCount(['customerBookings as total_bookings_count',
-            'customerBookings as completed_bookings_count' => function ($query) {
+        return User::with(['providerProfile'])
+            ->withCount(['providerBookings as total_bookings_count',
+            'providerBookings as completed_bookings_count' => function ($query) {
                 $query->where('status', 'completed');
             },
-            'customerBookings as cancelled_bookings_count' => function ($query) {
+            'providerBookings as cancelled_bookings_count' => function ($query) {
                 $query->where('status', 'cancelled');
             }])
-            ->withSum('customerBookings as total_spent_sum', 'total_price')
+            ->withSum(['providerBookings as total_earned_sum' => function ($query) {
+                $query->where('status', 'completed');
+            }], 'total_price')
+            ->withSum(['providerBookings as total_payout_sum' => function ($query) {
+                $query->where('status', 'completed');
+            }], DB::raw('total_price - service_charges'))
             ->findOrFail($this->userId);
     }
 
     public function setTab($tab)
     {
         $this->activeTab = $tab;
+        $this->resetPage();
     }
 
     public function resetPassword()
@@ -79,16 +99,15 @@ class Show extends Component
                 'password' => Hash::make($newPassword)
             ]);
 
-            // Send email with new credentials
             dispatch(function () use ($user, $newPassword) {
                 try {
                     Mail::to($user->email)->send(new PasswordResetByAdminMail($user, $newPassword));
                 } catch (\Exception $e) {
-                    \Log::error('Failed to send reset password email to user: ' . $user->email . ' - ' . $e->getMessage());
+                    \Log::error('Failed to send reset password email to provider: ' . $user->email . ' - ' . $e->getMessage());
                 }
             })->afterResponse();
 
-            $this->dispatch('showSweetAlert', 'success', 'Password reset successfully and sent to user email.', 'Success');
+            $this->dispatch('showSweetAlert', 'success', 'Password reset successfully and sent to provider email.', 'Success');
         } catch (\Exception $e) {
             \Log::error('Error resetting password: ' . $e->getMessage());
             $this->dispatch('showSweetAlert', 'error', 'Error resetting password: ' . $e->getMessage(), 'Error');
@@ -102,7 +121,7 @@ class Show extends Component
             $user->status = $user->status === 'active' ? 'inactive' : 'active';
             $user->save();
 
-            $this->dispatch('showSweetAlert', 'success', 'User status updated successfully.', 'Success');
+            $this->dispatch('showSweetAlert', 'success', 'Provider status updated successfully.', 'Success');
         } catch (\Exception $e) {
             \Log::error('Error updating status: ' . $e->getMessage());
             $this->dispatch('showSweetAlert', 'error', 'Error updating status: ' . $e->getMessage(), 'Error');
@@ -117,17 +136,17 @@ class Show extends Component
             $user = $this->user;
             $user->delete();
 
-            session()->flash('success_delete', 'User deleted successfully.');
-            return redirect()->route('user-management.service.users.index');
+            session()->flash('success_delete', 'Provider deleted successfully.');
+            return redirect()->route('user-management.service.providers.index');
         } catch (\Exception $e) {
-            \Log::error('Error deleting user: ' . $e->getMessage());
-            $this->dispatch('showSweetAlert', 'error', 'Error deleting user: ' . $e->getMessage(), 'Error');
+            \Log::error('Error deleting provider: ' . $e->getMessage());
+            $this->dispatch('showSweetAlert', 'error', 'Error deleting provider: ' . $e->getMessage(), 'Error');
         }
     }
 
     public function viewBooking($id)
     {
-        $this->selectedBooking = Booking::with(['provider', 'service'])->find($id);
+        $this->selectedBooking = Booking::with(['customer', 'service'])->find($id);
         if ($this->selectedBooking) {
             $this->showBookingModal = true;
         }
@@ -172,20 +191,42 @@ class Show extends Component
         return response()->stream($callback, 200, $headers);
     }
 
+    public function viewService($id)
+    {
+        $this->selectedService = \App\Models\ProviderService::with(['service', 'media'])->find($id);
+        if ($this->selectedService) {
+            $this->showServiceModal = true;
+        }
+    }
+
+    public function closeServiceModal()
+    {
+        $this->showServiceModal = false;
+        $this->selectedService = null;
+    }
+
     public function render()
     {
         $bookings = [];
-        if ($this->activeTab === 'history') {
+        $providerServices = [];
 
-            $bookings = Booking::where('customer_id', $this->userId)
-                ->orderBy($this->sortField, $this->sortDirection)
+        if ($this->activeTab === 'history') {
+            $bookings = Booking::where('provider_id', $this->userId)
+                ->orderBy($this->bookingSortField, $this->bookingSortDirection)
                 ->paginate($this->perPage);
-            //  dd($this->getUserProperty());
+        } elseif ($this->activeTab === 'services') {
+            $providerServices = $this->user->providerServices()
+                ->with('service')
+                ->join('services', 'provider_services.service_id', '=', 'services.id')
+                ->select('provider_services.*')
+                ->orderBy($this->serviceSortField === 'service_name' ? 'services.name' : 'provider_services.'.$this->serviceSortField, $this->serviceSortDirection)
+                ->paginate($this->perPage);
         }
-        return view('livewire.admin.user-management.user.show', [
+
+        return view('livewire.admin.user-management.provider.show', [
             'user' => $this->user,
             'bookings' => $bookings,
-
+            'providerServices' => $providerServices,
         ]);
     }
 }

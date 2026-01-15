@@ -10,9 +10,10 @@
                     <div class="form-group">
                         <label>Name</label>
                         <input type="text" class="form-input @error('name') error-input @enderror"
-                            placeholder="Enter name" wire:model="name">
+                            placeholder="Enter name" wire:model="name" wire:loading.attr="disabled"
+                            wire:target="save,update">
                         @error('name')
-                            <div class="error-message">
+                            <div class="error-message" style="margin-top: 0.5rem;">
                                 <i class="fa-solid fa-circle-exclamation"></i>
                                 <span>{{ $message }}</span>
                             </div>
@@ -22,9 +23,10 @@
                     <div class="form-group">
                         <label>Email</label>
                         <input type="email" class="form-input @error('email') error-input @enderror"
-                            placeholder="Enter email" wire:model="email">
+                            placeholder="Enter email" wire:model="email" wire:loading.attr="disabled"
+                            wire:target="save,update">
                         @error('email')
-                            <div class="error-message">
+                            <div class="error-message" style="margin-top: 0.5rem;">
                                 <i class="fa-solid fa-circle-exclamation"></i>
                                 <span>{{ $message }}</span>
                             </div>
@@ -34,9 +36,10 @@
                     <div class="form-group">
                         <label>Home Address</label>
                         <input type="text" class="form-input @error('address') error-input @enderror"
-                            placeholder="Enter home address" wire:model="address">
+                            placeholder="Enter home address" wire:model="address" wire:loading.attr="disabled"
+                            wire:target="save,update">
                         @error('address')
-                            <div class="error-message">
+                            <div class="error-message" style="margin-top: 0.5rem;">
                                 <i class="fa-solid fa-circle-exclamation"></i>
                                 <span>{{ $message }}</span>
                             </div>
@@ -45,19 +48,30 @@
 
                     <div class="form-group">
                         <label>Phone Number</label>
-                        <input type="number" class="form-input @error('phone') error-input @enderror"
-                            placeholder="Enter phone number" wire:model="phone">
+                        <input type="text" class="form-input @error('phone') error-input @enderror"
+                            placeholder="Enter phone number (e.g., +1234567890)" wire:model="phone"
+                            wire:loading.attr="disabled" wire:target="save,update">
                         @error('phone')
-                            <div class="error-message">
+                            <div class="error-message" style="margin-top: 0.5rem;">
                                 <i class="fa-solid fa-circle-exclamation"></i>
                                 <span>{{ $message }}</span>
                             </div>
                         @enderror
                     </div>
                     <div class="form-actions">
-                        <button type="button" class="cancel-btn " wire:click="close">Cancel</button>
-                        <button type="submit" class="submit-btn"> <i class="fa-solid fa-plus mr-3"></i>
-                            {{ $userId ? 'Save Changes' : 'Add User' }}</button>
+                        <button type="button" class="cancel-btn" wire:click="close" wire:loading.attr="disabled"
+                            wire:target="save,update">Cancel</button>
+                        <button type="submit" class="submit-btn" wire:loading.attr="disabled"
+                            wire:target="save,update">
+                            <span wire:loading.remove wire:target="save,update">
+                                <i class="fa-solid fa-plus mr-3"></i>
+                                {{ $userId ? 'Save Changes' : 'Add User' }}
+                            </span>
+                            <span wire:loading wire:target="save,update">
+                                <i class="fa-solid fa-spinner fa-spin mr-3"></i>
+                                {{ $userId ? 'Saving...' : 'Creating...' }}
+                            </span>
+                        </button>
                     </div>
                 </form>
             </div>

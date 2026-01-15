@@ -16,8 +16,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         return view('admin.pages.user_management.providers.index');
     })->name('user-management.service.providers.index');
 
-    Route::get('user-management/service-provider/{id}', function () {
-        return view('admin.pages.user_management.providers.view');
+    Route::get('user-management/service-provider/{id}', function ($id) {
+        return view('admin.pages.user_management.providers.view', ['id' => $id]);
     })->name('user-management.service.providers.view');
     Route::get('service-category',function(){
         return view('admin.pages.service_category.index');

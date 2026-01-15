@@ -4,6 +4,7 @@ namespace App\Livewire\Admin;
 
 use Livewire\Component;
 use App\Models\User;
+use App\Models\Booking;
 use Illuminate\Support\Facades\DB;
 class UserStats extends Component
 {
@@ -11,6 +12,11 @@ class UserStats extends Component
      
     public string $mode = 'dashboard';  
     public array $stats = [];
+
+    protected $listeners = [
+        'categoryUpdated' => 'generateStats',
+        'bookingUpdated'  => 'generateStats',
+    ];
 
     public function mount(string $mode = 'dashboard')
     {
@@ -33,17 +39,17 @@ class UserStats extends Component
                 $this->stats = [
                     [
                         'label' => 'Total Users', 
-                        'value' => $counts->total,
+                        'value' => $counts->total ?? 0,
                         'icon' => 'assets/images/icons/service_providers.svg',
                     ],
                     [
                         'label' => 'Active Users', 
-                        'value' => $counts->active,
+                        'value' => $counts->active ?? 0,
                         'icon' => 'assets/images/icons/new-providers.svg'
                     ],
                     [
                         'label' => 'Inactive Users',
-                        'value' => $counts->inactive,
+                        'value' => $counts->inactive ?? 0,
                         'icon' => 'assets/images/icons/active_booking.svg'                    
                     ],
                 ];
@@ -59,52 +65,52 @@ class UserStats extends Component
                 $this->stats = [
                     [
                         'label' => 'Total Users', 
-                        'value' => $counts->total,
+                        'value' => $counts->total ?? 0,
                         'icon' => 'assets/images/icons/service_providers.svg',
                     ],
                     [
                         'label' => 'Active Users', 
-                        'value' => $counts->active,
+                        'value' => $counts->active ?? 0,
                         'icon' => 'assets/images/icons/new-providers.svg'
                     ],
                     [
                         'label' => 'Inactive Users',
-                        'value' => $counts->inactive,
+                        'value' => $counts->inactive ?? 0,
                         'icon' => 'assets/images/icons/active_booking.svg'                    
                     ],
                 ];
                 break;
             case 'users':
-                $counts = User::select(
-                    DB::raw("COUNT(*) as total"),
+                $userCounts = User::select(
                     DB::raw("SUM(CASE WHEN user_type = 'provider' THEN 1 ELSE 0 END) as providers"),
                     DB::raw("SUM(CASE WHEN user_type = 'customer' THEN 1 ELSE 0 END) as customers"),
-                    DB::raw("SUM(CASE WHEN status = 'active' THEN 1 ELSE 0 END) as active"),
+                    DB::raw("SUM(CASE WHEN status = 'active' THEN 1 ELSE 0 END) as active_users"),
                 ) 
                 ->first();
+
+                $activeBookingsCount = Booking::whereIn('status', ['confirmed', 'in_progress', 'awaiting_provider'])->count();
+
                 $this->stats = [
                     [
                         'label' => 'Total service users', 
-                        'value' => $counts->customers,
+                        'value' => $userCounts->customers ?? 0,
                         'icon' => 'assets/images/icons/service_providers.svg',
                     ],
                     [
                         'label' => 'Total service providers', 
-                        'value' => $counts->providers,
+                        'value' => $userCounts->providers ?? 0,
                         'icon' => 'assets/images/icons/new-providers.svg'
                     ],
                     [
                         'label' => 'Active bookings', 
-                        'value' => $counts->active,
+                        'value' => $activeBookingsCount,
                         'icon' => 'assets/images/icons/active_booking.svg'
                     ],
                     [
                         'label' => 'Total active users', 
-                        'value' => $counts->active,
+                        'value' => $userCounts->active_users ?? 0,
                         'icon' => 'assets/images/icons/active_members.svg'
                     ],
-                    // assets/images/icons/active_members.svg
-                     
                 ];
                 break;
             case 'transactions':

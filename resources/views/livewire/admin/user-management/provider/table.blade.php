@@ -1,6 +1,6 @@
 <div>
 
-    <livewire:admin.components.toolbar label="service providers" button_label="Users" search_label="user"/>
+    <livewire:admin.components.toolbar label="service providers" button_label="Users" search_label="user" :active-filters="$activeFilters" />
         <div class="table-responsive">
             <table class="theme-table">
                     <thead>
@@ -33,24 +33,35 @@
                     </thead>
                     <tbody>
                         @forelse ($data as $item)
-                            <tr>
-                                <th><input type="checkbox" wire:model.live="selectAll"></th>
+                            <tr wire:key="provider-{{ $item->id }}">
+                                <td><input type="checkbox" value="{{ $item->id }}" wire:model.live="selected"></td>
                                 <td>{{ $item->id }}</td>
-                                <td>
-                                    <div class="user-info">
-                                        <img src="{{ asset($item->avatar ?? 'assets/images/icons/person-one.svg') }}"
-                                            alt="avatar">
-                                        <div>
-                                            <p class="user-name">{{ $item->name ?? '-' }}</p>
-                                            <p class="user-email">{{ $item->email ?? '-' }}</p>
+                                <td style="padding: 0;">
+                                    <a href="{{ route('user-management.service.providers.view', ['id' => $item->id]) }}" class="user-info-link" style="padding: 0.75rem 1rem;">
+                                        <div class="user-info">
+                                            <img src="{{ asset($item->avatar ?? 'assets/images/icons/person-one.svg') }}"
+                                                alt="avatar">
+                                            <div>
+                                                <p class="user-name">{{ $item->name ?? '-' }}</p>
+                                                <p class="user-email">{{ $item->email ?? '-' }}</p>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </a>
                                 </td>
 
                                 <td>{{ $item->address ?? '-', ' , ', $item->city ?? '-', ' , ', $item->state ?? '-', ' , ', $item->country ?? '-' }}
                                 </td>
                                 <td>{{ $item->phone ?? '-' }}</td>
-                                <td>Plumbing <span class="more"> +2 more</span></td>
+                                <td>
+                                    @if($item->providerServices->count() > 0)
+                                        {{ $item->providerServices->first()->service->name ?? '-' }}
+                                        @if($item->providerServices->count() > 1)
+                                            <span class="more"> +{{ $item->providerServices->count() - 1 }} more</span>
+                                        @endif
+                                    @else
+                                        -
+                                    @endif
+                                </td>
                                 <td><span
                                         class="status {{ $item->is_verified == 'verified'
                                             ? 'active'
@@ -63,31 +74,30 @@
                                 <td><span
                                         class="status {{ $item->status == 'active' ? 'active' : 'inactive' }}">{{ ucfirst($item->status) ?? '' }}</span>
                                 </td>
-                                <td>
+                                <td style="position:relative">
                                     <div class="actions-dropdown">
                                         <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three_dots.svg') }}"
                                                 class="dots-img "></button>
-                                        <div class="actions-menu">
+                                        <div class="actions-menu" style="display: none;">
                                             <a href="{{ route('user-management.service.providers.view', ['id' => $item->id]) }}"><img
                                                     src="{{ asset('assets/images/icons/eye.svg') }}" alt="View User"
                                                     class="w-5 h-5">View user</a>
-                                            <a href="#"><img src="{{ asset('assets/images/icons/edit-icon.svg') }}" alt="Edit User" class="w-5 h-5"> Edit user</a>
-                                            <a href="#" class='showDeleteModal'><img src="{{ asset('assets/images/icons/delete-icon.svg') }}" alt="Delete User" class="w-5 h-5"> Delete user</a>
-                                            <!-- ✅ Global Delete Modal -->
-                                            <div id="globalDeleteModal{{ $item->id }}" class="deleteModal"
-                                                style="display: none;position:absolute;    top: 2.5vw;">
-                                                <div class="delete-card">
-                                                    <div class="delete-card-header">
-                                                        <h3 class="delete-title">Delete Service Provider?</h3>
-                                                        <span class="delete-close" id="closeDeleteModal">&times;</span>
-                                                    </div>
-                                                    <p class="delete-text">Are you sure you want to delete this service provider?
-                                                    </p>
-                                                    <div class="delete-actions justify-content-start">
-                                                        <button class="confirm-delete-btn">Delete</button>
-                                                        <button class="cancel-delete-btn">Cancel</button>
-                                                    </div>
-                                                </div>
+                                            <a href="#" wire:click.prevent="edit({{ $item->id }})"><img src="{{ asset('assets/images/icons/edit-icon.svg') }}" alt="Edit User" class="w-5 h-5"> Edit user</a>
+                                            <a href="#" class='showDeleteModal___' data-id="{{ $item->id }}"><img src="{{ asset('assets/images/icons/delete-icon.svg') }}" alt="Delete User" class="w-5 h-5"> Delete user</a>
+                                        </div>
+                                    </div>
+
+                                    <div id="globalDeleteModal__{{ $item->id }}" class="deleteModal"
+                                        style="display: none; position: absolute; top: 2.5vw; right: 1vw; z-index: 9999;">
+                                        <div class="delete-card">
+                                            <div class="delete-card-header">
+                                                <h3 class="delete-title">Delete Service Provider?</h3>
+                                                <span class="delete-close closeDeleteModal" data-id="{{ $item->id }}">&times;</span>
+                                            </div>
+                                            <p class="delete-text">Are you sure you want to delete this service provider?</p>
+                                            <div class="delete-actions justify-content-start">
+                                                <button class="confirm-delete-btn" wire:click="delete({{ $item->id }})" data-id="{{ $item->id }}">Delete</button>
+                                                <button class="cancel-delete-btn" data-id="{{ $item->id }}">Cancel</button>
                                             </div>
                                         </div>
                                     </div>
@@ -106,6 +116,15 @@
  
     {{ $data->links('vendor.pagination.custom') }}
     <style>
+        .user-info-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            transition: background-color 0.2s;
+        }
+        .user-info-link:hover {
+            background-color: rgba(0, 0, 0, 0.03);
+        }
         .modal_heaader{
             display: flex;
             position: relative;
@@ -165,36 +184,130 @@
                 <h3 class="mt-0">Filter</h3>
                 </div>
               
-                <label style='color:#717171;font-weight:500;'>Select Date</label>
-                <div class=" row mt-3">
-                    <div class='col-6'>
-                        <span style="font-weight:500">From:</span>
-                        <div class="date_field_wraper">
-                            <input type="date" class="form-input mt-2 date-input" wire:model="fromDate">
-                        </div>
-                       
+            <label style='color:#717171;font-weight:500;'>Select Date</label>
+            <div class=" row mt-3">
+                <div class='col-6'>
+                    <span style="font-weight:500">From:</span>
+                    <div class="date_field_wraper">
+                        <input type="date" class="form-input mt-2 date-input" wire:model="tempFromDate">
                     </div>
-                    <div class='col-6'>
-                        <span style="font-weight:500"> To:</span>
-                        <div class="date_field_wraper">
-                            <input type="date" class="form-input mt-2 date-input" wire:model="toDate">
-                        </div>
-                       
+
+                </div>
+                <div class='col-6'>
+                    <span style="font-weight:500"> To:</span>
+                    <div class="date_field_wraper">
+                        <input type="date" class="form-input mt-2 date-input" wire:model="tempToDate">
                     </div>
+
                 </div>
-                <label style="color:#717171;font-weight:500;margin: 12px 0px 12px 0px;">Status</label>
-                <x-custom-select name="status" :options="[
-                    ['value' => '', 'label' => 'Select status'],
-                    ['value' => 'active', 'label' => 'Active'],
-                    ['value' => 'inactive', 'label' => 'Inactive'],
-                ]" placeholder="Select status" wireModel="status"
-                    class="form-input mt-2" />
-                <div class="form-actions">
-                    <button type="button" class="reset-btn filter_modal_reset" wire:click="resetFilters">Reset</button>
-                    <button type="button" class="submit-btn" wire:click="applyFilters">Apply Now</button>
-                </div>
+            </div>
+            <label style="color:#717171;font-weight:500;margin: 12px 0px 12px 0px;">Status</label>
+            <x-custom-select-livewire name="tempStatus" :options="[
+                ['value' => '', 'label' => 'Select status'],
+                ['value' => 'active', 'label' => 'Active'],
+                ['value' => 'inactive', 'label' => 'Inactive'],
+            ]" placeholder="Select status" wireModel="tempStatus" :value="$tempStatus"
+                class="form-input mt-2" />
+            <div class="form-actions">
+                <button type="button" class="reset-btn filter_modal_reset" wire:click="resetFilters">Reset</button>
+                <button type="button" class="submit-btn" wire:click="applyFilters">Apply Now</button>
+            </div>
             </div>
         </div>
     @endif
 </div>
-                    
+<script>
+    // Actions dropdown - Works with Livewire updates
+    (function() {
+        // Single event delegation handler
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('.actions-btn');
+            if (btn) {
+                e.stopPropagation();
+                e.preventDefault();
+                
+                const dropdown = btn.closest('.actions-dropdown');
+                const menu = dropdown.querySelector('.actions-menu');
+                const isActive = dropdown.classList.contains('active');
+                
+                // Close all other menus
+                document.querySelectorAll('.actions-dropdown').forEach(d => {
+                    if (d !== dropdown) {
+                        d.classList.remove('active');
+                        const otherMenu = d.querySelector('.actions-menu');
+                        if (otherMenu) otherMenu.style.display = 'none';
+                    }
+                });
+                
+                // Toggle current menu
+                if (isActive) {
+                    dropdown.classList.remove('active');
+                    menu.style.display = 'none';
+                } else {
+                    dropdown.classList.add('active');
+                    menu.style.display = 'block';
+                }
+                return false;
+            }
+            
+            // Close dropdowns when clicking outside
+            if (!e.target.closest('.actions-dropdown') && !e.target.closest('.actions-menu')) {
+                document.querySelectorAll('.actions-dropdown').forEach(dropdown => {
+                    dropdown.classList.remove('active');
+                    const menu = dropdown.querySelector('.actions-menu');
+                    if (menu) menu.style.display = 'none';
+                });
+            }
+        }, true);
+        
+        if (typeof Livewire !== 'undefined') {
+            document.addEventListener('livewire:init', function() {
+                Livewire.hook('morph.updated', () => {
+                    setTimeout(() => {
+                        document.querySelectorAll('.actions-dropdown').forEach(dropdown => {
+                            dropdown.classList.remove('active');
+                            const menu = dropdown.querySelector('.actions-menu');
+                            if (menu) menu.style.display = 'none';
+                        });
+                    }, 10);
+                });
+            });
+        }
+    })();
+
+    // Delete modal handlers
+    $(document).on('click', '.showDeleteModal___', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const id = $(this).attr('data-id');
+        if (!id) return;
+        
+        // Close dropdown
+        $(this).closest('.actions-dropdown').removeClass('active');
+        $(this).closest('.actions-dropdown').find('.actions-menu').hide();
+        
+        // Hide others
+        $('.deleteModal').hide();
+        
+        // Show specific
+        $('#globalDeleteModal__' + id).css('display', 'flex');
+    });
+    
+    $(document).on('click', '.closeDeleteModal, .cancel-delete-btn', function(e) {
+        e.preventDefault();
+        const id = $(this).attr('data-id');
+        $('#globalDeleteModal__' + id).hide();
+    });
+    
+    $(document).on('click', '.confirm-delete-btn', function(e) {
+        const id = $(this).attr('data-id');
+        $('#globalDeleteModal__' + id).hide();
+    });
+    
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('.showDeleteModal___, .deleteModal').length) {
+            $('.deleteModal').hide();
+        }
+    });
+</script>

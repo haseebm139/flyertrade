@@ -74,7 +74,7 @@
     <div class="users-toolbar">
         <nav class="breadcrumb">
             <a href="{{ route('user-management.service.users.index') }}">Service User</a>
-            <span class="breadcrumb-separator"><i class="fa-solid fa-chevron-right"></i></span>
+            <span class="breadcrumb-separator">›</span>
             <span class="breadcrumb-current">{{ ucwords($user->name) }}</span>
         </nav>
     </div>
@@ -83,7 +83,7 @@
     <div class="users-toolbar">
         <div class="toolbar-left" style="position:relative">
             <button class="reset-btn" wire:click="$set('showResetModal', true)" style="background-color: #fff;">Reset
-                password</button>
+                Password</button>
 
             @if ($showResetModal)
                 <div class="deleteModal" style="display: flex;">
@@ -104,14 +104,13 @@
 
 
             <button class="edit-btn" wire:click="$dispatch('addItemRequested', { id: {{ $user->id }} })">
-                Edit user
-                &nbsp;
+                Edit User
                 &nbsp;
                 <span class="download-icon"><img src="{{ asset('assets/images/icons/edit.svg') }}" alt=""
                         class="icons-btn"></span>
             </button>
 
-            <button class="delete-btn" wire:click="$set('showDeleteModal', true)">
+            <button class="delete-btn showDeleteModal" wire:click="$set('showDeleteModal', true)">
                 Delete user
                 &nbsp;
                 <span class="download-icon"><img src="{{ asset('assets/images/icons/trash.svg') }}" alt=""
@@ -129,7 +128,8 @@
                         <div class="delete-actions justify-content-start">
                             <button class="confirm-delete-btn" wire:click="deleteUser"
                                 onclick="this.closest('.deleteModal').style.display='none'">Delete</button>
-                            <button class="cancel-delete-btn" wire:click="$set('showDeleteModal', false)">Cancel</button>
+                            <button class="cancel-delete-btn"
+                                wire:click="$set('showDeleteModal', false)">Cancel</button>
                         </div>
                     </div>
                 </div>
@@ -139,15 +139,17 @@
         <div class="toolbar-right">
             <!-- ✅ User Profile -->
             <div class="user-profile">
-                <img src="{{ $user->avatar ? asset($user->avatar) : asset('assets/images/avatar/default.png') }}" alt="User"
-                    class="user-profile-img">
+                <img src="{{ $user->avatar ? asset($user->avatar) : asset('assets/images/icons/user_profile_img.svg') }}"
+                    alt="User" class="user-profile-img">
                 <div class="user-infos">
                     <h4 class="user-name-user">{{ ucwords($user->name) }}</h4>
-                    <p class="user-role">{{ $user->user_type === 'customer' ? 'Service user' : ucfirst($user->user_type ?? 'Service user') }}</p>
+                    <p class="user-role">
+                        {{ $user->user_type === 'customer' ? 'Service user' : ucfirst($user->user_type ?? 'Service user') }}
+                    </p>
                 </div>
 
                 <!-- ✅ Status Dropdown -->
-                <div class="status-dropdown">
+                <div class="status-dropdown" style="position:relative;">
                     <button class="status-btn {{ ($user->status ?? 'active') === 'active' ? 'active' : 'inactive' }}">
                         {{ ucfirst($user->status ?? 'Active') }} <i class="fa-solid fa-chevron-down"></i>
                     </button>
@@ -180,21 +182,9 @@
                 <p><span>State of residence</span> {{ $user->state ?? '-' }}</p>
                 <p><span>Home address</span> {{ $user->address ?? '-' }}</p>
                 <p><span>Overall rating</span>
-                    <span class="stars" style="color:#393939;">
-                        @php $rating = $user->overall_rating; @endphp
-                        @for ($i = 1; $i <= 5; $i++)
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M4.78313 13.3332C4.8748 12.9248 4.70813 12.3415 4.41647 12.0498L2.39147 10.0248C1.75813 9.3915 1.50813 8.7165 1.69147 8.13317C1.88313 7.54984 2.4748 7.14984 3.35813 6.99984L5.95813 6.5665C6.33313 6.49984 6.79147 6.1665 6.96647 5.82484L8.3998 2.94984C8.81647 2.12484 9.38313 1.6665 9.9998 1.6665C10.6165 1.6665 11.1831 2.12484 11.5998 2.94984L13.0331 5.82484C13.1415 6.0415 13.3665 6.24984 13.6081 6.3915L4.63313 15.3665C4.51647 15.4832 4.31647 15.3748 4.3498 15.2082L4.78313 13.3332Z"
-                                    fill="{{ $i <= $rating ? '#EFC100' : '#D1D1D1' }}" />
-                                <path
-                                    d="M15.5859 12.0501C15.2859 12.3501 15.1193 12.9251 15.2193 13.3334L15.7943 15.8417C16.0359 16.8834 15.8859 17.6667 15.3693 18.0417C15.1609 18.1917 14.9109 18.2667 14.6193 18.2667C14.1943 18.2667 13.6943 18.1084 13.1443 17.7834L10.7026 16.3334C10.3193 16.1084 9.68594 16.1084 9.3026 16.3334L6.86094 17.7834C5.93594 18.3251 5.14427 18.4167 4.63594 18.0417C4.44427 17.9001 4.3026 17.7084 4.21094 17.4584L14.3443 7.32508C14.7276 6.94174 15.2693 6.76674 15.7943 6.85841L16.6359 7.00008C17.5193 7.15008 18.1109 7.55008 18.3026 8.13341C18.4859 8.71674 18.2359 9.39174 17.6026 10.0251L15.5859 12.0501Z"
-                                    fill="{{ $i <= $rating ? '#EFC100' : '#D1D1D1' }}" />
-                            </svg>
-                        @endfor
-                        ({{ $rating }})
-                    </span>
+                    <img class="icons-btn" src="{{ asset('assets/images/icons/star.svg') }}" alt=""
+                        style="width: 1.2vw; height: 1.2vw;">
+                    ({{ number_format($user->overall_rating ?? 0, 1) }})
                 </p>
                 <p><span>Referrals</span> {{ $user->referrals_count ?? 0 }}</p>
             </div>
@@ -246,22 +236,29 @@
             <table class="theme-table">
                 <thead>
                     <tr>
-                         
-                        <th>Booking ID</th>
-                        <th>Date created</th>
-                        <th>Provider</th>
-                        <th>Location</th>
-                        <th>Service Category</th>
-                        <th>Amount Paid</th>
-                        <th>Duration</th>
-                        <th>Status</th>
+                        <th class="sortable" wire:click="sortBy('booking_ref')">Booking ID <img
+                                src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
+                        <th class="sortable" wire:click="sortBy('created_at')">Date created <img
+                                src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
+                        <th class="sortable">Provider <img src="{{ asset('assets/images/icons/sort.svg') }}"
+                                class="sort-icon"></th>
+                        <th class="sortable" wire:click="sortBy('booking_address')">Location <img
+                                src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
+                        <th class="sortable">Service Category <img src="{{ asset('assets/images/icons/sort.svg') }}"
+                                class="sort-icon"></th>
+                        <th class="sortable" wire:click="sortBy('total_price')">Amount Paid <img
+                                src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
+                        <th class="sortable" wire:click="sortBy('booking_working_minutes')">Duration <img
+                                src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
+                        <th class="sortable" wire:click="sortBy('status')">Status <img
+                                src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($bookings as $booking)
                         <tr>
-                             
+
                             <td>{{ $booking->booking_ref }}</td>
                             <td><span class="date">{{ $booking->created_at->format('d M, Y') }}</span>
                                 <br>
@@ -282,8 +279,7 @@
                                 </div>
                             </td>
                             <td class="viw-parent">
-                                <button class="view-btn"
-                                    wire:click="viewBooking({{ $booking->id }})">
+                                <button class="view-btn" wire:click="viewBooking({{ $booking->id }})">
                                     <img src="{{ asset('assets/images/icons/eye_icon.svg') }}" alt="View"
                                         class="eye-icon">
                                     View
@@ -303,7 +299,7 @@
     @endif
 
     @if ($showBookingModal && $selectedBooking)
-        <div id="view-booking" class="view-booking-modal" style="display: flex;">
+        <div id="view-booking" class="view-booking-modal add-user-modal" style="display: flex;">
             <div class="view-booking-content">
                 <div class="modal-header" style="margin-bottom:1.563vw">
                     <h2 style="font-size:1.146vw;font-weight: 600;line-height:1;">Booking details</h2>
@@ -320,8 +316,10 @@
                 </div>
                 <div class="service-header-icons">
                     <h4 style="font-size:0.938vw;font-weight: 500; letter-spacing: -0.04em;">Service details</h4>
-                    <h5> <img src="{{ asset('assets/images/icons/download.svg') }}" alt="Download"
-                            class="download-icon"> <small style="color:grey;font-size:0.938vw;">Download </small></h5>
+                    <h5 style="cursor: pointer;" wire:click="downloadBookingDetails({{ $selectedBooking->id }})">
+                        <img src="{{ asset('assets/images/icons/download.svg') }}" alt="Download"
+                            class="download-icon"> <small style="color:grey;font-size:0.938vw;">Download </small>
+                    </h5>
                 </div>
 
                 <div class="modal-section">
@@ -363,5 +361,31 @@
 
     <!-- Modals (Scripts to trigger them) -->
     <script>
+        document.addEventListener('livewire:initialized', () => {
+            // Video controls logic (if any)
+            $(document).on('click', '.play-btn', function() {
+                const container = $(this).closest('.video-container');
+                const video = container.find('.custom-video')[0];
+                const btn = $(this);
+
+                if (video.paused) {
+                    video.play();
+                    btn.text('⏸');
+                } else {
+                    video.pause();
+                    btn.text('▶');
+                }
+            });
+
+            // Toolbar checkboxes logic (if any)
+            $(document).on('change', '.row-check', function() {
+                const checkedCount = $('.row-check:checked').length;
+                if (checkedCount > 0) {
+                    $('.toolbar-actions').removeAttr('hidden');
+                } else {
+                    $('.toolbar-actions').attr('hidden', true);
+                }
+            });
+        });
     </script>
 </div>
