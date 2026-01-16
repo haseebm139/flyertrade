@@ -62,6 +62,12 @@
                 if (targetContent) {
                     targetContent.classList.add('active');
                 }
+
+                // Clear URL parameters and hash
+                if (window.location.search || window.location.hash) {
+                    const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+                    window.history.pushState({path: cleanUrl}, '', cleanUrl);
+                }
             });
         });
     });

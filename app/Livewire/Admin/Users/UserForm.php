@@ -8,6 +8,9 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\UserCredentialsMail;
+
 class UserForm extends Component
 {
     public $userId;
@@ -20,20 +23,24 @@ class UserForm extends Component
     public $isEdit = false;
     public $showModal = false;
 
-    protected $rules = [
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|max:255|unique:users,email',
-        'phone' => 'required|string|max:20',
-        'address' => 'required|string|max:500',
-        'user_type' => 'required|exists:roles,name',
-        'roles' => 'array',
-    ];
+    protected function rules()
+    {
+        return [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . $this->userId,
+            'phone' => 'required|string|regex:/^[0-9+\-() ]+$/|min:10|max:20',
+            'address' => 'required|string|max:500',
+            'user_type' => 'required|exists:roles,name',
+        ];
+    }
 
     protected $messages = [
         'name.required' => 'Name is required.',
         'email.required' => 'Email is required.',
         'email.unique' => 'A user with this email already exists.',
-        'user_type.required' => 'User type is required.',
+        'user_type.required' => 'Please select a user type.',
+        'phone.regex' => 'The phone number format is invalid.',
+        'phone.min' => 'The phone number must be at least 10 characters.',
     ];
 
     protected $listeners = [
@@ -42,12 +49,10 @@ class UserForm extends Component
 
     public function mount($userId = null, $isEdit = false)
     {
-        
         $this->userId = $userId;
         $this->isEdit = $isEdit;
         
         if ($isEdit && $userId) {
-             
             $this->loadUser();
         }
     }
@@ -59,16 +64,12 @@ class UserForm extends Component
         $this->email = $user->email;
         $this->phone = $user->phone ?? '';
         $this->address = $user->address ?? '';
-        $this->user_type = $user->user_type ?? 'customer';
+        $this->user_type = $user->user_type ?? '';
         $this->roles = $user->roles->pluck('name')->toArray();
     }
 
     public function save()
     {
-        if ($this->isEdit) {
-            $this->rules['email'] = 'required|email|max:255|unique:users,email,' . $this->userId;
-        }
-
         $this->validate();
 
         try {
@@ -80,28 +81,40 @@ class UserForm extends Component
                     'phone' => $this->phone,
                     'address' => $this->address,
                     'user_type' => $this->user_type,
+                    'role_id'   => $this->user_type,
                 ]);
-                $user->syncRoles($this->roles);
+                $user->syncRoles([$this->user_type]);
                 $message = 'User updated successfully.';
             } else {
+                // Generate random password for new user
+                $password = Str::random(10);
+                
                 $user = User::create([
                     'name' => $this->name,
                     'email' => $this->email,
                     'phone' => $this->phone,
                     'address' => $this->address,
                     'user_type' => $this->user_type,
-                    'password' => Hash::make('password123'), // Default password
+                    'role_id'   => $this->user_type,
+                    'password' => Hash::make($password),
                 ]);
                  
                 $user->assignRole($this->user_type);
-                $message = 'User created successfully.';
+                $message = 'User created successfully. Credentials sent via email.';
+
+                // Send email with credentials
+                try {
+                    Mail::to($user->email)->send(new UserCredentialsMail($user, $password));
+                } catch (\Exception $mailEx) {
+                    \Log::error('Failed to send credentials email: ' . $mailEx->getMessage());
+                    $message .= ' (Note: Email delivery failed)';
+                }
             }
 
             $this->dispatch('showSweetAlert', 'success', $message, 'Success');
             $this->dispatch('userSaved');
             $this->dispatch('refreshUsersTable');
             
-            // If editing a user, dispatch a specific event to refresh that user's data
             if ($this->isEdit && $this->userId) {
                 $this->dispatch('userUpdated', $this->userId);
             }
@@ -118,7 +131,7 @@ class UserForm extends Component
         $this->email = '';
         $this->phone = '';
         $this->address = '';
-        $this->user_type = 'customer';
+        $this->user_type = '';
         $this->roles = [];
         $this->userId = null;
         $this->isEdit = false;
@@ -126,20 +139,15 @@ class UserForm extends Component
 
     public function openUserModal($userId = null, $mode = 'create')
     {
+        $this->resetValidation();
+        $this->resetForm();
+        
         $this->userId = $userId;
         $this->isEdit = ($mode === 'edit');
         $this->showModal = true;
         
         if ($this->isEdit && $userId) {
             $this->loadUser();
-        } else {
-            // Reset form data but keep modal open
-            $this->name = '';
-            $this->email = '';
-            $this->phone = '';
-            $this->address = '';
-            $this->user_type = 'customer';
-            $this->roles = [];
         }
     }
 

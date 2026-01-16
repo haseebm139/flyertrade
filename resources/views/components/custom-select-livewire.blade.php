@@ -65,7 +65,7 @@ if ($initialValue !== null) {
 
 <div class="custom-select-wrapper {{ $class }}" style="{{ $style }}" x-data="{
     open: false,
-    selected: @js($initialValue && $initialLabel ? ['value' => $initialValue, 'label' => $initialLabel] : null),
+    selected: @js(($initialValue !== null && $initialLabel !== null) ? ['value' => $initialValue, 'label' => $initialLabel] : null),
     options: @js($normalizedOptions),
     placeholder: @js($placeholder),
     @if ($wireModel && $isLivewire) wireModel: '{{ $wireModel }}',
@@ -106,8 +106,8 @@ if ($initialValue !== null) {
     @click.outside="open = false" @if ($id) id="{{ $id }}" @endif>
 
     <div @click="open = !open" class="custom-select-input" :class="{ 'open': open }">
-        <span class="custom-select-text" :class="{ 'placeholder': !selected || !selected.value }"
-            x-text="selected && selected.value ? selected.label : placeholder"></span>
+        <span class="custom-select-text" :class="{ 'placeholder': !selected || selected.value === '' || selected.value === null }"
+            x-text="(selected && (selected.value !== '' && selected.value !== null)) ? selected.label : placeholder"></span>
         <svg class="custom-select-arrow" :class="{ 'open': open }" fill="none" stroke="currentColor"
             viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -127,7 +127,7 @@ if ($initialValue !== null) {
         </template>
     </div>
 
-    <input type="hidden" name="{{ $name }}" :value="selected && selected.value ? selected.value : ''" />
+    <input type="hidden" name="{{ $name }}" :value="(selected && selected.value !== null) ? selected.value : ''" />
 </div>
 
 <style>

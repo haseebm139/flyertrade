@@ -44,7 +44,7 @@
                         </td>
 
                         <td class="viw-parent theme-parent-class">
-                            <div class="d-flex align-items-center gap-2">
+                            <div class="d-flex align-items-center gap-3">
                                 <a href="javascript:void(0);" class="view-btn" wire:click="viewRole({{ $role->id }})">
                                     <img src="{{ asset('assets/images/icons/eye_icon.svg') }}" alt="View" class="eye-icon">
                                     View
@@ -71,9 +71,9 @@
                                         </div>
                                     </div>
 
-                                    <button type="button" class="delete-btn showDeleteModal" data-id="{{ $role->id }}" style="border: 0 !important; background: none; padding: 0;">
-                                        <span style="font-size: 0.9vw; color: #064f3c; cursor: pointer; font-weight: 400;"> Delete </span>
+                                    <button type="button" class="delete-btn showRoleDeleteModal" data-id="{{ $role->id }}" style="border: 0 !important; background: none; padding: 0;">
                                         <img src="{{ asset('assets/images/icons/delete-icon-active.svg') }}" alt="Delete" class="eye-icon">
+                                        <span style="font-size: 0.9vw; color: #064f3c; cursor: pointer; font-weight: 400;"> Delete </span>
                                     </button>
                                 </div>
                             </div>
@@ -196,7 +196,7 @@
 
 @push('scripts')
     <script>
-        $(document).on('click', '.showDeleteModal', function(e) {
+        $(document).on('click', '.showRoleDeleteModal', function(e) {
             e.preventDefault();
             e.stopPropagation();
             let id = $(this).data('id');
@@ -212,7 +212,7 @@
         })
 
         $(document).on('click', function(e) {
-            if (!$(e.target).closest('.deleteModal').length && !$(e.target).closest('.showDeleteModal').length) {
+            if (!$(e.target).closest('.deleteModal').length && !$(e.target).closest('.showRoleDeleteModal').length) {
                 $('.deleteModal').hide();
             }
         });

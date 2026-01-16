@@ -19,7 +19,7 @@
                         <label>Name</label>
                         <input type="text" class="form-input @error('name') error-input @enderror " wire:model="name" placeholder="Enter name" wire:loading.attr="disabled" wire:target="save">
                         @error('name')
-                            <div class="error-message">
+                            <div class="error-message" style="margin-top: 0.5rem;">
                                 <i class="fa-solid fa-circle-exclamation"></i>
                                 <span>{{ $message }}</span>
                             </div>
@@ -30,7 +30,7 @@
                         <label>Email</label>
                         <input type="email" class="form-input @error('email') error-input @enderror" wire:model="email" placeholder="Enter email" wire:loading.attr="disabled" wire:target="save">
                         @error('email')
-                            <div class="error-message">
+                            <div class="error-message" style="margin-top: 0.5rem;">
                                 <i class="fa-solid fa-circle-exclamation"></i>
                                 <span>{{ $message }}</span>
                             </div>
@@ -41,7 +41,7 @@
                         <label>Home Address</label>
                         <input type="text" class="form-input  @error('address') error-input @enderror" wire:model="address" placeholder="Enter home address" wire:loading.attr="disabled" wire:target="save">
                         @error('address')
-                            <div class="error-message">
+                            <div class="error-message" style="margin-top: 0.5rem;">
                                 <i class="fa-solid fa-circle-exclamation"></i>
                                 <span>{{ $message }}</span>
                             </div>
@@ -50,9 +50,9 @@
 
                     <div class="form-group">
                         <label>Phone Number</label>
-                        <input type="number" class="form-input  @error('phone') error-input @enderror" wire:model="phone" placeholder="Enter phone number" wire:loading.attr="disabled" wire:target="save">
+                        <input type="text" class="form-input  @error('phone') error-input @enderror" wire:model="phone" placeholder="Enter phone number" wire:loading.attr="disabled" wire:target="save">
                         @error('phone')
-                            <div class="error-message">
+                            <div class="error-message" style="margin-top: 0.5rem;">
                                 <i class="fa-solid fa-circle-exclamation"></i>
                                 <span>{{ $message }}</span>
                             </div>
@@ -61,7 +61,7 @@
 
                     <div class="form-group mb-3">
                         <label for="userType" class="form-label">User Type</label>
-                        <x-custom-select
+                        <x-custom-select-livewire
                             name="user_type"
                             id="userType"
                             :options="array_merge(
@@ -72,10 +72,11 @@
                             )"
                             placeholder="Select user type"
                             wireModel="user_type"
+                            :value="$user_type"
                             class="form-select"
                         />
                         @error('user_type')
-                           <div class="error-message">
+                           <div class="error-message" style="margin-top: 0.5rem;">
                                 <i class="fa-solid fa-circle-exclamation"></i>
                                 <span>{{ $message }}</span>
                             </div>

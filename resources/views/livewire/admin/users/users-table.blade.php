@@ -49,10 +49,14 @@
                                     <img src="{{ asset('assets/images/icons/eye_icon.svg') }}" alt="View" class="eye-icon">
                                     View
                                 </a>
+                                {{-- <a href="javascript:void(0);" class="view-btn" wire:click="editUser({{ $user->id }})">
+                                    <img src="{{ asset('assets/images/icons/edit.svg') }}" alt="Edit" class="eye-icon">
+                                    Edit
+                                </a> --}}
                                 
                                 <div style="position: relative;">
                                     <!-- ✅ Delete Modal -->
-                                    <div id="deleteModal{{ $user->id }}" class="deleteModal"
+                                    <div id="deleteUserModal{{ $user->id }}" class="deleteModal"
                                         style="display: none; position: absolute; top: 2vw; right: 6vw; z-index: 1000;">
                                         <div class="delete-card">
                                             <div class="delete-card-header">
@@ -67,7 +71,7 @@
                                         </div>
                                     </div>
 
-                                    <button type="button" class="delete-btn showDeleteModal" data-id="{{ $user->id }}" style="border: 0 !important; background: none; padding: 0;">
+                                    <button type="button" class="delete-btn showUserDeleteModal" data-id="{{ $user->id }}" style="border: 0 !important; background: none; padding: 0;">
                                         <img src="{{ asset('assets/images/icons/delete-icon-active.svg') }}" alt="Delete" class="eye-icon">
                                         <span style="font-size: 0.9vw; color: #064f3c; cursor: pointer; font-weight: 400;"> Delete </span>
                                     </button>
@@ -177,23 +181,23 @@
 
 @push('scripts')
     <script>
-        $(document).on('click', '.showDeleteModal', function(e) {
+        $(document).on('click', '.showUserDeleteModal', function(e) {
             e.preventDefault();
             e.stopPropagation();
             let id = $(this).data('id');
             $('.deleteModal').hide();
-            $('#deleteModal' + id).show();
+            $('#deleteUserModal' + id).show();
         })
 
         $(document).on('click', '.closeDeleteModal, .cancel-delete-btn', function(e) {
             e.preventDefault();
             e.stopPropagation();
             let id = $(this).data('id');
-            $('#deleteModal' + id).hide();
+            $('#deleteUserModal' + id).hide();
         })
 
         $(document).on('click', function(e) {
-            if (!$(e.target).closest('.deleteModal').length && !$(e.target).closest('.showDeleteModal').length) {
+            if (!$(e.target).closest('.deleteModal').length && !$(e.target).closest('.showUserDeleteModal').length) {
                 $('.deleteModal').hide();
             }
         });

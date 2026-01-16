@@ -31,24 +31,15 @@ $normalizedOptions = collect($options)
     })
     ->toArray();
 
-// If no value selected and options exist, select first non-empty option
-if ($selectedValue === null && !empty($normalizedOptions)) {
+// Find the label for the selected value
+if ($selectedValue !== null) {
     foreach ($normalizedOptions as $option) {
-        if ($option['value'] !== '' && $option['value'] !== null) {
-            $selectedValue = $option['value'];
+        if ($option['value'] == $selectedValue) {
             $selectedLabel = $option['label'];
             break;
         }
     }
-} elseif ($selectedValue !== null) {
-    // Find the label for the selected value
-    foreach ($normalizedOptions as $option) {
-        if ($option['value'] !== '' && $option['value'] !== null && $option['value'] == $selectedValue) {
-            $selectedLabel = $option['label'];
-                break;
-            }
-        }
-    }
+}
 @endphp
 
 <div class="custom-select-wrapper {{ $class }}" style="{{ $style }}" x-data="{
@@ -65,8 +56,8 @@ if ($selectedValue === null && !empty($normalizedOptions)) {
 }"
     @click.outside="open = false" @if ($id) id="{{ $id }}" @endif>
     <div @click="open = !open" class="custom-select-input" :class="{ 'open': open }">
-        <span class="custom-select-text" :class="{ 'placeholder': !selected || !selected.value }"
-            x-text="selected && selected.value ? selected.label : placeholder"></span>
+        <span class="custom-select-text" :class="{ 'placeholder': !selected || selected.value === '' || selected.value === null }"
+            x-text="(selected && (selected.value !== '' && selected.value !== null)) ? selected.label : placeholder"></span>
         <svg class="custom-select-arrow" :class="{ 'open': open }" fill="none" stroke="currentColor"
             viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
