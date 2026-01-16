@@ -44,17 +44,20 @@ class Form extends Component
             'description' => 'nullable|string|max:500',
         ]);
 
-        Service::updateOrCreate(
-            ['id' => $this->categoryId],
-            ['name' => $this->name, 'description' => $this->description]
-        );
-        $this->dispatch('showToastr', 'success', 'Service ' . ($this->categoryId ? 'updated' : 'created') . ' successfully.', 'Success');
-         
-        // notify the table to refresh
-        $this->dispatch('categoryUpdated');
+        try {
+            Service::updateOrCreate(
+                ['id' => $this->categoryId],
+                ['name' => $this->name, 'description' => $this->description]
+            );
+            $this->dispatch('showSweetAlert', 'success', 'Service ' . ($this->categoryId ? 'updated' : 'created') . ' successfully.', 'Success');
+            
+            // notify the table to refresh
+            $this->dispatch('categoryUpdated');
 
-        $this->close();
-        session()->flash('success', 'Service saved successfully.');
+            $this->close();
+        } catch (\Exception $e) {
+            $this->dispatch('showSweetAlert', 'error', 'Error saving service: ' . $e->getMessage(), 'Error');
+        }
     } 
     private function resetForm()
     {

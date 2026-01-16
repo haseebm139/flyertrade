@@ -10,9 +10,9 @@
                     <div class="form-group">
                         <label>Service Name</label>
                         <input type="text" class="form-input @error('name') error-input @enderror" wire:model="name"
-                            placeholder="Enter name">
+                            placeholder="Enter name" wire:loading.attr="disabled" wire:target="save">
                         @error('name')
-                            <div class="error-message">
+                            <div class="error-message" style="margin-top: 0.5rem;">
                                 <i class="fa-solid fa-circle-exclamation"></i>
                                 <span>{{ $message }}</span>
                             </div>
@@ -22,18 +22,28 @@
                     <div class="form-group">
                         <label>Description</label>
                         <textarea id="myTextarea" rows="2" class="form-input @error('description') error-input @enderror"
-                            placeholder="Add description" wire:model="description"></textarea>
+                            placeholder="Add description" wire:model="description" wire:loading.attr="disabled"
+                            wire:target="save"></textarea>
                         @error('description')
-                            <div class="error-message">
+                            <div class="error-message" style="margin-top: 0.5rem;">
                                 <i class="fa-solid fa-circle-exclamation"></i>
                                 <span>{{ $message }}</span>
                             </div>
                         @enderror
                     </div>
                     <div class="form-actions">
-                        <button type="button" wire:click="close" class="cancel-btn">Cancel</button>
-                        <button type="submit" class="submit-btn">+
-                            {{ $categoryId ? 'Save Changes' : 'Add Service' }}</button>
+                        <button type="button" wire:click="close" class="cancel-btn" wire:loading.attr="disabled"
+                            wire:target="save">Cancel</button>
+                        <button type="submit" class="submit-btn" wire:loading.attr="disabled" wire:target="save">
+                            <span wire:loading.remove wire:target="save">
+                                <i class="fa-solid fa-plus mr-3"></i>
+                                {{ $categoryId ? 'Save Changes' : 'Add Service' }}
+                            </span>
+                            <span wire:loading wire:target="save">
+                                <i class="fa-solid fa-spinner fa-spin mr-3"></i>
+                                {{ $categoryId ? 'Saving...' : 'Adding...' }}
+                            </span>
+                        </button>
                     </div>
                 </form>
             </div>

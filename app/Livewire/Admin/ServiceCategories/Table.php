@@ -16,6 +16,12 @@ class Table extends Component
     public $status = '';    
     public $fromDate = '';
     public $toDate = ''; 
+
+    // Temporary filter values (only used in modal, not applied until Apply button clicked)
+    public $tempStatus = '';
+    public $tempFromDate = '';
+    public $tempToDate = '';
+
     public $sortField = 'created_at';  
     public $sortDirection = 'desc';
     public $selected = [];  
@@ -27,6 +33,7 @@ class Table extends Component
         'exportCsvRequested' => 'exportCsv',
         'openFilterModal'    => 'openFilterModal',
         'searchUpdated'      => 'updatingSearch',
+        'removeFilter'       => 'removeFilter',
     ];
 
      
@@ -35,9 +42,10 @@ class Table extends Component
         $this->search = $value;
         $this->resetPage(); 
     }
-    public function updatingStatus() { $this->resetPage(); }
-    public function updatingFromDate() { $this->resetPage(); }
-    public function updatingToDate() { $this->resetPage(); }  
+    // Remove individual updating handlers to only apply on "Apply Now"
+    // public function updatingStatus() { $this->resetPage(); }
+    // public function updatingFromDate() { $this->resetPage(); }
+    // public function updatingToDate() { $this->resetPage(); }  
 
     # -------------------- SELECT ALL --------------------
     public function updatedSelectAll($value)
@@ -83,10 +91,18 @@ class Table extends Component
 
     public function delete($id)
     {
-        Service::findOrFail($id)->delete();
-        $this->confirmingId = null;
-        $this->dispatch('showToastr', 'success', 'Service category deleted successfully.', 'Success');
-        $this->dispatch('categoryUpdated'); // Refresh the table
+        try {
+            $service = Service::find($id);
+            if ($service) {
+                $service->delete();
+                $this->dispatch('showSweetAlert', 'success', 'Service category deleted successfully.', 'Success');
+            } else {
+                $this->dispatch('showSweetAlert', 'error', 'Service category not found.', 'Error');
+            }
+            $this->dispatch('categoryUpdated'); // Refresh the table
+        } catch (\Exception $e) {
+            $this->dispatch('showSweetAlert', 'error', 'Error deleting service category: ' . $e->getMessage(), 'Error');
+        }
     }
 
     public function edit($id)
@@ -102,25 +118,101 @@ class Table extends Component
     }
     
     # -------------------- FILTER MODAL --------------------
-    public function openFilterModal() {  $this->showFilterModal = true;   }
+    public function openFilterModal() {  
+        // Load current applied filters into temporary variables
+        $this->tempStatus = $this->status;
+        $this->tempFromDate = $this->fromDate;
+        $this->tempToDate = $this->toDate;
+        $this->showFilterModal = true;   
+    }
 
-    public function closeFilterModal() { $this->showFilterModal = false;  }
+    public function closeFilterModal() { 
+        $this->showFilterModal = false;  
+    }
 
     public function applyFilters()
     {
-    
+        // Apply temporary filters to actual filters
+        $this->status = $this->tempStatus;
+        $this->fromDate = $this->tempFromDate;
+        $this->toDate = $this->tempToDate;
+        
         $this->resetPage();
         $this->closeFilterModal();
-    }
-    public function clearFilters()
-    {
-        $this->reset(['status', 'fromDate', 'toDate']);
         
+        // Dispatch event to update toolbar with new active filters
+        $this->dispatch('filtersUpdated', $this->getActiveFilters());
     }
+
     public function resetFilters()
     {
-        $this->reset(['status', 'fromDate', 'toDate']);
+        // Reset both temporary and applied filters
+        $this->tempStatus = '';
+        $this->tempFromDate = '';
+        $this->tempToDate = '';
+        $this->status = '';
+        $this->fromDate = '';
+        $this->toDate = '';
         $this->resetPage();
+        $this->closeFilterModal();
+        
+        // Dispatch event to update toolbar (filters cleared)
+        $this->dispatch('filtersUpdated', $this->getActiveFilters());
+    }
+
+    /**
+     * Remove a specific filter by key
+     */
+    public function removeFilter($key = null)
+    {
+        // Handle array parameter from Livewire event
+        if (is_array($key) && isset($key['key'])) {
+            $key = $key['key'];
+        }
+        
+        if ($key === 'date') {
+            $this->fromDate = '';
+            $this->toDate = '';
+        } elseif ($key === 'status') {
+            $this->status = '';
+        }
+        
+        $this->resetPage();
+        
+        // Dispatch event to update toolbar with new active filters
+        $this->dispatch('filtersUpdated', $this->getActiveFilters());
+    }
+
+    /**
+     * Get active filters for display in toolbar
+     */
+    public function getActiveFilters()
+    {
+        $filters = [];
+        
+        // Date range filter
+        if ($this->fromDate && $this->toDate) {
+            $filters[] = [
+                'type' => 'date',
+                'label' => date('d M, Y', strtotime($this->fromDate)) . ' - ' . date('d M, Y', strtotime($this->toDate)),
+                'key' => 'date'
+            ];
+        }
+        
+        // Status filter
+        if ($this->status) {
+            $statusLabels = [
+                'active' => 'Active',
+                'inactive' => 'Inactive',
+            ];
+            $filters[] = [
+                'type' => 'status',
+                'label' => ($statusLabels[$this->status] ?? ucfirst($this->status)) . ' categories',
+                'key' => 'status'
+            ];
+        }
+        
+        return $filters;
     }
 
 
@@ -131,8 +223,8 @@ class Table extends Component
             ->when($this->search, fn($q) => $q->where('name', 'like', "%{$this->search}%"))
             ->when($this->fromDate && $this->toDate, fn($q) =>
                 $q->whereBetween('created_at', [
-                    $this->fromDate.'00:00:00',
-                    $this->toDate.'23:59:59'
+                    $this->fromDate . ' 00:00:00',
+                    $this->toDate . ' 23:59:59'
                 ])
             )
              
@@ -151,8 +243,15 @@ class Table extends Component
         ->latest()
         ->paginate($this->perPage);
          
+        $activeFilters = $this->getActiveFilters();
         
-        return view('livewire.admin.service-categories.table', compact('data'));
+        // Dispatch event to update toolbar with current active filters
+        $this->dispatch('filtersUpdated', $activeFilters);
+        
+        return view('livewire.admin.service-categories.table', [
+            'data' => $data,
+            'activeFilters' => $activeFilters,
+        ]);
     } 
 
     public function exportCsv(): StreamedResponse

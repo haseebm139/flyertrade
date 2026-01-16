@@ -283,7 +283,8 @@
                             <th class="sortable" wire:click="sortBy('total_price', 'booking')">Amount Paid <img
                                     src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
                             <th class="sortable" wire:click="sortBy('booking_working_minutes', 'booking')">Duration
-                                <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
+                                <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
+                            </th>
 
                             <th></th>
                         </tr>
