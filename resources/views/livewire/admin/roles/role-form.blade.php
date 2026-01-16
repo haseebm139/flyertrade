@@ -18,25 +18,25 @@
                         <div class="form-group">
                             <label>Role</label>
                             <input type="text" class="form-input @error('name') error-input @enderror"
-                                wire:model="name" placeholder="Enter name">
+                                wire:model="name" placeholder="Enter name" wire:loading.attr="disabled" wire:target="save">
                             @error('name')
-                                <div class="error-message">
+                                <div class="error-message" style="margin-top: 0.5rem;">
                                     <i class="fa-solid fa-circle-exclamation"></i>
                                     <span>{{ $message }}</span>
                                 </div>
                             @enderror
                         </div>
                         <div class="form-actions justify-content-center" id="first_btns____">
-                            <button type="button" class="cancel-btn" wire:click="closeModal">Cancel</button>
+                            <button type="button" class="cancel-btn" wire:click="closeModal" wire:loading.attr="disabled" wire:target="save">Cancel</button>
                             <button type="button" class="submit-btn add_permission________"
-                                id="add_permission________"><i class="fa-solid fa-plus"></i>
+                                id="add_permission________" wire:loading.attr="disabled" wire:target="save"><i class="fa-solid fa-plus mr-2"></i>
                                 {{ $isEdit ? 'Edit Role' : 'Add Role' }}
                             </button>
                         </div>
                     </div>
 
 
-                    <div id="second_btns____wrapper" class="permission-wrapper-hidden">
+                    <div id="second_btns____wrapper" class="permission-wrapper-hidden" style="display: none;">
 
                         <label>Permission</label>
                         <!-- Permission Section (hidden by default) -->
@@ -53,8 +53,8 @@
                                     @if ($groupPermissions->count() > 0)
                                         <div class="tabs-nav">
                                             <div class="tab {{ $firstActive ? 'active' : '' }}  roles-permission-theme-tab"
-                                                data-target="{{ Str::slug($groupName) . '_tab' }}"
-                                                onclick="switchTab('{{ Str::slug($groupName) . '_tab' }}')">
+                                                data-target="{{ Str::slug($groupName) }}_tab"
+                                                onclick="switchTab('{{ Str::slug($groupName) }}_tab')">
                                                 {{ $groupName }}</div>
 
                                         </div>
@@ -88,9 +88,16 @@
                             @endforeach
                             <!-- Form actions -->
                             <div class="form-actions justify-content-center">
-                                <button type="button" class="cancel-btn" wire:click="closeModal">Cancel</button>
-                                <button type="submit" class="submit-btn"><i class="fa-solid fa-plus"></i>
-                                    {{ $isEdit ? 'Add Permission' : 'Add Permission' }}
+                                <button type="button" class="cancel-btn" wire:click="closeModal" wire:loading.attr="disabled" wire:target="save">Cancel</button>
+                                <button type="submit" class="submit-btn" wire:loading.attr="disabled" wire:target="save">
+                                    <span wire:loading.remove wire:target="save">
+                                        <i class="fa-solid fa-plus mr-2"></i>
+                                        {{ $isEdit ? 'Update Role' : 'Add Role' }}
+                                    </span>
+                                    <span wire:loading wire:target="save">
+                                        <i class="fa-solid fa-spinner fa-spin mr-2"></i>
+                                        Saving...
+                                    </span>
                                 </button>
                             </div>
                         </div>

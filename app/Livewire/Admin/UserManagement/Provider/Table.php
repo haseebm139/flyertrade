@@ -30,11 +30,11 @@ class Table extends Component
 
     protected $listeners = [
         'categoryUpdated' => '$refresh',  
-        'exportCsvRequested' => 'exportCsv',
-        'openFilterModal'    => 'openFilterModal',
-        'searchUpdated'      => 'updatingSearch',
-        'addItemRequested'   => 'openAddModal',
-        'removeFilter'       => 'removeFilter',
+        'exportCsvRequested-service-providers' => 'exportCsv',
+        'openFilterModal-service-providers'    => 'openFilterModal',
+        'searchUpdated-service-providers' => 'updatingSearch',
+        'removeFilter-service-providers' => 'removeFilter',
+        'addItemRequested-service-providers'   => 'openAddModal',
     ];
 
     # -------------------- SEARCH + FILTER --------------------
@@ -100,6 +100,16 @@ class Table extends Component
         } catch (\Exception $e) {
             $this->dispatch('showSweetAlert', 'error', 'Error deleting provider: ' . $e->getMessage(), 'Error');
         }
+    }
+
+    public function addItemRequested()
+    {
+        $this->dispatch('addItemRequested');
+    }
+
+    public function openAddModal($id = null)
+    {
+        $this->dispatch('addItemRequested', id: $id);
     }
 
     public function edit($id)
@@ -245,9 +255,6 @@ class Table extends Component
         $data = $this->getDataQuery()->paginate($this->perPage);
         $activeFilters = $this->getActiveFilters();
         
-        // Dispatch event to update toolbar with current active filters
-        $this->dispatch('filtersUpdated', $activeFilters);
-         
         return view('livewire.admin.user-management.provider.table', [
             'data' => $data,
             'activeFilters' => $activeFilters,

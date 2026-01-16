@@ -71,40 +71,11 @@
         // Refresh role table
         Livewire.on('roleSaved', () => {
             Livewire.dispatch('refreshRolesTable');
-            Livewire.dispatch('$refresh');
         });
 
         // Refresh user table
         Livewire.on('userSaved', () => {
             Livewire.dispatch('refreshUsersTable');
-            Livewire.dispatch('$refresh');
-        });
-
-        // Simple toastr
-        Livewire.on('showToastr', (type, message, title) => {
-            const toast = document.createElement('div');
-            toast.className = `toast toast-${type}`;
-            toast.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <strong>${title}</strong>
-                    <span>${message}</span>
-                </div>
-            `;
-            toast.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};
-                color: white;
-                padding: 12px 20px;
-                border-radius: 4px;
-                z-index: 10000;
-                animation: slideIn 0.3s ease;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            `;
-
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
         });
     });
 

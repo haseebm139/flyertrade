@@ -97,7 +97,7 @@ class UserForm extends Component
                 $message = 'User created successfully.';
             }
 
-            $this->dispatch('showToastr', 'success', $message, 'Success');
+            $this->dispatch('showSweetAlert', 'success', $message, 'Success');
             $this->dispatch('userSaved');
             $this->dispatch('refreshUsersTable');
             
@@ -108,7 +108,7 @@ class UserForm extends Component
             
             $this->closeUserModal();
         } catch (\Exception $e) {
-            $this->dispatch('showToastr', 'error', 'Error saving user: ' . $e->getMessage(), 'Error');
+            $this->dispatch('showSweetAlert', 'error', 'Error saving user: ' . $e->getMessage(), 'Error');
         }
     }
 

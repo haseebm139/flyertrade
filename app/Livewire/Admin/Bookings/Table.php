@@ -27,9 +27,9 @@ class Table extends Component
     public $providerFilter = ''; 
     protected $listeners = [
         'categoryUpdated' => '$refresh',  
-        'exportCsvRequested' => 'exportCsv',
-        'openFilterModal'    => 'openFilterModal',
-        'searchUpdated'      => 'updatingSearch',
+        'exportCsvRequested-all-bookings' => 'exportCsv',
+        'openFilterModal-all-bookings'    => 'openFilterModal',
+        'searchUpdated-all-bookings'      => 'updatingSearch',
         'filterByStatus'     => 'filterByStatus',
     ];
      # -------------------- SEARCH + FILTER --------------------

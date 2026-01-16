@@ -23,7 +23,7 @@
 
                 @foreach ($activeFilters as $filter)
                     <a href="#" class="filter_active_btna___"
-                        wire:click="$dispatch('removeFilter', { key: '{{ $filter['key'] }}' })">
+                        wire:click="removeFilter('{{ $filter['key'] }}')">
                         <span>{{ $filter['label'] }}</span>
                         <i class="fa-solid fa-xmark"></i>
                     </a>

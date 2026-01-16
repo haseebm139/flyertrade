@@ -4,6 +4,8 @@ namespace App\Livewire\Admin\Components;
 
 use Livewire\Component;
 
+use Livewire\Attributes\Reactive;
+
 class Toolbar extends Component
 {
 
@@ -12,45 +14,43 @@ class Toolbar extends Component
     public string $button_label = ''; // default label
     public string $search_label = ''; // default label
     public bool $showAddButton = true; // Control button visibility
-    public array $activeFilters = []; // Active filters to display in toolbar
     
-    protected $listeners = [
-        'filtersUpdated' => 'updateFilters',
-    ];
+    #[Reactive]
+    public array $activeFilters = []; // Active filters to display in toolbar
     
     public function mount($activeFilters = [])
     {
         $this->activeFilters = $activeFilters;
     }
     
-    public function updateFilters($filters)
+    private function getNamespace()
     {
-        $this->activeFilters = $filters ?? [];
+        return str_replace(' ', '-', strtolower($this->label));
     }
-    
+
     public function addItem()
     {
-         
-        $this->dispatch('addItemRequested');
+        $this->dispatch('addItemRequested-' . $this->getNamespace());
     }
+
     public function exportCsv()
     {
-        // Tell parent to handle exporting
-        $this->dispatch('exportCsvRequested');
+        $this->dispatch('exportCsvRequested-' . $this->getNamespace());
     }
 
     public function openFilterModal()
     {
-        // Tell parent table to show modal
-        $this->dispatch('openFilterModal');
+        $this->dispatch('openFilterModal-' . $this->getNamespace());
+    }
+
+    public function removeFilter($key)
+    {
+        $this->dispatch('removeFilter-' . $this->getNamespace(), key: $key);
     }
 
     public function updatedSearch()
     {
-
-        
-        // Send search updates to parent
-        $this->dispatch('searchUpdated', $this->search);
+        $this->dispatch('searchUpdated-' . $this->getNamespace(), $this->search);
     }
 
 

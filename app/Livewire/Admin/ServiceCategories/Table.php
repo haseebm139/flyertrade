@@ -30,10 +30,11 @@ class Table extends Component
     
     protected $listeners = [
         'categoryUpdated' => '$refresh',  
-        'exportCsvRequested' => 'exportCsv',
-        'openFilterModal'    => 'openFilterModal',
-        'searchUpdated'      => 'updatingSearch',
-        'removeFilter'       => 'removeFilter',
+        'exportCsvRequested-service-categories' => 'exportCsv',
+        'openFilterModal-service-categories'    => 'openFilterModal',
+        'searchUpdated-service-categories' => 'updatingSearch',
+        'removeFilter-service-categories' => 'removeFilter',
+        'addItemRequested-service-categories'   => 'addItemRequested',
     ];
 
      
@@ -103,6 +104,11 @@ class Table extends Component
         } catch (\Exception $e) {
             $this->dispatch('showSweetAlert', 'error', 'Error deleting service category: ' . $e->getMessage(), 'Error');
         }
+    }
+
+    public function addItemRequested()
+    {
+        $this->dispatch('addItemRequested');
     }
 
     public function edit($id)
@@ -244,9 +250,6 @@ class Table extends Component
         ->paginate($this->perPage);
          
         $activeFilters = $this->getActiveFilters();
-        
-        // Dispatch event to update toolbar with current active filters
-        $this->dispatch('filtersUpdated', $activeFilters);
         
         return view('livewire.admin.service-categories.table', [
             'data' => $data,

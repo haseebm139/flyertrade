@@ -18,16 +18,33 @@ class RolesTable extends Component
     public $sortField = 'name';
     public $sortDirection = 'asc';
     public $selected = [];
+    public $selectAll = false;
     public $showFilterModal = false;
     public $fromDate = '';
     public $toDate = '';
     public $statusFilter = '';
     public $confirmingId = null;
 
+    // Temporary filter values (only used in modal, not applied until Apply button clicked)
+    public $tempFromDate = '';
+    public $tempToDate = '';
+
     protected $queryString = [
         'search' => ['except' => ''],
         'sortField' => ['except' => 'name'],
         'sortDirection' => ['except' => 'asc'],
+    ];
+
+    protected $listeners = [
+        'roleSaved' => 'refreshRoles',
+        'refreshRolesTable' => 'refreshRolesTable',
+        'roleUpdated' => 'refreshRole',
+        'roleDeleted' => 'refreshAfterDelete',
+        'openFilterModal-roles' => 'openFilterModal',
+        'searchUpdated-roles' => 'updatingSearch',
+        'removeFilter-roles' => 'removeFilter',
+        'exportCsvRequested-roles' => 'exportCsv',
+        'addItemRequested-roles' => 'addRole',
     ];
 
     public function mount()
@@ -39,12 +56,85 @@ class RolesTable extends Component
         }
     }
 
+    # -------------------- SEARCH + FILTER --------------------
+    public function updatingSearch($value) {  
+        $this->search = $value;
+        $this->resetPage(); 
+    }
+
+    public function openFilterModal()
+    {
+        $this->tempFromDate = $this->fromDate;
+        $this->tempToDate = $this->toDate;
+        $this->showFilterModal = true;
+    }
+
+    public function closeFilterModal()
+    {
+        $this->showFilterModal = false;
+    }
+
+    public function resetFilters()
+    {
+        $this->tempFromDate = '';
+        $this->tempToDate = '';
+        $this->fromDate = '';
+        $this->toDate = '';
+        
+        $this->resetPage();
+        $this->closeFilterModal();
+        $this->dispatch('filtersUpdated', $this->getActiveFilters());
+    }
+
+    public function applyFilters()
+    {
+        $this->fromDate = $this->tempFromDate;
+        $this->toDate = $this->tempToDate;
+        
+        $this->resetPage();
+        $this->closeFilterModal();
+        $this->dispatch('filtersUpdated', $this->getActiveFilters());
+    }
+
+    public function removeFilter($key = null)
+    {
+        if (is_array($key) && isset($key['key'])) {
+            $key = $key['key'];
+        }
+        
+        if ($key === 'date') {
+            $this->fromDate = '';
+            $this->toDate = '';
+        }
+        
+        $this->resetPage();
+        $this->dispatch('filtersUpdated', $this->getActiveFilters());
+    }
+
+    public function getActiveFilters()
+    {
+        $filters = [];
+        
+        if ($this->fromDate && $this->toDate) {
+            $filters[] = [
+                'type' => 'date',
+                'label' => date('d M, Y', strtotime($this->fromDate)) . ' - ' . date('d M, Y', strtotime($this->toDate)),
+                'key' => 'date'
+            ];
+        }
+        
+        return $filters;
+    }
+
     public function render()
     {
         $roles = $this->getDataQuery()->paginate($this->perPage);
-
-         
-        return view('livewire.admin.roles.roles-table', compact('roles'));
+        $activeFilters = $this->getActiveFilters();
+        
+        return view('livewire.admin.roles.roles-table', [
+            'roles' => $roles,
+            'activeFilters' => $activeFilters
+        ]);
     }
 
     private function getDataQuery()
@@ -85,31 +175,6 @@ class RolesTable extends Component
         }
     }
 
-    public function openFilterModal()
-    {
-        $this->showFilterModal = true;
-    }
-
-    public function closeFilterModal()
-    {
-        $this->showFilterModal = false;
-    }
-
-    public function resetFilters()
-    {
-        $this->search = '';
-        $this->fromDate = '';
-        $this->toDate = '';
-        $this->statusFilter = '';
-        $this->resetPage();
-    }
-
-    public function applyFilters()
-    {
-        $this->resetPage();
-        $this->closeFilterModal();
-    }
-
     public function exportCsv()
     {
         $roles = $this->getDataQuery()->get();
@@ -121,12 +186,15 @@ class RolesTable extends Component
             'Content-Disposition' => 'attachment; filename="' . $filename . '"',
         ];
 
-        $callback = function() use ($roles) {
+        $callback = function() {
             $file = fopen('php://output', 'w');
             
             // CSV Headers
             fputcsv($file, ['Role Name', 'Users Count', 'Created At', 'Updated At']);
             
+            // Fetch fresh data for callback
+            $roles = $this->getDataQuery()->get();
+
             // CSV Data
             foreach ($roles as $role) {
                 fputcsv($file, [
@@ -145,7 +213,6 @@ class RolesTable extends Component
 
     public function refreshTable()
     {
-        // Force refresh the table data by resetting pagination
         $this->resetPage();
     }
 
@@ -164,14 +231,12 @@ class RolesTable extends Component
     #[On('roleUpdated')]
     public function refreshRole($roleId)
     {
-        // Refresh the specific role data
         $this->refreshTable();
     }
 
     #[On('roleDeleted')]
     public function refreshAfterDelete()
     {
-        // Refresh the table after role deletion
         $this->refreshTable();
     }
 
@@ -187,17 +252,26 @@ class RolesTable extends Component
             
             // Check if role has users
             if ($role->users()->count() > 0) {
-                $this->dispatch('showSweetAlert', type: 'error', message: 'Cannot delete role. It has assigned users.', title: 'Error');
+                $this->dispatch('showSweetAlert', 'error', 'Cannot delete role. It has assigned users.', 'Error');
                 $this->confirmingId = null;
                 return;
             }
             
             $role->delete();
-            $this->dispatch('showSweetAlert', type: 'success', message: 'Role deleted successfully.', title: 'Success');
+            $this->dispatch('showSweetAlert', 'success', 'Role deleted successfully.', 'Success');
             $this->dispatch('roleDeleted');
             $this->confirmingId = null;
         } catch (\Exception $e) {
-            $this->dispatch('showSweetAlert', type: 'error', message: 'Error deleting role: ' . $e->getMessage(), title: 'Error');
+            $this->dispatch('showSweetAlert', 'error', 'Error deleting role: ' . $e->getMessage(), 'Error');
+        }
+    }
+
+    public function addItemRequested()
+    {
+        if (method_exists($this, 'addRole')) {
+            $this->addRole();
+        } else {
+            $this->dispatch('addItemRequested');
         }
     }
 
@@ -216,8 +290,17 @@ class RolesTable extends Component
         $this->dispatch('openRoleModal', null, 'create');
     }
 
-    public function openRoleModal($roleId = null, $mode = 'create')
+    public function updatedSelectAll($value)
     {
-        $this->dispatch('openRoleModal', $roleId, $mode);
+        if ($value) {
+            $this->selected = $this->getDataQuery()->pluck('id')->map(fn($id) => (string)$id)->toArray();
+        } else {
+            $this->selected = [];
+        }
+    }
+
+    public function updatedSelected()
+    {
+        $this->selectAll = false;
     }
 }

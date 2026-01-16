@@ -77,11 +77,9 @@ class RoleForm extends Component
                 $message = 'Role created successfully.';
             }
 
-            $this->dispatch('showSweetAlert', type: 'success', message: $message, title: 'Success');
+            $this->dispatch('showSweetAlert', 'success', $message, 'Success');
             $this->dispatch('roleSaved');
             $this->dispatch('refreshRolesTable');
-            // Also try dispatching to parent
-            $this->dispatch('roleSaved')->to('admin.roles.roles-table');
             
             // If editing a role, dispatch a specific event to refresh that role's data
             if ($this->isEdit && $this->roleId) {
@@ -91,7 +89,7 @@ class RoleForm extends Component
             // Close the modal after successful save
             $this->closeModal();
         } catch (\Exception $e) {
-            $this->dispatch('showSweetAlert', type: 'error', message: 'Error saving role: ' . $e->getMessage(), title: 'Error');
+            $this->dispatch('showSweetAlert', 'error', 'Error saving role: ' . $e->getMessage(), 'Error');
         }
     }
 

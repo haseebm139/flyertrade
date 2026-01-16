@@ -19,25 +19,36 @@ class UsersTable extends Component
     public $sortField = 'name';
     public $sortDirection = 'asc';
     public $selected = [];
+    public $selectAll = false;
     public $showFilterModal = false;
     public $fromDate = '';
     public $toDate = '';
     public $statusFilter = '';
     public $roleFilter = '';
-    public $showModal = false;
     public $confirmingId = null;
     
-    // Form properties
-    public $name = '';
-    public $email = '';
-    public $phone = '';
-    public $address = '';
-    public $user_type = 'customer';
+    // Temporary filter values (only used in modal, not applied until Apply button clicked)
+    public $tempStatus = '';
+    public $tempFromDate = '';
+    public $tempToDate = '';
+    public $tempRole = '';
 
     protected $queryString = [
         'search' => ['except' => ''],
         'sortField' => ['except' => 'name'],
         'sortDirection' => ['except' => 'asc'],
+    ];
+
+    protected $listeners = [
+        'userSaved' => 'refreshUsers',
+        'refreshUsersTable' => 'refreshUsersTable',
+        'userUpdated' => 'refreshUser',
+        'userDeleted' => 'refreshAfterDelete',
+        'openFilterModal-users' => 'openFilterModal',
+        'searchUpdated-users' => 'updatingSearch',
+        'removeFilter-users' => 'removeFilter',
+        'exportCsvRequested-users' => 'exportCsv',
+        'addItemRequested-users' => 'addUser',
     ];
 
     public function mount()
@@ -49,9 +60,107 @@ class UsersTable extends Component
         }
     }
 
+    # -------------------- SEARCH + FILTER --------------------
+    public function updatingSearch($value) {  
+        $this->search = $value;
+        $this->resetPage(); 
+    }
+
+    public function openFilterModal()
+    {
+        $this->tempStatus = $this->statusFilter;
+        $this->tempFromDate = $this->fromDate;
+        $this->tempToDate = $this->toDate;
+        $this->tempRole = $this->roleFilter;
+        $this->showFilterModal = true;
+    }
+
+    public function closeFilterModal()
+    {
+        $this->showFilterModal = false;
+    }
+
+    public function resetFilters()
+    {
+        $this->tempStatus = '';
+        $this->tempFromDate = '';
+        $this->tempToDate = '';
+        $this->tempRole = '';
+        
+        $this->statusFilter = '';
+        $this->fromDate = '';
+        $this->toDate = '';
+        $this->roleFilter = '';
+        
+        $this->resetPage();
+        $this->closeFilterModal();
+        $this->dispatch('filtersUpdated', $this->getActiveFilters());
+    }
+
+    public function applyFilters()
+    {
+        $this->statusFilter = $this->tempStatus;
+        $this->fromDate = $this->tempFromDate;
+        $this->toDate = $this->tempToDate;
+        $this->roleFilter = $this->tempRole;
+        
+        $this->resetPage();
+        $this->closeFilterModal();
+        $this->dispatch('filtersUpdated', $this->getActiveFilters());
+    }
+
+    public function removeFilter($key = null)
+    {
+        if (is_array($key) && isset($key['key'])) {
+            $key = $key['key'];
+        }
+        
+        if ($key === 'date') {
+            $this->fromDate = '';
+            $this->toDate = '';
+        } elseif ($key === 'status') {
+            $this->statusFilter = '';
+        } elseif ($key === 'role') {
+            $this->roleFilter = '';
+        }
+        
+        $this->resetPage();
+        $this->dispatch('filtersUpdated', $this->getActiveFilters());
+    }
+
+    public function getActiveFilters()
+    {
+        $filters = [];
+        
+        if ($this->fromDate && $this->toDate) {
+            $filters[] = [
+                'type' => 'date',
+                'label' => date('d M, Y', strtotime($this->fromDate)) . ' - ' . date('d M, Y', strtotime($this->toDate)),
+                'key' => 'date'
+            ];
+        }
+        
+        if ($this->statusFilter) {
+            $filters[] = [
+                'type' => 'status',
+                'label' => ucfirst($this->statusFilter) . ' users',
+                'key' => 'status'
+            ];
+        }
+
+        if ($this->roleFilter) {
+            $filters[] = [
+                'type' => 'role',
+                'label' => 'Role: ' . ucfirst($this->roleFilter),
+                'key' => 'role'
+            ];
+        }
+        
+        return $filters;
+    }
+
     public function refreshTable()
     {
-        // Force refresh the table data by resetting pagination
         $this->resetPage();
     }
 
@@ -83,7 +192,13 @@ class UsersTable extends Component
     {
         $users = $this->getDataQuery()->paginate($this->perPage);
         $roles = Role::all();
-        return view('livewire.admin.users.users-table', compact('users', 'roles'));
+        $activeFilters = $this->getActiveFilters();
+        
+        return view('livewire.admin.users.users-table', [
+            'users' => $users,
+            'roles' => $roles,
+            'activeFilters' => $activeFilters
+        ]);
     }
 
     private function getDataQuery()
@@ -124,32 +239,6 @@ class UsersTable extends Component
         }
     }
 
-    public function openFilterModal()
-    {
-        $this->showFilterModal = true;
-    }
-
-    public function closeFilterModal()
-    {
-        $this->showFilterModal = false;
-    }
-
-    public function resetFilters()
-    {
-        $this->search = '';
-        $this->fromDate = '';
-        $this->toDate = '';
-        $this->statusFilter = '';
-        $this->roleFilter = '';
-        $this->resetPage();
-    }
-
-    public function applyFilters()
-    {
-        $this->resetPage();
-        $this->closeFilterModal();
-    }
-
     public function exportCsv()
     {
         $users = $this->getDataQuery()->get();
@@ -161,12 +250,15 @@ class UsersTable extends Component
             'Content-Disposition' => 'attachment; filename="' . $filename . '"',
         ];
 
-        $callback = function() use ($users) {
+        $callback = function() {
             $file = fopen('php://output', 'w');
             
             // CSV Headers
             fputcsv($file, ['Name', 'Email', 'User Type', 'Roles', 'Phone', 'Address', 'Created At']);
             
+            // Fetch fresh data for the callback
+            $users = $this->getDataQuery()->get();
+
             // CSV Data
             foreach ($users as $user) {
                 fputcsv($file, [
@@ -197,10 +289,22 @@ class UsersTable extends Component
             $user = User::findOrFail($userId);
             $user->delete();
             $this->confirmingId = null;
-            $this->dispatch('showSweetAlert', type: 'success', message: 'User deleted successfully.', title: 'Success');
+            $this->dispatch('showSweetAlert', 'success', 'User deleted successfully.', 'Success');
             $this->dispatch('userDeleted');
         } catch (\Exception $e) {
-            $this->dispatch('showSweetAlert', type: 'error', message: 'Error deleting user: ' . $e->getMessage(), title: 'Error');
+            $this->dispatch('showSweetAlert', 'error', 'Error deleting user: ' . $e->getMessage(), 'Error');
+        }
+    }
+
+    public function addItemRequested()
+    {
+        if (method_exists($this, 'addUser')) {
+            $this->addUser();
+        } elseif (method_exists($this, 'addRole')) {
+            $this->addRole();
+        } else {
+            // Default behavior for other tables (like Service Categories)
+            $this->dispatch('addItemRequested');
         }
     }
 
@@ -214,86 +318,22 @@ class UsersTable extends Component
         $this->dispatch('openUserModal', $userId, 'edit');
     }
 
-    public function assignRole($userId, $roleId)
-    {
-        try {
-            $user = User::findOrFail($userId);
-            $role = Role::findOrFail($roleId);
-            
-            if (!$user->hasRole($role->name)) {
-                $user->assignRole($role);
-                $this->dispatch('showToastr', 'success', 'Role assigned successfully.', 'Success');
-            } else {
-                $this->dispatch('showToastr', 'info', 'User already has this role.', 'Info');
-            }
-        } catch (\Exception $e) {
-            $this->dispatch('showToastr', 'error', 'Error assigning role: ' . $e->getMessage(), 'Error');
-        }
-    }
-
-    public function removeRole($userId, $roleId)
-    {
-        try {
-            $user = User::findOrFail($userId);
-            $role = Role::findOrFail($roleId);
-            
-            $user->removeRole($role);
-            $this->dispatch('showToastr', 'success', 'Role removed successfully.', 'Success');
-        } catch (\Exception $e) {
-            $this->dispatch('showToastr', 'error', 'Error removing role: ' . $e->getMessage(), 'Error');
-        }
-    }
-
-    public function openUserModal($userId = null, $mode = 'create')
-    {
-        $this->dispatch('openUserModal', $userId, $mode);
-    }
-
-    public function closeUserModal()
-    {
-        $this->showModal = false;
-        $this->resetForm();
-    }
-
-    public function saveUser()
-    {
-        $this->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email',
-            'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string|max:500',
-            'user_type' => 'required|exists:roles,name',
-        ]);
-
-        try {
-            $user = User::create([
-                'name' => $this->name,
-                'email' => $this->email,
-                'phone' => $this->phone,
-                'address' => $this->address,
-                'user_type' => $this->user_type,
-                'password' => Hash::make('password123'), // Default password
-            ]);
-
-            $this->dispatch('showToastr', 'success', 'User created successfully.', 'Success');
-            $this->closeUserModal();
-            $this->resetPage();
-        } catch (\Exception $e) {
-            $this->dispatch('showToastr', 'error', 'Error creating user: ' . $e->getMessage(), 'Error');
-        }
-    }
-
-    public function resetForm()
-    {
-        $this->name = '';
-        $this->email = '';
-        $this->phone = '';
-        $this->address = '';
-        $this->user_type = 'customer';
-    }
-
     public function addUser()
     {
-        $this->openUserModal();
+        $this->dispatch('openUserModal', null, 'create');
+    }
+
+    public function updatedSelectAll($value)
+    {
+        if ($value) {
+            $this->selected = $this->getDataQuery()->pluck('id')->map(fn($id) => (string)$id)->toArray();
+        } else {
+            $this->selected = [];
+        }
+    }
+
+    public function updatedSelected()
+    {
+        $this->selectAll = false;
     }
 }
