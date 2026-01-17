@@ -6,13 +6,18 @@
 
         font-weight:500;
     }
+    @media (max-width:600px) {
+        .booking_id{
+            min-width: 100px;
+        }
+    }
 </style>
     <div class="table-responsive">
         <table class="theme-table">
             <thead>
                 <tr>
                     <th><input type="checkbox"></th>
-                    <th class="sortable" data-column="0">Booking ID <img src="{{ asset('assets/images/icons/sort.svg') }}"
+                    <th class="sortable booking_id" data-column="0">Booking ID <img src="{{ asset('assets/images/icons/sort.svg') }}"
                             class="sort-icon">
                     </th>
                     <th class="sortable" data-column="4">Service category <img
