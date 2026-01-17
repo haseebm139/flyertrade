@@ -670,6 +670,10 @@
         border-radius: 50%;
         cursor: pointer;
     }
+    .swiper{
+        width:100%;
+        min-height:8vw;    
+        }
 </style>
 
 
@@ -723,7 +727,16 @@
         <div class="swiper photos w-100">
             <div class="swiper-wrapper">
                 <div class="swiper-slide">
-                    <img class="w-100" src="{{ asset('assets/images/icons/service_one.svg') }}" alt="">
+                    <img class="w-100"  src="{{ asset('assets/images/icons/service_one.svg') }}" alt="">
+                </div>
+                <div class="swiper-slide">
+                    <img class="w-100" src="{{ asset('assets/images/icons/service_four.svg') }}" alt="">
+                </div>
+                <div class="swiper-slide">
+                    <img class="w-100" src="{{ asset('assets/images/icons/service_three.svg') }}" alt="">
+                </div>
+                <div class="swiper-slide">
+                    <img class="w-100" src="{{ asset('assets/images/icons/service_four.svg') }}" alt="">
                 </div>
                 <div class="swiper-slide">
                     <img class="w-100" src="{{ asset('assets/images/icons/service_four.svg') }}" alt="">
