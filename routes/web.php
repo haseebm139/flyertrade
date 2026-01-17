@@ -22,5 +22,8 @@ Route::get('/clear-cache', function () {
 
     return "✅ All caches cleared successfully!";
 })->name('cache.clear');
+Route::view('/privacy-policy', 'pages.privacy-policy')->name('privacy-policy');
+Route::view('/terms-conditions', 'pages.terms-conditions')->name('terms-conditions');
+
 require __DIR__.'/auth.php';
 require __DIR__.'/admin.php';
