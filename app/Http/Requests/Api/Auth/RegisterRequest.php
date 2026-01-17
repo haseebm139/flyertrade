@@ -35,6 +35,7 @@ class RegisterRequest extends FormRequest
             'state'     => ['nullable', 'string', 'max:100'],
             'zip'       => ['nullable', 'string', 'max:20'],
             'address'   => ['nullable', 'string', 'max:255'],
+            'phone'     => ['nullable', 'string'],
         ];
     }
 

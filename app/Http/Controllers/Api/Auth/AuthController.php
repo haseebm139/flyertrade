@@ -22,6 +22,7 @@ class AuthController extends BaseController
 {
     public function register(RegisterRequest $request)
     {
+        
         $user = User::where('email', $request->email)->first();
 
         if ($user) {
@@ -132,6 +133,7 @@ class AuthController extends BaseController
             'role_id'   => $role,
             'user_type' => $role,
             'password'  => Hash::make($request->password ?? $request->social_id),
+            'phone'     => $request->phone ?? null,
         ];
 
         $user = User::create($data);
