@@ -36,10 +36,8 @@
 </div>
 
 <!-- Role Form Modal -->
-<livewire:admin.roles.role-form :key="'role-form-' . time()" />
-
-<!-- User Form Modal -->
-<livewire:admin.users.user-form :key="'user-form-' . time()" />
+    <livewire:admin.roles.role-form :key="'role-form-static'" />
+    <livewire:admin.users.user-form :key="'user-form-static'" />
 
 
 <script>

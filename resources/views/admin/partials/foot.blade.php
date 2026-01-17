@@ -34,5 +34,3 @@ document.addEventListener('change', e => {
 
 
 </script>
-
-

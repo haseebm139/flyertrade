@@ -4,6 +4,7 @@ namespace App\Livewire\Admin\Roles;
 
 use Livewire\Component;
 use Livewire\Attributes\On;
+use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
@@ -14,17 +15,22 @@ class RoleForm extends Component
     public $permissions = [];
     public $isEdit = false;
     public $showModal = false;
+    public $step = 1; // 1: Role Name, 2: Permissions
 
-    protected $rules = [
-        'name' => 'required|string|max:255|unique:roles,name',
-        'permissions' => 'array',
-    ];
+    protected function rules()
+    {
+        return [
+            'name' => 'required|string|max:255|unique:roles,name,' . ($this->roleId ?? 'NULL'),
+            'permissions' => 'required|array|min:1',
+        ];
+    }
 
     protected $messages = [
         'name.required' => 'Role name is required.',
         'name.unique' => 'A role with this name already exists.',
+        'permissions.required' => 'Please select at least one permission.',
+        'permissions.min' => 'Please select at least one permission.',
     ];
-
 
     public function mount($roleId = null, $isEdit = false)
     {
@@ -39,15 +45,28 @@ class RoleForm extends Component
     #[On('openRoleModal')]
     public function openModal($roleId = null, $mode = 'create')
     {
+        $this->resetValidation();
         $this->roleId = $roleId;
         $this->isEdit = ($mode === 'edit');
         $this->showModal = true;
+        $this->step = 1;
         
         if ($this->isEdit && $roleId) {
             $this->loadRole();
         } else {
             $this->resetForm();
         }
+    }
+
+    public function goToPermissions()
+    {
+        $this->validateOnly('name');
+        $this->step = 2;
+    }
+
+    public function backToName()
+    {
+        $this->step = 1;
     }
 
     public function loadRole()
@@ -59,10 +78,6 @@ class RoleForm extends Component
 
     public function save()
     {
-        if ($this->isEdit) {
-            $this->rules['name'] = 'required|string|max:255|unique:roles,name,' . $this->roleId;
-        }
-
         $this->validate();
 
         try {
@@ -99,24 +114,33 @@ class RoleForm extends Component
         $this->permissions = [];
         $this->roleId = null;
         $this->isEdit = false;
+        $this->step = 1;
     }
 
     public function closeModal()
     {
         $this->showModal = false;
+        $this->step = 1;
         $this->resetForm();
     }
 
     public function render()
     {
-        $permissionGroups = [
-            'Dashboard' => Permission::where('name', 'like', '%dashboard%')->get(),
-            'Users' => Permission::where('name', 'like', '%user%')->get(),
-            'Bookings' => Permission::where('name', 'like', '%booking%')->get(),
-            'Transactions' => Permission::where('name', 'like', '%transaction%')->orWhere('name', 'like', '%payment%')->get(),
-            'Reports' => Permission::where('name', 'like', '%report%')->orWhere('name', 'like', '%analytics%')->get(),
-            'Roles' => Permission::where('name', 'like', '%role%')->orWhere('name', 'like', '%permission%')->get(),
-        ];
+        $allPermissions = \DB::table('permissions')->get();
+        
+        $permissionGroups = $allPermissions->groupBy(function($permission) {
+            $name = strtolower(trim($permission->name));
+            $parts = explode(' ', $name);
+            $actions = ['create', 'read', 'write', 'delete', 'update', 'view', 'manage', 'can'];
+            
+            // Shuru ke tamam action words ko hatayein
+            while (!empty($parts) && in_array($parts[0], $actions)) {
+                array_shift($parts);
+            }
+            
+            // Ab jo pehla lafz bacha hai, sirf usey return karein
+            return !empty($parts) ? ucwords($parts[0]) : 'General';
+        })->sortKeys();
 
         return view('livewire.admin.roles.role-form', compact('permissionGroups'));
     }

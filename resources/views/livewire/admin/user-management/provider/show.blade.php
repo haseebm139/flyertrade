@@ -1,124 +1,69 @@
 <div>
-    <style>
-        .video-container {
-            position: relative;
-            width: 25%;
+   <style>
+    .video-container {
+        position: relative;
+        width: 25%;
 
 
-        }
+    }
 
-        .custom-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(0, 0, 0, 0.5);
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-        }
+    .custom-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(0, 0, 0, 0.5);
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+    }
 
-        .custom-btn {
-            width: 1.823vw;
-            height: 1.823vw;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-        }
+    .custom-btn {
+        width: 1.823vw;
+        height: 1.823vw;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+    }
 
-        .custom-progress {
-            flex-grow: 1;
-            height: 0.313vw;
-            background: #fff;
-            cursor: pointer;
-        }
+    .custom-progress {
+        flex-grow: 1;
+        height: 0.313vw;
+        background: #fff;
+        cursor: pointer;
+    }
 
-        .custom-progress input {
-            width: 100%;
-            height: 100%;
-            -webkit-appearance: none;
-            appearance: none;
-            background: transparent;
-            cursor: pointer;
-            padding: 0px;
-            overflow: visible;
-        }
+    .custom-progress input {
+        width: 100%;
+        height: 100%;
+        -webkit-appearance: none;
+        appearance: none;
+        background: transparent;
+        cursor: pointer;
+        padding: 0px;
+        overflow: visible;
+    }
 
-        .custom-progress input::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 0.625vw;
-            height: 0.625vw;
-            background: #fff;
-            border-radius: 50%;
-            cursor: pointer;
-        }
+    .custom-progress input::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 0.625vw;
+        height: 0.625vw;
+        background: #fff;
+        border-radius: 50%;
+        cursor: pointer;
+    }
 
-        .custom-progress input::-moz-range-thumb {
-            width: 0.625vw;
-            height: 0.625vw;
-            background: #fff;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-
-        #addUserModal label {
-            margin-top: 1vw;
-            margin-bottom: 0.2vw;
-        }
-
-        .deleteModal {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            z-index: 999;
-        }
-
-        /* Dynamic Status Styles */
-        .status {
-            padding: 0.3vw 1vw;
-            border-radius: 1.0416vw;
-            font-size: 0.9vw;
-            text-align: center;
-            width: fit-content;
-            font-weight: 500;
-            border: 1px solid transparent;
-            text-transform: capitalize;
-        }
-
-        .status.completed,
-        .status.active,
-        .status.verified {
-            color: #17A55A;
-            border-color: #17A55A;
-            background-color: rgba(23, 165, 90, 0.1);
-        }
-
-        .status.pending,
-        .status.awaiting_provider {
-            color: #EFC100;
-            border-color: #EFC100;
-            background-color: rgba(239, 193, 0, 0.1);
-        }
-
-        .status.cancelled,
-        .status.rejected,
-        .status.inactive,
-        .status.declined {
-            color: #dc3545;
-            border-color: #dc3545;
-            background-color: rgba(220, 53, 69, 0.1);
-        }
-
-        .status.confirmed,
-        .status.in_progress {
-            color: #007bff;
-            border-color: #007bff;
-            background-color: rgba(0, 123, 255, 0.1);
-        }
-    </style>
+    .custom-progress input::-moz-range-thumb {
+        width: 0.625vw;
+        height: 0.625vw;
+        background: #fff;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+</style> --}}
 
     <div class="users-toolbar">
         <nav class="breadcrumb">
@@ -609,22 +554,51 @@
 
                 @if ($selectedService->media->where('type', 'photo')->count() > 0)
                     <h4 style="font-size:0.938vw">Photos</h4>
-                    <div class="photos">
+                    <div class="swiper photos ">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <img class="w-100" src="{{ asset('assets/images/icons/service_one.svg') }}"
+                                    alt="">
+                            </div>
+                            <div class="swiper-slide">
+                                <img class="w-100" src="{{ asset('assets/images/icons/service_four.svg') }}"
+                                    alt="">
+                            </div>
+                            <div class="swiper-slide">
+                                <img class="w-100" src="{{ asset('assets/images/icons/service_three.svg') }}"
+                                    alt="">
+                            </div>
+                            <div class="swiper-slide">
+                                <img class="w-100" src="{{ asset('assets/images/icons/service_four.svg') }}"
+                                    alt="">
+                            </div>
+
+                        </div>
+
+                        <!-- Navigation Arrows -->
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                    </div>
+                    {{-- <div class="photos">
                         @foreach ($selectedService->media->where('type', 'photo') as $media)
                             <img src="{{ asset($media->file_path) }}" alt="service photo">
                         @endforeach
-                    </div>
+                    </div> --}}
                 @endif
 
                 @if ($selectedService->media->where('type', 'video')->count() > 0)
                     <h4 style="font-size:0.938vw;margin-top:0.9vw">Videos</h4>
-                    <div class="videos">
-                        @foreach ($selectedService->media->where('type', 'video') as $media)
-                            <div class="video-container">
+                    <div class="videos swiper w-100">
+                        <!-- Navigation Arrows -->
+                        <div class="swiper-button-next video-swiper-button-next"></div>
+                        <div class="swiper-button-prev video-swiper-button-prev"></div>
+                        <div class="swiper-wrapper">
+                            <div class="video-container swiper-slide">
                                 <video class="custom-video" style="width: 100%;">
-                                    <source src="{{ asset($media->file_path) }}" type="video/mp4">
+                                    <source src="{{ asset('assets/videos/video1.mp4') }}" type="video/mp4">
                                     Your browser does not support the video tag.
                                 </video>
+
                                 <div class="custom-controls">
                                     <div class="custom-btn play-btn">▶</div>
                                     <div class="custom-progress">
@@ -632,7 +606,41 @@
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
+
+                            <div class="video-container swiper-slide">
+                                <video class="custom-video" style="width: 100%;">
+                                    <source src="{{ asset('assets/videos/video1.mp4') }}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+
+                                <div class="custom-controls">
+                                    <div class="custom-btn play-btn">▶</div>
+                                    <div class="custom-progress">
+                                        <input type="range" class="progress-bar" value="0" max="100">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+
+                        </div>
+                        {{-- <div class="videos">
+                            @foreach ($selectedService->media->where('type', 'video') as $media)
+                                <div class="video-container">
+                                    <video class="custom-video" style="width: 100%;">
+                                        <source src="{{ asset($media->file_path) }}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                    <div class="custom-controls">
+                                        <div class="custom-btn play-btn">▶</div>
+                                        <div class="custom-progress">
+                                            <input type="range" class="progress-bar" value="0"
+                                                max="100">
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div> --}}
                     </div>
                 @endif
             </div>

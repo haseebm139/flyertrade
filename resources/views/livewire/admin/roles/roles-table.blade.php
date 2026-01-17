@@ -37,7 +37,7 @@
                                         @endif
                                     </div>
                                 @else
-                                    <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User" class="avatar-small">
+                                    {{-- <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User" class="avatar-small"> --}}
                                     <span class="users-count more">0 users</span>
                                 @endif
                             </div>

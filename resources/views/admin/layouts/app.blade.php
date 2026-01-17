@@ -10,7 +10,7 @@
     @include('admin.partials.head')
     @stack('styles')
     @livewireStyles
-    <style>
+     <style>
         div:where(.swal2-icon).swal2-success [class^=swal2-success-line] {
             background-color: #17A55A !important;
         }
@@ -157,7 +157,13 @@
 #closemenumutton, #menubutton{
     display: none;
 }
+.table-responsive {
 
+    height: 100%;
+    min-height: 388px;
+    max-height: 100%;
+
+}
         @media(max-width:600px) {
             .sidebar {
                 display: block;
@@ -432,6 +438,7 @@
 
         }
     </style>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
 </head>
 
 <body>
@@ -588,24 +595,54 @@
                 });
             });
         });
-
     </script>
-<script>
-const menuButton = document.getElementById('menubutton');
-const closeMenuButton = document.getElementById('closemenumutton');
-const sidebar = document.querySelector('.sidebar');
+    <script>
+        const menuButton = document.getElementById('menubutton');
+        const closeMenuButton = document.getElementById('closemenumutton');
+        const sidebar = document.querySelector('.sidebar');
 
-// Open menu
-menuButton.addEventListener('click', function () {
-    sidebar.style.left = '0px';
-});
+        // Open menu
+        menuButton.addEventListener('click', function() {
+            sidebar.style.left = '0px';
+        });
 
-// Close menu
-closeMenuButton.addEventListener('click', function () {
-    sidebar.style.left = '-600px';
-});
-</script>
+        // Close menu
+        closeMenuButton.addEventListener('click', function() {
+            sidebar.style.left = '-600px';
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
+    <script>
+        
+        new Swiper('.photos', {
+            loop: true,
+            autoplay: {
+                delay: 2000,
+                disableOnInteraction: false,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            slidesPerView: 4,
+            spaceBetween: 20,
+        });
+
+        new Swiper('.videos', {
+            loop: true,
+            autoplay: {
+                delay: 2000,
+                disableOnInteraction: false,
+            },
+            navigation: {
+                nextEl: '.video-swiper-button-next',
+                prevEl: '.video-swiper-button-prev',
+            },
+            slidesPerView: 4,
+            spaceBetween: 20,
+        });
+    </script>
 </body>
 
 </html>
