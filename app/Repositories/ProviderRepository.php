@@ -40,12 +40,12 @@ class ProviderRepository
     public function getProviders(array $filters = [], $userId = null, $perPage = 15)
     {
          $query = User::query()
-            ->where('role_id', 'provider')
+            ->providers() // Using scope from User model
             ->with(['providerProfile', 
                     'providerProfile.services' => function($q) {
                         $q->with(['service', 'media', 'certificates']);
                     },
-                    'providerProfile.workingHours']) // eager load
+                    'providerProfile.workingHours'])
             ->withCount([
                 'providerBookings as provider_bookings_count',
                 'providerServices as provider_services_count',
@@ -53,63 +53,72 @@ class ProviderRepository
             ])
             ->withAvg('publishedReviews as published_reviews_avg_rating', 'rating');
 
-            // , 'ratings'
         // 🔹 Filter by Provider Name
-        // if (!empty($filters['provider_name'])) {
-        //     $query->where('name', 'like', '%' . $filters['provider_name'] . '%');
-        // }
+        if (!empty($filters['provider_name'])) {
+            $query->where('name', 'like', '%' . $filters['provider_name'] . '%');
+        }
+
+        // 🔹 General Search (Name or Service Name)
+        if (!empty($filters['search'])) {
+            $searchTerm = '%' . $filters['search'] . '%';
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('name', 'like', $searchTerm)
+                  ->orWhereHas('providerServices.service', function ($sq) use ($searchTerm) {
+                      $sq->where('name', 'like', $searchTerm);
+                  });
+            });
+        }
 
         // 🔹 Filter by Service Name
         if (!empty($filters['service_name'])) {
-
             $query->whereHas('providerServices.service', function ($q) use ($filters) {
                 $q->where('name', 'like', '%' . $filters['service_name'] . '%');
             });
         }
 
+        // 🔹 Filter by Service ID
         if (!empty($filters['service_id'])) {
-
             $query->whereHas('providerServices.service', function ($q) use ($filters) {
                 $q->where('id', $filters['service_id'] );
             });
         }
 
-        // 🔹 Filter by Price Range
-        // if (!empty($filters['min_price']) && !empty($filters['max_price'])) {
-        //     $query->whereHas('providerServices', function ($q) use ($filters) {
-        //         $q->where(function ($qq) use ($filters) {
-        //             $qq->whereBetween('rate_min', [$filters['min_price'], $filters['max_price']])
-        //                ->orWhereBetween('rate_max', [$filters['min_price'], $filters['max_price']]);
-        //         });
-        //     });
-        // }
+        // 🔹 Filter by Price Range (Fixed: Handling 0 and numeric check)
+        if (isset($filters['min_price']) && isset($filters['max_price'])) {
+            $query->whereHas('providerServices', function ($q) use ($filters) {
+                $q->where(function ($qq) use ($filters) {
+                    $qq->whereBetween('rate_min', [$filters['min_price'], $filters['max_price']])
+                       ->orWhereBetween('rate_max', [$filters['min_price'], $filters['max_price']]);
+                });
+            });
+        }
 
-        // 🔹 Filter by Rating (withAvg is cleaner than havingRaw inside whereHas)
-        // if (!empty($filters['min_rating'])) {
-        //     $query->withAvg('ratings', 'rating')
-        //         ->having('ratings_avg_rating', '>=', $filters['min_rating']);
-        // }
+        // 🔹 Filter by Rating (Fixed: Using correct relationship avg column)
+        if (!empty($filters['min_rating'])) {
+            $query->having('published_reviews_avg_rating', '>=', $filters['min_rating']);
+        }
 
-        // 🔹 Filter by Distance (Haversine Formula)
-        // if (!empty($filters['latitude']) && !empty($filters['longitude']) && !empty($filters['distance'])) {
-        //     $lat = $filters['latitude'];
-        //     $lng = $filters['longitude'];
-        //     $distance = $filters['distance'];
+        // 🔹 Filter by Distance (Fixed: SQL Injection security and selection logic)
+        if (!empty($filters['latitude']) && !empty($filters['longitude']) && !empty($filters['distance'])) {
+            $lat = (float) $filters['latitude'];
+            $lng = (float) $filters['longitude'];
+            $distance = (float) $filters['distance'];
 
-        //     $query->select('users.*', DB::raw("(
-        //         6371 * acos(
-        //             cos(radians($lat)) * cos(radians(latitude)) * cos(radians(longitude) - radians($lng))
-        //             + sin(radians($lat)) * sin(radians(latitude))
-        //         )
-        //     ) AS distance"))
-        //     ->having('distance', '<=', $distance)
-        //     ->orderBy('distance');
-        // }
+            $query->addSelect(DB::raw("(
+                6371 * acos(
+                    cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?))
+                    + sin(radians(?)) * sin(radians(latitude))
+                )
+            ) AS distance"))
+            ->addBinding([$lat, $lng, $lat], 'select')
+            ->having('distance', '<=', $distance)
+            ->orderBy('distance');
+        }
 
-        // 🔹 Sort by Top Rating (if no min_rating given but sorting requested)
-        // if (!empty($filters['sort_by']) && $filters['sort_by'] === 'rating') {
-        //     $query->withAvg('ratings', 'rating')->orderByDesc('ratings_avg_rating');
-        // }
+        // 🔹 Sort by Top Rating
+        if (!empty($filters['sort_by']) && $filters['sort_by'] === 'rating') {
+            $query->orderByDesc('published_reviews_avg_rating');
+        }
 
         // 🔹 Attach Bookmark Flag
         if ($userId) {
@@ -117,10 +126,11 @@ class ProviderRepository
         }
 
         // Default order (if nothing else applied)
-        if (empty($filters['sort_by'])) {
+        if (empty($filters['sort_by']) && empty($filters['latitude'])) {
             $query->latest();
         }
-        $perPage = $filters['per_page'] ?? 10; // default 10 per page
+
+        $perPage = $filters['per_page'] ?? 10;
         $providers = $query->paginate($perPage);
         
         // Optimize: Batch load all reviews data in single queries (eliminates N+1)

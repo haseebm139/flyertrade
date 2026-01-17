@@ -21,6 +21,7 @@ class ProviderController extends BaseController
     public function providers(Request $request)
     {
         $filters = $request->only([
+            'search',
             'provider_name',
             'service_name',
             'service_id',
