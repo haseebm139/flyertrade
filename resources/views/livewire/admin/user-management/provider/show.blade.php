@@ -63,7 +63,7 @@
         border-radius: 50%;
         cursor: pointer;
     }
-</style> --}}
+</style>  
 
     <div class="users-toolbar">
         <nav class="breadcrumb">

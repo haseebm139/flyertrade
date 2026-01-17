@@ -164,6 +164,9 @@
     max-height: 100%;
 
 }
+.doc-row .doc-title {
+    width: 10.208vw;
+}
         @media(max-width:600px) {
             .sidebar {
                 display: block;
