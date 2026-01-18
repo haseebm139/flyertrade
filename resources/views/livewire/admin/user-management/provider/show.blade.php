@@ -177,9 +177,22 @@
                 <p><span>State of residence</span> {{ $user->state ?? '-' }}</p>
                 <p><span>Home address</span> {{ $user->address ?? '-' }}</p>
                 <p><span>Overall rating</span>
-                    <img class="icons-btn" src="{{ asset('assets/images/icons/star.svg') }}" alt=""
-                        style="width: 1.2vw; height: 1.2vw;">
-                    ({{ number_format($user->overall_rating ?? 0, 1) }})
+                    <span class="stars">
+                        @php
+                            $rating = $user->overall_rating ?? 0;
+                            $filledStars = floor($rating);
+                        @endphp
+                        @for ($i = 1; $i <= 5; $i++)
+                            @if ($i <= $filledStars)
+                                <img class="icons-btn" src="{{ asset('assets/images/icons/star.svg') }}" alt="Star"
+                                    style="width: 1.2vw; height: 1.2vw;">
+                            @else
+                                <img class="icons-btn" src="{{ asset('assets/images/icons/empty_star.svg') }}" alt="Empty Star"
+                                    style="width: 1.2vw; height: 1.2vw;">
+                            @endif
+                        @endfor
+                        ({{ number_format($rating, 1) }})
+                    </span>
                 </p>
                 <p><span>Availability status</span>
                     {{ $user->providerProfile ? str_replace('_', ' ', ucfirst($user->providerProfile->availability_status)) : 'N/A' }}
