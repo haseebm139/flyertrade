@@ -642,6 +642,35 @@
                 });
             });
         });
+
+        // Handle Session Flashes with SweetAlert2 Toast
+        @if (session()->has('success_toastr'))
+            Swal.fire({
+                toast: true,
+                background: '#FFFFFF',
+                position: 'top-end',
+                title: 'Success',
+                text: "{{ session('success_toastr') }}",
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 5000,
+                timerProgressBar: true
+            });
+        @endif
+
+        @if (session()->has('error_toastr'))
+            Swal.fire({
+                toast: true,
+                background: '#FFFFFF',
+                position: 'top-end',
+                title: 'Error',
+                text: "{{ session('error_toastr') }}",
+                icon: 'error',
+                showConfirmButton: false,
+                timer: 5000,
+                timerProgressBar: true
+            });
+        @endif
     </script>
     <script>
         const menuButton = document.getElementById('menubutton');

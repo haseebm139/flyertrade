@@ -10,19 +10,29 @@
                     <div class="d-flex align-items-center">
                         <img src="{{ asset($review->reviewer->avatar ?? 'assets/images/icons/person.svg') }}" alt="Reviewer" class="me-3 profile" style="width: 2.65vw; height: 2.65vw; border-radius: 50%;">
                         <div>
-                            <h6 class="mb-0" style="font-weight: 500; font-size: 0.8vw;">{{ $review->reviewer->name ?? 'N/A' }}</h6>
+                            <h6 class="mb-0" style="font-weight: 500; font-size: 0.8vw;">
+                                <a href="{{ $review->reviewer->user_type === 'provider' ? route('user-management.service.providers.view', ['id' => $review->reviewer->id]) : route('user-management.service.users.view', ['id' => $review->reviewer->id]) }}"
+                                    style="text-decoration: none; color: inherit;">
+                                    {{ $review->reviewer->name ?? 'N/A' }}
+                                </a>
+                            </h6>
                             <small class="text-muted" style="font-size: 0.7vw;">Reviewer</small>
                         </div>
                     </div>
                     <a href="{{ $review->reviewer->user_type === 'provider' ? route('user-management.service.providers.view', ['id' => $review->reviewer->id]) : route('user-management.service.users.view', ['id' => $review->reviewer->id]) }}" class="btn btn-outline-secondary btn-sm view-profile-btn">View profile</a>
                 </div>
 
-                <!-- Status -->
                 <div class="d-flex align-items-center justify-content-between p-3 mb-3">
                     <div class="d-flex align-items-center">
                         <div>
-                            <h6 class="mb-0" style="font-weight: 500; font-size: 0.8vw;">{{ $review->reviewedProvider->name ?? 'N/A' }}</h6>
-                            <small class="text-muted" style="font-size: 0.7vw;">Reviewed {{ $review->reviewer->user_type === 'customer' ? 'Provider' : 'User' }}</small>
+                            <h6 class="mb-0" style="font-weight: 500; font-size: 0.8vw;">
+                                <a href="{{ $review->reviewedProvider->user_type === 'provider' ? route('user-management.service.providers.view', ['id' => $review->reviewedProvider->id]) : route('user-management.service.users.view', ['id' => $review->reviewedProvider->id]) }}"
+                                    style="text-decoration: none; color: inherit;">
+                                    {{ $review->reviewedProvider->name ?? 'N/A' }}
+                                </a>
+                            </h6>
+                            <small class="text-muted"
+                                style="font-size: 0.7vw;">Reviewed {{ $review->reviewer->user_type === 'customer' ? 'Provider' : 'User' }}</small>
                         </div>
                     </div>
 
@@ -67,7 +77,7 @@
                         </p>
                     @else
                         <!-- Edit Area -->
-                        <textarea wire:model="reviewText" style="width:100%; font-size:1vw; padding: 10px; border: 1px solid #ccc; border-radius: 5px;" rows="4"></textarea>
+                        <textarea wire:model="reviewText" style="width:100%; font-size:1vw; padding: 10px; border: 1px solid #555555; border-radius: 5px;" rows="4"></textarea>
                     @endif
 
                     <!-- Buttons -->

@@ -15,13 +15,21 @@ class ReviewShow extends Component
     public function mount($id)
     {
         $this->reviewId = $id;
-        $this->loadReview();
+        $result = $this->loadReview();
+        if ($result instanceof \Illuminate\Http\RedirectResponse) {
+            return $result;
+        }
     }
 
     public function loadReview()
     {
-        $this->review = Review::with(['reviewer', 'reviewedProvider', 'booking', 'service'])->findOrFail($this->reviewId);
-        $this->reviewText = $this->review->review;
+        try {
+            $this->review = Review::with(['reviewer', 'reviewedProvider', 'booking', 'service'])->findOrFail($this->reviewId);
+            $this->reviewText = $this->review->review;
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            session()->flash('error_toastr', 'Review not found.');
+            return redirect()->route('reviews.index');
+        }
     }
 
     public function toggleEdit()
