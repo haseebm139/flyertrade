@@ -29,10 +29,10 @@
                 @forelse($users as $user)
                     <tr wire:key="user-row-{{ $user->id }}">
                         <td><input type="checkbox" value="{{ $user->id }}" wire:model.live="selected"></td>
-                        <td style='font-weight:500;'>
+                        <td style='font-weight:500; cursor: pointer;' wire:click="viewUser({{ $user->id }})">
                             {{ ucfirst($user->user_type ?? 'N/A') }}
                         </td>
-                        <td>
+                        <td style="cursor: pointer;" wire:click="viewUser({{ $user->id }})">
                             <div class="user-info">
                                 <img src="{{ asset($user->avatar ?? 'assets/images/icons/person-one.svg') }}" alt="User">
                                 <div>
@@ -41,8 +41,8 @@
                                 </div>
                             </div>
                         </td>
-                        <td style='font-weight:500;'>{{ Str::limit($user->address ?? 'N/A', 30) }}</td>
-                        <td style='font-weight:500;'>{{ $user->phone ?? 'N/A' }}</td>
+                        <td style='font-weight:500; cursor: pointer;' wire:click="viewUser({{ $user->id }})">{{ Str::limit($user->address ?? 'N/A', 30) }}</td>
+                        <td style='font-weight:500; cursor: pointer;' wire:click="viewUser({{ $user->id }})">{{ $user->phone ?? 'N/A' }}</td>
                         <td class="viw-parent">
                             <div class="d-flex align-items-center gap-3">
                                 <a href="javascript:void(0);" class="view-btn" wire:click="viewUser({{ $user->id }})">
