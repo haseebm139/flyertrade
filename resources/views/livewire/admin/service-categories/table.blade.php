@@ -93,7 +93,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6">No categories found.</td>
+                        <td colspan="5" class="text-center py-4">No Service category found.</td>
                     </tr>
                 @endforelse
             </tbody>

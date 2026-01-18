@@ -106,7 +106,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="10">No bookings found.</td>
+                        <td colspan="8" class="text-center py-4">No bookings found.</td>
                     </tr>
                 @endforelse
             </tbody>

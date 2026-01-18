@@ -133,10 +133,10 @@
                     <tr wire:key="assigned-user-{{ $user->id }}">
                         <td><input type="checkbox" wire:model.live="selectedUsers" value="{{ $user->id }}"></td>
                         <td style="cursor: pointer;"
-                            onclick="window.location.href='{{ $user->user_type === 'provider' ? route('user-management.service.providers.view', ['id' => $user->id]) : route('user-management.service.users.view', ['id' => $user->id]) }}'">
+                            onclick="window.location.href='{{ route('roles-and-permissions.users.show', ['id' => $user->id]) }}'">
                             {{ ucfirst($user->user_type) }}</td>
                         <td style="cursor: pointer;"
-                            onclick="window.location.href='{{ $user->user_type === 'provider' ? route('user-management.service.providers.view', ['id' => $user->id]) : route('user-management.service.users.view', ['id' => $user->id]) }}'">
+                            onclick="window.location.href='{{ route('roles-and-permissions.users.show', ['id' => $user->id]) }}'">
                             <div class="user-info">
                                 <img src="{{ asset($user->avatar ?? 'assets/images/icons/person-one.svg') }}"
                                     alt="User">

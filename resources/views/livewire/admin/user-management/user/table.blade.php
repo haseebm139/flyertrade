@@ -100,7 +100,7 @@
 
                 @empty
                 <tr>
-                    <td>No Service User found.</td>
+                    <td colspan="7" class="text-center py-4">No Service User found.</td>
                 </tr>
                 @endforelse
             </tbody>
@@ -117,9 +117,7 @@
             display: block;
             transition: background-color 0.2s;
         }
-        .user-info-link:hover {
-            background-color: rgba(0, 0, 0, 0.03);
-        }
+         
         .modal_heaader {
             display: flex;
             position: relative;

@@ -25,12 +25,14 @@
                     <tr wire:key="role-row-{{ $role->id }}">
                         <td><input type="checkbox" value="{{ $role->id }}" wire:model.live="selected"></td>
                         <td>
-                            <div class="role-info" style="cursor: pointer;" wire:click="viewRole({{ $role->id }})">
+                            <div class="role-info" style="cursor: pointer;"
+                                onclick="window.location.href='{{ route('roles-and-permissions.roles.show', ['id' => $role->id]) }}'">
                                 <span class="role-name"
                                     style='font-weight:500;'>{{ ucfirst($role->name) ?? 'N/A' }}</span>
                             </div>
                         </td>
-                        <td style="cursor: pointer;" wire:click="viewRole({{ $role->id }})">
+                        <td style="cursor: pointer;"
+                            onclick="window.location.href='{{ route('roles-and-permissions.roles.show', ['id' => $role->id]) }}'">
                             <div class="users-info">
                                 @if ($role->users->count() > 0)
                                     <div class="user-avatar">
@@ -49,8 +51,8 @@
 
                         <td class="viw-parent theme-parent-class">
                             <div class="d-flex align-items-center gap-3">
-                                <a href="javascript:void(0);" class="view-btn"
-                                    wire:click="viewRole({{ $role->id }})">
+                                <a href="{{ route('roles-and-permissions.roles.show', ['id' => $role->id]) }}"
+                                    class="view-btn">
                                     <img src="{{ asset('assets/images/icons/eye_icon.svg') }}" alt="View"
                                         class="eye-icon">
                                     View
