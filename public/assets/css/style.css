@@ -3424,9 +3424,9 @@ body.cm-lock {
 }
 
 .status.unpublished {
-    background-color: #f44336;
-    /* Red */
-    color: white;
+   background: #fdecea;
+    color: #dc3545;
+    border: 1px solid;
 }
 
 .dropdown-menu {

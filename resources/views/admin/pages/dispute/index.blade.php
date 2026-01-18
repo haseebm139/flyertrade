@@ -115,13 +115,7 @@
                     </td>
 
 
-                    <style>
-                        .unpublished {
-                            color: #D00416 !important;
-                            border: 2px solid #D00416 !important;
-                            background-color: #fb374741 !important;
-                        }
-                    </style>
+                     
                     <td>
                         <div class="status-dropdown status-dropdown-resolve">
                             <span class="status active Resolved" onclick="toggleDropdown(this)">

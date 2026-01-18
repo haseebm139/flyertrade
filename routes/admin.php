@@ -43,8 +43,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         return view('admin.pages.reviews.index');
     })->name('reviews.index');
 
-    Route::get('reviews-details',function(){
-        return view('admin.pages.reviews.show');
+    Route::get('reviews-details/{id}',function($id){
+        return view('admin.pages.reviews.show', ['id' => $id]);
     })->name('reviews.show');
 
     Route::get('roles-and-permissions',function(){
