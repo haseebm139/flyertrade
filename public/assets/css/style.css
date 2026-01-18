@@ -1585,6 +1585,12 @@ td.user-data.id-number {
     border: 1px solid;
 }
 
+.status.cancelled {
+    background: #fdecea;
+    color: #dc3545;
+    border: 1px solid;
+}
+
 #addUserModal input,
 #addUserModal textarea,
 #addUserModal select {

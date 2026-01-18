@@ -278,7 +278,10 @@
                                 <small class="time">{{ $booking->created_at->format('h:ia') }}</small>
                             </td>
                             <td>
-                                <p class="user-name">{{ $booking->provider->name ?? '-' }}</p>
+                                <a href="{{ $booking->provider_id ? route('user-management.service.providers.view', $booking->provider_id) : '#' }}"
+                                    style="text-decoration: none; color: inherit; font-weight: 500;">
+                                    {{ $booking->provider->name ?? '-' }}
+                                </a>
                             </td>
                             <td>{{ $booking->booking_address ?? '-' }}</td>
                             <td>
@@ -363,9 +366,19 @@
                     <h4 style="font-size:0.938vw;font-weight: 500; letter-spacing: -0.04em;">Users details</h4>
                     <div class="details-grid">
                         <div>Service provider</div>
-                        <div class="text-end">{{ $selectedBooking->provider->name ?? '-' }}</div>
+                        <div class="text-end">
+                            <a href="{{ $selectedBooking->provider_id ? route('user-management.service.providers.view', $selectedBooking->provider_id) : '#' }}"
+                                style="text-decoration: none; color: #004e42; font-weight: 600;">
+                                {{ $selectedBooking->provider->name ?? '-' }}
+                            </a>
+                        </div>
                         <div>Service user</div>
-                        <div class="text-end">{{ $user->name }}</div>
+                        <div class="text-end">
+                            <a href="{{ route('user-management.service.users.view', $user->id) }}"
+                                style="text-decoration: none; color: #004e42; font-weight: 600;">
+                                {{ $user->name }}
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

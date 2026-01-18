@@ -286,7 +286,12 @@
                                     <br>
                                     <small class="time">{{ $booking->created_at->format('h:i A') }}</small>
                                 </td>
-                                <td>{{ $booking->customer->name ?? '-' }}</td>
+                                <td>
+                                    <a href="{{ $booking->customer_id ? route('user-management.service.users.view', $booking->customer_id) : '#' }}"
+                                        style="text-decoration: none; color: inherit; font-weight: 500;">
+                                        {{ $booking->customer->name ?? '-' }}
+                                    </a>
+                                </td>
                                 <td>{{ $booking->service->name ?? '-' }}</td>
                                 <td>{{ Str::limit($booking->booking_address ?? '-', 30) }}</td>
                                 <td>${{ number_format($booking->total_price, 2) }}</td>
@@ -548,9 +553,19 @@
                     <h4 style="font-size:0.938vw;font-weight: 500; letter-spacing: -0.04em;">Users details</h4>
                     <div class="details-grid">
                         <div>Service provider</div>
-                        <div class="text-end">{{ $user->name }}</div>
+                        <div class="text-end">
+                            <a href="{{ route('user-management.service.providers.view', $user->id) }}"
+                                style="text-decoration: none; color: #004e42; font-weight: 600;">
+                                {{ $user->name }}
+                            </a>
+                        </div>
                         <div>Service user</div>
-                        <div class="text-end">{{ $selectedBooking->customer->name ?? '-' }}</div>
+                        <div class="text-end">
+                            <a href="{{ $selectedBooking->customer_id ? route('user-management.service.users.view', $selectedBooking->customer_id) : '#' }}"
+                                style="text-decoration: none; color: #004e42; font-weight: 600;">
+                                {{ $selectedBooking->customer->name ?? '-' }}
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

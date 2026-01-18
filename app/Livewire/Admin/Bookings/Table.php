@@ -20,30 +20,146 @@ class Table extends Component
     public $sortField = 'created_at';  
     public $sortDirection = 'desc';
     public $selected = [];  
-    public $selectAll = false;    
+    public $selectAll = false;
     public $showFilterModal = false;
+    public $showBookingModal = false;
+    public $selectedBooking = null;
+
+    // Temporary filter values
+    public $tempStatus = '';
+    public $tempFromDate = '';
+    public $tempToDate = '';
+    public $tempServiceFilter = '';
+    public $tempCustomerFilter = '';
+    public $tempProviderFilter = '';
+
     public $serviceFilter = '';
     public $customerFilter = '';
-    public $providerFilter = ''; 
+    public $providerFilter = '';
     protected $listeners = [
-        'categoryUpdated' => '$refresh',  
+        'categoryUpdated' => '$refresh',
         'exportCsvRequested-all-bookings' => 'exportCsv',
         'openFilterModal-all-bookings'    => 'openFilterModal',
         'searchUpdated-all-bookings'      => 'updatingSearch',
-        'filterByStatus'     => 'filterByStatus',
+        'removeFilter-all-bookings'       => 'removeFilter',
+        'filterByStatus'                  => 'filterByStatus',
     ];
-     # -------------------- SEARCH + FILTER --------------------
-    public function openFilterModal() {  $this->showFilterModal = true;   }
-
-    public function closeFilterModal() { $this->showFilterModal = false;  }
-
-     public function updatingSearch($value) {  
-        $this->search = $value;
-        $this->resetPage(); 
+    # -------------------- SEARCH + FILTER --------------------
+    public function openFilterModal()
+    {
+        $this->tempStatus = $this->status;
+        $this->tempFromDate = $this->fromDate;
+        $this->tempToDate = $this->toDate;
+        $this->tempServiceFilter = $this->serviceFilter;
+        $this->tempCustomerFilter = $this->customerFilter;
+        $this->tempProviderFilter = $this->providerFilter;
+        $this->showFilterModal = true;
     }
-    public function updatingStatus() { $this->resetPage(); }
-    public function updatingFromDate() { $this->resetPage(); }
-    public function updatingToDate() { $this->resetPage(); }  
+
+    public function closeFilterModal()
+    {
+        $this->showFilterModal = false;
+    }
+
+    public function updatingSearch($value)
+    {
+        $this->search = $value;
+        $this->resetPage();
+    }
+
+    public function applyFilters()
+    {
+        $this->status = $this->tempStatus;
+        $this->fromDate = $this->tempFromDate;
+        $this->toDate = $this->tempToDate;
+        $this->serviceFilter = $this->tempServiceFilter;
+        $this->customerFilter = $this->tempCustomerFilter;
+        $this->providerFilter = $this->tempProviderFilter;
+
+        $this->resetPage();
+        $this->closeFilterModal();
+
+        $this->dispatch('filtersUpdated', $this->getActiveFilters());
+    }
+
+    public function removeFilter($key = null)
+    {
+        if (is_array($key) && isset($key['key'])) {
+            $key = $key['key'];
+        }
+
+        if ($key === 'date') {
+            $this->fromDate = '';
+            $this->toDate = '';
+        } elseif ($key === 'status') {
+            $this->status = '';
+        } elseif ($key === 'service') {
+            $this->serviceFilter = '';
+        } elseif ($key === 'customer') {
+            $this->customerFilter = '';
+        } elseif ($key === 'provider') {
+            $this->providerFilter = '';
+        }
+
+        $this->resetPage();
+        $this->dispatch('filtersUpdated', $this->getActiveFilters());
+    }
+
+    public function getActiveFilters()
+    {
+        $filters = [];
+
+        if ($this->fromDate && $this->toDate) {
+            $filters[] = [
+                'type' => 'date',
+                'label' => date('d M, Y', strtotime($this->fromDate)) . ' - ' . date('d M, Y', strtotime($this->toDate)),
+                'key' => 'date'
+            ];
+        }
+
+        if ($this->status) {
+            $statusLabels = [
+                'awaiting_provider' => 'Pending',
+                'confirmed' => 'Active',
+                'in_progress' => 'In Progress',
+                'completed' => 'Completed',
+                'cancelled' => 'Cancelled',
+                'rejected' => 'Rejected',
+                'reschedule_pending_customer' => 'Reschedule Pending',
+            ];
+            $filters[] = [
+                'type' => 'status',
+                'label' => ($statusLabels[$this->status] ?? ucfirst($this->status)) . ' bookings',
+                'key' => 'status'
+            ];
+        }
+
+        if ($this->serviceFilter) {
+            $filters[] = [
+                'type' => 'service',
+                'label' => 'Service: ' . $this->serviceFilter,
+                'key' => 'service'
+            ];
+        }
+
+        if ($this->customerFilter) {
+            $filters[] = [
+                'type' => 'customer',
+                'label' => 'User: ' . $this->customerFilter,
+                'key' => 'customer'
+            ];
+        }
+
+        if ($this->providerFilter) {
+            $filters[] = [
+                'type' => 'provider',
+                'label' => 'Provider: ' . $this->providerFilter,
+                'key' => 'provider'
+            ];
+        }
+
+        return $filters;
+    }
 
     # -------------------- SELECT ALL --------------------
     public function updatedSelectAll($value)
@@ -93,14 +209,6 @@ class Table extends Component
     }
     
     # -------------------- FILTER MODAL --------------------
-     
-
-    public function applyFilters()
-    {
-    
-        $this->resetPage();
-        $this->closeFilterModal();
-    }
     public function filterByStatus($status = null)
     {
         if (is_array($status) && isset($status['status'])) {
@@ -109,17 +217,21 @@ class Table extends Component
             $this->status = $status;
         }
         $this->resetPage();
+        $this->dispatch('filtersUpdated', $this->getActiveFilters());
     }
 
     public function clearFilters()
     {
         $this->reset(['status', 'fromDate', 'toDate', 'serviceFilter', 'customerFilter', 'providerFilter']);
-        
+        $this->dispatch('filtersUpdated', $this->getActiveFilters());
     }
+
     public function resetFilters()
     {
-        $this->reset(['status', 'fromDate', 'toDate', 'serviceFilter', 'customerFilter', 'providerFilter']);
+        $this->reset(['status', 'fromDate', 'toDate', 'serviceFilter', 'customerFilter', 'providerFilter', 'tempStatus', 'tempFromDate', 'tempToDate', 'tempServiceFilter', 'tempCustomerFilter', 'tempProviderFilter']);
         $this->resetPage();
+        $this->closeFilterModal();
+        $this->dispatch('filtersUpdated', $this->getActiveFilters());
     }
 
 
@@ -158,9 +270,10 @@ class Table extends Component
     {
         $data = $this->getDataQuery()
             ->paginate($this->perPage);
-         
-        return view('livewire.admin.bookings.table', compact('data'));
-    } 
+        $activeFilters = $this->getActiveFilters();
+
+        return view('livewire.admin.bookings.table', compact('data', 'activeFilters'));
+    }
 
     public function exportCsv()
     {
@@ -202,13 +315,64 @@ class Table extends Component
         $this->confirmingId = $id;
     }
 
+    public function viewBooking($id)
+    {
+        $this->selectedBooking = Booking::with(['customer', 'provider', 'service'])->find($id);
+        if ($this->selectedBooking) {
+            $this->showBookingModal = true;
+        }
+    }
+
+    public function closeBookingModal()
+    {
+        $this->showBookingModal = false;
+        $this->selectedBooking = null;
+    }
+
+    public function downloadBookingDetails($id)
+    {
+        $booking = Booking::with(['customer', 'provider', 'service'])->find($id);
+        if (!$booking) {
+            $this->dispatch('showSweetAlert', 'error', 'Booking not found.', 'Error');
+            return;
+        }
+
+        $fileName = "booking-{$booking->booking_ref}.csv";
+        $headers = [
+            "Content-Type" => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+        ];
+
+        $callback = function () use ($booking) {
+            $handle = fopen('php://output', 'w');
+            fputcsv($handle, ['Field', 'Details']);
+            fputcsv($handle, ['Booking ID', $booking->booking_ref]);
+            fputcsv($handle, ['Date', $booking->created_at->format('d M, Y')]);
+            fputcsv($handle, ['Time', $booking->created_at->format('h:i A')]);
+            fputcsv($handle, ['Duration', $booking->working_hours . ' Hours']);
+            fputcsv($handle, ['Location', $booking->booking_address ?? '-']);
+            fputcsv($handle, ['Service Type', $booking->service->name ?? '-']);
+            fputcsv($handle, ['Service Cost', '$' . number_format($booking->total_price, 2)]);
+            fputcsv($handle, ['Status', ucfirst(str_replace('_', ' ', $booking->status))]);
+            fputcsv($handle, ['Service Provider', $booking->provider->name ?? '-']);
+            fputcsv($handle, ['Service User', $booking->customer->name ?? '-']);
+            fclose($handle);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
     public function delete($id)
     {
-        $booking = Booking::find($id);
-        if ($booking) {
-            $booking->delete();
-            $this->dispatch('showToastr', 'success', 'Booking deleted successfully.', 'Success');
+        try {
+            $booking = Booking::find($id);
+            if ($booking) {
+                $booking->delete();
+                $this->dispatch('showSweetAlert', 'success', 'Booking deleted successfully.', 'Success');
+            }
+            $this->confirmingId = null;
+        } catch (\Exception $e) {
+            $this->dispatch('showSweetAlert', 'error', 'Error deleting booking: ' . $e->getMessage(), 'Error');
         }
-        $this->confirmingId = null;
     }
 }
