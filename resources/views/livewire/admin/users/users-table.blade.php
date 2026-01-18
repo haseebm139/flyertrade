@@ -22,6 +22,10 @@
                         Phone number
                         <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon {{ $sortField === 'phone' ? $sortDirection : '-' }}">
                     </th>
+                    <th class="sortable" wire:click="sortBy('last_login_at')" style="cursor: pointer;">
+                        Last login
+                        <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon {{ $sortField === 'last_login_at' ? $sortDirection : '-' }}">
+                    </th>
                     <th></th>
                 </tr>
             </thead>
@@ -43,6 +47,28 @@
                         </td>
                         <td style='font-weight:500; cursor: pointer;' wire:click="viewUser({{ $user->id }})">{{ Str::limit($user->address ?? 'N/A', 30) }}</td>
                         <td style='font-weight:500; cursor: pointer;' wire:click="viewUser({{ $user->id }})">{{ $user->phone ?? 'N/A' }}</td>
+                        <td>
+                            <span class=" " style="font-weight:400">
+                                @if ($user->last_login_at)
+                                    @php
+                                        $lastLogin = $user->last_login_at;
+                                        $diffInDays = $lastLogin->diffInDays();
+                                        
+                                        if ($diffInDays >= 30) {
+                                            $lastLoginText = 'Last month';
+                                        } elseif ($diffInDays >= 7) {
+                                            $lastLoginText = 'Last week';
+                                        } else {
+                                            $lastLoginText = $lastLogin->diffForHumans();
+                                            $lastLoginText = str_replace([' minutes', ' minute'], ' min', $lastLoginText);
+                                        }
+                                    @endphp
+                                    {{ $lastLoginText }}
+                                @else
+                                    Never
+                                @endif
+                            </span>
+                        </td>
                         <td class="viw-parent">
                             <div class="d-flex align-items-center gap-3">
                                 <a href="javascript:void(0);" class="view-btn" wire:click="viewUser({{ $user->id }})">
@@ -176,7 +202,11 @@
             background-position: right 10px center;
             background-size: 20px;
         }
+
+         
     </style>
+
+     
 </div>
 
 @push('scripts')

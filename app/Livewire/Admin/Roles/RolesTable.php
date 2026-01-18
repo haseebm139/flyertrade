@@ -126,6 +126,11 @@ class RolesTable extends Component
         return $filters;
     }
 
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+    }
+
     public function render()
     {
         $roles = $this->getDataQuery()->paginate($this->perPage);
@@ -173,6 +178,7 @@ class RolesTable extends Component
             $this->sortField = $field;
             $this->sortDirection = 'asc';
         }
+        $this->resetPage();
     }
 
     public function exportCsv()

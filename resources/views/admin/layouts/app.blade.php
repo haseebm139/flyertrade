@@ -119,6 +119,25 @@
         }
     </style>
     <style>
+        .sort-icon {
+            transition: transform 0.3s ease;
+        }
+        .sort-desc {
+            transform: rotate(180deg);
+        }
+        .sort-asc {
+           transform: rotate(180deg);
+        }
+        th.sortable {
+            cursor: pointer;
+        }
+        th.sortable:hover {
+            background-color: #f8f9fa;
+        }
+        .theme-table tbody tr:hover {
+            background-color: #f1f1f1;
+            transition: background-color 0.2s ease;
+        }
         #rows,
         #perPage {
             width: 100%;

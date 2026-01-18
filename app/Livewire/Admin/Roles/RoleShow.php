@@ -3,17 +3,24 @@
 namespace App\Livewire\Admin\Roles;
 
 use Livewire\Component;
+use Livewire\WithPagination;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Models\User;
 
 class RoleShow extends Component
 {
+    use WithPagination;
+
     public $roleId;
     public $role;
     public $permissions = [];
-    public $permissionGroups = [];
+    public $selectedUsers = [];
+    public $selectAllUsers = false;
     public $showDeleteModal = false;
+    public $perPage = 10;
+    public $sortColumn = 'created_at';
+    public $sortDirection = 'desc';
     public $deleteRoleId;
     public $deleteRoleName;
 
@@ -28,60 +35,32 @@ class RoleShow extends Component
     {
         $this->roleId = $roleId;
         $this->loadRole();
-        $this->loadPermissions();
-        
-         
+        $this->sortColumn = 'created_at';
     }
 
     public function loadRole()
     {
-        $this->role = Role::with(['permissions', 'users'])->findOrFail($this->roleId);
+        $this->role = Role::with(['permissions'])->findOrFail($this->roleId);
         $this->permissions = $this->role->permissions->pluck('name')->toArray();
     }
 
-    public function loadPermissions()
+    public function getPermissionGroupsProperty()
     {
         $allPermissions = Permission::all();
-        
-        $this->permissionGroups = [
-            'Dashboard' => $allPermissions->filter(function ($permission) {
-                return str_contains(strtolower($permission->name), 'dashboard');
-            }),
-            'Users' => $allPermissions->filter(function ($permission) {
-                return str_contains(strtolower($permission->name), 'user') || 
-                       str_contains(strtolower($permission->name), 'customer') ||
-                       str_contains(strtolower($permission->name), 'provider');
-            }),
-            'Bookings' => $allPermissions->filter(function ($permission) {
-                return str_contains(strtolower($permission->name), 'booking');
-            }),
-            'Transactions' => $allPermissions->filter(function ($permission) {
-                return str_contains(strtolower($permission->name), 'transaction') || 
-                       str_contains(strtolower($permission->name), 'payment');
-            }),
-            'Reports' => $allPermissions->filter(function ($permission) {
-                return str_contains(strtolower($permission->name), 'report') || 
-                       str_contains(strtolower($permission->name), 'analytics');
-            }),
-            'Roles' => $allPermissions->filter(function ($permission) {
-                return str_contains(strtolower($permission->name), 'role') || 
-                       str_contains(strtolower($permission->name), 'permission');
-            }),
-            'Content' => $allPermissions->filter(function ($permission) {
-                return str_contains(strtolower($permission->name), 'content') || 
-                       str_contains(strtolower($permission->name), 'category') ||
-                       str_contains(strtolower($permission->name), 'service');
-            }),
-            'Financial' => $allPermissions->filter(function ($permission) {
-                return str_contains(strtolower($permission->name), 'financial') || 
-                       str_contains(strtolower($permission->name), 'payout');
-            }),
-        ];
 
-        // Remove empty groups
-        $this->permissionGroups = array_filter($this->permissionGroups, function ($group) {
-            return $group->count() > 0;
-        });
+        return $allPermissions->groupBy(function ($permission) {
+            $name = strtolower(trim($permission->name));
+            $parts = explode(' ', $name);
+            $actions = ['create', 'read', 'write', 'delete', 'update', 'view', 'manage', 'can'];
+
+            // Shuru ke tamam action words ko hatayein
+            while (!empty($parts) && in_array($parts[0], $actions)) {
+                array_shift($parts);
+            }
+
+            // Ab jo pehla lafz bacha hai, sirf usey return karein
+            return !empty($parts) ? ucwords($parts[0]) : 'General';
+        })->sortKeys();
     }
 
     public function updatePermissions()
@@ -168,7 +147,6 @@ class RoleShow extends Component
         if ($updatedRoleId == $this->roleId) {
             try {
                 $this->loadRole();
-                $this->loadPermissions();
                 // Silent refresh - no toastr notification as user already got success message from edit
             } catch (\Exception $e) {
                 $this->dispatch('showSweetAlert', type: 'error', message: 'Error refreshing role data: ' . $e->getMessage(), title: 'Error');
@@ -176,8 +154,50 @@ class RoleShow extends Component
         }
     }
 
+    public function updatedSelectAllUsers($value)
+    {
+        if ($value) {
+            $this->selectedUsers = $this->role->users->pluck('id')->map(fn($id) => (string)$id)->toArray();
+        } else {
+            $this->selectedUsers = [];
+        }
+    }
+
+    public function updatedSelectedUsers()
+    {
+        $this->selectAllUsers = false;
+    }
+
+    public function sortBy($column)
+    {
+        $validFields = ['user_type', 'name', 'created_at', 'last_login_at'];
+        if (!in_array($column, $validFields)) {
+            return;
+        }
+
+        if ($this->sortColumn === $column) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortColumn = $column;
+            $this->sortDirection = 'asc';
+        }
+        $this->resetPage();
+    }
+
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+    }
+
     public function render()
     {
-        return view('livewire.admin.roles.role-show');
+        $assignedUsers = $this->role->users()
+            ->orderBy($this->sortColumn, $this->sortDirection)
+            ->paginate($this->perPage);
+
+        return view('livewire.admin.roles.role-show', [
+            'permissionGroups' => $this->permissionGroups,
+            'assignedUsers' => $assignedUsers
+        ]);
     }
 }

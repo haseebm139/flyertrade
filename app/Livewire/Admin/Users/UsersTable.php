@@ -54,7 +54,7 @@ class UsersTable extends Component
     public function mount()
     {
         // Ensure sortField is always valid for users table
-        $validFields = ['name', 'email', 'user_type', 'address', 'phone', 'created_at', 'updated_at'];
+        $validFields = ['name', 'email', 'user_type', 'address', 'phone', 'last_login_at', 'created_at', 'updated_at'];
         if (!in_array($this->sortField, $validFields)) {
             $this->sortField = 'name';
         }
@@ -204,7 +204,7 @@ class UsersTable extends Component
     private function getDataQuery()
     {
         // Ensure sortField is valid before using it
-        $validFields = ['name', 'email', 'user_type', 'address', 'phone', 'created_at', 'updated_at'];
+        $validFields = ['name', 'email', 'user_type', 'address', 'phone', 'last_login_at', 'created_at', 'updated_at'];
         $sortField = in_array($this->sortField, $validFields) ? $this->sortField : 'name';
         
         return User::query()
@@ -225,7 +225,7 @@ class UsersTable extends Component
     public function sortBy($field)
     {
         // Only allow sorting by valid fields for users table
-        $validFields = ['name', 'email', 'user_type', 'address', 'phone', 'created_at', 'updated_at'];
+        $validFields = ['name', 'email', 'user_type', 'address', 'phone', 'last_login_at', 'created_at', 'updated_at'];
         
         if (!in_array($field, $validFields)) {
             return;
@@ -237,6 +237,12 @@ class UsersTable extends Component
             $this->sortField = $field;
             $this->sortDirection = 'asc';
         }
+        $this->resetPage();
+    }
+
+    public function updatedPerPage()
+    {
+        $this->resetPage();
     }
 
     public function exportCsv()

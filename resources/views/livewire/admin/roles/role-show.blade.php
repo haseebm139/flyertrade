@@ -68,7 +68,7 @@
         <div class="tabs-nav theme-btn-class-roles-module" id="tabsNav">
             @foreach ($permissionGroups as $groupName => $groupPermissions)
                 <div class="tab roles-permission-theme-tabs {{ $loop->first ? 'active' : '' }}"
-                    data-target="{{ Str::slug($groupName) }}" onclick="switchTab('{{ Str::slug($groupName) }}')">
+                    data-target="{{ Str::slug($groupName) }}_show_tab" onclick="switchTab('{{ Str::slug($groupName) }}_show_tab')">
                     {{ $groupName }}
                 </div>
             @endforeach
@@ -82,7 +82,7 @@
 
     <!-- Tab Content -->
     @foreach ($permissionGroups as $groupName => $groupPermissions)
-        <div id="{{ Str::slug($groupName) }}" class="tab-content {{ $loop->first ? 'active' : '' }}" style="margin-left: 1vw">
+        <div id="{{ Str::slug($groupName) }}_show_tab" class="tab-content {{ $loop->first ? 'active' : '' }}" style="margin-left: 1vw">
             @foreach ($groupPermissions as $permission)
                 <div class="permission-item">
                     <span >{{ ucwords(str_replace(['-', '_'], ' ', $permission->name)) }}</span>
@@ -104,39 +104,63 @@
     <table class="theme-table">
         <thead>
             <tr>
-                <th><input type="checkbox" id="selectAllUsers"></th>
-                <th class="sortable" data-column="0">User Type
-                    <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
+                <th><input type="checkbox" wire:model.live="selectAllUsers"></th>
+                <th class="sortable" wire:click="sortBy('user_type')">User Type
+                    <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon {{ $sortColumn === 'user_type' ? ($sortDirection === 'asc' ? 'sort-asc' : 'sort-desc') : '' }}">
                 </th>
-                <th class="sortable" data-column="4">User name
-                    <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
+                <th class="sortable" wire:click="sortBy('name')">User name
+                    <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon {{ $sortColumn === 'name' ? ($sortDirection === 'asc' ? 'sort-asc' : 'sort-desc') : '' }}">
                 </th>
-                <th class="sortable">Last login
-                    <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
+                <th class="sortable" wire:click="sortBy('last_login_at')">Last login
+                    <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon {{ $sortColumn === 'last_login_at' ? ($sortDirection === 'asc' ? 'sort-asc' : 'sort-desc') : '' }}">
                 </th>
-                <th class="sortable" data-column="6">Date added
-                    <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon">
+                <th class="sortable" wire:click="sortBy('created_at')">Date added
+                    <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon {{ $sortColumn === 'created_at' ? ($sortDirection === 'asc' ? 'sort-asc' : 'sort-desc') : '' }}">
                 </th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            @if ($role && $role->users->count() > 0)
-                @foreach ($role->users as $user)
-                    <tr>
-                        <td><input type="checkbox" class="user-checkbox" value="{{ $user->id }}"></td>
-                        <td>{{ ucfirst($user->user_type) }}</td>
-                        <td>
+            @if ($assignedUsers && $assignedUsers->count() > 0)
+                @foreach ($assignedUsers as $user)
+                    <tr wire:key="assigned-user-{{ $user->id }}">
+                        <td><input type="checkbox" wire:model.live="selectedUsers" value="{{ $user->id }}"></td>
+                        <td style="cursor: pointer;"
+                            onclick="window.location.href='{{ $user->user_type === 'provider' ? route('user-management.service.providers.view', ['id' => $user->id]) : route('user-management.service.users.view', ['id' => $user->id]) }}'">
+                            {{ ucfirst($user->user_type) }}</td>
+                        <td style="cursor: pointer;"
+                            onclick="window.location.href='{{ $user->user_type === 'provider' ? route('user-management.service.providers.view', ['id' => $user->id]) : route('user-management.service.users.view', ['id' => $user->id]) }}'">
                             <div class="user-info">
-                                <img src="{{ asset('assets/images/icons/person-one.svg') }}" alt="User">
+                                <img src="{{ asset($user->avatar ?? 'assets/images/icons/person-one.svg') }}" alt="User">
                                 <div>
                                     <p class="user-name">{{ $user->name }}</p>
+                                    <p class="user-email">{{ $user->email }}</p>
                                 </div>
                             </div>
                         </td>
                         <td>
                             <span class="status last-seen py-2" style="font-weight:400">
-                                {{ $user->last_login_at ? $user->last_login_at->diffForHumans() : '2 weeks ago' }}
+                                @if ($user->last_login_at)
+                                    @php
+                                        $lastLogin = $user->last_login_at;
+                                        $diffInDays = $lastLogin->diffInDays();
+                                        
+                                        if ($diffInDays >= 30) {
+                                            $lastLoginText = 'Last month';
+                                        } elseif ($diffInDays >= 7) {
+                                            $lastLoginText = 'Last week';
+                                        } else {
+                                            // Custom short format for "min ago", "hours ago" etc.
+                                            $lastLoginText = $lastLogin->diffForHumans(null, false, true); 
+                                            // Some Carbon versions might not support the short flag well, 
+                                            // let's just use diffForHumans() and replace if needed or keep it simple.
+                                            $lastLoginText = str_replace([' minutes', ' minute'], ' min', $lastLoginText);
+                                        }
+                                    @endphp
+                                    {{ $lastLoginText }}
+                                @else
+                                    Never
+                                @endif
                             </span>
                         </td>
                         <td><span class="date">{{ $user->created_at->format('Y-m-d') }}</span></td>
@@ -149,6 +173,14 @@
             @endif
         </tbody>
     </table>
+
+    <div class="mt-3">
+        {{ $assignedUsers->links('vendor.pagination.custom') }}
+    </div>
+
+    
+
+     
 
   
 
