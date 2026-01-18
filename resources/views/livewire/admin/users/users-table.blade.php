@@ -48,19 +48,25 @@
                         <td style='font-weight:500; cursor: pointer;' wire:click="viewUser({{ $user->id }})">{{ Str::limit($user->address ?? 'N/A', 30) }}</td>
                         <td style='font-weight:500; cursor: pointer;' wire:click="viewUser({{ $user->id }})">{{ $user->phone ?? 'N/A' }}</td>
                         <td>
-                            <span class=" " style="font-weight:400">
+                            <span class="status last-seen" style="font-weight:400">
                                 @if ($user->last_login_at)
                                     @php
                                         $lastLogin = $user->last_login_at;
-                                        $diffInDays = $lastLogin->diffInDays();
+                                        $now = now();
                                         
-                                        if ($diffInDays >= 30) {
-                                            $lastLoginText = 'Last month';
-                                        } elseif ($diffInDays >= 7) {
-                                            $lastLoginText = 'Last week';
+                                        if ($lastLogin->gt($now)) {
+                                            $lastLoginText = 'Just now';
                                         } else {
-                                            $lastLoginText = $lastLogin->diffForHumans();
-                                            $lastLoginText = str_replace([' minutes', ' minute'], ' min', $lastLoginText);
+                                            $diffInDays = $lastLogin->diffInDays($now);
+                                            
+                                            if ($diffInDays >= 30) {
+                                                $lastLoginText = 'Last month';
+                                            } elseif ($diffInDays >= 7) {
+                                                $lastLoginText = 'Last week';
+                                            } else {
+                                                $lastLoginText = $lastLogin->diffForHumans($now);
+                                                $lastLoginText = str_replace([' minutes ago', ' minute ago'], ' min ago', $lastLoginText);
+                                            }
                                         }
                                     @endphp
                                     {{ $lastLoginText }}
@@ -115,6 +121,8 @@
     </div>
 
     {{ $users->links('vendor.pagination.custom') }}
+
+    
 
     @if ($showFilterModal)
         <div class="modal filter-theme-modal" style="display: flex;">

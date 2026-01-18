@@ -73,7 +73,8 @@
                                                     data-id="{{ $role->id }}">&times;</span>
                                             </div>
                                             <p class="delete-text">Are you sure you want to delete role
-                                                <strong>{{ $role->name }}</strong>?</p>
+                                                <strong>{{ $role->name }}</strong>?
+                                            </p>
                                             <div class="delete-actions justify-content-start">
                                                 <button class="confirm-delete-btn"
                                                     wire:click="deleteRole({{ $role->id }})">Delete</button>
@@ -218,8 +219,6 @@
             background-position: right 0.521vw center;
             background-size: 1.042vw;
         }
-
-         
     </style>
 </div>
 

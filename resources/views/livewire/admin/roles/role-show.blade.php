@@ -19,9 +19,9 @@
                 </button>
 
                 <button class="delete-btn" wire:click="openDeleteModal">
-                  
+
                     Delete Role&nbsp;
-                      <span class="download-icon">
+                    <span class="download-icon">
                         <img src="{{ asset('assets/images/icons/trash.svg') }}" alt="" class="icons-btn">
                     </span>
                 </button>
@@ -31,26 +31,27 @@
         <div class="toolbar-right">
             <h2 class="page-titles">{{ ucfirst($role->name) ?? 'Role Details' }}</h2>
         </div>
-          <!-- Global Delete Modal -->
-    @if ($showDeleteModal)
-            <div class="deleteModal delete-card" id="global-delete-modal" style="
+        <!-- Global Delete Modal -->
+        @if ($showDeleteModal)
+            <div class="deleteModal delete-card" id="global-delete-modal"
+                style="
     position: absolute;
     right: 12vw;
     top: 1vw;
 ">
-            <div class="delete-card-header">
-                <h3 class="delete-title">Delete Role</h3>
-                <span class="delete-close" wire:click="closeDeleteModal">&times;</span>
+                <div class="delete-card-header">
+                    <h3 class="delete-title">Delete Role</h3>
+                    <span class="delete-close" wire:click="closeDeleteModal">&times;</span>
+                </div>
+                <p class="delete-text">Are you sure you want to delete this role?
+                </p>
+
+                <div class="delete-actions justify-content-start">
+                    <button class="confirm-delete-btn" wire:click="deleteRole">Delete</button>
+                    <button class="cancel-delete-btn" wire:click="closeDeleteModal">Cancel</button>
+                </div>
             </div>
-            <p class="delete-text">Are you sure you want to delete this role?
-            </p>
-             
-            <div class="delete-actions justify-content-start" >
-                <button class="confirm-delete-btn" wire:click="deleteRole">Delete</button>
-                <button class="cancel-delete-btn" wire:click="closeDeleteModal">Cancel</button>
-            </div>
-        </div>
-    @endif
+        @endif
     </div>
 
     <div class="users-toolbars">
@@ -68,7 +69,8 @@
         <div class="tabs-nav theme-btn-class-roles-module" id="tabsNav">
             @foreach ($permissionGroups as $groupName => $groupPermissions)
                 <div class="tab roles-permission-theme-tabs {{ $loop->first ? 'active' : '' }}"
-                    data-target="{{ Str::slug($groupName) }}_show_tab" onclick="switchTab('{{ Str::slug($groupName) }}_show_tab')">
+                    data-target="{{ Str::slug($groupName) }}_show_tab"
+                    onclick="switchTab('{{ Str::slug($groupName) }}_show_tab')">
                     {{ $groupName }}
                 </div>
             @endforeach
@@ -82,10 +84,11 @@
 
     <!-- Tab Content -->
     @foreach ($permissionGroups as $groupName => $groupPermissions)
-        <div id="{{ Str::slug($groupName) }}_show_tab" class="tab-content {{ $loop->first ? 'active' : '' }}" style="margin-left: 1vw">
+        <div id="{{ Str::slug($groupName) }}_show_tab" class="tab-content {{ $loop->first ? 'active' : '' }}"
+            style="margin-left: 1vw">
             @foreach ($groupPermissions as $permission)
                 <div class="permission-item">
-                    <span >{{ ucwords(str_replace(['-', '_'], ' ', $permission->name)) }}</span>
+                    <span>{{ ucwords(str_replace(['-', '_'], ' ', $permission->name)) }}</span>
                     <input type="checkbox" wire:model="permissions" value="{{ $permission->name }}"
                         id="permission_{{ $permission->id }}">
                 </div>
@@ -106,16 +109,20 @@
             <tr>
                 <th><input type="checkbox" wire:model.live="selectAllUsers"></th>
                 <th class="sortable" wire:click="sortBy('user_type')">User Type
-                    <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon {{ $sortColumn === 'user_type' ? ($sortDirection === 'asc' ? 'sort-asc' : 'sort-desc') : '' }}">
+                    <img src="{{ asset('assets/images/icons/sort.svg') }}"
+                        class="sort-icon {{ $sortColumn === 'user_type' ? ($sortDirection === 'asc' ? 'sort-asc' : 'sort-desc') : '' }}">
                 </th>
                 <th class="sortable" wire:click="sortBy('name')">User name
-                    <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon {{ $sortColumn === 'name' ? ($sortDirection === 'asc' ? 'sort-asc' : 'sort-desc') : '' }}">
+                    <img src="{{ asset('assets/images/icons/sort.svg') }}"
+                        class="sort-icon {{ $sortColumn === 'name' ? ($sortDirection === 'asc' ? 'sort-asc' : 'sort-desc') : '' }}">
                 </th>
                 <th class="sortable" wire:click="sortBy('last_login_at')">Last login
-                    <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon {{ $sortColumn === 'last_login_at' ? ($sortDirection === 'asc' ? 'sort-asc' : 'sort-desc') : '' }}">
+                    <img src="{{ asset('assets/images/icons/sort.svg') }}"
+                        class="sort-icon {{ $sortColumn === 'last_login_at' ? ($sortDirection === 'asc' ? 'sort-asc' : 'sort-desc') : '' }}">
                 </th>
                 <th class="sortable" wire:click="sortBy('created_at')">Date added
-                    <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon {{ $sortColumn === 'created_at' ? ($sortDirection === 'asc' ? 'sort-asc' : 'sort-desc') : '' }}">
+                    <img src="{{ asset('assets/images/icons/sort.svg') }}"
+                        class="sort-icon {{ $sortColumn === 'created_at' ? ($sortDirection === 'asc' ? 'sort-asc' : 'sort-desc') : '' }}">
                 </th>
                 <th></th>
             </tr>
@@ -131,7 +138,8 @@
                         <td style="cursor: pointer;"
                             onclick="window.location.href='{{ $user->user_type === 'provider' ? route('user-management.service.providers.view', ['id' => $user->id]) : route('user-management.service.users.view', ['id' => $user->id]) }}'">
                             <div class="user-info">
-                                <img src="{{ asset($user->avatar ?? 'assets/images/icons/person-one.svg') }}" alt="User">
+                                <img src="{{ asset($user->avatar ?? 'assets/images/icons/person-one.svg') }}"
+                                    alt="User">
                                 <div>
                                     <p class="user-name">{{ $user->name }}</p>
                                     <p class="user-email">{{ $user->email }}</p>
@@ -139,22 +147,31 @@
                             </div>
                         </td>
                         <td>
-                            <span class="status last-seen py-2" style="font-weight:400">
+                            <span class="status last-seen" style="font-weight:400">
                                 @if ($user->last_login_at)
                                     @php
                                         $lastLogin = $user->last_login_at;
-                                        $diffInDays = $lastLogin->diffInDays();
-                                        
-                                        if ($diffInDays >= 30) {
-                                            $lastLoginText = 'Last month';
-                                        } elseif ($diffInDays >= 7) {
-                                            $lastLoginText = 'Last week';
+                                        $now = now();
+
+                                        // Handle potential future time (clock skew) as "Just now"
+                                        if ($lastLogin->gt($now)) {
+                                            $lastLoginText = 'Just now';
                                         } else {
-                                            // Custom short format for "min ago", "hours ago" etc.
-                                            $lastLoginText = $lastLogin->diffForHumans(null, false, true); 
-                                            // Some Carbon versions might not support the short flag well, 
-                                            // let's just use diffForHumans() and replace if needed or keep it simple.
-                                            $lastLoginText = str_replace([' minutes', ' minute'], ' min', $lastLoginText);
+                                            $diffInDays = $lastLogin->diffInDays($now);
+
+                                            if ($diffInDays >= 30) {
+                                                $lastLoginText = 'Last month';
+                                            } elseif ($diffInDays >= 7) {
+                                                $lastLoginText = 'Last week';
+                                            } else {
+                                                $lastLoginText = $lastLogin->diffForHumans($now);
+                                                // Shorten "minutes" to "min" as per user image
+                                                $lastLoginText = str_replace(
+                                                    [' minutes ago', ' minute ago'],
+                                                    ' min ago',
+                                                    $lastLoginText,
+                                                );
+                                            }
                                         }
                                     @endphp
                                     {{ $lastLoginText }}
@@ -178,11 +195,12 @@
         {{ $assignedUsers->links('vendor.pagination.custom') }}
     </div>
 
-    
 
-     
 
-  
+
+
+
+
 
     <script>
         function scrollTabs(direction) {
