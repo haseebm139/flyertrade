@@ -1,69 +1,99 @@
 <div>
-   <style>
-    .video-container {
-        position: relative;
-        width: 25%;
+    <style>
+        #addUserModal label {
+            margin-top: 1vw;
+            margin-bottom: 0.2vw;
+        }
+
+        .video-container {
+            position: relative;
+            width: 25%;
 
 
-    }
+        }
 
-    .custom-controls {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: rgba(0, 0, 0, 0.5);
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-    }
+        .custom-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.5);
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
 
-    .custom-btn {
-        width: 1.823vw;
-        height: 1.823vw;
-        background: white;
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-    }
+        .custom-btn {
+            width: 1.823vw;
+            height: 1.823vw;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
 
-    .custom-progress {
-        flex-grow: 1;
-        height: 0.313vw;
-        background: #fff;
-        cursor: pointer;
-    }
+        .custom-progress {
+            flex-grow: 1;
+            height: 0.313vw;
+            background: #fff;
+            cursor: pointer;
+        }
 
-    .custom-progress input {
-        width: 100%;
-        height: 100%;
-        -webkit-appearance: none;
-        appearance: none;
-        background: transparent;
-        cursor: pointer;
-        padding: 0px;
-        overflow: visible;
-    }
+        .custom-progress input {
+            width: 100%;
+            height: 100%;
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            cursor: pointer;
+            padding: 0px;
+            overflow: visible;
+        }
 
-    .custom-progress input::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 0.625vw;
-        height: 0.625vw;
-        background: #fff;
-        border-radius: 50%;
-        cursor: pointer;
-    }
+        .custom-progress input::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 0.625vw;
+            height: 0.625vw;
+            background: #fff;
+            border-radius: 50%;
+            cursor: pointer;
+        }
 
-    .custom-progress input::-moz-range-thumb {
-        width: 0.625vw;
-        height: 0.625vw;
-        background: #fff;
-        border-radius: 50%;
-        cursor: pointer;
-    }
-</style>  
+        .custom-progress input::-moz-range-thumb {
+            width: 0.625vw;
+            height: 0.625vw;
+            background: #fff;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .swiper {
+            width: 100%;
+            min-height: 8vw;
+        }
+
+        .deleteModal {
+            /* display: none;
+                      position: fixed;
+                      inset: 0;
+                      background: rgba(0,0,0,0.4);
+                      justify-content: center;
+                      align-items: center;
+                      z-index: 999; */
+            position: absolute;
+            top: -5px;
+            right: -5px;
+        }
+
+        .delete-card {
+            /* background: #fff;
+                      padding: 20px;
+                      border-radius: 10px;
+                      min-width: 300px; */
+        }
+    </style>
 
     <div class="users-toolbar">
         <nav class="breadcrumb">
@@ -187,8 +217,8 @@
                                 <img class="icons-btn" src="{{ asset('assets/images/icons/star.svg') }}" alt="Star"
                                     style="width: 1.2vw; height: 1.2vw;">
                             @else
-                                <img class="icons-btn" src="{{ asset('assets/images/icons/empty_star.svg') }}" alt="Empty Star"
-                                    style="width: 1.2vw; height: 1.2vw;">
+                                <img class="icons-btn" src="{{ asset('assets/images/icons/empty_star.svg') }}"
+                                    alt="Empty Star" style="width: 1.2vw; height: 1.2vw;">
                             @endif
                         @endfor
                         ({{ number_format($rating, 1) }})
@@ -528,7 +558,8 @@
     @endif
 
     @if ($showServiceModal && $selectedService)
-        <div id="service-details-modal" class="service-details-theme" style="display: flex;">
+        <div id="service-details-modal" class="service-details-theme" style="display: flex;"
+            wire:click.self="closeServiceModal">
             <div class="modal-content">
                 <span class="close-btn" id="closeServiceDetails" style="line-height: 1;"
                     wire:click="closeServiceModal">
@@ -537,8 +568,7 @@
                         <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75"
                             stroke="#717171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                         </path>
-                    </svg>
-                </span>
+                    </svg></span>
                 <h3>Service details</h3>
 
                 <label>Name</label>
@@ -565,165 +595,86 @@
                     </div>
                 </div>
 
-                @if ($selectedService->media->where('type', 'photo')->count() > 0)
-                    <h4 style="font-size:0.938vw">Photos</h4>
-                    <div class="swiper photos ">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide">
-                                <img class="w-100" src="{{ asset('assets/images/icons/service_one.svg') }}"
-                                    alt="">
-                            </div>
-                            <div class="swiper-slide">
-                                <img class="w-100" src="{{ asset('assets/images/icons/service_four.svg') }}"
-                                    alt="">
-                            </div>
-                            <div class="swiper-slide">
-                                <img class="w-100" src="{{ asset('assets/images/icons/service_three.svg') }}"
-                                    alt="">
-                            </div>
-                            <div class="swiper-slide">
-                                <img class="w-100" src="{{ asset('assets/images/icons/service_four.svg') }}"
-                                    alt="">
-                            </div>
-
+                <h4 style="font-size:0.938vw">Photos</h4>
+                <!-- Slider -->
+                <div class="swiper photos w-100">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <img class="w-100" src="{{ asset('assets/images/icons/service_one.svg') }}"
+                                alt="">
+                        </div>
+                        <div class="swiper-slide">
+                            <img class="w-100" src="{{ asset('assets/images/icons/service_four.svg') }}"
+                                alt="">
+                        </div>
+                        <div class="swiper-slide">
+                            <img class="w-100" src="{{ asset('assets/images/icons/service_three.svg') }}"
+                                alt="">
+                        </div>
+                        <div class="swiper-slide">
+                            <img class="w-100" src="{{ asset('assets/images/icons/service_four.svg') }}"
+                                alt="">
+                        </div>
+                        <div class="swiper-slide">
+                            <img class="w-100" src="{{ asset('assets/images/icons/service_four.svg') }}"
+                                alt="">
+                        </div>
+                        <div class="swiper-slide">
+                            <img class="w-100" src="{{ asset('assets/images/icons/service_three.svg') }}"
+                                alt="">
+                        </div>
+                        <div class="swiper-slide">
+                            <img class="w-100" src="{{ asset('assets/images/icons/service_four.svg') }}"
+                                alt="">
                         </div>
 
-                        <!-- Navigation Arrows -->
-                        <div class="swiper-button-next"></div>
-                        <div class="swiper-button-prev"></div>
                     </div>
-                    {{-- <div class="photos">
-                        @foreach ($selectedService->media->where('type', 'photo') as $media)
-                            <img src="{{ asset($media->file_path) }}" alt="service photo">
-                        @endforeach
-                    </div> --}}
-                @endif
 
-                @if ($selectedService->media->where('type', 'video')->count() > 0)
-                    <h4 style="font-size:0.938vw;margin-top:0.9vw">Videos</h4>
-                    <div class="videos swiper w-100">
-                        <!-- Navigation Arrows -->
-                        <div class="swiper-button-next video-swiper-button-next"></div>
-                        <div class="swiper-button-prev video-swiper-button-prev"></div>
-                        <div class="swiper-wrapper">
-                            <div class="video-container swiper-slide">
-                                <video class="custom-video" style="width: 100%;">
-                                    <source src="{{ asset('assets/videos/video1.mp4') }}" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
+                    <!-- Navigation Arrows -->
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
 
-                                <div class="custom-controls">
-                                    <div class="custom-btn play-btn">▶</div>
-                                    <div class="custom-progress">
-                                        <input type="range" class="progress-bar" value="0" max="100">
-                                    </div>
-                                </div>
-                            </div>
+                <h4 style="font-size:0.938vw;margin-top:0.9vw">Videos</h4>
+                <div class="videos swiper w-100">
+                    <!-- Navigation Arrows -->
+                    <div class="swiper-button-next video-swiper-button-next"></div>
+                    <div class="swiper-button-prev video-swiper-button-prev"></div>
+                    <div class="swiper-wrapper">
+                        <div class="video-container swiper-slide">
+                            <video class="custom-video" style="width: 100%;">
+                                <source src="{{ asset('assets/videos/video1.mp4') }}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
 
-                            <div class="video-container swiper-slide">
-                                <video class="custom-video" style="width: 100%;">
-                                    <source src="{{ asset('assets/videos/video1.mp4') }}" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
-
-                                <div class="custom-controls">
-                                    <div class="custom-btn play-btn">▶</div>
-                                    <div class="custom-progress">
-                                        <input type="range" class="progress-bar" value="0" max="100">
-                                    </div>
+                            <div class="custom-controls">
+                                <div class="custom-btn play-btn">▶</div>
+                                <div class="custom-progress">
+                                    <input type="range" class="progress-bar" value="0" max="100">
                                 </div>
                             </div>
                         </div>
-                        <div>
 
-                        </div>
-                        {{-- <div class="videos">
-                            @foreach ($selectedService->media->where('type', 'video') as $media)
-                                <div class="video-container">
-                                    <video class="custom-video" style="width: 100%;">
-                                        <source src="{{ asset($media->file_path) }}" type="video/mp4">
-                                        Your browser does not support the video tag.
-                                    </video>
-                                    <div class="custom-controls">
-                                        <div class="custom-btn play-btn">▶</div>
-                                        <div class="custom-progress">
-                                            <input type="range" class="progress-bar" value="0"
-                                                max="100">
-                                        </div>
-                                    </div>
+                        <div class="video-container swiper-slide">
+                            <video class="custom-video" style="width: 100%;">
+                                <source src="{{ asset('assets/videos/video1.mp4') }}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+
+                            <div class="custom-controls">
+                                <div class="custom-btn play-btn">▶</div>
+                                <div class="custom-progress">
+                                    <input type="range" class="progress-bar" value="0" max="100">
                                 </div>
-                            @endforeach
-                        </div> --}}
+                            </div>
+                        </div>
+
+
                     </div>
-                @endif
+                </div>
             </div>
         </div>
     @endif
-    {{-- <div id="service-details-modal" class="service-details-theme">
-        <div class="modal-content">
-            <span class="close-btn" id="closeServiceDetails" style="line-height: 1;"><svg
-                    style="width:0.625vw;height:0.625vw;" width="12" height="12" viewBox="0 0 12 12"
-                    fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75" stroke="#717171"
-                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                </svg></span>
-            <h3>Service details</h3>
-
-            <label>Name</label>
-            <input type="text" value="Plumbing" readonly>
-
-            <label>Description</label>
-            <textarea readonly> Reliable and affordable plumbing solutions for your home or office. From fixing leaks and unclogging drains to full bathroom installations, I deliver fast and professional services. </textarea>
-
-            <div class="price-boxes">
-                <div><label for="">Maximum price/hr</label><input type="text" value="$80" readonly>
-                </div>
-                <div><label for="">Mid price/hr</label> <input type="text" value="$30" readonly></div>
-                <div><label for="">Minimum price/hr</label><input type="text" value="$40" readonly>
-                </div>
-            </div>
-
-            <h4 style="font-size:0.938vw">Photos</h4>
-            <div class="photos">
-                <img src="{{ asset('assets/images/icons/service_one.svg') }}" alt="">
-                <img src="{{ asset('assets/images/icons/service_four.svg') }}" alt="">
-                <img src="{{ asset('assets/images/icons/service_three.svg') }}" alt="">
-                <img src="{{ asset('assets/images/icons/service_four.svg') }}" alt="">
-            </div>
-
-            <h4 style="font-size:0.938vw;margin-top:0.9vw">Videos</h4>
-            <div class="videos">
-                <div class="video-container">
-                    <video class="custom-video" style="width: 100%;">
-                        <source src="{{ asset('assets/videos/video1.mp4') }}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-
-                    <div class="custom-controls">
-                        <div class="custom-btn play-btn">▶</div>
-                        <div class="custom-progress">
-                            <input type="range" class="progress-bar" value="0" max="100">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="video-container">
-                    <video class="custom-video" style="width: 100%;">
-                        <source src="{{ asset('assets/videos/video1.mp4') }}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-
-                    <div class="custom-controls">
-                        <div class="custom-btn play-btn">▶</div>
-                        <div class="custom-progress">
-                            <input type="range" class="progress-bar" value="0" max="100">
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div> --}}
 
     <!-- Document Preview Modal -->
     <div id="check-modal" class="cm-modal" aria-hidden="true">
@@ -821,4 +772,6 @@
             });
         });
     </script>
+
+
 </div>

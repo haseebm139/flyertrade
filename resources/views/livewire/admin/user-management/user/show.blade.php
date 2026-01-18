@@ -192,8 +192,8 @@
                                 <img class="icons-btn" src="{{ asset('assets/images/icons/star.svg') }}" alt="Star"
                                     style="width: 1.2vw; height: 1.2vw;">
                             @else
-                                <img class="icons-btn" src="{{ asset('assets/images/icons/empty_star.svg') }}" alt="Empty Star"
-                                    style="width: 1.2vw; height: 1.2vw;">
+                                <img class="icons-btn" src="{{ asset('assets/images/icons/empty_star.svg') }}"
+                                    alt="Empty Star" style="width: 1.2vw; height: 1.2vw;">
                             @endif
                         @endfor
                         ({{ number_format($rating, 1) }})

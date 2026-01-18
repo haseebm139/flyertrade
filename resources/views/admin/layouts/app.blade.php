@@ -10,7 +10,7 @@
     @include('admin.partials.head')
     @stack('styles')
     @livewireStyles
-     <style>
+    <style>
         div:where(.swal2-icon).swal2-success [class^=swal2-success-line] {
             background-color: #17A55A !important;
         }
@@ -154,24 +154,31 @@
         .sidebar .profile-email {
             font-size: 0.8vw;
         }
-#closemenumutton, #menubutton{
-    display: none;
-}
-.table-responsive {
 
-    height: 100%;
-    min-height: 388px;
-    max-height: 100%;
-.table-responsive {
+        #closemenumutton,
+        #menubutton {
+            display: none;
+        }
 
-    height: 100%;
-    min-height: 388px;
-    max-height: 100%;
+        .table-responsive {
 
-}
-.doc-row .doc-title {
-    width: 10.208vw;
-}
+            height: 100%;
+            min-height: 388px;
+            max-height: 100%;
+        }
+
+        .table-responsive {
+
+            height: 100%;
+            min-height: 388px;
+            max-height: 100%;
+
+        }
+
+        .doc-row .doc-title {
+            width: 10.208vw;
+        }
+
         @media(max-width:600px) {
             .sidebar {
                 display: block;
@@ -184,15 +191,18 @@
                 padding: 10vw;
                 transition: 1s ease-in all;
             }
-            #menubutton{
+
+            #menubutton {
                 display: block;
             }
-            #closemenumutton{
+
+            #closemenumutton {
                 display: block;
                 right: 0px;
                 position: absolute;
 
             }
+
             .sidebar img.logo-img {
                 width: 40vw;
             }
@@ -242,8 +252,8 @@
 
             .top-row {
                 padding: 10px;
-                gap:10px;
-          
+                gap: 10px;
+
             }
 
             .page-title {
@@ -412,41 +422,50 @@
             .main_content {
                 padding: 5vw;
             }
+
             .space {
                 margin-top: 20vw;
             }
-            #profileBt .profile-info{
+
+            #profileBt .profile-info {
                 width: 50vw;
             }
+
             #profilePopup .profile-card img {
-                    width: 10vw;
-                    height: 10vw;
-                }
-            .nav-sublink{
+                width: 10vw;
+                height: 10vw;
+            }
+
+            .nav-sublink {
                 font-size: 3.5vw;
                 padding-left: 10vw;
             }
+
             .nav-sublink::before {
                 left: 6.2vw;
                 width: 2vw;
                 height: 2vw;
             }
+
             div.notification_popup {
                 top: 4.5vw !important;
- 
+
                 width: 45vw !important;
             }
+
             .notification-text {
                 font-size: 1.5vw;
             }
-      #rows, #perPage {
-        background-position: right 2px center;
-        background-size: 3px;
-     }
+
+            #rows,
+            #perPage {
+                background-position: right 2px center;
+                background-size: 3px;
+            }
 
         }
     </style>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
 </head>
 
@@ -615,11 +634,11 @@
             sidebar.style.left = '0px';
         });
 
-// Close menu
-closeMenuButton.addEventListener('click', function () {
-    sidebar.style.left = '-600px';
-});
-</script>
+        // Close menu
+        closeMenuButton.addEventListener('click', function() {
+            sidebar.style.left = '-600px';
+        });
+    </script>
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
@@ -634,11 +653,11 @@ closeMenuButton.addEventListener('click', function () {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev',
             },
-            slidesPerView:4,
+            slidesPerView: 4,
             spaceBetween: 20,
         });
 
-    new Swiper('.videos', {
+        new Swiper('.videos', {
             loop: true,
             autoplay: {
                 delay: 2000,
@@ -648,7 +667,7 @@ closeMenuButton.addEventListener('click', function () {
                 nextEl: '.video-swiper-button-next',
                 prevEl: '.video-swiper-button-prev',
             },
-            slidesPerView:4,
+            slidesPerView: 4,
             spaceBetween: 20,
         });
     </script>
