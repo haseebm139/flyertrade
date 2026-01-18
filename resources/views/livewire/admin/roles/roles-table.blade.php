@@ -23,11 +23,11 @@
                     <tr wire:key="role-row-{{ $role->id }}">
                         <td><input type="checkbox" value="{{ $role->id }}" wire:model.live="selected"></td>
                         <td>
-                            <div class="role-info">
+                            <div class="role-info" style="cursor: pointer;" wire:click="viewRole({{ $role->id }})">
                                 <span class="role-name" style='font-weight:500;'>{{ ucfirst($role->name) ?? 'N/A' }}</span>
                             </div>
                         </td>
-                        <td>
+                        <td style="cursor: pointer;" wire:click="viewRole({{ $role->id }})">
                             <div class="users-info">
                                 @if ($role->users->count() > 0)
                                     <div class="user-avatar">

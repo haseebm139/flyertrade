@@ -128,8 +128,8 @@ class RoleShow extends Component
             $this->dispatch('showSweetAlert', type: 'success', message: 'Role deleted successfully.', title: 'Success');
             $this->closeDeleteModal();
             
-            // Redirect to roles index
-            return redirect()->route('roles-and-permissions.index');
+            // Redirect to roles index with tab parameter
+            return redirect()->route('roles-and-permissions.index', ['tab' => 'roles']);
         } catch (\Exception $e) {
             $this->dispatch('showSweetAlert', type: 'error', message: 'Error deleting role: ' . $e->getMessage(), title: 'Error');
         }

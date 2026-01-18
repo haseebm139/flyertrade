@@ -82,7 +82,7 @@
 
     <!-- Tab Content -->
     @foreach ($permissionGroups as $groupName => $groupPermissions)
-        <div id="{{ Str::slug($groupName) }}" class="tab-content {{ $loop->first ? 'active' : '' }}">
+        <div id="{{ Str::slug($groupName) }}" class="tab-content {{ $loop->first ? 'active' : '' }}" style="margin-left: 1vw">
             @foreach ($groupPermissions as $permission)
                 <div class="permission-item">
                     <span >{{ ucwords(str_replace(['-', '_'], ' ', $permission->name)) }}</span>

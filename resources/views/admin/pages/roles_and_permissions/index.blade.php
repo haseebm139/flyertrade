@@ -4,6 +4,9 @@
 @section('header', 'Roles and Permissions')
 
 @section('content')
+@php
+    $activeTab = request()->query('tab', 'users');
+@endphp
 <style>
     #addUserModal .custom-select-input ,#addUserModal .form-select{
         background: #F6F6F6;
@@ -21,17 +24,17 @@
 
 <!-- Top Tabs -->
 <div class="tabs-section mb-3">
-    <div class="tab active roles-tab" data-target="users">Users</div>
-    <div class="tab roles-tab" id="ROlesss_tabb" data-target="roles">Roles</div>
+    <div class="tab {{ $activeTab === 'users' ? 'active' : '' }} roles-tab" data-target="users">Users</div>
+    <div class="tab {{ $activeTab === 'roles' ? 'active' : '' }} roles-tab" id="ROlesss_tabb" data-target="roles">Roles</div>
 </div>
 
 <!-- Users Tab Content -->
-<div id="users" class="main-tab-content active">
+<div id="users" class="main-tab-content {{ $activeTab === 'users' ? 'active' : '' }}">
     <livewire:admin.users.users-table />
 </div>
 
 <!-- Roles Tab Content -->
-<div id="roles" class="main-tab-content">
+<div id="roles" class="main-tab-content {{ $activeTab === 'roles' ? 'active' : '' }}">
     <livewire:admin.roles.roles-table />
 </div>
 
