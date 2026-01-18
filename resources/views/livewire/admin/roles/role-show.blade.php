@@ -165,13 +165,19 @@
         }
 
         function switchTab(tabId) {
-            // Hide all tab contents
+            const wrapper = document.querySelector('.tabs-wrapper');
+            if (!wrapper) return;
+
+            // Hide all tab contents (scoped to the current component if possible, but at least use classes correctly)
             document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
+                // Only affect contents that are NOT main-tab-content
+                if (!content.classList.contains('main-tab-content')) {
+                    content.classList.remove('active');
+                }
             });
 
-            // Remove active class from all tabs
-            document.querySelectorAll('.tab').forEach(tab => {
+            // Remove active class from all tabs within this wrapper
+            wrapper.querySelectorAll('.tab').forEach(tab => {
                 tab.classList.remove('active');
             });
 
@@ -182,7 +188,7 @@
             }
 
             // Add active class to clicked tab
-            const clickedTab = document.querySelector(`[data-target="${tabId}"]`);
+            const clickedTab = wrapper.querySelector(`[data-target="${tabId}"]`);
             if (clickedTab) {
                 clickedTab.classList.add('active');
             }

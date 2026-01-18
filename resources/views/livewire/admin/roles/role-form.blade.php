@@ -132,24 +132,27 @@
 
     <script>
         function switchTab(tabId) {
-            // Hide all tab contents
-            document.querySelectorAll('.tab-content').forEach(content => {
+            const section = document.getElementById('permissionSection');
+            if (!section) return;
+
+            // Hide all tab contents within this section
+            section.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.remove('active');
             });
 
-            // Remove active class from all tabs
-            document.querySelectorAll('.tab').forEach(tab => {
+            // Remove active class from all tabs within this section
+            section.querySelectorAll('.roles-permission-theme-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
 
             // Show selected tab content
-            const targetContent = document.getElementById(tabId);
+            const targetContent = section.querySelector('#' + tabId);
             if (targetContent) {
                 targetContent.classList.add('active');
             }
 
             // Add active class to clicked tab
-            const clickedTab = document.querySelector(`[data-target="${tabId}"]`);
+            const clickedTab = section.querySelector(`[data-target="${tabId}"]`);
             if (clickedTab) {
                 clickedTab.classList.add('active');
             }
