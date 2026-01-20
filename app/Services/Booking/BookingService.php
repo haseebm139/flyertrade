@@ -503,7 +503,7 @@ class BookingService
     public function upcomingBookingsCustomer($customerId)
     {
         $bookings = Booking::with('slots', 'provider', 'customer','providerService.service')
-            // ->where('customer_id', $customerId)
+            ->where('customer_id', $customerId)
             ->where('status', 'confirmed')
             ->paginate(10);
         

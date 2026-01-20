@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Api\Booking;
+namespace App\Http\Requests\Api\Customer;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
 
-class ProcessPaymentRequest extends FormRequest
+use Illuminate\Contracts\Validation\Validator;
+
+use Illuminate\Http\Exceptions\HttpResponseException;
+class StoreIncidentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,18 +25,10 @@ class ProcessPaymentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'payment_method_id' => 'required|string|starts_with:pm_',
+            'message' => 'required|string|min:10',
+            'attachment' => 'nullable|image|max:5120', // Max 2MB
         ];
     }
-
-    public function messages(): array
-    {
-        return [
-            'payment_method_id.required' => 'Payment method ID is required.',
-            'payment_method_id.starts_with' => 'Payment method ID must be a valid Stripe payment method (starts with pm_).',
-        ];
-    }
-
 
     public function failedValidation(Validator $validator)
     {
@@ -48,4 +41,3 @@ class ProcessPaymentRequest extends FormRequest
         );
     }
 }
-

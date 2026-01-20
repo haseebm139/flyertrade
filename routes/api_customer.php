@@ -1,6 +1,6 @@
 <?php
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\Customer\{AuthController,ProviderController,ProfileController,BookingController as CustomerBookingController,ChatController,ReviewController};
+use App\Http\Controllers\Api\Customer\{AuthController,ProviderController,ProfileController,BookingController as CustomerBookingController,ChatController,ReviewController,IncidentReportController};
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\Shared\MediaController;
 
@@ -48,6 +48,9 @@ Route::prefix('customer')->group(function () {
 
         // Reviews
         Route::post('bookings/{booking}/review', [ReviewController::class,'store']);
+
+        // Incident Reporting
+        Route::post('bookings/{booking}/report-incident', [IncidentReportController::class, 'store'])->middleware('throttle:5,1');
 
         // Payments (Stripe)
         Route::post('payments/intent', [PaymentController::class,'createPaymentIntent']);
