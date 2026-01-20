@@ -13,15 +13,25 @@ class LocationController extends BaseController
      */
     public function countries()
     {
-        // Querying directly from DB to include the new 'emoji' column
+        // Querying directly from DB to include the new 'emoji' column and joining currencies
         $countries = DB::table('countries')
-            ->select('id', 'name', 'emoji', 'iso2', 'phone_code')
-            ->where('status', 1)
-            ->orderBy('name')
+            ->leftJoin('currencies', 'countries.id', '=', 'currencies.country_id')
+            ->select(
+                'countries.id', 
+                'countries.name', 
+                'countries.emoji', 
+                'countries.iso2', 
+                'countries.phone_code',
+                'currencies.code as currency_code',
+                'currencies.symbol as currency_symbol',
+                'currencies.name as currency_name'
+            )
+            ->where('countries.status', 1)
+            ->orderBy('countries.name')
             ->get()
             ->map(function($country) {
-                // PNG Flag URL
-                $country->flag_url = "https://flagcdn.com/w160/" . strtolower($country->iso2) . ".png";
+                // Local PNG Flag URL
+                $country->flag_url = "assets/images/flags/" . strtolower($country->iso2) . ".png";
                 return $country;
             });
         
