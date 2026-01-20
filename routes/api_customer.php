@@ -10,6 +10,7 @@ Route::middleware('auth:sanctum')->controller(CustomerBookingController::class)-
     Route::get('{booking}','show');    // show one
     
     Route::post('{booking}/cancel', 'cancel');
+    Route::post('{booking}/extend', 'extend'); // Extend booking time
     Route::post('{booking}/reschedule/request','requestReschedule');    // show one
     Route::post('{booking}/reschedule/respond','respondReschedule');    // show one
     Route::get('customer/pending', 'pending');

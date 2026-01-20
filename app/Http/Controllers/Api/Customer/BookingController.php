@@ -11,9 +11,67 @@ use App\Services\Booking\BookingService;
 use Illuminate\Http\JsonResponse;
 use Validator;
 use App\Http\Controllers\Api\BaseController;
+use App\Models\Setting;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
 class BookingController extends BaseController
 {
     public function __construct(private BookingService $bookingsService) {}
+
+    /**
+     * Extend a booking time
+     *
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function extend(Request $request, $id): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'booking_working_minutes' => 'required|integer|min:1',
+            'price' => 'required|numeric|min:0',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), 422);
+        }
+
+        try {
+            return DB::transaction(function () use ($request, $id) {
+                $booking = Booking::find($id);
+
+                if (!$booking) {
+                    return $this->sendError('Booking not found', 404);
+                }
+
+                if ($booking->customer_id != auth()->id()) {
+                    return $this->sendError('Unauthorized access.', 403);
+                }
+
+                // if (!in_array($booking->status, ['confirmed', 'in_progress'])) {
+                //     return $this->sendError('Only confirmed or in-progress bookings can be extended.', 422);
+                // }
+
+                $duration = $request->input('booking_working_minutes');
+                $extensionPrice = $request->input('price');
+
+                // Calculate service charges based on the provided price
+                $commissionPercentage = (float) Setting::get('service_charge_percentage', 25);
+                $serviceCharges = ($extensionPrice * $commissionPercentage) / 100;
+
+                // Update the booking
+                $booking->increment('booking_working_minutes', $duration);
+                $booking->increment('total_price', $extensionPrice);
+                $booking->increment('service_charges', $serviceCharges);
+
+                return $this->sendResponse($booking->refresh(), 'Booking extended successfully.');
+            });
+        } catch (\Exception $e) {
+            Log::error('Booking extension failed: ' . $e->getMessage());
+            return $this->sendError('Failed to extend booking.', 500);
+        }
+    }
 
     // Customer creates booking & pays (Stripe)
     public function store(StoreBookingRequest $request): JsonResponse
