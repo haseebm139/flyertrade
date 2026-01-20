@@ -12,8 +12,14 @@ use App\Http\Controllers\Api\ReviewsController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\MediaController;
 use App\Http\Controllers\Api\Shared\NotificationController;
+use App\Http\Controllers\Api\Shared\LocationController;
 
 Route::post('stripe/webhook', [StripeWebhookController::class, 'handle']);
+
+// Public Location APIs
+Route::get('countries', [LocationController::class, 'countries']);
+Route::get('countries/{countryId}/states', [LocationController::class, 'states']);
+Route::get('countries/{countryId}/cities', [LocationController::class, 'cities']);
 
 // Public reviews endpoint (no authentication required)
 Route::get('providers/{providerId}/reviews', [ReviewsController::class, 'getProviderReviews']);
