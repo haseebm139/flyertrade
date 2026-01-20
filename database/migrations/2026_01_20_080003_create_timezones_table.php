@@ -11,16 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('countries', function (Blueprint $table) {
+        Schema::create('timezones', function (Blueprint $table) {
             $table->id();
-            $table->string('iso2', 2);
+            $table->foreignId('country_id')->constrained()->onDelete('cascade');
             $table->string('name');
-            $table->string('emoji', 10)->nullable();
-            $table->tinyInteger('status')->default(1);
-            $table->string('phone_code', 5);
-            $table->string('iso3', 3);
-            $table->string('region');
-            $table->string('subregion');
         });
     }
 
@@ -29,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('countries');
+        Schema::dropIfExists('timezones');
     }
 };
