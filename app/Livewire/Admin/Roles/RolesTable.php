@@ -253,6 +253,10 @@ class RolesTable extends Component
 
     public function deleteRole($roleId)
     {
+        if (!auth()->user()->can('Delete Roles')) {
+            $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
+            return;
+        }
         try {
             $role = Role::findOrFail($roleId);
             
@@ -274,6 +278,10 @@ class RolesTable extends Component
 
     public function addItemRequested()
     {
+        if (!auth()->user()->can('Create Roles')) {
+            $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
+            return;
+        }
         if (method_exists($this, 'addRole')) {
             $this->addRole();
         } else {
@@ -283,16 +291,28 @@ class RolesTable extends Component
 
     public function viewRole($roleId)
     {
+        if (!auth()->user()->can('Read Roles')) {
+            $this->dispatch('showSweetAlert', 'error', 'Unauthorized access.', 'Error');
+            return;
+        }
         return redirect()->route('roles-and-permissions.roles.show', ['id' => $roleId]);
     }
 
     public function editRole($roleId)
     {
+        if (!auth()->user()->can('Write Roles')) {
+            $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
+            return;
+        }
         $this->dispatch('openRoleModal', $roleId, 'edit');
     }
 
     public function addRole()
     {
+        if (!auth()->user()->can('Create Roles')) {
+            $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
+            return;
+        }
         $this->dispatch('openRoleModal', null, 'create');
     }
 

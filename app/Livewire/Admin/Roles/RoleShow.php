@@ -4,6 +4,7 @@ namespace App\Livewire\Admin\Roles;
 
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Models\User;
@@ -23,6 +24,7 @@ class RoleShow extends Component
     public $sortDirection = 'desc';
     public $deleteRoleId;
     public $deleteRoleName;
+    public $activeTab = '';
 
     protected $listeners = [
         'openDeleteModal' => 'openDeleteModal',
@@ -31,11 +33,21 @@ class RoleShow extends Component
         'roleUpdated' => 'handleRoleUpdated'
     ];
 
+    public function setActiveTab($tab)
+    {
+        $this->activeTab = $tab;
+    }
+
     public function mount($roleId)
     {
         $this->roleId = $roleId;
         $this->loadRole();
         $this->sortColumn = 'created_at';
+        
+        // Set first tab as active
+        if ($this->permissionGroups->count() > 0) {
+            $this->activeTab = Str::slug($this->permissionGroups->keys()->first()) . '_show_tab';
+        }
     }
 
     public function loadRole()
@@ -65,6 +77,10 @@ class RoleShow extends Component
 
     public function updatePermissions()
     {
+        if (!auth()->user()->can('Write Roles')) {
+            $this->dispatch('showSweetAlert', type: 'error', message: 'Unauthorized action.', title: 'Error');
+            return;
+        }
         try {
             $role = Role::findOrFail($this->roleId);
             $role->syncPermissions($this->permissions);
@@ -77,6 +93,10 @@ class RoleShow extends Component
 
     public function openDeleteModal()
     {
+        if (!auth()->user()->can('Delete Roles')) {
+            $this->dispatch('showSweetAlert', type: 'error', message: 'Unauthorized action.', title: 'Error');
+            return;
+        }
         $this->deleteRoleId = $this->roleId;
         $this->deleteRoleName = $this->role->name;
         $this->showDeleteModal = true;
@@ -93,6 +113,10 @@ class RoleShow extends Component
 
     public function deleteRole()
     {
+        if (!auth()->user()->can('Delete Roles')) {
+            $this->dispatch('showSweetAlert', type: 'error', message: 'Unauthorized action.', title: 'Error');
+            return;
+        }
         try {
             $role = Role::findOrFail($this->deleteRoleId);
             
@@ -116,6 +140,10 @@ class RoleShow extends Component
 
     public function editRole()
     {
+        if (!auth()->user()->can('Write Roles')) {
+            $this->dispatch('showSweetAlert', type: 'error', message: 'Unauthorized action.', title: 'Error');
+            return;
+        }
         $this->dispatch('openRoleModal', roleId: $this->roleId, mode: 'edit');
          
     }

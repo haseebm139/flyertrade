@@ -18,7 +18,7 @@ class Form extends Component
     public $phone = '';
     public $address = '';
     protected $listeners = [        
-        'addItemRequested' => 'open',
+        'open-provider-form' => 'open',
     ];
 
     public function open($id = null)

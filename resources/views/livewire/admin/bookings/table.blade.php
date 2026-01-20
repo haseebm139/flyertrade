@@ -34,6 +34,8 @@
 
                     <th class="sortable">Provider<img src="{{ asset('assets/images/icons/sort.svg') }}"
                             class="sort-icon"></th>
+                    <th class="sortable" wire:click="sortBy('booking_working_minutes')">Duration <img
+                            src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
                     <th class="sortable" wire:click="sortBy('booking_address')">Location <img
                             src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
                     <th class="sortable" wire:click="sortBy('total_price')">Amount Paid <img
@@ -72,6 +74,7 @@
                                 <span class="user-theme-name">{{ $booking->provider->name ?? 'N/A' }}</span>
                             </a>
                         </td>
+                        <td>{{ $booking->formatted_duration }}</td>
                         <td>
                             <span class="desf">
                                 {{ Str::limit($booking->booking_address, 30) }}
@@ -96,12 +99,12 @@
                             </span>
                         </td>
                         <td>
-                            <button class="view-btn" wire:click="viewBooking({{ $booking->id }})">
-                                View <img src="{{ asset('assets/images/icons/eye_icon.svg') }}" alt="View"
-                                    class="action-icon">
-                            </button>
-
-
+                            @can('Read Bookings')
+                                <button class="view-btn" wire:click="viewBooking({{ $booking->id }})">
+                                    View <img src="{{ asset('assets/images/icons/eye_icon.svg') }}" alt="View"
+                                        class="action-icon">
+                                </button>
+                            @endcan
                         </td>
                     </tr>
                 @empty
@@ -136,11 +139,13 @@
                 </div>
                 <div class="service-header-icons">
                     <h4 style="font-size:0.938vw;font-weight: 500; letter-spacing: -0.04em;">Service details</h4>
-                    <h5 style="cursor: pointer;" wire:click="downloadBookingDetails({{ $selectedBooking->id }})">
-                        <img src="{{ asset('assets/images/icons/download.svg') }}" alt="Download"
-                            class="download-icon">
-                        <small style="color:grey;font-size:0.938vw;">Download </small>
-                    </h5>
+                    @can('Read Bookings')
+                        <h5 style="cursor: pointer;" wire:click="downloadBookingDetails({{ $selectedBooking->id }})">
+                            <img src="{{ asset('assets/images/icons/download.svg') }}" alt="Download"
+                                class="download-icon">
+                            <small style="color:grey;font-size:0.938vw;">Download </small>
+                        </h5>
+                    @endcan
                 </div>
 
                 <div class="modal-section">
@@ -152,7 +157,7 @@
                         <div>Time</div>
                         <div>{{ $selectedBooking->created_at->format('h:i A') }}</div>
                         <div>Duration</div>
-                        <div>{{ $selectedBooking->working_hours }} Hours</div>
+                        <div>{{ $selectedBooking->formatted_duration }}</div>
                         <div>Location</div>
                         <div>{{ $selectedBooking->booking_address ?? '-' }}</div>
                         <div>Service type</div>

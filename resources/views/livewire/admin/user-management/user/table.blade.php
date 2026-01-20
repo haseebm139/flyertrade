@@ -1,5 +1,5 @@
 <div>
-    <livewire:admin.components.toolbar label="service users" button_label="Users" search_label="user" :active-filters="$activeFilters" />
+    <livewire:admin.components.toolbar label="service users" :button_label="auth()->user()->can('Create Service Users') ? 'Users' : ''" search_label="user" :active-filters="$activeFilters" />
 
     <!-- Users Table -->
     <div class="table-responsive">
@@ -63,38 +63,45 @@
                     </td>
                     <td style="position:relative">
                         <div class="actions-dropdown">
+                            @if(auth()->user()->can('Read Service Users') || auth()->user()->can('Write Service Users') || auth()->user()->can('Delete Service Users'))
                                 <button class="actions-btn"> <img
                                         src="{{ asset('assets/images/icons/three_dots.svg') }}"
                                     class="dots-img "></button>
-                            <div class="actions-menu" style="display: none;">
+                                <div class="actions-menu" style="display: none;">
                                     <a href="{{ route('user-management.service.users.view', ['id' => $item->id]) }}"><img
                                             src="{{ asset('assets/images/icons/eye.svg') }}" alt="View User"
                                             class="w-5 h-5"> View user</a>
-                                    <a href="#" wire:click="edit({{ $item->id }}) "><img
-                                            src="{{ asset('assets/images/icons/edit-icon.svg') }}" alt="Edit User"
-                                            class="w-5 h-5"> Edit user</a>
-                                    <a href="#" class="showDeleteModal___" data-id="{{ $item->id }}"><img
-                                            src="{{ asset('assets/images/icons/delete-icon.svg') }}" alt="Delete User"
-                                            class="w-5 h-5"> Delete user</a>
-                            </div>
-                            <!-- ✅ Global Delete Modal -->
-
-                        </div>
-                        <div id="globalDeleteModal__{{ $item->id }}" class="deleteModal"
-                            style="display: none;position:absolute;    top: 2.5vw; right: 1vw;">
-                            <div class="delete-card">
-                                <div class="delete-card-header">
-                                    <h3 class="delete-title">Delete Service User?</h3>
-                                    <span class="delete-close closeDeleteModal"
-                                        data-id="{{ $item->id }}">&times;</span>
+                                    @can('Write Service Users')
+                                        <a href="#" wire:click="edit({{ $item->id }}) "><img
+                                                src="{{ asset('assets/images/icons/edit-icon.svg') }}" alt="Edit User"
+                                                class="w-5 h-5"> Edit user</a>
+                                    @endcan
+                                    @can('Delete Service Users')
+                                        <a href="#" class="showDeleteModal___" data-id="{{ $item->id }}"><img
+                                                src="{{ asset('assets/images/icons/delete-icon.svg') }}" alt="Delete User"
+                                                class="w-5 h-5"> Delete user</a>
+                                    @endcan
                                 </div>
-                                <p class="delete-text">Are you sure you want to delete this service user?</p>
-                                <div class="delete-actions justify-content-start">
-                                    <button class="confirm-delete-btn" wire:click="delete({{ $item->id }})" data-id="{{ $item->id }}">Delete</button>
-                                    <button class="cancel-delete-btn" data-id="{{ $item->id }}">Cancel</button>
+                            @endif
+                        </div>
+                        
+                        @can('Delete Service Users')
+                            <div id="globalDeleteModal__{{ $item->id }}" class="deleteModal"
+                                style="display: none;position:absolute;    top: 2.5vw; right: 1vw;">
+                                <div class="delete-card">
+                                    <div class="delete-card-header">
+                                        <h3 class="delete-title">Delete Service User?</h3>
+                                        <span class="delete-close closeDeleteModal"
+                                            data-id="{{ $item->id }}">&times;</span>
+                                    </div>
+                                    <p class="delete-text">Are you sure you want to delete this service user?</p>
+                                    <div class="delete-actions justify-content-start">
+                                        <button class="confirm-delete-btn" wire:click="delete({{ $item->id }})" data-id="{{ $item->id }}">Delete</button>
+                                        <button class="cancel-delete-btn" data-id="{{ $item->id }}">Cancel</button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        @endcan
                     </td>
                 </tr>
 

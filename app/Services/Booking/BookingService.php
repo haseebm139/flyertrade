@@ -16,8 +16,12 @@ use App\Services\Payment\StripeService;
 use App\Services\Notification\NotificationService;
 use Illuminate\Support\Facades\DB; 
 
+use App\Models\Setting;
+
 class BookingService
 {
+
+ 
     public function __construct(
         private StripeService $stripe,
         private NotificationService $notificationService
@@ -140,6 +144,9 @@ class BookingService
           
         // Persist booking + slots
         return DB::transaction(function () use ($data, $totalMinutes,$providerHasService) {
+            // Calculate service charges dynamically based on admin settings
+            $percentage = (float) \App\Models\Setting::get('service_charge_percentage', 25);
+            $serviceCharges = ($data['total_price'] * $percentage) / 100;
               
             $booking = Booking::create([
                 'booking_ref' => $this->makeRef(),
@@ -151,8 +158,8 @@ class BookingService
                 'booking_description' => $data['booking_description'] ?? null,
                 'status' => 'awaiting_provider',
                 'booking_working_minutes' => $totalMinutes,
-                'total_price' => $data['total_price'],
-                'service_charges' => $data['service_charges'] ?? 0,
+                'total_price' => $data['total_price'] ,
+                'service_charges' => $serviceCharges,
                 // 'stripe_payment_intent_id' => $intent->id,
                 // 'stripe_payment_method_id' => $data['payment_method_id'],
                 // 'paid_at' => $intent->status === 'succeeded' ? now() : null,

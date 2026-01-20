@@ -1,6 +1,6 @@
 <div>
 
-    <livewire:admin.components.toolbar label="service providers" button_label="Users" search_label="user" :active-filters="$activeFilters" />
+    <livewire:admin.components.toolbar label="service providers" :button_label="auth()->user()->can('Create Service Providers') ? 'Users' : ''" search_label="user" :active-filters="$activeFilters" />
         <div class="table-responsive">
             <table class="theme-table">
                     <thead>
@@ -76,31 +76,39 @@
                                 </td>
                                 <td style="position:relative">
                                     <div class="actions-dropdown">
-                                        <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three_dots.svg') }}"
-                                                class="dots-img "></button>
-                                        <div class="actions-menu" style="display: none;">
-                                            <a href="{{ route('user-management.service.providers.view', ['id' => $item->id]) }}"><img
-                                                    src="{{ asset('assets/images/icons/eye.svg') }}" alt="View User"
-                                                    class="w-5 h-5">View user</a>
-                                            <a href="#" wire:click.prevent="edit({{ $item->id }})"><img src="{{ asset('assets/images/icons/edit-icon.svg') }}" alt="Edit User" class="w-5 h-5"> Edit user</a>
-                                            <a href="#" class='showDeleteModal___' data-id="{{ $item->id }}"><img src="{{ asset('assets/images/icons/delete-icon.svg') }}" alt="Delete User" class="w-5 h-5"> Delete user</a>
-                                        </div>
+                                        @if(auth()->user()->can('Read Service Providers') || auth()->user()->can('Write Service Providers') || auth()->user()->can('Delete Service Providers'))
+                                            <button class="actions-btn"> <img src="{{ asset('assets/images/icons/three_dots.svg') }}"
+                                                    class="dots-img "></button>
+                                            <div class="actions-menu" style="display: none;">
+                                                <a href="{{ route('user-management.service.providers.view', ['id' => $item->id]) }}"><img
+                                                        src="{{ asset('assets/images/icons/eye.svg') }}" alt="View User"
+                                                        class="w-5 h-5">View user</a>
+                                                @can('Write Service Providers')
+                                                    <a href="#" wire:click.prevent="edit({{ $item->id }})"><img src="{{ asset('assets/images/icons/edit-icon.svg') }}" alt="Edit User" class="w-5 h-5"> Edit user</a>
+                                                @endcan
+                                                @can('Delete Service Providers')
+                                                    <a href="#" class='showDeleteModal___' data-id="{{ $item->id }}"><img src="{{ asset('assets/images/icons/delete-icon.svg') }}" alt="Delete User" class="w-5 h-5"> Delete user</a>
+                                                @endcan
+                                            </div>
+                                        @endif
                                     </div>
 
-                                    <div id="globalDeleteModal__{{ $item->id }}" class="deleteModal"
-                                        style="display: none; position: absolute; top: 2.5vw; right: 1vw; z-index: 9999;">
-                                        <div class="delete-card">
-                                            <div class="delete-card-header">
-                                                <h3 class="delete-title">Delete Service Provider?</h3>
-                                                <span class="delete-close closeDeleteModal" data-id="{{ $item->id }}">&times;</span>
-                                            </div>
-                                            <p class="delete-text">Are you sure you want to delete this service provider?</p>
-                                            <div class="delete-actions justify-content-start">
-                                                <button class="confirm-delete-btn" wire:click="delete({{ $item->id }})" data-id="{{ $item->id }}">Delete</button>
-                                                <button class="cancel-delete-btn" data-id="{{ $item->id }}">Cancel</button>
+                                    @can('Delete Service Providers')
+                                        <div id="globalDeleteModal__{{ $item->id }}" class="deleteModal"
+                                            style="display: none; position: absolute; top: 2.5vw; right: 1vw; z-index: 9999;">
+                                            <div class="delete-card">
+                                                <div class="delete-card-header">
+                                                    <h3 class="delete-title">Delete Service Provider?</h3>
+                                                    <span class="delete-close closeDeleteModal" data-id="{{ $item->id }}">&times;</span>
+                                                </div>
+                                                <p class="delete-text">Are you sure you want to delete this service provider?</p>
+                                                <div class="delete-actions justify-content-start">
+                                                    <button class="confirm-delete-btn" wire:click="delete({{ $item->id }})" data-id="{{ $item->id }}">Delete</button>
+                                                    <button class="cancel-delete-btn" data-id="{{ $item->id }}">Cancel</button>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    @endcan
                                 </td>
                             </tr>
 

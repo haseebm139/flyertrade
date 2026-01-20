@@ -1,5 +1,68 @@
 <div>
     {{-- Debug info removed for production --}}
+    <style>
+        .tabs-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5vw;
+            margin-bottom: 1.5vw;
+            padding: 0 0.5vw;
+        }
+        .tabs-nav {
+            display: flex;
+            gap: 1vw;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none;  /* IE and Edge */
+            padding: 0.5vw 0;
+        }
+        .tabs-nav::-webkit-scrollbar {
+            display: none; /* Chrome, Safari and Opera */
+        }
+        .roles-permission-theme-tab {
+            white-space: nowrap;
+            padding: 0.6vw 1.2vw;
+            border-radius: 0.5vw;
+            font-size: 0.85vw;
+            color: #717171;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            background: transparent;
+        }
+        .roles-permission-theme-tab.active {
+            background: #e6f0ed;
+            color: #064f3c;
+        }
+        .tab-control {
+            flex-shrink: 0;
+            width: 2vw;
+            height: 2vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border: 1px solid #f1f1f1;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .tab-control:hover {
+            background: #f8f9fa;
+        }
+        .tab-control img {
+            width: 0.6vw;
+            height: 0.6vw;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+
     @if ($showModal)
         <div class="modal role-form-modal" style="display: flex;" wire:click.self="closeModal" x-on:keydown.escape.window="closeModal">
 
@@ -53,49 +116,47 @@
 
                             <!-- Permission Section -->
                             <div class="permission-section" id="permissionSection">
-                            <!-- Tabs navigation -->
-                            <div class="tabs-wrapper">
-                                <!-- Left Control -->
-                                <button type="button" class="tab-control left" onclick="scrollTabs(-1)">
-                                    <img src="{{ asset('assets/images/icons/left_control.svg') }}" alt="Left">
-                                </button>
-                                @php $firstActive = true; @endphp
+                                <!-- Tabs navigation -->
+                                <div class="tabs-wrapper">
+                                    <!-- Left Control -->
+                                    <button type="button" class="tab-control left" onclick="scrollTabs(this, -1)">
+                                        <img src="{{ asset('assets/images/icons/left_control.svg') }}" alt="Left">
+                                    </button>
+                                    
+                                    <div class="tabs-nav">
+                                        @foreach ($permissionGroups as $groupName => $groupPermissions)
+                                            @php $tabId = Str::slug($groupName) . '_tab'; @endphp
+                                            @if ($groupPermissions->count() > 0)
+                                                <div class="tab {{ $activeTab == $tabId ? 'active' : '' }} roles-permission-theme-tab"
+                                                    data-target="{{ $tabId }}"
+                                                    wire:click="setActiveTab('{{ $tabId }}')">
+                                                    {{ $groupName }}
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                    </div>
 
-                                @foreach ($permissionGroups as $groupName => $groupPermissions)
-                                    @if ($groupPermissions->count() > 0)
-                                        <div class="tabs-nav" wire:key="nav-{{ Str::slug($groupName) }}">
-                                            <div class="tab {{ $firstActive ? 'active' : '' }}  roles-permission-theme-tab"
-                                                data-target="{{ Str::slug($groupName) }}_tab"
-                                                onclick="switchTab('{{ Str::slug($groupName) }}_tab')">
-                                                {{ $groupName }}</div>
-
-                                        </div>
-                                        @php $firstActive = false; @endphp
-                                    @endif
-                                @endforeach
-                                <!-- Right Control -->
-                                <button type="button" class="tab-control right" onclick="scrollTabs(1)">
-                                    <img src="{{ asset('assets/images/icons/right-control.svg') }} " alt="Right">
-                                </button>
-                                <!-- Form actions -->
-
-                            </div>
+                                    <!-- Right Control -->
+                                    <button type="button" class="tab-control right" onclick="scrollTabs(this, 1)">
+                                        <img src="{{ asset('assets/images/icons/right-control.svg') }}" alt="Right">
+                                    </button>
+                                </div>
                             <!-- Tab content -->
-                            @php $firstActive = true; @endphp
                             @foreach ($permissionGroups as $groupName => $groupPermissions)
+                                @php $tabId = Str::slug($groupName) . '_tab'; @endphp
                                 @if ($groupPermissions->count() > 0)
-                                    <div id="{{ Str::slug($groupName) }}_tab" wire:key="content-{{ Str::slug($groupName) }}"
-                                        class="tab-content {{ $firstActive ? 'active' : '' }} ">
+                                    <div id="{{ $tabId }}" wire:key="content-{{ $tabId }}"
+                                        class="tab-content {{ $activeTab == $tabId ? 'active' : '' }}"
+                                        style="display: {{ $activeTab == $tabId ? 'block' : 'none' }}">
                                         @foreach ($groupPermissions as $permission)
                                             <div class="permission-item" wire:key="permission-{{ $permission->id }}">
                                                 <span>{{ ucwords(str_replace(['-', '_'], ' ', $permission->name)) }}</span>
-                                                <input type="checkbox" wire:model="permissions"
+                                                <input type="checkbox" wire:model.live="permissions"
                                                     value="{{ $permission->name }}"
                                                     id="permission_{{ $permission->id }}">
                                             </div>
                                         @endforeach
                                     </div>
-                                     @php $firstActive = false; @endphp
                                 @endif
                             @endforeach
                             
@@ -138,6 +199,7 @@
             // Hide all tab contents within this section
             section.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.remove('active');
+                content.style.display = 'none';
             });
 
             // Remove active class from all tabs within this section
@@ -146,9 +208,10 @@
             });
 
             // Show selected tab content
-            const targetContent = section.querySelector('#' + tabId);
+            const targetContent = document.getElementById(tabId);
             if (targetContent) {
                 targetContent.classList.add('active');
+                targetContent.style.display = 'block';
             }
 
             // Add active class to clicked tab
@@ -158,10 +221,10 @@
             }
         }
 
-        function scrollTabs(direction) {
-            const tabsContainer = document.querySelector('.tabs-wrapper');
-            if (tabsContainer) {
-                tabsContainer.scrollLeft += direction * 200;
+        function scrollTabs(btn, direction) {
+            const tabsNav = btn.parentElement.querySelector('.tabs-nav');
+            if (tabsNav) {
+                tabsNav.scrollLeft += direction * 150;
             }
         }
     </script>

@@ -1,5 +1,5 @@
 <div>
-    <livewire:admin.components.toolbar label="Service categories" button_label="Service category" search_label="Search category" :active-filters="$activeFilters" />
+    <livewire:admin.components.toolbar label="Service categories" :button_label="auth()->user()->can('Create Service Categories') ? 'Service category' : ''" search_label="Search category" :active-filters="$activeFilters" />
     <div class="table-responsive">
     <table class="theme-table">
             <thead>
@@ -57,37 +57,40 @@
                         <td><span class="desf" style="color:#717171;">{{ $item->description }}</span></td>
 
                         <td>
-
                             <span class="desf d-flex" style="position:relative;">
-                                <button class="edit-btn" wire:click="edit({{ $item->id }})"
-                                    style="border: 0 !important">
-                                    <img src="{{ asset('assets/images/icons/edit-icon.svg') }}" alt="Edit"
-                                        class="action-icon">
-                                </button>
+                                @can('Write Service Categories')
+                                    <button class="edit-btn" wire:click="edit({{ $item->id }})"
+                                        style="border: 0 !important">
+                                        <img src="{{ asset('assets/images/icons/edit-icon.svg') }}" alt="Edit"
+                                            class="action-icon">
+                                    </button>
+                                @endcan
                                 
-                                <!-- ✅ Delete Modal (Per-row design) -->
-                                <div id="globalDeleteModal{{ $item->id }}" class="deleteModal"
-                                    style="display: none; position: absolute; top: 2vw; right: 6vw; z-index: 1000;">
-                                    <div class="delete-card">
-                                        <div class="delete-card-header">
-                                            <h3 class="delete-title">Delete Service Category?</h3>
-                                            <span class="delete-close closeDeleteModal"
-                                                data-id="{{ $item->id }}">&times;</span>
-                                        </div>
-                                        <p class="delete-text">Are you sure you want to delete this service category?</p>
-                                        <div class="delete-actions justify-content-start">
-                                            <button class="confirm-delete-btn" wire:click="delete({{ $item->id }})"
-                                                data-id="{{ $item->id }}">Delete</button>
-                                            <button class="cancel-delete-btn" data-id="{{ $item->id }}">Cancel</button>
+                                @can('Delete Service Categories')
+                                    <!-- ✅ Delete Modal (Per-row design) -->
+                                    <div id="globalDeleteModal{{ $item->id }}" class="deleteModal"
+                                        style="display: none; position: absolute; top: 2vw; right: 6vw; z-index: 1000;">
+                                        <div class="delete-card">
+                                            <div class="delete-card-header">
+                                                <h3 class="delete-title">Delete Service Category?</h3>
+                                                <span class="delete-close closeDeleteModal"
+                                                    data-id="{{ $item->id }}">&times;</span>
+                                            </div>
+                                            <p class="delete-text">Are you sure you want to delete this service category?</p>
+                                            <div class="delete-actions justify-content-start">
+                                                <button class="confirm-delete-btn" wire:click="delete({{ $item->id }})"
+                                                    data-id="{{ $item->id }}">Delete</button>
+                                                <button class="cancel-delete-btn" data-id="{{ $item->id }}">Cancel</button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <!-- ✅ Delete button -->
-                                <button type="button" class="delete-btn showDeleteModal" data-id="{{ $item->id }}">
-                                    <img src="{{ asset('assets/images/icons/delete-icon.svg') }}" alt="Delete"
-                                        class="action-icon">
-                                </button>
+                                    <!-- ✅ Delete button -->
+                                    <button type="button" class="delete-btn showDeleteModal" data-id="{{ $item->id }}">
+                                        <img src="{{ asset('assets/images/icons/delete-icon.svg') }}" alt="Delete"
+                                            class="action-icon">
+                                    </button>
+                                @endcan
                             </span>
                         </td>
                     </tr>

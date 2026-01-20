@@ -16,6 +16,7 @@ class RoleForm extends Component
     public $isEdit = false;
     public $showModal = false;
     public $step = 1; // 1: Role Name, 2: Permissions
+    public $activeTab = '';
 
     protected function rules()
     {
@@ -62,6 +63,24 @@ class RoleForm extends Component
     {
         $this->validateOnly('name');
         $this->step = 2;
+        
+        // Set first tab as active if not set
+        if (empty($this->activeTab)) {
+            $allPermissions = \DB::table('permissions')->get();
+            $permissionGroups = $allPermissions->groupBy(function($permission) {
+                $name = strtolower(trim($permission->name));
+                $parts = explode(' ', $name);
+                $actions = ['create', 'read', 'write', 'delete', 'update', 'view', 'manage', 'can'];
+                while (!empty($parts) && in_array($parts[0], $actions)) {
+                    array_shift($parts);
+                }
+                return !empty($parts) ? ucwords($parts[0]) : 'General';
+            })->sortKeys();
+            
+            if ($permissionGroups->count() > 0) {
+                $this->activeTab = Str::slug($permissionGroups->keys()->first()) . '_tab';
+            }
+        }
     }
 
     public function backToName()
@@ -122,6 +141,11 @@ class RoleForm extends Component
         $this->showModal = false;
         $this->step = 1;
         $this->resetForm();
+    }
+
+    public function setActiveTab($tab)
+    {
+        $this->activeTab = $tab;
     }
 
     public function render()

@@ -39,6 +39,10 @@ class ReviewShow extends Component
 
     public function saveReview()
     {
+        if (!auth()->user()->can('Write Reviews')) {
+            $this->dispatch('showSweetAlert', type: 'error', message: 'Unauthorized action');
+            return;
+        }
         $this->review->update([
             'review' => $this->reviewText
         ]);
@@ -48,12 +52,20 @@ class ReviewShow extends Component
 
     public function setStatus($status)
     {
+        if (!auth()->user()->can('Write Reviews')) {
+            $this->dispatch('showSweetAlert', type: 'error', message: 'Unauthorized action');
+            return;
+        }
         $this->review->update(['status' => strtolower($status)]);
         $this->dispatch('showSweetAlert', type: 'success', message: 'Status updated to ' . $status);
     }
 
     public function delete()
     {
+        if (!auth()->user()->can('Delete Reviews')) {
+            $this->dispatch('showSweetAlert', type: 'error', message: 'Unauthorized action');
+            return;
+        }
         $this->review->delete();
         $this->dispatch('showSweetAlert', type: 'success', message: 'Review deleted successfully');
         return redirect()->route('reviews.index');

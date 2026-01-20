@@ -6,12 +6,14 @@
 
     <div class="users-toolbar border-0 p-0">
         <div class="toolbar-left">
-            <button class="add-user-btn new-email-btn">
-                <img class="icons-btn" src="{{asset('assets/images/icons/sms.svg')}}" alt=""> New Email
-            </button>
-            <button class="export-btn">
-                <img class="icons-btn" src="{{asset('assets/images/icons/messages.svg')}}" alt=""> New Message
-            </button>
+            @can('Create Messages')
+                <button class="add-user-btn new-email-btn">
+                    <img class="icons-btn" src="{{asset('assets/images/icons/sms.svg')}}" alt=""> New Email
+                </button>
+                <button class="export-btn">
+                    <img class="icons-btn" src="{{asset('assets/images/icons/messages.svg')}}" alt=""> New Message
+                </button>
+            @endcan
         </div>
         <div class="toolbar-right">
             <h2 class="page-title">Messaging</h2>

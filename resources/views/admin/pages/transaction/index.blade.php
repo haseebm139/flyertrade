@@ -23,12 +23,14 @@
     </div>
     <div class="users-toolbar">
         <div class="toolbar-left">
-            <button class="export-btn d-flex align-items-center gap-1" style="color:#004E42; line-height:1">
-                <span class="download-icon"><img class="btn-icons" src="{{ asset('assets/images/icons/download.svg') }}"
-                        alt=""></span>&nbsp;
-                Export
-                CSV
-            </button>
+            @can('Read Transactions')
+                <button class="export-btn d-flex align-items-center gap-1" style="color:#004E42; line-height:1">
+                    <span class="download-icon"><img class="btn-icons" src="{{ asset('assets/images/icons/download.svg') }}"
+                            alt=""></span>&nbsp;
+                    Export
+                    CSV
+                </button>
+            @endcan
             <!-- <button class="d-none add-user-btn" id="openAddUserModal">+ Add User</button> -->
         </div>
         <div class="toolbar-right">
@@ -110,10 +112,12 @@
                                         alt="">
                                     View
                                     details</a>
-                                <a href="#" class="initiateBtn showDeleteModal___" data-id="1" data-user="Mike Brown">
-                                    <img style="height:0.7vw;width:0.7vw" src="{{ asset('assets/images/icons/init.svg') }}"
-                                        alt=""> Initiate payout
-                                </a>
+                                @can('Write Transactions')
+                                    <a href="#" class="initiateBtn showDeleteModal___" data-id="1" data-user="Mike Brown">
+                                        <img style="height:0.7vw;width:0.7vw" src="{{ asset('assets/images/icons/init.svg') }}"
+                                            alt=""> Initiate payout
+                                    </a>
+                                @endcan
 
                             </div>
 

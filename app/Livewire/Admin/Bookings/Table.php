@@ -315,8 +315,30 @@ class Table extends Component
         $this->confirmingId = $id;
     }
 
+    public function delete($id)
+    {
+        if (!auth()->user()->can('Delete Bookings')) {
+            $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
+            return;
+        }
+        try {
+            $booking = Booking::find($id);
+            if ($booking) {
+                $booking->delete();
+                $this->dispatch('showSweetAlert', 'success', 'Booking deleted successfully.', 'Success');
+            }
+            $this->confirmingId = null;
+        } catch (\Exception $e) {
+            $this->dispatch('showSweetAlert', 'error', 'Error deleting booking: ' . $e->getMessage(), 'Error');
+        }
+    }
+
     public function viewBooking($id)
     {
+        if (!auth()->user()->can('Read Bookings')) {
+            $this->dispatch('showSweetAlert', 'error', 'Unauthorized access.', 'Error');
+            return;
+        }
         $this->selectedBooking = Booking::with(['customer', 'provider', 'service'])->find($id);
         if ($this->selectedBooking) {
             $this->showBookingModal = true;
@@ -331,6 +353,10 @@ class Table extends Component
 
     public function downloadBookingDetails($id)
     {
+        if (!auth()->user()->can('Read Bookings')) {
+            $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
+            return;
+        }
         $booking = Booking::with(['customer', 'provider', 'service'])->find($id);
         if (!$booking) {
             $this->dispatch('showSweetAlert', 'error', 'Booking not found.', 'Error');
@@ -360,19 +386,5 @@ class Table extends Component
         };
 
         return response()->stream($callback, 200, $headers);
-    }
-
-    public function delete($id)
-    {
-        try {
-            $booking = Booking::find($id);
-            if ($booking) {
-                $booking->delete();
-                $this->dispatch('showSweetAlert', 'success', 'Booking deleted successfully.', 'Success');
-            }
-            $this->confirmingId = null;
-        } catch (\Exception $e) {
-            $this->dispatch('showSweetAlert', 'error', 'Error deleting booking: ' . $e->getMessage(), 'Error');
-        }
     }
 }

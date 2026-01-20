@@ -44,10 +44,12 @@
     </div>
     <div class="users-toolbar">
         <div class="toolbar-left">
-            <button class="export-btn d-flex align-items-center gap-1" style="color:#004E42; line-height:1">
-                <span class="download-icon"><img class="btn-icons" src="{{ asset('assets/images/icons/download.svg') }}"
-                        alt=""></span> &nbsp;&nbsp;Export CSV
-            </button>
+            @can('Read Disputes')
+                <button class="export-btn d-flex align-items-center gap-1" style="color:#004E42; line-height:1">
+                    <span class="download-icon"><img class="btn-icons" src="{{ asset('assets/images/icons/download.svg') }}"
+                            alt=""></span> &nbsp;&nbsp;Export CSV
+                </button>
+            @endcan
 
         </div>
         <div class="toolbar-right">
@@ -118,18 +120,24 @@
                      
                     <td>
                         <div class="status-dropdown status-dropdown-resolve">
-                            <span class="status active Resolved" onclick="toggleDropdown(this)">
-                                Resolved
-                                <svg class="arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                    viewBox="0 0 24 24" fill="none" stroke="#0a8754" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                    <polyline points="6 9 12 15 18 9"></polyline>
-                                </svg>
-                            </span>
-                            <ul class="dropdown-menu" style="display: none;">
-                                <li onclick="setStatus(this, 'Resolved')">Resolved</li>
-                                <li onclick="setStatus(this, 'Unresolved')">Unresolved</li>
-                            </ul>
+                            @can('Write Disputes')
+                                <span class="status active Resolved" onclick="toggleDropdown(this)">
+                                    Resolved
+                                    <svg class="arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                        viewBox="0 0 24 24" fill="none" stroke="#0a8754" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                </span>
+                                <ul class="dropdown-menu" style="display: none;">
+                                    <li onclick="setStatus(this, 'Resolved')">Resolved</li>
+                                    <li onclick="setStatus(this, 'Unresolved')">Unresolved</li>
+                                </ul>
+                            @else
+                                <span class="status active Resolved">
+                                    Resolved
+                                </span>
+                            @endcan
                         </div>
                     </td>
 
@@ -138,13 +146,12 @@
                             <button class="actions-btn" id="open-menu-btn" fdprocessedid="3p4nw"> <img
                                     src="{{ asset('assets/images/icons/three_dots.svg') }}" class="dots-img "></button>
                             <div class="actions-menu" id="open-menu-btn-wrapper" style="display: none; right: 0px !important; top: 32px;!important">
-                                <a>
-                                    Mark as unresolved</a>
-                                {{-- <a href="#" class="initiateBtn" data-user="Mike Brown">
-                                    <img src="{{ asset('assets/images/icons/init.svg') }}" alt=""> Initiate
-                                    payout
-                                </a> --}}
-
+                                @can('Write Disputes')
+                                    <a>Mark as unresolved</a>
+                                @endcan
+                                @can('Read Bookings')
+                                    <a onclick="openBookingModal()">View details</a>
+                                @endcan
                             </div>
                         </div>
                     </td>

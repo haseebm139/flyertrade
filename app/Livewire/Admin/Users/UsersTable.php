@@ -291,6 +291,10 @@ class UsersTable extends Component
 
     public function deleteUser($userId)
     {
+        if (!auth()->user()->can('Delete Roles')) {
+            $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
+            return;
+        }
         try {
             $user = User::findOrFail($userId);
             $user->delete();
@@ -304,6 +308,10 @@ class UsersTable extends Component
 
     public function addItemRequested()
     {
+        if (!auth()->user()->can('Create Roles')) {
+            $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
+            return;
+        }
         if (method_exists($this, 'addUser')) {
             $this->addUser();
         } elseif (method_exists($this, 'addRole')) {
@@ -316,24 +324,28 @@ class UsersTable extends Component
 
     public function viewUser($userId)
     {
+        if (!auth()->user()->can('Read Roles')) {
+            $this->dispatch('showSweetAlert', 'error', 'Unauthorized access.', 'Error');
+            return;
+        }
         return redirect()->route('roles-and-permissions.users.show', ['id' => $userId]);
-        // $user = User::find($userId);
-        // if (!$user) return;
-
-        // if ($user->user_type === 'provider') {
-        //     return redirect()->route('user-management.service.providers.view', ['id' => $userId]);
-        // } else {
-        //     return redirect()->route('user-management.service.users.view', ['id' => $userId]);
-        // }
     }
 
     public function editUser($userId)
     {
+        if (!auth()->user()->can('Write Roles')) {
+            $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
+            return;
+        }
         $this->dispatch('openUserModal', $userId, 'edit');
     }
 
     public function addUser()
     {
+        if (!auth()->user()->can('Create Roles')) {
+            $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
+            return;
+        }
         $this->dispatch('openUserModal', null, 'create');
     }
 

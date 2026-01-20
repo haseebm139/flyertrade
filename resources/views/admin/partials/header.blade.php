@@ -235,11 +235,13 @@
                 </div>
 
                 <div class="view_all_notification" style=" text-align: left;">
-                    <a href="{{ route('notification.index') }}"
-                        style="color: #00796B;  font-weight: 500; text-decoration: none; display: flex; align-items: center; gap: 0.3vw;">
-                        View all notifications
-                        <span style="font-size: 1vw;">&#8250;</span>
-                    </a>
+                    @can('Read Notifications')
+                        <a href="{{ route('notification.index') }}"
+                            style="color: #00796B;  font-weight: 500; text-decoration: none; display: flex; align-items: center; gap: 0.3vw;">
+                            View all notifications
+                            <span style="font-size: 1vw;">&#8250;</span>
+                        </a>
+                    @endcan
                 </div>
             </div>
 

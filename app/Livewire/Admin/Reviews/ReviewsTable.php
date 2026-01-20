@@ -139,6 +139,10 @@ class ReviewsTable extends Component
 
     public function setStatus($reviewId, $status)
     {
+        if (!auth()->user()->can('Write Reviews')) {
+            $this->dispatch('showSweetAlert', type: 'error', message: 'Unauthorized action');
+            return;
+        }
         $review = Review::findOrFail($reviewId);
         $review->update(['status' => strtolower($status)]);
         $this->dispatch('showSweetAlert', type: 'success', message: 'Status updated to ' . $status);
@@ -146,6 +150,10 @@ class ReviewsTable extends Component
 
     public function delete($reviewId)
     {
+        if (!auth()->user()->can('Delete Reviews')) {
+            $this->dispatch('showSweetAlert', type: 'error', message: 'Unauthorized action');
+            return;
+        }
         Review::findOrFail($reviewId)->delete();
         $this->dispatch('showSweetAlert', type: 'success', message: 'Review deleted successfully');
     }

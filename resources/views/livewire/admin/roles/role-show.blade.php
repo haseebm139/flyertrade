@@ -1,4 +1,67 @@
 <div>
+    <style>
+        .tabs-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5vw;
+            margin-bottom: 1.5vw;
+            padding: 0 0.5vw;
+        }
+        .tabs-nav {
+            display: flex;
+            gap: 1vw;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none;  /* IE and Edge */
+            padding: 0.5vw 0;
+        }
+        .tabs-nav::-webkit-scrollbar {
+            display: none; /* Chrome, Safari and Opera */
+        }
+        .roles-permission-theme-tabs {
+            white-space: nowrap;
+            padding: 0.6vw 1.2vw;
+            border-radius: 0.5vw;
+            font-size: 0.85vw;
+            color: #717171;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            background: transparent;
+        }
+        .roles-permission-theme-tabs.active {
+            background: #e6f0ed;
+            color: #064f3c;
+        }
+        .tab-control {
+            flex-shrink: 0;
+            width: 2vw;
+            height: 2vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border: 1px solid #f1f1f1;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .tab-control:hover {
+            background: #f8f9fa;
+        }
+        .tab-control img {
+            width: 0.6vw;
+            height: 0.6vw;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+
     <!-- Breadcrumb -->
     <div class="users-toolbar">
         <nav class="breadcrumb">
@@ -61,35 +124,37 @@
     <!-- Tabs Wrapper -->
     <div class="tabs-wrapper">
         <!-- Left Control -->
-        <button class="tab-control left" onclick="scrollTabs('left')">
+        <button class="tab-control left" onclick="scrollTabs(this, -1)">
             <img src="{{ asset('assets/images/icons/left_control.svg') }}" alt="Left">
         </button>
 
         <!-- Tabs Navigation -->
-        <div class="tabs-nav theme-btn-class-roles-module" id="tabsNav">
+        <div class="tabs-nav">
             @foreach ($permissionGroups as $groupName => $groupPermissions)
-                <div class="tab roles-permission-theme-tabs {{ $loop->first ? 'active' : '' }}"
-                    data-target="{{ Str::slug($groupName) }}_show_tab"
-                    onclick="switchTab('{{ Str::slug($groupName) }}_show_tab')">
+                @php $tabId = Str::slug($groupName) . '_show_tab'; @endphp
+                <div class="tab roles-permission-theme-tabs {{ $activeTab == $tabId ? 'active' : '' }}"
+                    data-target="{{ $tabId }}"
+                    wire:click="setActiveTab('{{ $tabId }}')">
                     {{ $groupName }}
                 </div>
             @endforeach
         </div>
 
         <!-- Right Control -->
-        <button class="tab-control right" onclick="scrollTabs('right')">
+        <button class="tab-control right" onclick="scrollTabs(this, 1)">
             <img src="{{ asset('assets/images/icons/right-control.svg') }}" alt="Right">
         </button>
     </div>
 
     <!-- Tab Content -->
     @foreach ($permissionGroups as $groupName => $groupPermissions)
-        <div id="{{ Str::slug($groupName) }}_show_tab" class="tab-content {{ $loop->first ? 'active' : '' }}"
-            style="margin-left: 1vw">
+        @php $tabId = Str::slug($groupName) . '_show_tab'; @endphp
+        <div id="{{ $tabId }}" class="tab-content {{ $activeTab == $tabId ? 'active' : '' }}"
+            style="margin-left: 1vw; display: {{ $activeTab == $tabId ? 'block' : 'none' }}">
             @foreach ($groupPermissions as $permission)
                 <div class="permission-item">
                     <span>{{ ucwords(str_replace(['-', '_'], ' ', $permission->name)) }}</span>
-                    <input type="checkbox" wire:model="permissions" value="{{ $permission->name }}"
+                    <input type="checkbox" wire:model.live="permissions" value="{{ $permission->name }}"
                         id="permission_{{ $permission->id }}">
                 </div>
             @endforeach
@@ -203,42 +268,36 @@
 
 
     <script>
-        function scrollTabs(direction) {
-            const tabsNav = document.getElementById('tabsNav');
-            const scrollAmount = 200;
-
-            if (direction === 'left') {
-                tabsNav.scrollLeft -= scrollAmount;
-            } else {
-                tabsNav.scrollLeft += scrollAmount;
+        function scrollTabs(btn, direction) {
+            const tabsNav = btn.parentElement.querySelector('.tabs-nav');
+            if (tabsNav) {
+                tabsNav.scrollLeft += direction * 150;
             }
         }
 
         function switchTab(tabId) {
-            const wrapper = document.querySelector('.tabs-wrapper');
-            if (!wrapper) return;
-
-            // Hide all tab contents (scoped to the current component if possible, but at least use classes correctly)
+            // Hide all tab contents
             document.querySelectorAll('.tab-content').forEach(content => {
-                // Only affect contents that are NOT main-tab-content
                 if (!content.classList.contains('main-tab-content')) {
+                    content.style.display = 'none';
                     content.classList.remove('active');
                 }
             });
 
-            // Remove active class from all tabs within this wrapper
-            wrapper.querySelectorAll('.tab').forEach(tab => {
+            // Remove active class from all tabs
+            document.querySelectorAll('.roles-permission-theme-tabs').forEach(tab => {
                 tab.classList.remove('active');
             });
 
             // Show selected tab content
             const targetContent = document.getElementById(tabId);
             if (targetContent) {
+                targetContent.style.display = 'block';
                 targetContent.classList.add('active');
             }
 
             // Add active class to clicked tab
-            const clickedTab = wrapper.querySelector(`[data-target="${tabId}"]`);
+            const clickedTab = document.querySelector(`[data-target="${tabId}"]`);
             if (clickedTab) {
                 clickedTab.classList.add('active');
             }

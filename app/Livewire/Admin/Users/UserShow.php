@@ -46,6 +46,10 @@ class UserShow extends Component
 
     public function openDeleteModal()
     {
+        if (!auth()->user()->can('Delete Roles')) {
+            $this->dispatch('showSweetAlert', type: 'error', message: 'Unauthorized action.', title: 'Error');
+            return;
+        }
         $this->deleteUserId = $this->userId;
         $this->deleteUserName = $this->user->name;
         $this->showDeleteModal = true;
@@ -60,6 +64,10 @@ class UserShow extends Component
 
     public function deleteUser()
     {
+        if (!auth()->user()->can('Delete Roles')) {
+            $this->dispatch('showSweetAlert', type: 'error', message: 'Unauthorized action.', title: 'Error');
+            return;
+        }
         try {
             $user = User::findOrFail($this->deleteUserId);
             
@@ -84,6 +92,10 @@ class UserShow extends Component
 
     public function openEditModal()
     {
+        if (!auth()->user()->can('Write Roles')) {
+            $this->dispatch('showSweetAlert', type: 'error', message: 'Unauthorized action.', title: 'Error');
+            return;
+        }
         // Populate edit form with current user data
         $this->editUser = [
             'name' => $this->user->name,
@@ -106,6 +118,10 @@ class UserShow extends Component
 
     public function updateUserRoles()
     {
+        if (!auth()->user()->can('Write Roles')) {
+            $this->dispatch('showSweetAlert', type: 'error', message: 'Unauthorized action.', title: 'Error');
+            return;
+        }
         try {
             $user = User::findOrFail($this->userId);
             $user->syncRoles($this->userRoles);
@@ -118,6 +134,10 @@ class UserShow extends Component
 
     public function updateUser()
     {
+        if (!auth()->user()->can('Write Roles')) {
+            $this->dispatch('showSweetAlert', type: 'error', message: 'Unauthorized action.', title: 'Error');
+            return;
+        }
         try {
             $this->validate([
                 'editUser.name' => 'required|string|max:255',

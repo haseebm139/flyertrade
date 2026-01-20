@@ -35,6 +35,22 @@ class Booking extends Model
         return round(($this->booking_working_minutes ?? 0) / 60, 2);
     }
 
+    public function getFormattedDurationAttribute(): string
+    {
+        $minutes = $this->booking_working_minutes ?? 0;
+        if ($minutes < 60) {
+            return $minutes . 'm';
+        }
+        $hours = floor($minutes / 60);
+        $remainingMinutes = $minutes % 60;
+        
+        if ($remainingMinutes === 0) {
+            return $hours . 'h';
+        }
+        
+        return $hours . 'h ' . $remainingMinutes . 'm';
+    }
+
     /**
      * Check if review has been given for this booking
      */

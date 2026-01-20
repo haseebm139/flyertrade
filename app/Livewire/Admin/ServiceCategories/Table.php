@@ -92,6 +92,10 @@ class Table extends Component
 
     public function delete($id)
     {
+        if (!auth()->user()->can('Delete Service Categories')) {
+            $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
+            return;
+        }
         try {
             $service = Service::find($id);
             if ($service) {
@@ -108,11 +112,19 @@ class Table extends Component
 
     public function addItemRequested()
     {
+        if (!auth()->user()->can('Create Service Categories')) {
+            $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
+            return;
+        }
         $this->dispatch('addItemRequested');
     }
 
     public function edit($id)
     {
+        if (!auth()->user()->can('Write Service Categories')) {
+            $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
+            return;
+        }
         $this->dispatch('addItemRequested', id: $id); // open modal with category
     }
     

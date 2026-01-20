@@ -92,6 +92,10 @@ class Table extends Component
 
     public function delete($id)
     {
+        if (!auth()->user()->can('Delete Service Providers')) {
+            $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
+            return;
+        }
         try {
             User::findOrFail($id)->delete();
             $this->confirmingId = null;
@@ -102,19 +106,29 @@ class Table extends Component
         }
     }
 
-    public function addItemRequested()
-    {
-        $this->dispatch('addItemRequested');
-    }
-
     public function openAddModal($id = null)
     {
-        $this->dispatch('addItemRequested', id: $id);
+        if ($id) {
+            if (!auth()->user()->can('Write Service Providers')) {
+                $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
+                return;
+            }
+        } else {
+            if (!auth()->user()->can('Create Service Providers')) {
+                $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
+                return;
+            }
+        }
+        $this->dispatch('open-provider-form', id: $id);
     }
 
     public function edit($id)
     {
-        $this->dispatch('addItemRequested', id: $id); // open modal with category
+        if (!auth()->user()->can('Write Service Providers')) {
+            $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
+            return;
+        }
+        $this->dispatch('open-provider-form', id: $id); 
     }
     
     public function updatedPerPage($value)

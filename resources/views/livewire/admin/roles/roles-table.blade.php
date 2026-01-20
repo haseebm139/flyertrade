@@ -1,5 +1,5 @@
 <div>
-    <livewire:admin.components.toolbar label="roles" button_label="Role" search_label="Search role" :active-filters="$activeFilters" />
+    <livewire:admin.components.toolbar label="roles" :button_label="auth()->user()->can('Create Roles') ? 'Role' : ''" search_label="Search role" :active-filters="$activeFilters" />
 
     <div class="table-responsive">
         <!-- Table -->
@@ -26,13 +26,13 @@
                         <td><input type="checkbox" value="{{ $role->id }}" wire:model.live="selected"></td>
                         <td>
                             <div class="role-info" style="cursor: pointer;"
-                                onclick="window.location.href='{{ route('roles-and-permissions.roles.show', ['id' => $role->id]) }}'">
+                                @can('Read Roles') onclick="window.location.href='{{ route('roles-and-permissions.roles.show', ['id' => $role->id]) }}'" @endcan>
                                 <span class="role-name"
                                     style='font-weight:500;'>{{ ucfirst($role->name) ?? 'N/A' }}</span>
                             </div>
                         </td>
                         <td style="cursor: pointer;"
-                            onclick="window.location.href='{{ route('roles-and-permissions.roles.show', ['id' => $role->id]) }}'">
+                            @can('Read Roles') onclick="window.location.href='{{ route('roles-and-permissions.roles.show', ['id' => $role->id]) }}'" @endcan>
                             <div class="users-info">
                                 @if ($role->users->count() > 0)
                                     <div class="user-avatar">
@@ -51,51 +51,57 @@
 
                         <td class="viw-parent theme-parent-class">
                             <div class="d-flex align-items-center gap-3">
-                                <a href="{{ route('roles-and-permissions.roles.show', ['id' => $role->id]) }}"
-                                    class="view-btn">
-                                    <img src="{{ asset('assets/images/icons/eye_icon.svg') }}" alt="View"
-                                        class="eye-icon">
-                                    View
-                                </a>
-                                <a href="javascript:void(0);" class="view-btn"
-                                    wire:click="editRole({{ $role->id }})">
-                                    <img src="{{ asset('assets/images/icons/edit.svg') }}" alt="Edit"
-                                        class="eye-icon">
-                                    Edit
-                                </a>
+                                @can('Read Roles')
+                                    <a href="{{ route('roles-and-permissions.roles.show', ['id' => $role->id]) }}"
+                                        class="view-btn">
+                                        <img src="{{ asset('assets/images/icons/eye_icon.svg') }}" alt="View"
+                                            class="eye-icon">
+                                        View
+                                    </a>
+                                @endcan
+                                @can('Write Roles')
+                                    <a href="javascript:void(0);" class="view-btn"
+                                        wire:click="editRole({{ $role->id }})">
+                                        <img src="{{ asset('assets/images/icons/edit.svg') }}" alt="Edit"
+                                            class="eye-icon">
+                                        Edit
+                                    </a>
+                                @endcan
 
-                                <div style="position: relative;">
-                                    <!-- ✅ Delete Modal -->
-                                    <div id="deleteRoleModal{{ $role->id }}" class="deleteModal"
-                                        style="display: none; position: absolute; top: 2vw; right: 6vw; z-index: 1000;">
-                                        <div class="delete-card">
-                                            <div class="delete-card-header">
-                                                <h3 class="delete-title">Delete Role</h3>
-                                                <span class="delete-close closeDeleteModal"
-                                                    data-id="{{ $role->id }}">&times;</span>
-                                            </div>
-                                            <p class="delete-text">Are you sure you want to delete role
-                                                <strong>{{ $role->name }}</strong>?
-                                            </p>
-                                            <div class="delete-actions justify-content-start">
-                                                <button class="confirm-delete-btn"
-                                                    wire:click="deleteRole({{ $role->id }})">Delete</button>
-                                                <button class="cancel-delete-btn"
-                                                    data-id="{{ $role->id }}">Cancel</button>
+                                @can('Delete Roles')
+                                    <div style="position: relative;">
+                                        <!-- ✅ Delete Modal -->
+                                        <div id="deleteRoleModal{{ $role->id }}" class="deleteModal"
+                                            style="display: none; position: absolute; top: 2vw; right: 6vw; z-index: 1000;">
+                                            <div class="delete-card">
+                                                <div class="delete-card-header">
+                                                    <h3 class="delete-title">Delete Role</h3>
+                                                    <span class="delete-close closeDeleteModal"
+                                                        data-id="{{ $role->id }}">&times;</span>
+                                                </div>
+                                                <p class="delete-text">Are you sure you want to delete role
+                                                    <strong>{{ $role->name }}</strong>?
+                                                </p>
+                                                <div class="delete-actions justify-content-start">
+                                                    <button class="confirm-delete-btn"
+                                                        wire:click="deleteRole({{ $role->id }})">Delete</button>
+                                                    <button class="cancel-delete-btn"
+                                                        data-id="{{ $role->id }}">Cancel</button>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <button type="button" class="delete-btn showRoleDeleteModal"
-                                        data-id="{{ $role->id }}"
-                                        style="border: 0 !important; background: none; padding: 0;">
-                                        <img src="{{ asset('assets/images/icons/delete-icon-active.svg') }}"
-                                            alt="Delete" class="eye-icon">
-                                        <span
-                                            style="font-size: 0.9vw; color: #064f3c; cursor: pointer; font-weight: 400;">
-                                            Delete </span>
-                                    </button>
-                                </div>
+                                        <button type="button" class="delete-btn showRoleDeleteModal"
+                                            data-id="{{ $role->id }}"
+                                            style="border: 0 !important; background: none; padding: 0;">
+                                            <img src="{{ asset('assets/images/icons/delete-icon-active.svg') }}"
+                                                alt="Delete" class="eye-icon">
+                                            <span
+                                                style="font-size: 0.9vw; color: #064f3c; cursor: pointer; font-weight: 400;">
+                                                Delete </span>
+                                        </button>
+                                    </div>
+                                @endcan
                             </div>
                         </td>
                     </tr>

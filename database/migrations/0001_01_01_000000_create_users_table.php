@@ -21,8 +21,8 @@ return new class extends Migration
             // $table->string('cover_photo')->nullable();
             // 🔹 Additional fields for your app
             $table->string('phone')->nullable();
-            $table->enum('role_id', ['customer', 'provider', 'admin','multi'])->default('customer');
-            $table->enum('user_type', ['customer', 'provider', 'admin','multi'])->default('customer');
+            $table->string('role_id')->default('customer');
+            $table->string('user_type')->default('customer');
              
              
 

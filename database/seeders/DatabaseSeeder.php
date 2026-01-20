@@ -15,10 +15,8 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
         $this->call([
-            RolesAndPermissionsSeeder::class,
-            ServiceSeeder::class,
-            UserSeeder::class,
-            ReviewSeeder::class, // Uncomment after bookings are seeded
+            PermissionSeeder::class,
+            TestingFlowSeeder::class,
         ]);
 
     }

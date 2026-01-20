@@ -1,5 +1,5 @@
 <div>
-    <livewire:admin.components.toolbar label="users" button_label="User" search_label="Search user" :active-filters="$activeFilters" />
+    <livewire:admin.components.toolbar label="users" :button_label="auth()->user()->can('Create Roles') ? 'User' : ''" search_label="Search user" :active-filters="$activeFilters" />
 
     <div class="table-responsive">
         <table class="theme-table roles">
@@ -33,10 +33,10 @@
                 @forelse($users as $user)
                     <tr wire:key="user-row-{{ $user->id }}">
                         <td><input type="checkbox" value="{{ $user->id }}" wire:model.live="selected"></td>
-                        <td style='font-weight:500; cursor: pointer;' wire:click="viewUser({{ $user->id }})">
+                        <td style='font-weight:500; cursor: pointer;' @can('Read Roles') wire:click="viewUser({{ $user->id }})" @endcan>
                             {{ ucfirst($user->user_type ?? 'N/A') }}
                         </td>
-                        <td style="cursor: pointer;" wire:click="viewUser({{ $user->id }})">
+                        <td style="cursor: pointer;" @can('Read Roles') wire:click="viewUser({{ $user->id }})" @endcan>
                             <div class="user-info">
                                 <img src="{{ asset($user->avatar ?? 'assets/images/icons/person-one.svg') }}" alt="User">
                                 <div>
@@ -45,8 +45,8 @@
                                 </div>
                             </div>
                         </td>
-                        <td style='font-weight:500; cursor: pointer;' wire:click="viewUser({{ $user->id }})">{{ Str::limit($user->address ?? 'N/A', 30) }}</td>
-                        <td style='font-weight:500; cursor: pointer;' wire:click="viewUser({{ $user->id }})">{{ $user->phone ?? 'N/A' }}</td>
+                        <td style='font-weight:500; cursor: pointer;' @can('Read Roles') wire:click="viewUser({{ $user->id }})" @endcan>{{ Str::limit($user->address ?? 'N/A', 30) }}</td>
+                        <td style='font-weight:500; cursor: pointer;' @can('Read Roles') wire:click="viewUser({{ $user->id }})" @endcan>{{ $user->phone ?? 'N/A' }}</td>
                         <td>
                             <span class="status last-seen" style="font-weight:400">
                                 @if ($user->last_login_at)
@@ -77,37 +77,44 @@
                         </td>
                         <td class="viw-parent">
                             <div class="d-flex align-items-center gap-3">
-                                <a href="javascript:void(0);" class="view-btn" wire:click="viewUser({{ $user->id }})">
-                                    <img src="{{ asset('assets/images/icons/eye_icon.svg') }}" alt="View" class="eye-icon">
-                                    View
-                                </a>
-                                {{-- <a href="javascript:void(0);" class="view-btn" wire:click="editUser({{ $user->id }})">
-                                    <img src="{{ asset('assets/images/icons/edit.svg') }}" alt="Edit" class="eye-icon">
-                                    Edit
-                                </a> --}}
+                                @can('Read Roles')
+                                    <a href="javascript:void(0);" class="view-btn" wire:click="viewUser({{ $user->id }})">
+                                        <img src="{{ asset('assets/images/icons/eye_icon.svg') }}" alt="View" class="eye-icon">
+                                        View
+                                    </a>
+                                @endcan
                                 
-                                <div style="position: relative;">
-                                    <!-- ✅ Delete Modal -->
-                                    <div id="deleteUserModal{{ $user->id }}" class="deleteModal"
-                                        style="display: none; position: absolute; top: 2vw; right: 6vw; z-index: 1000;">
-                                        <div class="delete-card">
-                                            <div class="delete-card-header">
-                                                <h3 class="delete-title">Delete User</h3>
-                                                <span class="delete-close closeDeleteModal" data-id="{{ $user->id }}">&times;</span>
-                                            </div>
-                                            <p class="delete-text">Are you sure you want to delete user <strong>{{ $user->name }}</strong>?</p>
-                                            <div class="delete-actions justify-content-start">
-                                                <button class="confirm-delete-btn" wire:click="deleteUser({{ $user->id }})">Delete</button>
-                                                <button class="cancel-delete-btn" data-id="{{ $user->id }}">Cancel</button>
+                                @can('Write Roles')
+                                    <a href="javascript:void(0);" class="view-btn" wire:click="editUser({{ $user->id }})">
+                                        <img src="{{ asset('assets/images/icons/edit.svg') }}" alt="Edit" class="eye-icon">
+                                        Edit
+                                    </a>
+                                @endcan
+                                
+                                @can('Delete Roles')
+                                    <div style="position: relative;">
+                                        <!-- ✅ Delete Modal -->
+                                        <div id="deleteUserModal{{ $user->id }}" class="deleteModal"
+                                            style="display: none; position: absolute; top: 2vw; right: 6vw; z-index: 1000;">
+                                            <div class="delete-card">
+                                                <div class="delete-card-header">
+                                                    <h3 class="delete-title">Delete User</h3>
+                                                    <span class="delete-close closeDeleteModal" data-id="{{ $user->id }}">&times;</span>
+                                                </div>
+                                                <p class="delete-text">Are you sure you want to delete user <strong>{{ $user->name }}</strong>?</p>
+                                                <div class="delete-actions justify-content-start">
+                                                    <button class="confirm-delete-btn" wire:click="deleteUser({{ $user->id }})">Delete</button>
+                                                    <button class="cancel-delete-btn" data-id="{{ $user->id }}">Cancel</button>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <button type="button" class="delete-btn showUserDeleteModal" data-id="{{ $user->id }}" style="border: 0 !important; background: none; padding: 0;">
-                                        <img src="{{ asset('assets/images/icons/delete-icon-active.svg') }}" alt="Delete" class="eye-icon">
-                                        <span style="font-size: 0.9vw; color: #064f3c; cursor: pointer; font-weight: 400;"> Delete </span>
-                                    </button>
-                                </div>
+                                        <button type="button" class="delete-btn showUserDeleteModal" data-id="{{ $user->id }}" style="border: 0 !important; background: none; padding: 0;">
+                                            <img src="{{ asset('assets/images/icons/delete-icon-active.svg') }}" alt="Delete" class="eye-icon">
+                                            <span style="font-size: 0.9vw; color: #064f3c; cursor: pointer; font-weight: 400;"> Delete </span>
+                                        </button>
+                                    </div>
+                                @endcan
                             </div>
                         </td>
                     </tr>

@@ -93,8 +93,11 @@ class Table extends Component
 
     public function delete($id)
     {
+        if (!auth()->user()->can('Delete Service Users')) {
+            $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
+            return;
+        }
         try {
-            
             $user = User::findOrFail($id);
             $user->delete();
             $this->confirmingId = null;
@@ -105,19 +108,29 @@ class Table extends Component
         }
     }
 
-    public function addItemRequested()
-    {
-        $this->dispatch('addItemRequested');
-    }
-
     public function openAddModal($id = null)
     {
-        $this->dispatch('openUserModal', $id, $id ? 'edit' : 'create');
+        if ($id) {
+            if (!auth()->user()->can('Write Service Users')) {
+                $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
+                return;
+            }
+        } else {
+            if (!auth()->user()->can('Create Service Users')) {
+                $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
+                return;
+            }
+        }
+        $this->dispatch('open-customer-form', id: $id);
     }
 
     public function edit($id)
     {
-        $this->dispatch('addItemRequested', id: $id); // open modal with category
+        if (!auth()->user()->can('Write Service Users')) {
+            $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
+            return;
+        }
+        $this->dispatch('open-customer-form', id: $id); 
     }
     
     public function updatedPerPage($value)

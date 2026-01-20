@@ -1,4 +1,7 @@
 <div>
+    <div class="container" bis_skin_checked="1">
+        <h1 class="page-title">All Reviews</h1>
+    </div>
     <livewire:admin.components.toolbar label="reviews" button_label="" search_label="" :active-filters="$activeFilters" />
 
     <div class="tabs-section">
@@ -102,59 +105,71 @@
                                                     ? 'unpublished'
                                                     : 'pending');
                                     @endphp
-                                    <span class="status {{ $statusClass }}" onclick="toggleReviewDropdown(this)">
-                                        {{ ucfirst($review->status) }}
-                                        <svg class="arrow" xmlns="http://www.w3.org/2000/svg" width="14"
-                                            height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <polyline points="6 9 12 15 18 9"></polyline>
-                                        </svg>
-                                    </span>
-                                    <ul class="dropdown-menu" style="display:none; position: absolute; z-index: 100;">
-                                        <li wire:click="setStatus({{ $review->id }}, 'pending')">Pending</li>
-                                        <li wire:click="setStatus({{ $review->id }}, 'published')">Publish</li>
-                                        <li wire:click="setStatus({{ $review->id }}, 'unpublished')">Unpublished</li>
-                                    </ul>
+                                    @can('Write Reviews')
+                                        <span class="status {{ $statusClass }}" onclick="toggleReviewDropdown(this)">
+                                            {{ ucfirst($review->status) }}
+                                            <svg class="arrow" xmlns="http://www.w3.org/2000/svg" width="14"
+                                                height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <polyline points="6 9 12 15 18 9"></polyline>
+                                            </svg>
+                                        </span>
+                                        <ul class="dropdown-menu" style="display:none; position: absolute; z-index: 100;">
+                                            <li wire:click="setStatus({{ $review->id }}, 'pending')">Pending</li>
+                                            <li wire:click="setStatus({{ $review->id }}, 'published')">Publish</li>
+                                            <li wire:click="setStatus({{ $review->id }}, 'unpublished')">Unpublished</li>
+                                        </ul>
+                                    @else
+                                        <span class="status {{ $statusClass }}">
+                                            {{ ucfirst($review->status) }}
+                                        </span>
+                                    @endcan
                                 </div>
                             </td>
                             <td style="position:relative;">
                                 <div class="actions-dropdown review-actions-{{ $review->id }}">
-                                    <button class="actions-btn act"
-                                        onclick="toggleReviewActions(this, {{ $review->id }})">
-                                        <img src="{{ asset('assets/images/icons/three_dots.svg') }}" class="dots-img"
-                                            alt="">
-                                    </button>
-                                    <div class="actions-menu" style="position: absolute; right: 0; z-index: 100;">
-                                        <a href="{{ route('reviews.show', ['id' => $review->id]) }}">
-                                            <img src="{{ asset('assets/images/icons/eye.svg') }}" alt=""> View
-                                            Details
-                                        </a>
-                                        <a href="javascript:void(0);" class="showReviewDeleteModal"
-                                            data-id="{{ $review->id }}">
-                                            <img src="{{ asset('assets/images/icons/delete-icon.svg') }}"
-                                                alt=""> Delete
-                                        </a>
-                                    </div>
+                                    @if(auth()->user()->can('Read Reviews') || auth()->user()->can('Delete Reviews'))
+                                        <button class="actions-btn act"
+                                            onclick="toggleReviewActions(this, {{ $review->id }})">
+                                            <img src="{{ asset('assets/images/icons/three_dots.svg') }}" class="dots-img"
+                                                alt="">
+                                        </button>
+                                        <div class="actions-menu" style="position: absolute; right: 0; z-index: 100;">
+                                            <a href="{{ route('reviews.show', ['id' => $review->id]) }}">
+                                                <img src="{{ asset('assets/images/icons/eye.svg') }}" alt=""> View
+                                                Details
+                                            </a>
+                                            @can('Delete Reviews')
+                                                <a href="javascript:void(0);" class="showReviewDeleteModal"
+                                                    data-id="{{ $review->id }}">
+                                                    <img src="{{ asset('assets/images/icons/delete-icon.svg') }}"
+                                                        alt=""> Delete
+                                                </a>
+                                            @endcan
+                                        </div>
+                                    @endif
                                 </div>
 
                                 <!-- ✅ Delete Modal -->
-                                <div id="deleteReviewModal{{ $review->id }}" class="deleteModal"
-                                    style="display: none; position: absolute; top: 2vw; right: 6vw; z-index: 1000;">
-                                    <div class="delete-card">
-                                        <div class="delete-card-header">
-                                            <h3 class="delete-title">Delete review</h3>
-                                            <span class="delete-close closeReviewDeleteModal"
-                                                data-id="{{ $review->id }}">&times;</span>
-                                        </div>
-                                        <p class="delete-text">Are you sure you want to delete this review?</p>
-                                        <div class="delete-actions justify-content-start">
-                                            <button class="confirm-delete-btn"
-                                                wire:click="delete({{ $review->id }})">Delete</button>
-                                            <button class="cancel-delete-btn closeReviewDeleteModal"
-                                                data-id="{{ $review->id }}">Cancel</button>
+                                @can('Delete Reviews')
+                                    <div id="deleteReviewModal{{ $review->id }}" class="deleteModal"
+                                        style="display: none; position: absolute; top: 2vw; right: 6vw; z-index: 1000;">
+                                        <div class="delete-card">
+                                            <div class="delete-card-header">
+                                                <h3 class="delete-title">Delete review</h3>
+                                                <span class="delete-close closeReviewDeleteModal"
+                                                    data-id="{{ $review->id }}">&times;</span>
+                                            </div>
+                                            <p class="delete-text">Are you sure you want to delete this review?</p>
+                                            <div class="delete-actions justify-content-start">
+                                                <button class="confirm-delete-btn"
+                                                    wire:click="delete({{ $review->id }})">Delete</button>
+                                                <button class="cancel-delete-btn closeReviewDeleteModal"
+                                                    data-id="{{ $review->id }}">Cancel</button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                @endcan
                             </td>
                         </tr>
                     @empty

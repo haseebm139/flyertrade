@@ -69,7 +69,9 @@
                         <!-- Header -->
                         <div class="recent-dispute-header">
                             <h5>Recent dispute</h5>
-                            <a href="#">View all</a>
+                            @can('Read Disputes')
+                                <a href="{{ route('dispute.index') }}">View all</a>
+                            @endcan
                         </div>
 
                         <!-- Table -->
@@ -125,7 +127,9 @@
                         <!-- Header -->
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h5 class="card-title mb-0">Recently added users</h5>
-                            <a class="dashboard-view-all" href="#" style="font-weight:400,color:#1b1b1b ,font-size:0.875vw" >View all</a>
+                            @can('Read Service Users')
+                                <a class="dashboard-view-all" href="{{ route('user-management.service.users.index') }}" style="font-weight:400,color:#1b1b1b ,font-size:0.875vw" >View all</a>
+                            @endcan
                         </div>
                         <nav>
                             <div class="nav nav-tabs tabs-recently-added-users" id="nav-tab" role="tablist">
