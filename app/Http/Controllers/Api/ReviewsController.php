@@ -78,7 +78,7 @@ class ReviewsController extends BaseController
         }
         
         $query = Review::with(['service','reviewer', 'reviewedProvider', 'booking'])
-            ->where('receiver_id', $provider->id); 
+            ->where('receiver_id', $provider->id)->where('status','published'); 
         // Filter by status
         if ($request->has('status') && in_array($request->status, ['pending', 'published', 'unpublished'])) {
             $query->where('status', $request->status);
