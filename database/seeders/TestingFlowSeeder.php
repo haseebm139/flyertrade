@@ -129,7 +129,7 @@ class TestingFlowSeeder extends Seeder
                 $totalPrice = rand(100, 500);
 
                 // Calculate service charges dynamically based on admin settings
-                $percentage = (float) \App\Models\Setting::get('service_charge_percentage', 25);
+                // $percentage = (float) \App\Models\Setting::get('service_charge_percentage', 25);
                 $percentage = (float) 25;
                 $serviceCharges = ($totalPrice * $percentage) / 100;
 
