@@ -6,7 +6,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     
 
     // User Management
-    Route::middleware(['permission:Read Service Users'])->group(function () {
+    Route::middleware(['permission:Read Users'])->group(function () {
         Route::get('user-management/service-users', function () {
             return view('admin.pages.user_management.users.index');
         })->name('user-management.service.users.index');
@@ -16,7 +16,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         })->name('user-management.service.users.view');
     });
 
-    Route::middleware(['permission:Read Service Providers'])->group(function () {
+    Route::middleware(['permission:Read Providers'])->group(function () {
         Route::get('user-management/service-provider', function () {
             return view('admin.pages.user_management.providers.index');
         })->name('user-management.service.providers.index');

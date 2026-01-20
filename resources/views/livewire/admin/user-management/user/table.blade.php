@@ -1,5 +1,5 @@
 <div>
-    <livewire:admin.components.toolbar label="service users" :button_label="auth()->user()->can('Create Service Users') ? 'Users' : ''" search_label="user" :active-filters="$activeFilters" />
+    <livewire:admin.components.toolbar label="service users" :button_label="auth()->user()->can('Create Users') ? 'Users' : ''" search_label="user" :active-filters="$activeFilters" />
 
     <!-- Users Table -->
     <div class="table-responsive">
@@ -63,7 +63,7 @@
                     </td>
                     <td style="position:relative">
                         <div class="actions-dropdown">
-                            @if(auth()->user()->can('Read Service Users') || auth()->user()->can('Write Service Users') || auth()->user()->can('Delete Service Users'))
+                            @if(auth()->user()->can('Read Users') || auth()->user()->can('Write Users') || auth()->user()->can('Delete Users'))
                                 <button class="actions-btn"> <img
                                         src="{{ asset('assets/images/icons/three_dots.svg') }}"
                                     class="dots-img "></button>
@@ -71,12 +71,12 @@
                                     <a href="{{ route('user-management.service.users.view', ['id' => $item->id]) }}"><img
                                             src="{{ asset('assets/images/icons/eye.svg') }}" alt="View User"
                                             class="w-5 h-5"> View user</a>
-                                    @can('Write Service Users')
+                                    @can('Write Users')
                                         <a href="#" wire:click="edit({{ $item->id }}) "><img
                                                 src="{{ asset('assets/images/icons/edit-icon.svg') }}" alt="Edit User"
                                                 class="w-5 h-5"> Edit user</a>
                                     @endcan
-                                    @can('Delete Service Users')
+                                    @can('Delete Users')
                                         <a href="#" class="showDeleteModal___" data-id="{{ $item->id }}"><img
                                                 src="{{ asset('assets/images/icons/delete-icon.svg') }}" alt="Delete User"
                                                 class="w-5 h-5"> Delete user</a>
@@ -85,7 +85,7 @@
                             @endif
                         </div>
                         
-                        @can('Delete Service Users')
+                        @can('Delete Users')
                             <div id="globalDeleteModal__{{ $item->id }}" class="deleteModal"
                                 style="display: none;position:absolute;    top: 2.5vw; right: 1vw;">
                                 <div class="delete-card">

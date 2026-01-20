@@ -92,7 +92,7 @@ class Table extends Component
 
     public function delete($id)
     {
-        if (!auth()->user()->can('Delete Service Providers')) {
+        if (!auth()->user()->can('Delete Providers')) {
             $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
             return;
         }
@@ -109,12 +109,12 @@ class Table extends Component
     public function openAddModal($id = null)
     {
         if ($id) {
-            if (!auth()->user()->can('Write Service Providers')) {
+            if (!auth()->user()->can('Write Providers')) {
                 $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
                 return;
             }
         } else {
-            if (!auth()->user()->can('Create Service Providers')) {
+            if (!auth()->user()->can('Create Providers')) {
                 $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
                 return;
             }
@@ -124,7 +124,7 @@ class Table extends Component
 
     public function edit($id)
     {
-        if (!auth()->user()->can('Write Service Providers')) {
+        if (!auth()->user()->can('Write Providers')) {
             $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
             return;
         }

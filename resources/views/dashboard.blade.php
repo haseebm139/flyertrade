@@ -127,7 +127,7 @@
                         <!-- Header -->
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h5 class="card-title mb-0">Recently added users</h5>
-                            @can('Read Service Users')
+                            @can('Read Users')
                                 <a class="dashboard-view-all" href="{{ route('user-management.service.users.index') }}" style="font-weight:400,color:#1b1b1b ,font-size:0.875vw" >View all</a>
                             @endcan
                         </div>

@@ -24,7 +24,7 @@
         @endcan
 
         <!-- User Management -->
-        @if(auth()->user()->can('Read Service Users') || auth()->user()->can('Read Service Providers'))
+        @if(auth()->user()->can('Read Users') || auth()->user()->can('Read Providers'))
             <a class="nav-link dropdown-toggle {{ request()->routeIs('user-management.*') ? 'active' : '' }}"
                 data-bs-toggle="collapse" href="#userManagementMenu" role="button"
                 aria-expanded="{{ request()->routeIs('user-management.*') ? 'true' : 'false' }}"
@@ -37,13 +37,13 @@
             </a>
 
             <div class="collapse {{ request()->routeIs('user-management.*') ? 'show' : '' }}" id="userManagementMenu">
-                @can('Read Service Users')
+                @can('Read Users')
                     <a href="{{ route('user-management.service.users.index') }}"
                         class="nav-sublink {{ request()->routeIs('user-management.service.users.*') ? 'active' : '' }}">
                         Service Users
                     </a>
                 @endcan
-                @can('Read Service Providers')
+                @can('Read Providers')
                     <a href="{{ route('user-management.service.providers.index') }}"
                         class="nav-sublink {{ request()->routeIs('user-management.service.providers.*') ? 'active' : '' }}">
                         Service Providers
