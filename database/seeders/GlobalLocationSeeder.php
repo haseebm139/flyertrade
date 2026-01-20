@@ -18,38 +18,33 @@ class GlobalLocationSeeder extends Seeder
         Schema::disableForeignKeyConstraints();
 
         $tables = ['countries', 'states', 'currencies', 'languages', 'timezones', 'cities'];
-        $sqlPath = database_path('seeders/sql');
+        $jsonPath = database_path('seeders/json');
 
         foreach ($tables as $table) {
-            $filePath = "{$sqlPath}/{$table}.sql";
+            $filePath = "{$jsonPath}/{$table}.json";
 
             if (File::exists($filePath)) {
-                $this->command->info("Seeding table: {$table} from SQL file...");
+                $this->command->info("Seeding table: {$table} from JSON file...");
                 
                 // Truncate table before seeding to avoid duplicates
                 DB::table($table)->truncate();
 
-                // Read and execute SQL file
-                // Reading in chunks because cities.sql is massive
-                $sqlFile = fopen($filePath, 'r');
-                $sqlBatch = '';
-                while (!feof($sqlFile)) {
-                    $line = fgets($sqlFile);
-                    if (trim($line) == '' || strpos($line, '--') === 0) continue;
-                    
-                    $sqlBatch .= $line;
-                    
-                    // Execute every 100 lines to avoid memory/buffer issues
-                    if (substr(trim($line), -1) == ';') {
-                        DB::unprepared($sqlBatch);
-                        $sqlBatch = '';
-                    }
-                }
-                fclose($sqlFile);
+                // Read JSON content
+                $json = File::get($filePath);
+                $data = json_decode($json, true);
 
-                $this->command->info("Table {$table} seeded successfully!");
+                if (is_array($data)) {
+                    // Insert in chunks of 500 to avoid query size limits
+                    $chunks = array_chunk($data, 500);
+                    foreach ($chunks as $chunk) {
+                        DB::table($table)->insert($chunk);
+                    }
+                    $this->command->info("Table {$table} seeded successfully!");
+                } else {
+                    $this->command->error("Failed to decode JSON for table {$table}");
+                }
             } else {
-                $this->command->warn("SQL file for {$table} not found at {$filePath}");
+                $this->command->warn("JSON file for {$table} not found at {$filePath}");
             }
         }
 
