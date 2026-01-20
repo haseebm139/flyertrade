@@ -30,12 +30,12 @@ class IncidentReportController extends Controller
                 }
 
                 // 2. Security Check: Ensure incident is not reported for cancelled bookings
-                if ($booking->status === 'cancelled') {
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => 'You cannot report an incident for a cancelled booking.'
-                    ], 422);
-                }
+                // if ($booking->status === 'cancelled') {
+                //     return response()->json([
+                //         'status' => 'error',
+                //         'message' => 'You cannot report an incident for a cancelled booking.'
+                //     ], 422);
+                // }
 
                 // 3. Security Check: Prevent duplicate reports for the same booking
                 // $existingDispute = Dispute::where('booking_id', $bookingId)
