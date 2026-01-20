@@ -730,7 +730,7 @@ class BookingService
                 // }
 
                 // Use existing requestReschedule method
-                // $rescheduleResult = $this->requestReschedule($booking, $newSlots);
+                $rescheduleResult = $this->requestReschedule($booking, $newSlots);
                 
                 // if ($rescheduleResult['error']) {
                 //     return $rescheduleResult;
