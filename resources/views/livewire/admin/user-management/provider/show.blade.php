@@ -7,9 +7,108 @@
 
         .video-container {
             position: relative;
-            width: 25%;
+            width: 404px !important;
+            height: 147px !important;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #000;
+        }
 
+        /* Override style.css static grid for swiper */
+        #photos-swiper,
+        #videos-swiper {
+            display: block !important;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            padding-bottom: 20px !important;
+        }
+        
+        #photos-swiper .swiper-wrapper,
+        #videos-swiper .swiper-wrapper {
+            display: flex !important;
+            flex-wrap: nowrap !important;
+        }
 
+        /* Figma Image Styles */
+        #photos-swiper .swiper-slide {
+            width: 194px !important;
+            height: 147px !important;
+            margin-right: 15px;
+        }
+        #photos-swiper .swiper-slide img {
+            width: 194px !important;
+            height: 147px !important;
+            object-fit: cover;
+            border-radius: 4px !important;
+            box-shadow: 0px 16px 48px 3px rgba(181, 181, 181, 0.24);
+        }
+
+        .videos-grid-layout {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            gap: 15px;
+            width: 100%;
+            margin-top: 0.5vw;
+            padding-bottom: 10px;
+        }
+
+        .videos-grid-layout::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .videos-grid-layout::-webkit-scrollbar-thumb {
+            background: #004e42;
+            border-radius: 10px;
+        }
+
+        .videos-grid-layout .video-container {
+            flex: 0 0 404px;
+            width: 404px !important;
+            height: 147px !important;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #000;
+            position: relative;
+        }
+
+        /* Figma Video Styles */
+        #videos-swiper .swiper-slide {
+            width: 404px !important;
+            height: 147px !important;
+            margin-right: 15px;
+        }
+        #videos-swiper .custom-video {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        .video-container.playing .custom-controls {
+            opacity: 0.7;
+        }
+
+        .video-container:hover .custom-controls {
+            opacity: 1;
+        }
+
+        /* Swiper Navigation Customization */
+        .service-details-theme .swiper-button-next,
+        .service-details-theme .swiper-button-prev {
+            background: white;
+            width: 30px !important;
+            height: 30px !important;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            color: #004e42 !important;
+        }
+
+        .service-details-theme .swiper-button-next::after,
+        .service-details-theme .swiper-button-prev::after {
+            font-size: 14px !important;
+            font-weight: bold;
         }
 
         .custom-controls {
@@ -20,24 +119,29 @@
             position: absolute;
             bottom: 0;
             width: 100%;
+            padding: 5px 10px;
         }
 
         .custom-btn {
-            width: 1.823vw;
-            height: 1.823vw;
+            width: 25px;
+            height: 25px;
             background: white;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
+            color: #004e42;
+            font-size: 12px;
         }
 
         .custom-progress {
             flex-grow: 1;
-            height: 0.313vw;
-            background: #fff;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            margin: 0 10px;
             cursor: pointer;
+            border-radius: 2px;
         }
 
         .custom-progress input {
@@ -75,23 +179,35 @@
         }
 
         .deleteModal {
-            /* display: none;
-                      position: fixed;
-                      inset: 0;
-                      background: rgba(0,0,0,0.4);
-                      justify-content: center;
-                      align-items: center;
-                      z-index: 999; */
             position: absolute;
             top: -5px;
             right: -5px;
         }
 
-        .delete-card {
-            /* background: #fff;
-                      padding: 20px;
-                      border-radius: 10px;
-                      min-width: 300px; */
+        /* Complete Scroll for Service Details Modal */
+        #service-details-modal-container {
+            overflow-y: auto !important;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .service-details-theme {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start !important; /* Align to top for scrolling */
+            padding: 2vw 0; /* Space at top and bottom */
+            min-height: 100%;
+            position: relative !important; /* Allow container to handle fixed positioning */
+            background: transparent !important;
+        }
+
+        .service-details-theme .modal-content {
+            max-height: none !important; /* Remove inner scroll */
+            overflow-y: visible !important;
+            margin-bottom: 2vw;
+        }
+
+        body.modal-open {
+            overflow: hidden !important;
         }
     </style>
 
@@ -572,124 +688,108 @@
         </div>
     @endif
 
-    @if ($showServiceModal && $selectedService)
-        <div id="service-details-modal" class="service-details-theme" style="display: flex;"
-            wire:click.self="closeServiceModal">
-            <div class="modal-content">
-                <span class="close-btn" id="closeServiceDetails" style="line-height: 1;"
-                    wire:click="closeServiceModal">
+    <!-- Service Details Modal Container -->
+    <div id="service-details-modal-container" style="display: none; position: fixed; inset: 0; z-index: 1050;">
+        <div id="service-details-modal" class="service-details-theme" style="display: flex;">
+            <div class="modal-content" @click.stop>
+                <span class="close-btn" style="line-height: 1;" onclick="closeServiceModalJS()">
                     <svg style="width:0.625vw;height:0.625vw;" width="12" height="12" viewBox="0 0 12 12"
                         fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75"
                             stroke="#717171" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                         </path>
-                    </svg></span>
+                    </svg>
+                </span>
                 <h3>Service details</h3>
 
                 <label>Name</label>
-                <input type="text" value="{{ $selectedService->service->name ?? '-' }}" readonly>
+                <input type="text" value="{{ $selectedService->service->name ?? '' }}" readonly>
 
                 <label>Description</label>
-                <textarea readonly>{{ $selectedService->description ?? '-' }}</textarea>
+                <textarea readonly>{{ $selectedService->description ?? '' }}</textarea>
 
                 <div class="price-boxes">
                     <div>
                         <label for="">Maximum price/hr</label>
-                        <input type="text" value="${{ number_format($selectedService->rate_max ?? 0, 2) }}"
+                        <input type="text"
+                            value="{{ $selectedService ? '$' . number_format($selectedService->rate_max ?? 0, 2) : '' }}"
                             readonly>
                     </div>
                     <div>
                         <label for="">Mid price/hr</label>
-                        <input type="text" value="${{ number_format($selectedService->rate_mid ?? 0, 2) }}"
+                        <input type="text"
+                            value="{{ $selectedService ? '$' . number_format($selectedService->rate_mid ?? 0, 2) : '' }}"
                             readonly>
                     </div>
                     <div>
                         <label for="">Minimum price/hr</label>
-                        <input type="text" value="${{ number_format($selectedService->rate_min ?? 0, 2) }}"
+                        <input type="text"
+                            value="{{ $selectedService ? '$' . number_format($selectedService->rate_min ?? 0, 2) : '' }}"
                             readonly>
                     </div>
                 </div>
 
-                <h4 style="font-size:0.938vw">Photos</h4>
-                <!-- Slider -->
-                <div class="swiper photos w-100">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide">
-                            <img class="w-100" src="{{ asset('assets/images/icons/service_one.svg') }}"
-                                alt="">
-                        </div>
-                        <div class="swiper-slide">
-                            <img class="w-100" src="{{ asset('assets/images/icons/service_four.svg') }}"
-                                alt="">
-                        </div>
-                        <div class="swiper-slide">
-                            <img class="w-100" src="{{ asset('assets/images/icons/service_three.svg') }}"
-                                alt="">
-                        </div>
-                        <div class="swiper-slide">
-                            <img class="w-100" src="{{ asset('assets/images/icons/service_four.svg') }}"
-                                alt="">
-                        </div>
-                        <div class="swiper-slide">
-                            <img class="w-100" src="{{ asset('assets/images/icons/service_four.svg') }}"
-                                alt="">
-                        </div>
-                        <div class="swiper-slide">
-                            <img class="w-100" src="{{ asset('assets/images/icons/service_three.svg') }}"
-                                alt="">
-                        </div>
-                        <div class="swiper-slide">
-                            <img class="w-100" src="{{ asset('assets/images/icons/service_four.svg') }}"
-                                alt="">
-                        </div>
+                @if ($selectedService)
+                    @php
+                        $allMedia = $selectedService->media;
+                        if ($allMedia->isEmpty()) {
+                            $allMedia = \App\Models\ProviderServiceMedia::where('user_id', $user->id)->get();
+                        }
+                    @endphp
 
+                    <h4 style="font-size:0.938vw">Photos</h4>
+                    <div id="photos-swiper" class="swiper w-100" wire:ignore>
+                        <div class="swiper-wrapper">
+                            @php
+                                $photos = $allMedia->filter(
+                                    fn($m) => in_array(strtolower(trim($m->type)), ['photo', 'image']),
+                                );
+                            @endphp
+                            @forelse($photos as $photo)
+                                <div class="swiper-slide">
+                                    <img src="{{ asset($photo->file_path) }}" alt="Service Photo">
+                                </div>
+                            @empty
+                                <div class="swiper-slide">
+                                    <img src="{{ asset('assets/images/icons/service_one.svg') }}" alt="Placeholder">
+                                </div>
+                            @endforelse
+                        </div>
+                        <div class="swiper-button-next photos-next"></div>
+                        <div class="swiper-button-prev photos-prev"></div>
                     </div>
 
-                    <!-- Navigation Arrows -->
-                    <div class="swiper-button-next"></div>
-                    <div class="swiper-button-prev"></div>
-                </div>
-
-                <h4 style="font-size:0.938vw;margin-top:0.9vw">Videos</h4>
-                <div class="videos swiper w-100">
-                    <!-- Navigation Arrows -->
-                    <div class="swiper-button-next video-swiper-button-next"></div>
-                    <div class="swiper-button-prev video-swiper-button-prev"></div>
-                    <div class="swiper-wrapper">
-                        <div class="video-container swiper-slide">
-                            <video class="custom-video" style="width: 100%;">
-                                <source src="{{ asset('assets/videos/video1.mp4') }}" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
-
-                            <div class="custom-controls">
-                                <div class="custom-btn play-btn">▶</div>
-                                <div class="custom-progress">
-                                    <input type="range" class="progress-bar" value="0" max="100">
+                    <h4 style="font-size:0.938vw;margin-top:0.9vw">Videos</h4>
+                    <div class="videos-grid-layout" wire:ignore>
+                        @php
+                            $videos = $allMedia->filter(
+                                fn($m) => strtolower(trim($m->type)) === 'video' ||
+                                    str_ends_with(strtolower($m->file_path), '.mp4'),
+                            );
+                        @endphp
+                        @forelse($videos as $video)
+                            <div class="video-container">
+                                <video class="custom-video" preload="metadata" playsinline>
+                                    <source src="{{ asset($video->file_path) }}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                                <div class="custom-controls" style="z-index: 10; pointer-events: none;">
+                                    <div class="custom-btn play-btn" style="pointer-events: auto;" onclick="window.toggleVideo(this)">▶</div>
+                                    <div class="custom-progress" style="pointer-events: auto;">
+                                        <input type="range" class="progress-bar" value="0" max="100">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="video-container swiper-slide">
-                            <video class="custom-video" style="width: 100%;">
-                                <source src="{{ asset('assets/videos/video1.mp4') }}" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
-
-                            <div class="custom-controls">
-                                <div class="custom-btn play-btn">▶</div>
-                                <div class="custom-progress">
-                                    <input type="range" class="progress-bar" value="0" max="100">
-                                </div>
+                        @empty
+                            <div class="video-container" style="background: transparent; height: auto; width: 100%;">
+                                <p class="text-muted" style="font-size: 0.8vw;">No videos found.</p>
                             </div>
-                        </div>
-
-
+                        @endforelse
                     </div>
-                </div>
+                @endif
             </div>
         </div>
-    @endif
+    </div>
 
     <!-- Document Preview Modal -->
     <div id="check-modal" class="cm-modal" aria-hidden="true">
@@ -713,23 +813,113 @@
 
     <!-- Modals (Scripts to trigger them) -->
     <script>
-        document.addEventListener('livewire:initialized', () => {
-            // Video controls logic
-            $(document).on('click', '.play-btn', function() {
-                const container = $(this).closest('.video-container');
-                const video = container.find('.custom-video')[0];
-                const btn = $(this);
+        console.log("Service details script loading...");
 
-                if (video.paused) {
-                    video.play();
-                    btn.text('⏸');
-                } else {
-                    video.pause();
-                    btn.text('▶');
+        // Global functions for modal - Move outside to ensure they load immediately
+        window.toggleVideo = function(el) {
+            console.log("Click detected! Function toggleVideo started.");
+            
+            // Handle different click targets (btn or video)
+            const container = el.closest('.video-container');
+            if (!container) {
+                console.error("Could not find .video-container");
+                return;
+            }
+
+            const video = container.querySelector('video');
+            const btn = container.querySelector('.play-btn');
+
+            if (!video) {
+                console.error("Video element not found");
+                return;
+            }
+            
+            if (video.dataset.processing === 'true') {
+                console.warn("Video is already processing...");
+                return;
+            }
+            
+            video.dataset.processing = 'true';
+
+            if (video.paused) {
+                console.log("Attempting to play...");
+                // Pause all other videos
+                document.querySelectorAll('video').forEach(v => {
+                    if (v !== video && !v.paused) {
+                        v.pause();
+                        const otherBtn = v.closest('.video-container').querySelector('.play-btn');
+                        if (otherBtn) otherBtn.textContent = '▶';
+                        v.closest('.video-container').classList.remove('playing');
+                    }
+                });
+
+                video.play().then(() => {
+                    console.log("Playback success");
+                    btn.textContent = '⏸';
+                    container.classList.add('playing');
+                    video.dataset.processing = 'false';
+                }).catch(err => {
+                    console.warn("Autoplay blocked, muting...");
+                    video.muted = true;
+                    video.play().then(() => {
+                        btn.textContent = '⏸';
+                        container.classList.add('playing');
+                        video.dataset.processing = 'false';
+                    });
+                });
+            } else {
+                console.log("Pausing...");
+                video.pause();
+                btn.textContent = '▶';
+                container.classList.remove('playing');
+                video.dataset.processing = 'false';
+            }
+        };
+
+        function closeServiceModalJS() {
+            // Pause all videos when closing
+            $('video').each(function() {
+                if (!this.paused) {
+                    this.pause();
+                    const container = $(this).closest('.video-container');
+                    container.find('.play-btn').text('▶');
+                    container.removeClass('playing');
                 }
             });
+            $('#service-details-modal-container').fadeOut(200);
+            $('body').removeClass('modal-open');
+            @this.closeServiceModal();
+        }
 
-            $(document).on('timeupdate', '.custom-video', function() {
+        document.addEventListener('livewire:initialized', () => {
+            // Function to initialize Swipers
+            let photosSwiper;
+            const initSwipers = () => {
+                const photosEl = document.querySelector('#photos-swiper');
+                if (photosEl) {
+                    if (photosSwiper) photosSwiper.destroy(true, true);
+                    photosSwiper = new Swiper('#photos-swiper', {
+                        slidesPerView: 'auto',
+                        spaceBetween: 15,
+                        observer: true,
+                        observeParents: true,
+                        navigation: {
+                            nextEl: '.photos-next',
+                            prevEl: '.photos-prev',
+                        },
+                    });
+                }
+            };
+
+            // Listen for open modal event
+            Livewire.on('open-service-modal', () => {
+                $('#service-details-modal-container').fadeIn(200);
+                $('body').addClass('modal-open');
+                setTimeout(initSwipers, 300);
+            });
+
+            // Progress bar and time updates - Keep these as they are data-bound
+            $(document).off('timeupdate', '.custom-video').on('timeupdate', '.custom-video', function() {
                 const video = this;
                 const container = $(this).closest('.video-container');
                 const progressBar = container.find('.progress-bar');
@@ -739,13 +929,21 @@
                 }
             });
 
-            $(document).on('input', '.progress-bar', function() {
+            $(document).off('input', '.progress-bar').on('input', '.progress-bar', function() {
                 const container = $(this).closest('.video-container');
                 const video = container.find('.custom-video')[0];
                 const value = $(this).val();
-                if (video.duration) {
+                if (video && video.duration && !isNaN(video.duration)) {
                     video.currentTime = (value * video.duration) / 100;
                 }
+            });
+
+            // Reset UI when video ends
+            $(document).off('ended', '.custom-video').on('ended', '.custom-video', function() {
+                const container = $(this).closest('.video-container');
+                container.find('.play-btn').text('▶');
+                container.removeClass('playing');
+                this.dataset.processing = 'false';
             });
 
             // Document status badge dropdown logic
@@ -787,6 +985,4 @@
             });
         });
     </script>
-
-
 </div>

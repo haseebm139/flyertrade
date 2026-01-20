@@ -20,9 +20,9 @@ class Show extends Component
     public $showResetModal = false;
     public $showDeleteModal = false;
     public $showBookingModal = false;
-    public $showServiceModal = false;
     public $selectedBooking = null;
     public $selectedService = null;
+    public $showServiceModal = false;
     public $activeTab = 'details';
     public $perPage = 10;
     public $search = '';
@@ -198,6 +198,7 @@ class Show extends Component
         $this->selectedService = \App\Models\ProviderService::with(['service', 'media'])->find($id);
         if ($this->selectedService) {
             $this->showServiceModal = true;
+            $this->dispatch('open-service-modal');
         }
     }
 
