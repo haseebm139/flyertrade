@@ -13,11 +13,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-        $this->call([
-            PermissionSeeder::class,
-            TestingFlowSeeder::class,
-        ]);
+        // 1. Global Data (Countries, Cities, Flags, Currencies)
+        $this->call(GlobalLocationSeeder::class);
 
+        // 2. Roles and Permissions
+        $this->call(PermissionSeeder::class);
+
+        // 3. Admin Settings (Commission, Currency, etc.)
+        $this->call(SettingSeeder::class);
+
+        // 4. Testing Data (Users, Services, Bookings)
+        $this->call(TestingFlowSeeder::class);
     }
 }

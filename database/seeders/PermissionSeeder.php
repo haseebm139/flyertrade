@@ -20,8 +20,8 @@ class PermissionSeeder extends Seeder
         // 1. Define Modules/Categories
         $modules = [
             'Dashboard',
-            'Service Users',
-            'Service Providers',
+            'Users',
+            'Providers',
             'Service Categories',
             'Bookings',
             'Transactions',

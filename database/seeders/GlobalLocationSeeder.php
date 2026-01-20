@@ -30,12 +30,22 @@ class GlobalLocationSeeder extends Seeder
                 DB::table($table)->truncate();
 
                 // Read and execute SQL file
-                // Since the files can be huge (cities.sql), we read them line by line or in blocks
-                $sql = File::get($filePath);
-                
-                // For massive files, we might need DB::unprepared
-                // or splitting by semicolon
-                DB::unprepared($sql);
+                // Reading in chunks because cities.sql is massive
+                $sqlFile = fopen($filePath, 'r');
+                $sqlBatch = '';
+                while (!feof($sqlFile)) {
+                    $line = fgets($sqlFile);
+                    if (trim($line) == '' || strpos($line, '--') === 0) continue;
+                    
+                    $sqlBatch .= $line;
+                    
+                    // Execute every 100 lines to avoid memory/buffer issues
+                    if (substr(trim($line), -1) == ';') {
+                        DB::unprepared($sqlBatch);
+                        $sqlBatch = '';
+                    }
+                }
+                fclose($sqlFile);
 
                 $this->command->info("Table {$table} seeded successfully!");
             } else {
