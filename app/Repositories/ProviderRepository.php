@@ -286,6 +286,23 @@ class ProviderRepository
     }
 
     /**
+     * Get booked slots for a provider
+     *
+     * @param int $providerId
+     * @return \Illuminate\Support\Collection
+     */
+    public function getBookedSlots(int $providerId)
+    {
+        return DB::table('booking_slots as bs')
+            ->join('bookings as b', 'b.id', '=', 'bs.booking_id')
+            ->where('b.provider_id', $providerId)
+            ->whereIn('b.status', ['awaiting_provider', 'confirmed', 'in_progress'])
+            ->select('bs.service_date', 'bs.start_time', 'bs.end_time')
+            ->get()
+            ->groupBy('service_date');
+    }
+
+    /**
      * Toggle bookmark for a provider
      */
     public function toggleBookmark(int $userId, int $providerId)

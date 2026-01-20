@@ -48,6 +48,12 @@ class ProviderController extends BaseController
         return $this->sendResponse($result, 'Provider profile.');
     }
 
+    public function bookedSlots(string $id)
+    {
+        $slots = $this->providerRepo->getBookedSlots((int) $id);
+        return $this->sendResponse($slots, 'Provider booked slots.');
+    }
+
     public function toggle(Request $request)
     {
 
