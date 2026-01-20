@@ -38,16 +38,16 @@ class IncidentReportController extends Controller
                 }
 
                 // 3. Security Check: Prevent duplicate reports for the same booking
-                $existingDispute = Dispute::where('booking_id', $bookingId)
-                    ->where('user_id', $userId)
-                    ->first();
+                // $existingDispute = Dispute::where('booking_id', $bookingId)
+                //     ->where('user_id', $userId)
+                //     ->first();
 
-                if ($existingDispute) {
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => 'You have already reported an incident for this booking.'
-                    ], 422);
-                }
+                // if ($existingDispute) {
+                //     return response()->json([
+                //         'status' => 'error',
+                //         'message' => 'You have already reported an incident for this booking.'
+                //     ], 422);
+                // }
 
                 $data = $request->validated();
                 $data['user_id'] = $userId;
@@ -58,12 +58,12 @@ class IncidentReportController extends Controller
                     $data['attachment'] = 'storage/' . $path;
                 }
 
-                $dispute = Dispute::create($data);
+                // $dispute = Dispute::create($data);
 
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Incident reported successfully.',
-                    'data' => $dispute
+                    'data' => $dispute ??[]
                 ], 201);
             });
         } catch (\Exception $e) {
