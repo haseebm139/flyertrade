@@ -145,8 +145,7 @@ class BookingService
         // Persist booking + slots
         return DB::transaction(function () use ($data, $totalMinutes,$providerHasService) {
             // Calculate service charges dynamically based on admin settings
-            // $percentage = (float) \App\Models\Setting::get('service_charge_percentage', 25);
-            $percentage = (float) 25;
+            $percentage = (float) \App\Models\Setting::get('service_charge_percentage', 25); 
             $serviceCharges = ($data['total_price'] * $percentage) / 100;
               
             $booking = Booking::create([

@@ -57,8 +57,7 @@ class BookingController extends BaseController
                 $extensionPrice = $request->input('price');
 
                 // Calculate service charges based on the provided price
-                // $commissionPercentage = (float) Setting::get('service_charge_percentage', 25) ;
-                $commissionPercentage = (float) 25;
+                $commissionPercentage = (float) Setting::get('service_charge_percentage', 25) ; 
                 $serviceCharges = ($extensionPrice * $commissionPercentage) / 100;
 
                 // Update the booking

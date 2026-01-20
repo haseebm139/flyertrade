@@ -13,7 +13,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        
+        // 1. Global Data (Countries, States, Cities, Flags, Currencies)
+        $this->call(GlobalLocationSeeder::class);
+
         // 2. Roles and Permissions
         $this->call(PermissionSeeder::class);
         
@@ -22,7 +24,5 @@ class DatabaseSeeder extends Seeder
         
         // 4. Testing Data (Users, Services, Bookings)
         $this->call(TestingFlowSeeder::class);
-        // 1. Global Data (Countries, Cities, Flags, Currencies)
-        $this->call(GlobalLocationSeeder::class);
     }
 }
