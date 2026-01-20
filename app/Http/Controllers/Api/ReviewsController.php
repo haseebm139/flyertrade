@@ -118,9 +118,19 @@ class ReviewsController extends BaseController
         // Pagination
         $perPage = $request->get('per_page', 10);
         $reviews = $query->paginate($perPage);
+
+        // Calculate average rating for the provider/query
+        // We'll use a separate query to get the average based on the same base conditions
+        $avgRating = (float) Review::where('receiver_id', $provider->id)
+            ->where('status', 'published')
+            ->when($request->has('service_id'), function ($q) use ($request) {
+                return $q->where('service_id', $request->service_id);
+            })
+            ->avg('rating') ?? 0;
          
         return $this->sendResponse([
             'reviews' => $reviews->items(),
+            'average_rating' => round($avgRating, 2),
             'pagination' => [
                 'current_page' => $reviews->currentPage(),
                 'last_page' => $reviews->lastPage(),
