@@ -134,6 +134,14 @@ class AuthController extends BaseController
             'user_type' => $role,
             'password'  => Hash::make($request->password ?? $request->social_id),
             'phone'     => $request->phone ?? null,
+            'latitude'  => $request->latitude ?? null,
+            'longitude' => $request->longitude ?? null,
+            'country'   => $request->country ?? null,
+            'city'      => $request->city ?? null,
+            'state'     => $request->state ?? null,
+            'zip'       => $request->zip ?? null,
+            'address'   => $request->address ?? null,
+            
         ];
 
         $user = User::create($data);
