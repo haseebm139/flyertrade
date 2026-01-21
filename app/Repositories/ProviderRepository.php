@@ -293,13 +293,22 @@ class ProviderRepository
      */
     public function getBookedSlots(int $providerId)
     {
-        return DB::table('booking_slots as bs')
+        $bookedSlots = DB::table('booking_slots as bs')
             ->join('bookings as b', 'b.id', '=', 'bs.booking_id')
             ->where('b.provider_id', $providerId)
             ->whereIn('b.status', ['awaiting_provider', 'confirmed', 'in_progress'])
             ->select('bs.service_date', 'bs.start_time', 'bs.end_time')
             ->get()
             ->groupBy('service_date');
+
+        $workingHours = \App\Models\ProviderWorkingHour::where('user_id', $providerId)
+            ->where('is_active', true)
+            ->get(['day', 'start_time', 'end_time']);
+
+        return [
+            'booked_slots' => $bookedSlots,
+            'working_hours' => $workingHours
+        ];
     }
 
     /**
