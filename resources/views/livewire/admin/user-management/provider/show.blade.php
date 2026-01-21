@@ -23,7 +23,7 @@
             position: relative;
             padding-bottom: 20px !important;
         }
-        
+
         #photos-swiper .swiper-wrapper,
         #videos-swiper .swiper-wrapper {
             display: flex !important;
@@ -36,6 +36,7 @@
             height: 147px !important;
             margin-right: 15px;
         }
+
         #photos-swiper .swiper-slide img {
             width: 194px !important;
             height: 147px !important;
@@ -79,6 +80,7 @@
             height: 147px !important;
             margin-right: 15px;
         }
+
         #videos-swiper .custom-video {
             width: 100% !important;
             height: 100% !important;
@@ -101,7 +103,7 @@
             width: 30px !important;
             height: 30px !important;
             border-radius: 50%;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             color: #004e42 !important;
         }
 
@@ -138,7 +140,7 @@
         .custom-progress {
             flex-grow: 1;
             height: 4px;
-            background: rgba(255,255,255,0.3);
+            background: rgba(255, 255, 255, 0.3);
             margin: 0 10px;
             cursor: pointer;
             border-radius: 2px;
@@ -193,15 +195,19 @@
         .service-details-theme {
             display: flex;
             justify-content: center;
-            align-items: flex-start !important; /* Align to top for scrolling */
-            padding: 2vw 0; /* Space at top and bottom */
+            align-items: flex-start !important;
+            /* Align to top for scrolling */
+            padding: 2vw 0;
+            /* Space at top and bottom */
             min-height: 100%;
-            position: relative !important; /* Allow container to handle fixed positioning */
+            position: relative !important;
+            /* Allow container to handle fixed positioning */
             background: transparent !important;
         }
 
         .service-details-theme .modal-content {
-            max-height: none !important; /* Remove inner scroll */
+            max-height: none !important;
+            /* Remove inner scroll */
             overflow-y: visible !important;
             margin-bottom: 2vw;
         }
@@ -774,7 +780,8 @@
                                     Your browser does not support the video tag.
                                 </video>
                                 <div class="custom-controls" style="z-index: 10; pointer-events: none;">
-                                    <div class="custom-btn play-btn" style="pointer-events: auto;" onclick="window.toggleVideo(this)">▶</div>
+                                    <div class="custom-btn play-btn" style="pointer-events: auto;"
+                                        onclick="window.toggleVideo(this)">▶</div>
                                     <div class="custom-progress" style="pointer-events: auto;">
                                         <input type="range" class="progress-bar" value="0" max="100">
                                     </div>
@@ -818,7 +825,7 @@
         // Global functions for modal - Move outside to ensure they load immediately
         window.toggleVideo = function(el) {
             console.log("Click detected! Function toggleVideo started.");
-            
+
             // Handle different click targets (btn or video)
             const container = el.closest('.video-container');
             if (!container) {
@@ -833,12 +840,12 @@
                 console.error("Video element not found");
                 return;
             }
-            
+
             if (video.dataset.processing === 'true') {
                 console.warn("Video is already processing...");
                 return;
             }
-            
+
             video.dataset.processing = 'true';
 
             if (video.paused) {
