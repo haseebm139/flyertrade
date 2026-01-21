@@ -6,15 +6,18 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Repositories\ProviderRepository;
+use App\Services\Booking\BookingService;
 use App\Http\Controllers\Api\BaseController;
 use Illuminate\Support\Facades\Validator;
 class ProviderController extends BaseController
 {
     protected $providerRepo;
+    protected $bookingService;
 
-    public function __construct(ProviderRepository $providerRepo)
+    public function __construct(ProviderRepository $providerRepo, BookingService $bookingService)
     {
         $this->providerRepo = $providerRepo;
+        $this->bookingService = $bookingService;
     }
 
 
@@ -52,6 +55,58 @@ class ProviderController extends BaseController
     {
         $slots = $this->providerRepo->getBookedSlots((int) $id);
         return $this->sendResponse($slots, 'Provider booked slots.');
+    }
+
+    public function bookedSlotsMe()
+    {
+        $slots = $this->providerRepo->getBookedSlots(auth()->id());
+        return $this->sendResponse($slots, 'Your booked slots.');
+    }
+
+    public function checkAvailability(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'slots' => 'required|array|min:1',
+            'slots.*.service_date' => 'required|date_format:Y-m-d',
+            'slots.*.start_time' => 'required|date_format:H:i',
+            'slots.*.end_time' => 'required|date_format:H:i|after:slots.*.start_time',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), 422);
+        }
+
+        foreach ($request->slots as $slot) {
+            $status = $this->bookingService->checkAvailability($slot, (int)$id);
+            if ($status !== 'available') {
+                return $this->sendError("Provider is not available on {$slot['service_date']} between {$slot['start_time']} - {$slot['end_time']}.", 422);
+            }
+        }
+
+        return $this->sendResponse(true, 'Provider is available for the selected slots.');
+    }
+
+    public function checkAvailabilityMe(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'slots' => 'required|array|min:1',
+            'slots.*.service_date' => 'required|date_format:Y-m-d',
+            'slots.*.start_time' => 'required|date_format:H:i',
+            'slots.*.end_time' => 'required|date_format:H:i|after:slots.*.start_time',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), 422);
+        }
+
+        foreach ($request->slots as $slot) {
+            $status = $this->bookingService->checkAvailability($slot, auth()->id());
+            if ($status !== 'available') {
+                return $this->sendError("You are not available on {$slot['service_date']} between {$slot['start_time']} - {$slot['end_time']}.", 422);
+            }
+        }
+
+        return $this->sendResponse(true, 'You are available for the selected slots.');
     }
 
     public function toggle(Request $request)

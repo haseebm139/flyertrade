@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\Api\Provider\{ProfileController,ProviderServiceController,BookingController as ProviderBookingActionController,ChatController,PayoutController};
+use App\Http\Controllers\Api\Customer\ProviderController;
 use App\Http\Controllers\Api\PaymentController;
 
 Route::middleware('auth:sanctum')->controller(ProviderBookingActionController::class)->prefix('booking')->group(function () {
@@ -14,7 +15,7 @@ Route::middleware('auth:sanctum')->controller(ProviderBookingActionController::c
     Route::get('provider/completed', 'completed');
     Route::get('provider/pending', 'pending');
     Route::get('provider/total-amount', 'totalAmount');
-
+    Route::get('provider/booked-slots', [ProviderController::class, 'bookedSlotsMe']);
 });
 Route::prefix('provider')->group(function () {
 

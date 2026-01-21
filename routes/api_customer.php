@@ -37,6 +37,8 @@ Route::prefix('customer')->group(function () {
             Route::get('/providers/services/{service_id}', 'providersByServices');
             Route::get('/providers/{provider}', 'show');
             Route::get('/providers/{provider}/booked-slots', 'bookedSlots');
+            Route::post('/providers/{provider}/check-availability', 'checkAvailability');
+            Route::post('/check-availability-me', 'checkAvailabilityMe');
             Route::get('/bookmarks', 'bookmarks');
             Route::post('/bookmarks', 'toggle');
         });
