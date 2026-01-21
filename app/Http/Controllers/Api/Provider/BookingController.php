@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Booking;
 use App\Services\Booking\BookingService;
 use Illuminate\Http\JsonResponse;
+use Validator;
 use App\Http\Controllers\Api\BaseController;
 class BookingController extends BaseController
 {
@@ -23,6 +24,48 @@ class BookingController extends BaseController
             return $this->sendError($updated['message']);
         }
         return $this->sendResponse($updated, 'Booking accepted successfully.'); 
+    }
+
+    public function directStore(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'provider_id' => 'required|exists:users,id',
+            'customer_id' => 'required|exists:users,id',
+            'service_id' => 'required|exists:services,id', 
+            'booking_address' => 'nullable|string|max:255',
+            'booking_description' => 'nullable|string',
+            'total_price' => 'required|numeric|min:0',
+            'currency' => 'nullable|string|size:3',
+            'slots' => 'required|array|min:1',
+            'slots.*.service_date' => 'required|date_format:Y-m-d',
+            'slots.*.start_time' => 'required|date_format:H:i',
+            'slots.*.end_time' => 'required|date_format:H:i|after:slots.*.start_time',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), 422);
+        }
+
+        $data = $validator->validated();
+
+        // Use customer's address if booking_address is not provided
+        if (empty($data['booking_address'])) {
+            $customer = \App\Models\User::find($data['customer_id']);
+            $data['booking_address'] = $customer ? ($customer->address ?? 'Direct Booking') : 'Direct Booking';
+        }
+
+        try {
+            $result = $this->bookings->directCreate($data);
+            
+            if ($result['error']) {
+                return $this->sendError($result['message'], 422);
+            }
+
+            return $this->sendResponse($result['booking'], 'Direct booking created and accepted successfully.');
+        } catch (\Exception $e) {
+            Log::error('Direct booking failed: ' . $e->getMessage());
+            return $this->sendError('Failed to create direct booking.', 500);
+        }
     }
 
     public function reject(Request $request, $id): JsonResponse

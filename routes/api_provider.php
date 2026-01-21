@@ -7,6 +7,7 @@ Route::middleware('auth:sanctum')->controller(ProviderBookingActionController::c
     Route::post('{booking}/reject', 'reject');
     Route::post('{booking}/complete', 'complete');
     Route::post('{booking}/start', 'start'); 
+    Route::post('provider/direct-store', 'directStore'); // Direct create & accept without payment
     Route::get('provider/job', 'job');
     Route::get('provider/upcoming', 'upcoming');
     Route::get('provider/ongoing', 'ongoing');

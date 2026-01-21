@@ -192,6 +192,92 @@ class BookingService
         });
     }
 
+    public function directCreate(array $data)
+    {
+        return DB::transaction(function () use ($data) {
+            // 1. Check if provider offers the service
+            $providerService = ProviderService::where('user_id', $data['provider_id'])
+                ->where('service_id', $data['service_id'])
+                ->first();
+
+            // if (!$providerService) {
+            //     return ['error' => true, 'message' => 'Provider does not offer this service.'];
+            // }
+
+            // 2. Calculate total minutes and check slot conflicts
+            $totalMinutes = 0;
+            foreach ($data['slots'] as $slot) {
+                $start = Carbon::createFromFormat('H:i', $slot['start_time']);
+                $end = Carbon::createFromFormat('H:i', $slot['end_time']);
+                $duration = $start->diffInMinutes($end);
+
+                if ($duration <= 0) {
+                    return ['error' => true, 'message' => 'Invalid slot duration for ' . $slot['service_date']];
+                }
+
+                $totalMinutes += $duration;
+
+                // Check for conflicts with other bookings
+                // $hasConflict = DB::table('booking_slots as bs')
+                //     ->join('bookings as b', 'b.id', '=', 'bs.booking_id')
+                //     ->where("b.provider_id", $data['provider_id'])
+                //     ->whereIn('b.status', ['awaiting_provider', 'confirmed', 'in_progress'])
+                //     ->whereDate('bs.service_date', $slot['service_date'])
+                //     ->where(function ($q) use ($slot) {
+                //         $q->where('bs.start_time', '<', $slot['end_time'])
+                //             ->where('bs.end_time', '>', $slot['start_time']);
+                //     })
+                //     ->exists();
+
+                // if ($hasConflict) {
+                //     return ['error' => true, 'message' => "Provider is already booked on {$slot['service_date']} between {$slot['start_time']} - {$slot['end_time']}."];
+                // }
+            }
+
+            // 3. Calculate service charges (admin commission)
+            $percentage = (float) Setting::get('service_charge_percentage', 25);
+            $serviceCharges = ($data['total_price'] * $percentage) / 100;
+
+            // 4. Create the booking with 'confirmed' status
+            $booking = Booking::create([
+                'booking_ref' => $this->makeRef(),
+                'customer_id' => $data['customer_id'],
+                'provider_id' => $data['provider_id'],
+                'service_id' => $data['service_id'],
+                'provider_service_id' => $providerService ? $providerService->id : null,
+                'booking_address' => $data['booking_address'],
+                'booking_description' => $data['booking_description'] ?? null,
+                'status' => 'confirmed', // Automatically accepted
+                'booking_type' => 'custom',
+                'booking_working_minutes' => $totalMinutes,
+                'total_price' => $data['total_price'],
+                'service_charges' => $serviceCharges,
+                'confirmed_at' => now(),
+                'expires_at' => now()->addHours(2), // Standard expiry
+            ]);
+
+            // 5. Create slots
+            foreach ($data['slots'] as $slot) {
+                BookingSlot::create([
+                    'booking_id' => $booking->id,
+                    'service_date' => $slot['service_date'],
+                    'start_time' => $slot['start_time'],
+                    'end_time' => $slot['end_time'],
+                    'duration_minutes' => Carbon::createFromFormat('H:i', $slot['start_time'])
+                        ->diffInMinutes(Carbon::createFromFormat('H:i', $slot['end_time'])),
+                ]);
+            }
+
+            $booking = $booking->load('slots', 'customer', 'provider', 'providerService.service');
+
+            // 6. Notify both parties
+            $this->notificationService->notifyBookingCreated($booking);
+            $this->notificationService->notifyBookingConfirmed($booking);
+
+            return ['error' => false, 'booking' => $booking];
+        });
+    }
+
     public function accept(Booking $booking) 
     {
         if ($booking->status !== 'awaiting_provider') {
