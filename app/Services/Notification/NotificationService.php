@@ -6,9 +6,26 @@ use App\Models\Notification;
 use App\Models\User;
 use App\Helpers\NotificationIcon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use App\Services\FirebaseService;
 
 class NotificationService
 {
+    protected $firebaseService;
+
+    public function __construct(FirebaseService $firebaseService)
+    {
+        $this->firebaseService = $firebaseService;
+    }
+
+    /**
+     * Send FCM push notification (Legacy method kept for compatibility or internal use)
+     */
+    public function sendPushNotification($fcmToken, $title, $message, array $data = [])
+    {
+        return $this->firebaseService->sendToToken($fcmToken, $title, $message, $data);
+    }
+
     /**
      * Send notification to a single user
      *
@@ -32,7 +49,7 @@ class NotificationService
         ?string $icon = null,
         ?string $category = null
     ): Notification {
-        return Notification::create([
+        $notification = Notification::create([
             'user_id' => $user->id,
             'type' => $type,
             'icon' => $icon ?? NotificationIcon::getIconForType($type),
@@ -44,6 +61,16 @@ class NotificationService
             'notifiable_id' => $notifiable ? $notifiable->id : null,
             'data' => $data,
         ]);
+
+        // Send FCM push notification if user has a token
+        if ($user->fcm_token) {
+            $this->sendPushNotification($user->fcm_token, $title, $message, array_merge($data, [
+                'notification_id' => $notification->id,
+                'type' => $type
+            ]));
+        }
+
+        return $notification;
     }
 
     /**
@@ -86,6 +113,9 @@ class NotificationService
         // Use individual create() instead of bulk insert for better reliability
         foreach ($userIds as $userId) {
             try {
+                $user = User::find($userId);
+                if (!$user) continue;
+
                 $notificationData = [
                     'user_id' => $userId,
                     'type' => $type,
@@ -103,8 +133,16 @@ class NotificationService
                     $notificationData['notifiable_id'] = $notifiableId;
                 }
                 
-                Notification::create($notificationData);
+                $notification = Notification::create($notificationData);
                 $count++;
+
+                // Send FCM push notification if user has a token
+                if ($user->fcm_token) {
+                    $this->sendPushNotification($user->fcm_token, $title, $message, array_merge($data, [
+                        'notification_id' => $notification->id,
+                        'type' => $type
+                    ]));
+                }
             } catch (\Exception $e) {
                 $errors[] = "User ID {$userId}: " . $e->getMessage();
                 \Log::error("Failed to create notification for user {$userId}: " . $e->getMessage());

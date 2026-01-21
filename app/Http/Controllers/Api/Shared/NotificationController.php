@@ -31,6 +31,35 @@ class NotificationController extends BaseController
     }
 
     /**
+     * Test push notification
+     */
+    public function testPush(Request $request): JsonResponse
+    {
+        $validator = \Validator::make($request->all(), [
+            'fcm_token' => 'required|string',
+            'title' => 'nullable|string',
+            'body' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), 422);
+        }
+
+        $token = $request->fcm_token;
+        $title = $request->title ?? 'Test Notification';
+        $body = $request->body ?? 'This is a test push from FlyerTrade API';
+
+        $firebaseService = app(\App\Services\FirebaseService::class);
+        $result = $firebaseService->sendToToken($token, $title, $body, ['test' => 'true']);
+
+        if ($result) {
+            return $this->sendResponse($result, 'Push notification request sent to Google.');
+        }
+
+        return $this->sendError('Failed to send push notification. Check laravel.log for details.', 500);
+    }
+
+    /**
      * Get unread notifications count
      */
     public function unreadCount(): JsonResponse

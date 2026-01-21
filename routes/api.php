@@ -89,6 +89,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Notifications (Shared for Customer and Provider)
     Route::controller(NotificationController::class)->prefix('notifications')->group(function () {
         Route::get('/', 'index');
+        Route::post('/test-push', 'testPush');
         Route::get('/unread-count', 'unreadCount');
         Route::post('/{id}/read', 'markAsRead');
         Route::post('/mark-all-read', 'markAllAsRead');
