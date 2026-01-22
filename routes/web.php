@@ -5,6 +5,18 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
 use App\Http\Controllers\NotificationController;
+use App\Mail\TestEmail;
+use Illuminate\Support\Facades\Mail;
+
+Route::get('/test-email', function () {
+    try {
+        $data = ['message' => 'Hello, this is a test email from Flyertrade!'];
+        Mail::to('haseebm139@gmail.com')->send(new TestEmail($data));
+        return "✅ Email sent successfully to haseebm139@gmail.com!";
+    } catch (\Exception $e) {
+        return "❌ Failed to send email. Error: " . $e->getMessage();
+    }
+});
 
 Route::get('/testing', function () {
     dd('Hello world');
