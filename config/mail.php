@@ -65,7 +65,16 @@ return [
         'resend' => [
             'transport' => 'resend',
         ],
-
+        'sendgrid' => [
+            'transport' => 'smtp',
+            'host' => env('SENDGRID_HOST', 'smtp.sendgrid.net'),
+            'port' => env('SENDGRID_PORT', 587),
+            'encryption' => env('SENDGRID_ENCRYPTION', 'tls'),
+            'username' => env('SENDGRID_USERNAME', 'apikey'),
+            'password' => env('SENDGRID_API_KEY'),
+            'timeout' => null,
+            'local_domain' => env('MAIL_EHLO_DOMAIN'),
+        ],
         'sendmail' => [
             'transport' => 'sendmail',
             'path' => env('MAIL_SENDMAIL_PATH', '/usr/sbin/sendmail -bs -i'),
