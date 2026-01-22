@@ -50,6 +50,17 @@ return [
             'local_domain' => env('MAIL_EHLO_DOMAIN'),
         ],
 
+        'sendgrid' => [
+            'transport' => 'smtp',
+            'host' => env('SENDGRID_HOST', 'smtp.sendgrid.net'),
+            'port' => env('SENDGRID_PORT', 587),
+            'encryption' => env('SENDGRID_ENCRYPTION', 'tls'),
+            'username' => env('SENDGRID_USERNAME', 'apikey'),
+            'password' => env('SENDGRID_API_KEY'),
+            'timeout' => null,
+            'local_domain' => env('MAIL_EHLO_DOMAIN'),
+        ],
+
         'ses' => [
             'transport' => 'ses',
         ],
