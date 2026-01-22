@@ -31,7 +31,7 @@ class UserCredentialsMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new \Illuminate\Mail\Mailables\Address('no-reply@developer.com', 'FlyerTrade'),
+            from: new \Illuminate\Mail\Mailables\Address('haseebm139@gmail.com', 'FlyerTrade'),
             subject: 'Welcome to FlyerTrade - Your Account Credentials',
         );
     }

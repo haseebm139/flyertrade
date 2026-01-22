@@ -29,7 +29,7 @@ class OtpCodeMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new \Illuminate\Mail\Mailables\Address('no-reply@developer.com', 'FlyerTrade'),
+            from: new \Illuminate\Mail\Mailables\Address('haseebm139@gmail.com', 'FlyerTrade'),
             subject: $this->mailData['title'] ?? 'OTP Code Mail',
         );
     }
