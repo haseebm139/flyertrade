@@ -24,6 +24,8 @@ class Table extends Component
     public $showFilterModal = false;
     public $showBookingModal = false;
     public $selectedBooking = null;
+    public $isCardFilter = false;
+    public $activeFilters = [];
 
     // Temporary filter values
     public $tempStatus = '';
@@ -70,6 +72,7 @@ class Table extends Component
     public function applyFilters()
     {
         $this->status = $this->tempStatus;
+        $this->isCardFilter = false;
         $this->fromDate = $this->tempFromDate;
         $this->toDate = $this->tempToDate;
         $this->serviceFilter = $this->tempServiceFilter;
@@ -93,6 +96,7 @@ class Table extends Component
             $this->toDate = '';
         } elseif ($key === 'status') {
             $this->status = '';
+            $this->isCardFilter = false;
         } elseif ($key === 'service') {
             $this->serviceFilter = '';
         } elseif ($key === 'customer') {
@@ -117,7 +121,7 @@ class Table extends Component
             ];
         }
 
-        if ($this->status) {
+        if ($this->status && !$this->isCardFilter) {
             $statusLabels = [
                 'awaiting_provider' => 'Pending',
                 'confirmed' => 'Active',
@@ -209,12 +213,14 @@ class Table extends Component
     }
     
     # -------------------- FILTER MODAL --------------------
-    public function filterByStatus($status = null)
+    public function filterByStatus($status = null, $isCard = false)
     {
-        if (is_array($status) && isset($status['status'])) {
-            $this->status = $status['status'];
+        if (is_array($status)) {
+            $this->isCardFilter = $status['isCard'] ?? false;
+            $this->status = $status['status'] ?? '';
         } else {
             $this->status = $status;
+            $this->isCardFilter = $isCard;
         }
         $this->resetPage();
         $this->dispatch('filtersUpdated', $this->getActiveFilters());
@@ -222,13 +228,13 @@ class Table extends Component
 
     public function clearFilters()
     {
-        $this->reset(['status', 'fromDate', 'toDate', 'serviceFilter', 'customerFilter', 'providerFilter']);
+        $this->reset(['status', 'fromDate', 'toDate', 'serviceFilter', 'customerFilter', 'providerFilter', 'isCardFilter']);
         $this->dispatch('filtersUpdated', $this->getActiveFilters());
     }
 
     public function resetFilters()
     {
-        $this->reset(['status', 'fromDate', 'toDate', 'serviceFilter', 'customerFilter', 'providerFilter', 'tempStatus', 'tempFromDate', 'tempToDate', 'tempServiceFilter', 'tempCustomerFilter', 'tempProviderFilter']);
+        $this->reset(['status', 'fromDate', 'toDate', 'serviceFilter', 'customerFilter', 'providerFilter', 'tempStatus', 'tempFromDate', 'tempToDate', 'tempServiceFilter', 'tempCustomerFilter', 'tempProviderFilter', 'isCardFilter']);
         $this->resetPage();
         $this->closeFilterModal();
         $this->dispatch('filtersUpdated', $this->getActiveFilters());
@@ -270,9 +276,12 @@ class Table extends Component
     {
         $data = $this->getDataQuery()
             ->paginate($this->perPage);
-        $activeFilters = $this->getActiveFilters();
+        $this->activeFilters = $this->getActiveFilters();
 
-        return view('livewire.admin.bookings.table', compact('data', 'activeFilters'));
+        return view('livewire.admin.bookings.table', [
+            'data' => $data,
+            'activeFilters' => $this->activeFilters
+        ]);
     }
 
     public function exportCsv()

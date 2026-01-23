@@ -79,7 +79,8 @@
 
             // Dispatch Livewire event to filter the table
             Livewire.dispatch('filterByStatus', {
-                status: status
+                status: status,
+                isCard: true
             });
         }
 
@@ -93,7 +94,8 @@
 
             // Dispatch Livewire event to show all bookings
             Livewire.dispatch('filterByStatus', {
-                status: ''
+                status: '',
+                isCard: false
             });
         }
     </script>
