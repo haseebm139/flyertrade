@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Mail;
 
 Route::get('/test-email', function () {
     try {
+        // dd( $serviceAccountPath = storage_path('firebase/firebase_credentials.json'));
         $data = ['message' => 'Hello, this is a test email from Flyertrade!'];
         Mail::to('haseebm139@gmail.com')->send(new TestEmail($data));
         return "✅ Email sent successfully to haseebm139@gmail.com!";

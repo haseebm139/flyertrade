@@ -13,7 +13,7 @@ class FirebaseService
 
     public function __construct()
     {
-        $serviceAccountPath = storage_path('firebase/firebase_credentials.json');
+        $serviceAccountPath = env('FIREBASE_CREDENTIALS', storage_path('firebase/firebase_credentials.json'));
         
         if (file_exists($serviceAccountPath)) {
             $factory = (new Factory)->withServiceAccount($serviceAccountPath);

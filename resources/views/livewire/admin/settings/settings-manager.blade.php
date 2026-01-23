@@ -2,24 +2,31 @@
     <div class="row">
         <div class="col-md-2">
             <div class="tabs-vertical-wrapper">
-                <div class="tab roles-permission-theme-tabs {{ $activeTab === 'general' ? 'active' : '' }}" wire:click="switchTab('general')">General</div>
-                <div class="tab roles-permission-theme-tabs {{ $activeTab === 'financial' ? 'active' : '' }}" wire:click="switchTab('financial')">Financial</div>
-                <div class="tab roles-permission-theme-tabs {{ $activeTab === 'notification' ? 'active' : '' }}" wire:click="switchTab('notification')">Notification</div>
-                <div class="tab roles-permission-theme-tabs {{ $activeTab === 'system' ? 'active' : '' }}" wire:click="switchTab('system')">System Log & Audits</div>
-                <div class="tab roles-permission-theme-tabs {{ $activeTab === 'admin' ? 'active' : '' }}" wire:click="switchTab('admin')">Admin Management</div>
-                <div class="tab roles-permission-theme-tabs {{ $activeTab === 'onboarding' ? 'active' : '' }}" wire:click="switchTab('onboarding')">Onboarding</div>
-                <div class="tab roles-permission-theme-tabs {{ $activeTab === 'content' ? 'active' : '' }}" wire:click="switchTab('content')">Content Moderation</div>
+                <div class="tab roles-permission-theme-tabs {{ $activeTab === 'general' ? 'active' : '' }}"
+                    wire:click="switchTab('general')">General</div>
+                <div class="tab roles-permission-theme-tabs {{ $activeTab === 'financial' ? 'active' : '' }}"
+                    wire:click="switchTab('financial')">Financial</div>
+                <div class="tab roles-permission-theme-tabs {{ $activeTab === 'notification' ? 'active' : '' }}"
+                    wire:click="switchTab('notification')">Notification</div>
+                <div class="tab roles-permission-theme-tabs {{ $activeTab === 'system' ? 'active' : '' }}"
+                    wire:click="switchTab('system')">System Log & Audits</div>
+                <div class="tab roles-permission-theme-tabs {{ $activeTab === 'admin' ? 'active' : '' }}"
+                    wire:click="switchTab('admin')">Admin Management</div>
+                <div class="tab roles-permission-theme-tabs {{ $activeTab === 'onboarding' ? 'active' : '' }}"
+                    wire:click="switchTab('onboarding')">Onboarding</div>
+                <div class="tab roles-permission-theme-tabs {{ $activeTab === 'content' ? 'active' : '' }}"
+                    wire:click="switchTab('content')">Content Moderation</div>
             </div>
         </div>
         <div class="col-md-10">
-            @if($activeTab === 'general')
+            @if ($activeTab === 'general')
                 <div id="general" class="tab-content active">
                     <h3>General</h3>
                     <p>General information and settings content goes here.</p>
                 </div>
             @endif
 
-            @if($activeTab === 'financial')
+            @if ($activeTab === 'financial')
                 <div id="financial" class="tab-content active">
                     <div class="setting-wrapper">
                         <div class="charge-col">
@@ -29,22 +36,27 @@
                             @endphp
                             <div class="country-dropdown">
                                 <button type="button" class="country-select" onclick="toggleCountryDropdown(this)">
-                                    @if($selectedCountry && $selectedCountry->flag_url)
-                                        <img src="{{ asset($selectedCountry->flag_url) }}" alt="" class="country-flag">
+                                    @if ($selectedCountry && $selectedCountry->flag_url)
+                                        <img src="{{ asset($selectedCountry->flag_url) }}" alt=""
+                                            class="country-flag">
+                                        <span>{{ $selectedCountry->name ?? 'Select Country' }}</span>
+                                    @else
+                                        <span>{{ $selectedCountry->name ?? 'Select Country' }}</span>
                                     @endif
-                                    <span>{{ $selectedCountry->name ?? 'Select Country' }}</span>
                                     <i class="fa-solid fa-chevron-down"></i>
                                 </button>
                                 <div class="country-list">
-                                    <button type="button" class="country-item"
-                                        wire:click="$set('country_id', '')" onclick="closeCountryDropdown(this)">
+                                    <button type="button" class="country-item" wire:click="$set('country_id', '')"
+                                        onclick="closeCountryDropdown(this)">
                                         <span>Select Country</span>
                                     </button>
-                                    @foreach($countries as $country)
+                                    @foreach ($countries as $country)
                                         <button type="button" class="country-item"
-                                            wire:click="$set('country_id', {{ $country->id }})" onclick="closeCountryDropdown(this)">
-                                            @if($country->flag_url)
-                                                <img src="{{ asset($country->flag_url) }}" alt="" class="country-flag">
+                                            wire:click="$set('country_id', {{ $country->id }})"
+                                            onclick="closeCountryDropdown(this)">
+                                            @if ($country->flag_url)
+                                                <img src="{{ asset($country->flag_url) }}" alt=""
+                                                    class="country-flag">
                                             @endif
                                             <span>{{ $country->name }}</span>
                                         </button>
@@ -71,7 +83,8 @@
                     <div class="setting-wrapper">
                         <div class="charge-col">
                             <label class="charge-label">Commission Fee (%)</label>
-                            <input type="number" wire:model="commission_fee" class="charge-input" placeholder="Enter commission fee" />
+                            <input type="number" wire:model="commission_fee" class="charge-input"
+                                placeholder="Enter commission fee" />
                         </div>
                     </div>
                     <br />
@@ -82,7 +95,7 @@
                 </div>
             @endif
 
-            @if($activeTab === 'notification')
+            @if ($activeTab === 'notification')
                 <div id="notification" class="tab-content active">
                     <div class="setting-wrapper">
                         <h2 style="font-size: 1.042vw;">Global notification toggle</h2>
@@ -116,28 +129,28 @@
                 </div>
             @endif
 
-            @if($activeTab === 'system')
+            @if ($activeTab === 'system')
                 <div id="system" class="tab-content active">
                     <h3>System Log & Audits</h3>
                     <p>Audit trails and system logs will be displayed here.</p>
                 </div>
             @endif
 
-            @if($activeTab === 'admin')
+            @if ($activeTab === 'admin')
                 <div id="admin" class="tab-content active">
                     <h3>Admin Management</h3>
                     <p>Manage admin users, roles, and permissions here.</p>
                 </div>
             @endif
 
-            @if($activeTab === 'onboarding')
+            @if ($activeTab === 'onboarding')
                 <div id="onboarding" class="tab-content active">
                     <h3>Onboarding</h3>
                     <p>Onboarding settings content goes here.</p>
                 </div>
             @endif
 
-            @if($activeTab === 'content')
+            @if ($activeTab === 'content')
                 <div id="content" class="tab-content active">
                     <h3>Content Moderation</h3>
                     <p>Moderate user content and submissions in this section.</p>
@@ -150,6 +163,7 @@
         .country-dropdown {
             position: relative;
         }
+
         .country-select {
             display: flex;
             align-items: center;
@@ -162,12 +176,21 @@
             font-size: 1vw;
             justify-content: space-between;
         }
+
         .country-select .country-flag {
-            width: 20px;
-            height: 14px;
+            width: 1.042vw;
+            height: 1.042vw;
             object-fit: cover;
-            border-radius: 2px;
+            border-radius: 50%;
         }
+
+        .country-flag img {
+            width: 1.042vw;
+            height: 1.042vw;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
         .country-list {
             position: absolute;
             top: calc(100% + 6px);
@@ -181,9 +204,11 @@
             display: none;
             z-index: 10;
         }
+
         .country-dropdown.open .country-list {
             display: block;
         }
+
         .country-item {
             width: 100%;
             display: flex;
@@ -195,6 +220,7 @@
             text-align: left;
             font-size: 0.95vw;
         }
+
         .country-item:hover {
             background: #f5f5f5;
         }
@@ -218,7 +244,7 @@
             }
         }
 
-        document.addEventListener('click', function (e) {
+        document.addEventListener('click', function(e) {
             if (!e.target.closest('.country-dropdown')) {
                 document.querySelectorAll('.country-dropdown.open').forEach(el => el.classList.remove('open'));
             }
