@@ -64,29 +64,47 @@
             <h1>Terms and Conditions</h1>
             <p>Last updated: {{ date('F d, Y') }}</p>
 
-            <h2>1. Agreement to Terms</h2>
-            <p>By accessing or using Flyertrade, you agree to be bound by these terms and conditions. If you disagree with any part of these terms, you may not access the service.</p>
+            @php
+                $terms = [
+                    [
+                        'title' => 'Agreement to Terms',
+                        'body' => \App\Models\Setting::get('onboarding_terms_agreement', 'By accessing or using Flyertrade, you agree to be bound by these terms and conditions. If you disagree with any part of these terms, you may not access the service.'),
+                    ],
+                    [
+                        'title' => 'Use of Service',
+                        'body' => \App\Models\Setting::get('onboarding_terms_use', 'You agree to use our service only for lawful purposes and in accordance with these terms. You are responsible for maintaining the confidentiality of your account and password.'),
+                    ],
+                    [
+                        'title' => 'Intellectual Property',
+                        'body' => \App\Models\Setting::get('onboarding_terms_ip', 'The service and its original content, features, and functionality are and will remain the exclusive property of Flyertrade and its licensors.'),
+                    ],
+                    [
+                        'title' => 'Termination',
+                        'body' => \App\Models\Setting::get('onboarding_terms_termination', 'We may terminate or suspend your account immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the terms.'),
+                    ],
+                    [
+                        'title' => 'Limitation of Liability',
+                        'body' => \App\Models\Setting::get('onboarding_terms_liability', 'In no event shall Flyertrade, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages.'),
+                    ],
+                    [
+                        'title' => 'Governing Law',
+                        'body' => \App\Models\Setting::get('onboarding_terms_law', 'These terms shall be governed and construed in accordance with the laws of our operating jurisdiction, without regard to its conflict of law provisions.'),
+                    ],
+                    [
+                        'title' => 'Changes to Terms',
+                        'body' => \App\Models\Setting::get('onboarding_terms_changes', "We reserve the right, at our sole discretion, to modify or replace these terms at any time. We will provide at least 30 days' notice prior to any new terms taking effect."),
+                    ],
+                    [
+                        'title' => 'Contact Us',
+                        'body' => \App\Models\Setting::get('onboarding_terms_contact', 'If you have any questions about these terms, please contact us at: support@flyertrade.com'),
+                    ],
+                ];
+            @endphp
 
-            <h2>2. Use of Service</h2>
-            <p>You agree to use our service only for lawful purposes and in accordance with these terms. You are responsible for maintaining the confidentiality of your account and password.</p>
-
-            <h2>3. Intellectual Property</h2>
-            <p>The service and its original content, features, and functionality are and will remain the exclusive property of Flyertrade and its licensors.</p>
-
-            <h2>4. Termination</h2>
-            <p>We may terminate or suspend your account immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the terms.</p>
-
-            <h2>5. Limitation of Liability</h2>
-            <p>In no event shall Flyertrade, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages.</p>
-
-            <h2>6. Governing Law</h2>
-            <p>These terms shall be governed and construed in accordance with the laws of our operating jurisdiction, without regard to its conflict of law provisions.</p>
-
-            <h2>7. Changes to Terms</h2>
-            <p>We reserve the right, at our sole discretion, to modify or replace these terms at any time. We will provide at least 30 days' notice prior to any new terms taking effect.</p>
-
-            <h2>8. Contact Us</h2>
-            <p>If you have any questions about these terms, please contact us at: support@flyertrade.com</p>
+            @foreach ($terms as $index => $term)
+                <h2>{{ $index + 1 }}. {{ $term['title'] }}</h2>
+                <p>{!! nl2br(e($term['body'])) !!}</p>
+            @endforeach
         </div>
     </body>
 </html>

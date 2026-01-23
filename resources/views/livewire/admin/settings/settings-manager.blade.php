@@ -143,48 +143,6 @@
                         <button type="button" class="submit-btn" wire:click="saveFinancial">Save
                             Changes</button>
                     </div>
-                    <div class="setting-wrapper" style="margin-top: 1.2vw;">
-                        <h2 class="settings-section-title">Terms & Conditions</h2>
-                        @php
-                            $termsItems = [
-                                ['key' => 'terms_agreement', 'label' => 'Agreement to Terms', 'value' => $onboarding_terms_agreement],
-                                ['key' => 'terms_use', 'label' => 'Use of Service', 'value' => $onboarding_terms_use],
-                                ['key' => 'terms_ip', 'label' => 'Intellectual Property', 'value' => $onboarding_terms_ip],
-                                ['key' => 'terms_termination', 'label' => 'Termination', 'value' => $onboarding_terms_termination],
-                                ['key' => 'terms_liability', 'label' => 'Limitation of Liability', 'value' => $onboarding_terms_liability],
-                                ['key' => 'terms_law', 'label' => 'Governing Law', 'value' => $onboarding_terms_law],
-                                ['key' => 'terms_changes', 'label' => 'Changes to Terms', 'value' => $onboarding_terms_changes],
-                                ['key' => 'terms_contact', 'label' => 'Contact Us', 'value' => $onboarding_terms_contact],
-                            ];
-                        @endphp
-                        <div class="onboarding-card">
-                            @foreach ($termsItems as $index => $item)
-                                <div class="onboarding-row">
-                                    <div class="onboarding-row-header">
-                                        <h4>{{ $index + 1 }}. {{ $item['label'] }}</h4>
-                                        <div class="onboarding-actions">
-                                            @if ($onboardingEditingKey === $item['key'])
-                                                <button class="view-btn" wire:click="saveOnboarding">Save</button>
-                                                <button class="view-btn cancel-btn-sm" wire:click="cancelOnboarding">Cancel</button>
-                                            @else
-                                                <button class="view-btn" wire:click="editOnboarding('{{ $item['key'] }}')">
-                                                    <img class="icons-btn" src="{{ asset('assets/images/icons/edit.svg') }}" alt="">  <span class="edit-text">Edit</span>
-                                                </button>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    @if ($onboardingEditingKey === $item['key'])
-                                        <textarea class="onboarding-textarea" rows="4"
-                                            wire:model="onboardingEditingValue"></textarea>
-                                    @else
-                                        <p class="onboarding-text">
-                                            {{ $item['value'] ?: 'Add details here.' }}
-                                        </p>
-                                    @endif
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
                 </div>
             @endif
 
@@ -598,6 +556,48 @@
                                     </p>
                                 @endif
                             </div>
+                        </div>
+                    </div>
+                    <div class="setting-wrapper" style="margin-top: 1.2vw;">
+                        <h2 class="settings-section-title">Terms & Conditions</h2>
+                        @php
+                            $termsItems = [
+                                ['key' => 'terms_agreement', 'label' => 'Agreement to Terms', 'value' => $onboarding_terms_agreement],
+                                ['key' => 'terms_use', 'label' => 'Use of Service', 'value' => $onboarding_terms_use],
+                                ['key' => 'terms_ip', 'label' => 'Intellectual Property', 'value' => $onboarding_terms_ip],
+                                ['key' => 'terms_termination', 'label' => 'Termination', 'value' => $onboarding_terms_termination],
+                                ['key' => 'terms_liability', 'label' => 'Limitation of Liability', 'value' => $onboarding_terms_liability],
+                                ['key' => 'terms_law', 'label' => 'Governing Law', 'value' => $onboarding_terms_law],
+                                ['key' => 'terms_changes', 'label' => 'Changes to Terms', 'value' => $onboarding_terms_changes],
+                                ['key' => 'terms_contact', 'label' => 'Contact Us', 'value' => $onboarding_terms_contact],
+                            ];
+                        @endphp
+                        <div class="onboarding-card">
+                            @foreach ($termsItems as $index => $item)
+                                <div class="onboarding-row">
+                                    <div class="onboarding-row-header">
+                                        <h4> {{ $item['label'] }}</h4>
+                                        <div class="onboarding-actions">
+                                            @if ($onboardingEditingKey === $item['key'])
+                                                <button class="view-btn" wire:click="saveOnboarding">Save</button>
+                                                <button class="view-btn cancel-btn-sm" wire:click="cancelOnboarding">Cancel</button>
+                                            @else
+                                                <button class="view-btn" wire:click="editOnboarding('{{ $item['key'] }}')">
+                                                    <img class="icons-btn" src="{{ asset('assets/images/icons/edit.svg') }}" alt="">  <span class="edit-text">Edit</span>
+                                                </button>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    @if ($onboardingEditingKey === $item['key'])
+                                        <textarea class="onboarding-textarea" rows="4"
+                                            wire:model="onboardingEditingValue"></textarea>
+                                    @else
+                                        <p class="onboarding-text">
+                                            {{ $item['value'] ?: 'Add details here.' }}
+                                        </p>
+                                    @endif
+                                </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
