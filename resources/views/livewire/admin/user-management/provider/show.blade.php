@@ -238,7 +238,7 @@
 
         .video-placeholder img {
             width: 100%;
-            height: 150px;
+            height: 7.813vw;
             object-fit: cover;
             display: block;
         }
