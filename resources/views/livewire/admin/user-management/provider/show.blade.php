@@ -7,8 +7,8 @@
 
         .video-container {
             position: relative;
-            width: 404px !important;
-            height: 147px !important;
+            /* width: 404px !important;
+            height: 147px !important; */
             border-radius: 4px;
             overflow: hidden;
             background: #000;
@@ -64,7 +64,7 @@
             border-radius: 10px;
         }
 
-        .videos-grid-layout .video-container {
+        /* .videos-grid-layout .video-container {
             flex: 0 0 404px;
             width: 404px !important;
             height: 147px !important;
@@ -72,14 +72,14 @@
             overflow: hidden;
             background: #000;
             position: relative;
-        }
+        } */
 
         /* Figma Video Styles */
-        #videos-swiper .swiper-slide {
+        /* #videos-swiper .swiper-slide {
             width: 404px !important;
             height: 147px !important;
             margin-right: 15px;
-        }
+        } */
 
         #videos-swiper .custom-video {
             width: 100% !important;
@@ -759,6 +759,15 @@
                                 <div class="swiper-slide">
                                     <img src="{{ asset('assets/images/icons/service_one.svg') }}" alt="Placeholder">
                                 </div>
+                                 <div class="swiper-slide">
+                                    <img src="{{ asset('assets/images/icons/service_one.svg') }}" alt="Placeholder">
+                                </div>
+                                 <div class="swiper-slide">
+                                    <img src="{{ asset('assets/images/icons/service_one.svg') }}" alt="Placeholder">
+                                </div>
+                                 <div class="swiper-slide">
+                                    <img src="{{ asset('assets/images/icons/service_one.svg') }}" alt="Placeholder">
+                                </div>
                             @endforelse
                         </div>
                         <div class="swiper-button-next photos-next"></div>
@@ -766,32 +775,89 @@
                     </div>
 
                     <h4 style="font-size:0.938vw;margin-top:0.9vw">Videos</h4>
-                    <div class="videos-grid-layout" wire:ignore>
-                        @php
-                            $videos = $allMedia->filter(
-                                fn($m) => strtolower(trim($m->type)) === 'video' ||
-                                    str_ends_with(strtolower($m->file_path), '.mp4'),
-                            );
-                        @endphp
-                        @forelse($videos as $video)
-                            <div class="video-container">
-                                <video class="custom-video" preload="metadata" playsinline>
-                                    <source src="{{ asset($video->file_path) }}" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
-                                <div class="custom-controls" style="z-index: 10; pointer-events: none;">
-                                    <div class="custom-btn play-btn" style="pointer-events: auto;"
-                                        onclick="window.toggleVideo(this)">▶</div>
-                                    <div class="custom-progress" style="pointer-events: auto;">
-                                        <input type="range" class="progress-bar" value="0" max="100">
+                    <div class="videos-grid-layout  swiper "  id="videos-swiper" wire:ignore>
+                        <!-- Navigation Arrows -->
+                        <div class="swiper-button-next video-swiper-button-next"></div>
+                        <div class="swiper-button-prev video-swiper-button-prev"></div>
+                        <div class="swiper-wrapper">
+                            @php
+                                $videos = $allMedia->filter(
+                                    fn($m) => strtolower(trim($m->type)) === 'video' ||
+                                        str_ends_with(strtolower($m->file_path), '.mp4'),
+                                );
+                            @endphp
+                            @forelse($videos as $video)
+                                <div class="video-container swiper-slide">
+                                    <video class="custom-video" preload="metadata" playsinline>
+                                        <source src="{{ asset($video->file_path) }}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                    <div class="custom-controls" style="z-index: 10; pointer-events: none;">
+                                        <div class="custom-btn play-btn" style="pointer-events: auto;"
+                                            onclick="window.toggleVideo(this)">▶</div>
+                                        <div class="custom-progress" style="pointer-events: auto;">
+                                            <input type="range" class="progress-bar" value="0" max="100">
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        @empty
-                            <div class="video-container" style="background: transparent; height: auto; width: 100%;">
-                                <p class="text-muted" style="font-size: 0.8vw;">No videos found.</p>
-                            </div>
-                        @endforelse
+                            @empty
+                                <div class="video-container swiper-slide">
+                                    <video class="custom-video" preload="metadata" playsinline>
+                                        <source src="{{ asset('assets/videos/video1.mp4') }}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                    <div class="custom-controls" style="z-index: 10; pointer-events: none;">
+                                        <div class="custom-btn play-btn" style="pointer-events: auto;"
+                                            onclick="window.toggleVideo(this)">▶</div>
+                                        <div class="custom-progress" style="pointer-events: auto;">
+                                            <input type="range" class="progress-bar" value="0" max="100">
+                                        </div>
+                                    </div>
+                                </div>
+                                           <div class="video-container swiper-slide">
+                                    <video class="custom-video" preload="metadata" playsinline>
+                                        <source src="{{ asset('assets/videos/Countdown3.mp4') }}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                    <div class="custom-controls" style="z-index: 10; pointer-events: none;">
+                                        <div class="custom-btn play-btn" style="pointer-events: auto;"
+                                            onclick="window.toggleVideo(this)">▶</div>
+                                        <div class="custom-progress" style="pointer-events: auto;">
+                                            <input type="range" class="progress-bar" value="0" max="100">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                              <div class="video-container swiper-slide">
+                                    <video class="custom-video" preload="metadata" playsinline>
+                                        <source src="{{ asset('assets/videos/1.mp4') }}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                    <div class="custom-controls" style="z-index: 10; pointer-events: none;">
+                                        <div class="custom-btn play-btn" style="pointer-events: auto;"
+                                            onclick="window.toggleVideo(this)">▶</div>
+                                        <div class="custom-progress" style="pointer-events: auto;">
+                                            <input type="range" class="progress-bar" value="0" max="100">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                              <div class="video-container swiper-slide">
+                                    <video class="custom-video" preload="metadata" playsinline>
+                                        <source src="{{ asset('assets/videos/2.mp4') }}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                    <div class="custom-controls" style="z-index: 10; pointer-events: none;">
+                                        <div class="custom-btn play-btn" style="pointer-events: auto;"
+                                            onclick="window.toggleVideo(this)">▶</div>
+                                        <div class="custom-progress" style="pointer-events: auto;">
+                                            <input type="range" class="progress-bar" value="0" max="100">
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforelse
                     </div>
                 @endif
             </div>
@@ -817,86 +883,176 @@
             </div>
         </div>
     </div>
+    <script>
+console.log("Service details script loading...");
+
+/* =====================================
+   PLAY / PAUSE (MULTIPLE VIDEOS SAFE)
+===================================== */
+function toggleVideo(btn) {
+    const container = btn.closest('.video-container');
+    const video = container.querySelector('.custom-video');
+
+    // Pause all other videos
+    document.querySelectorAll('.custom-video').forEach(v => {
+        if (v !== video) {
+            v.pause();
+            const c = v.closest('.video-container');
+            c.querySelector('.play-btn').textContent = '▶';
+            c.classList.remove('playing');
+        }
+    });
+
+    if (video.paused) {
+        video.play();
+        btn.textContent = '⏸';
+        container.classList.add('playing');
+    } else {
+        video.pause();
+        btn.textContent = '▶';
+        container.classList.remove('playing');
+    }
+}
+
+/* =====================================
+   PROGRESS BAR UPDATE (ONE TIME ONLY)
+===================================== */
+$(document)
+.off('timeupdate', '.custom-video')
+.on('timeupdate', '.custom-video', function () {
+    const container = $(this).closest('.video-container');
+    const progressBar = container.find('.progress-bar');
+
+    if (this.duration && !isNaN(this.duration)) {
+        progressBar.val((this.currentTime / this.duration) * 100);
+    }
+});
+
+/* =====================================
+   SEEK BAR (PER VIDEO)
+===================================== */
+$(document)
+.off('input', '.progress-bar')
+.on('input', '.progress-bar', function () {
+    const container = $(this).closest('.video-container');
+    const video = container.find('.custom-video')[0];
+
+    if (video && video.duration && !isNaN(video.duration)) {
+        video.currentTime = (this.value / 100) * video.duration;
+    }
+});
+
+/* =====================================
+   VIDEO END RESET
+===================================== */
+$(document)
+.off('ended', '.custom-video')
+.on('ended', '.custom-video', function () {
+    const container = $(this).closest('.video-container');
+    container.find('.play-btn').text('▶');
+    container.removeClass('playing');
+    this.currentTime = 0;
+});
+
+/* =====================================
+   MODAL CLOSE
+===================================== */
+function closeServiceModalJS() {
+    $('video').each(function () {
+        this.pause();
+        const container = $(this).closest('.video-container');
+        container.find('.play-btn').text('▶');
+        container.removeClass('playing');
+    });
+
+    $('#service-details-modal-container').fadeOut(200);
+    $('body').removeClass('modal-open');
+
+    @this.closeServiceModal();
+}
+</script>
+
 
     <!-- Modals (Scripts to trigger them) -->
     <script>
-        console.log("Service details script loading...");
+        // console.log("Service details script loading...");
 
-        // Global functions for modal - Move outside to ensure they load immediately
-        window.toggleVideo = function(el) {
-            console.log("Click detected! Function toggleVideo started.");
+        // // Global functions for modal - Move outside to ensure they load immediately
 
-            // Handle different click targets (btn or video)
-            const container = el.closest('.video-container');
-            if (!container) {
-                console.error("Could not find .video-container");
-                return;
-            }
+        // function toggleVideo(btn) {
+        //     const container = btn.closest('.video-container');
+        //     const video = container.querySelector('.custom-video');
+        //     const progressBar = container.querySelector('.progress-bar');
 
-            const video = container.querySelector('video');
-            const btn = container.querySelector('.play-btn');
+        //     if (video.paused) {
+        //         video.play();
+        //         btn.textContent = '⏸';
+        //     } else {
+        //         video.pause();
+        //         btn.textContent = '▶';
+        //     }
 
-            if (!video) {
-                console.error("Video element not found");
-                return;
-            }
+        //     // Update progress while playing
+        //     video.addEventListener('timeupdate', () => {
+        //         const percent = (video.currentTime / video.duration) * 100;
+        //         progressBar.value = percent || 0;
+        //     });
 
-            if (video.dataset.processing === 'true') {
-                console.warn("Video is already processing...");
-                return;
-            }
+        //     // Seek on progress change
+        //     progressBar.addEventListener('input', () => {
+        //         video.currentTime = (progressBar.value / 100) * video.duration;
+        //     });
 
-            video.dataset.processing = 'true';
+        //     // Reset on end
+        //     video.addEventListener('ended', () => {
+        //         btn.textContent = '▶';
+        //         progressBar.value = 0;
+        //     });
+        // }
 
-            if (video.paused) {
-                console.log("Attempting to play...");
-                // Pause all other videos
-                document.querySelectorAll('video').forEach(v => {
-                    if (v !== video && !v.paused) {
-                        v.pause();
-                        const otherBtn = v.closest('.video-container').querySelector('.play-btn');
-                        if (otherBtn) otherBtn.textContent = '▶';
-                        v.closest('.video-container').classList.remove('playing');
-                    }
-                });
 
-                video.play().then(() => {
-                    console.log("Playback success");
-                    btn.textContent = '⏸';
-                    container.classList.add('playing');
-                    video.dataset.processing = 'false';
-                }).catch(err => {
-                    console.warn("Autoplay blocked, muting...");
-                    video.muted = true;
-                    video.play().then(() => {
-                        btn.textContent = '⏸';
-                        container.classList.add('playing');
-                        video.dataset.processing = 'false';
-                    });
-                });
-            } else {
-                console.log("Pausing...");
-                video.pause();
-                btn.textContent = '▶';
-                container.classList.remove('playing');
-                video.dataset.processing = 'false';
-            }
-        };
 
-        function closeServiceModalJS() {
-            // Pause all videos when closing
-            $('video').each(function() {
-                if (!this.paused) {
-                    this.pause();
-                    const container = $(this).closest('.video-container');
-                    container.find('.play-btn').text('▶');
-                    container.removeClass('playing');
-                }
-            });
-            $('#service-details-modal-container').fadeOut(200);
-            $('body').removeClass('modal-open');
-            @this.closeServiceModal();
-        }
+        // function closeServiceModalJS() {
+        //     // Pause all videos when closing
+        //     $('video').each(function() {
+        //         if (!this.paused) {
+        //             this.pause();
+        //             const container = $(this).closest('.video-container');
+        //             container.find('.play-btn').text('▶');
+        //             container.removeClass('playing');
+        //         }
+        //     });
+        //     $('#service-details-modal-container').fadeOut(200);
+        //     $('body').removeClass('modal-open');
+        //     @this.closeServiceModal();
+        // }
+        // // Progress bar and time updates - Keep these as they are data-bound
+        //     $(document).off('timeupdate', '.custom-video').on('timeupdate', '.custom-video', function() {
+        //         const video = this;
+        //         const container = $(this).closest('.video-container');
+        //         const progressBar = container.find('.progress-bar');
+        //         if (video.duration) {
+        //             const value = (video.currentTime / video.duration) * 100;
+        //             progressBar.val(value);
+        //         }
+        //     });
+
+        //     $(document).off('input', '.progress-bar').on('input', '.progress-bar', function() {
+        //         const container = $(this).closest('.video-container');
+        //         const video = container.find('.custom-video')[0];
+        //         const value = $(this).val();
+        //         if (video && video.duration && !isNaN(video.duration)) {
+        //             video.currentTime = (value * video.duration) / 100;
+        //         }
+        //     });
+
+        //     // Reset UI when video ends
+        //     $(document).off('ended', '.custom-video').on('ended', '.custom-video', function() {
+        //         const container = $(this).closest('.video-container');
+        //         container.find('.play-btn').text('▶');
+        //         container.removeClass('playing');
+        //         this.dataset.processing = 'false';
+        //     });
 
         document.addEventListener('livewire:initialized', () => {
             // Function to initialize Swipers
@@ -906,13 +1062,29 @@
                 if (photosEl) {
                     if (photosSwiper) photosSwiper.destroy(true, true);
                     photosSwiper = new Swiper('#photos-swiper', {
-                        slidesPerView: 'auto',
+                        slidesPerView: '4',
                         spaceBetween: 15,
                         observer: true,
                         observeParents: true,
                         navigation: {
                             nextEl: '.photos-next',
                             prevEl: '.photos-prev',
+                        },
+                    });
+                }
+
+     let videoSwiper;
+                 const videosEl = document.querySelector('#videos-swiper');
+                if (videosEl) {
+                    if (videoSwiper) videoSwiper.destroy(true, true);
+                    videoSwiper = new Swiper('#videos-swiper', {
+                        slidesPerView: '4',
+                        spaceBetween: 15,
+                        observer: true,
+                        observeParents: true,
+                        navigation: {
+                            nextEl: '.video-swiper-button-next',
+                            prevEl: '.video-swiper-button-prev',
                         },
                     });
                 }
@@ -925,34 +1097,7 @@
                 setTimeout(initSwipers, 300);
             });
 
-            // Progress bar and time updates - Keep these as they are data-bound
-            $(document).off('timeupdate', '.custom-video').on('timeupdate', '.custom-video', function() {
-                const video = this;
-                const container = $(this).closest('.video-container');
-                const progressBar = container.find('.progress-bar');
-                if (video.duration) {
-                    const value = (video.currentTime / video.duration) * 100;
-                    progressBar.val(value);
-                }
-            });
-
-            $(document).off('input', '.progress-bar').on('input', '.progress-bar', function() {
-                const container = $(this).closest('.video-container');
-                const video = container.find('.custom-video')[0];
-                const value = $(this).val();
-                if (video && video.duration && !isNaN(video.duration)) {
-                    video.currentTime = (value * video.duration) / 100;
-                }
-            });
-
-            // Reset UI when video ends
-            $(document).off('ended', '.custom-video').on('ended', '.custom-video', function() {
-                const container = $(this).closest('.video-container');
-                container.find('.play-btn').text('▶');
-                container.removeClass('playing');
-                this.dataset.processing = 'false';
-            });
-
+    
             // Document status badge dropdown logic
             $(document).on('click', '.actions-btn-verified', function(e) {
                 e.stopPropagation();
