@@ -618,10 +618,6 @@
                     data-src="{{ asset($doc['file']) }}" data-title="{{ $doc['title'] }}">
                     View document
                 </a>
-                @else
-                <span class="text-muted" style="font-size: 0.9vw;">No document uploaded</span>
-                @endif
-
                 <span
                     class="badge badge-{{ $uiStatus }} badge-pill actions-btn-verified {{ $uiStatus === 'declined' ? 'text-danger border-danger' : '' }}"
                     style="position:relative;padding:0.677vw; {{ $uiStatus === 'declined' ? 'background:rgba(251, 55, 72, 0.1);' : '' }}"
@@ -643,6 +639,10 @@
                         @endif
                     </div>
                 </span>
+                @else
+                <span class="text-muted" style="font-size: 0.9vw;">No document uploaded</span>
+                @endif
+
             </div>
             @endforeach
         </div>
