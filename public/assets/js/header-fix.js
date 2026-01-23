@@ -1,6 +1,6 @@
 // Header-specific functionality fix
 document.addEventListener('DOMContentLoaded', function () {
-    console.log('Header fix script loaded');
+     
 
     // Wait a bit to ensure main.js has loaded
     setTimeout(() => {
@@ -20,14 +20,13 @@ function closeAllPopups() {
 }
 
 function initializeHeaderFix() {
-    console.log('Initializing header fix...');
+     
 
     // Profile button functionality
     const profileBtn = document.getElementById("profileBtn");
     const profilePopup = document.getElementById("profilePopup");
 
-    console.log('Profile button found:', !!profileBtn);
-    console.log('Profile popup found:', !!profilePopup);
+     
 
     if (profileBtn && profilePopup) {
         // Add event listener to profile button
@@ -56,7 +55,7 @@ function initializeHeaderFix() {
             }
         });
 
-        console.log('Profile button functionality initialized');
+         
     } else {
         console.log('Profile button or popup not found');
     }
@@ -65,8 +64,7 @@ function initializeHeaderFix() {
     const notifBtn = document.getElementById("notifBtn");
     const notifPopup = document.getElementById("notifPopup");
 
-    console.log('Notification button found:', !!notifBtn);
-    console.log('Notification popup found:', !!notifPopup);
+     
 
     if (notifBtn && notifPopup) {
         notifBtn.addEventListener("click", function (e) {
@@ -94,7 +92,7 @@ function initializeHeaderFix() {
             }
         });
 
-        console.log('Notification button functionality initialized');
+         
     } else {
         console.log('Notification button or popup not found');
     }

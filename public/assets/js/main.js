@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
     initializeDropdowns();
     initializeTables();
 
-    console.log('All components initialized');
+     
 });
 
 // Header functionality (basic - detailed handling in header-fix.js)

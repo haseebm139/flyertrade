@@ -5,7 +5,7 @@ if (window.mainInitialized) {
     window.mainInitialized = true;
 
     document.addEventListener('DOMContentLoaded', function () {
-        console.log('Main.js loaded - Flyertrade Admin Panel');
+         
 
         // Initialize all components
         initializeHeader();
@@ -13,7 +13,7 @@ if (window.mainInitialized) {
         initializeDropdowns();
         initializeTables();
 
-        console.log('All components initialized');
+         
     });
 
     // Header functionality (basic - detailed handling in header-fix.js)
