@@ -39,6 +39,7 @@ class NotificationController extends BaseController
             'fcm_token' => 'required|string',
             'title' => 'nullable|string',
             'body' => 'nullable|string',
+            'data' => 'nullable|array',
         ]);
 
         if ($validator->fails()) {
@@ -48,9 +49,46 @@ class NotificationController extends BaseController
         $token = $request->fcm_token;
         $title = $request->title ?? 'Test Notification';
         $body = $request->body ?? 'This is a test push from FlyerTrade API';
+        
+        $data = $request->data ?? ['test' => 'true'];
 
         $firebaseService = app(\App\Services\FirebaseService::class);
-        $result = $firebaseService->sendToToken($token, $title, $body, ['test' => 'true']);
+        $result = $firebaseService->sendToToken($token, $title, $body, $data);
+
+        if ($result) {
+            return $this->sendResponse($result, 'Push notification request sent to Google.');
+        }
+
+        return $this->sendError('Failed to send push notification. Check laravel.log for details.', 500);
+    }
+
+    public function pushNotification(Request $request): JsonResponse
+    {
+        $validator = \Validator::make($request->all(), [
+            'fcm_token' => 'required|string',
+            'title' => 'nullable|string',
+            'body' => 'nullable|string',
+            'data' => 'nullable|array',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), 422);
+        }
+
+        $token = $request->fcm_token;
+        $title = $request->title ?? 'Notification';
+        $body = $request->body ?? 'You have a new message from FlyerTrade';
+        
+        // Use provided data or default to empty array
+        $data = $request->data ?? [];
+        
+        // Ensure click_action is set if not provided, common for Flutter apps
+        if (!isset($data['click_action'])) {
+            $data['click_action'] = 'FLUTTER_NOTIFICATION_CLICK';
+        }
+
+        $firebaseService = app(\App\Services\FirebaseService::class);
+        $result = $firebaseService->sendToToken($token, $title, $body, $data);
 
         if ($result) {
             return $this->sendResponse($result, 'Push notification request sent to Google.');
