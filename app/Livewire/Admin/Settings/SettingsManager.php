@@ -5,6 +5,7 @@ namespace App\Livewire\Admin\Settings;
 use App\Models\Setting;
 use App\Models\Country;
 use Livewire\Component;
+use Illuminate\Support\Facades\DB;
 
 class SettingsManager extends Component
 {
@@ -14,6 +15,7 @@ class SettingsManager extends Component
     public $country_id;
     public $currency;
     public $commission_fee;
+    public $currencyAuto = true;
     
     // Notification Settings
     public $push_notifications;
@@ -29,11 +31,31 @@ class SettingsManager extends Component
     {
         $this->country_id = Setting::get('country_id');
         $this->currency = Setting::get('currency', 'USD');
-        $this->commission_fee = Setting::get('commission_fee', 0);
+        $this->commission_fee = Setting::get('service_charge_percentage', Setting::get('commission_fee', 0));
 
         $this->push_notifications = (bool) Setting::get('push_notifications', true);
         $this->email_notifications = (bool) Setting::get('email_notifications', true);
         $this->sms_notifications = (bool) Setting::get('sms_notifications', false);
+    }
+
+    public function updatedCountryId($value)
+    {
+        if (!$this->currencyAuto) {
+            return;
+        }
+
+        $currencyCode = DB::table('currencies')
+            ->where('country_id', $value)
+            ->value('code');
+
+        if ($currencyCode) {
+            $this->currency = $currencyCode;
+        }
+    }
+
+    public function updatedCurrency()
+    {
+        $this->currencyAuto = false;
     }
     
     public function switchTab($tab)
@@ -43,8 +65,13 @@ class SettingsManager extends Component
     
     public function saveFinancial()
     {
+        $this->validate([
+            'commission_fee' => 'required|numeric|min:0|max:100',
+        ]);
+
         Setting::set('country_id', $this->country_id, 'financial');
         Setting::set('currency', $this->currency, 'financial');
+        Setting::set('service_charge_percentage', $this->commission_fee, 'financial');
         Setting::set('commission_fee', $this->commission_fee, 'financial');
         
         $this->dispatch('showSweetAlert', 'success', 'Financial settings updated successfully!', 'Success');
