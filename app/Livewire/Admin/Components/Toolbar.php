@@ -55,6 +55,18 @@ class Toolbar extends Component
 
 
      
+    public function getListeners()
+    {
+        return [
+            'search-reset-' . $this->getNamespace() => 'resetSearch',
+        ];
+    }
+
+    public function resetSearch()
+    {
+        $this->search = '';
+    }
+
     public function render()
     {
         return view('livewire.admin.components.toolbar');

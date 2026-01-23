@@ -52,7 +52,7 @@ class IncidentReportController extends Controller
                 $data = $request->validated();
                 $data['user_id'] = $userId;
                 $data['booking_id'] = $bookingId;
-
+                $data['status'] = 'unresolved';
                 if ($request->hasFile('attachment')) {
                     $path = $request->file('attachment')->store('customer/incidents', 'public');
                     $data['attachment'] = 'storage/' . $path;

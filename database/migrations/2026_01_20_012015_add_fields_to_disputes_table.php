@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('booking_id')->after('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->text('message')->after('booking_id');
             $table->string('attachment')->after('message')->nullable();
-            $table->string('status')->after('attachment')->default('pending'); // pending, in_progress, resolved
+            $table->string('status')->after('attachment')->default('unresolved'); // resolve , unresolved
         });
     }
 

@@ -19,8 +19,7 @@
                     Filter
                     <img class="btn-icons" src="{{ asset('assets/images/icons/button-icon.svg') }} "
                         alt=""></span></button>
-            {{-- @if (count($activeFilters) > 0)
-
+            @if (count($activeFilters) > 0)
                 @foreach ($activeFilters as $filter)
                     <a href="#" class="filter_active_btna___"
                         wire:click="removeFilter('{{ $filter['key'] }}')">
@@ -28,7 +27,7 @@
                         <i class="fa-solid fa-xmark"></i>
                     </a>
                 @endforeach
-            @endif --}}
+            @endif
         </div>
     </div>
 </div>
