@@ -49,6 +49,14 @@ class SettingsManager extends Component
     public $onboarding_info_collect = '';
     public $onboarding_use_info = '';
     public $onboarding_disclosure = '';
+    public $onboarding_terms_agreement = '';
+    public $onboarding_terms_use = '';
+    public $onboarding_terms_ip = '';
+    public $onboarding_terms_termination = '';
+    public $onboarding_terms_liability = '';
+    public $onboarding_terms_law = '';
+    public $onboarding_terms_changes = '';
+    public $onboarding_terms_contact = '';
     public $onboardingEditingKey = null;
     public $onboardingEditingValue = '';
     
@@ -85,6 +93,14 @@ class SettingsManager extends Component
         $this->onboarding_info_collect = Setting::get('onboarding_info_collect', '');
         $this->onboarding_use_info = Setting::get('onboarding_use_info', '');
         $this->onboarding_disclosure = Setting::get('onboarding_disclosure', '');
+        $this->onboarding_terms_agreement = Setting::get('onboarding_terms_agreement', '');
+        $this->onboarding_terms_use = Setting::get('onboarding_terms_use', '');
+        $this->onboarding_terms_ip = Setting::get('onboarding_terms_ip', '');
+        $this->onboarding_terms_termination = Setting::get('onboarding_terms_termination', '');
+        $this->onboarding_terms_liability = Setting::get('onboarding_terms_liability', '');
+        $this->onboarding_terms_law = Setting::get('onboarding_terms_law', '');
+        $this->onboarding_terms_changes = Setting::get('onboarding_terms_changes', '');
+        $this->onboarding_terms_contact = Setting::get('onboarding_terms_contact', '');
     }
 
     public function updatedCountryId($value)
@@ -213,6 +229,14 @@ class SettingsManager extends Component
             'info_collect' => $this->onboarding_info_collect,
             'use_info' => $this->onboarding_use_info,
             'disclosure' => $this->onboarding_disclosure,
+            'terms_agreement' => $this->onboarding_terms_agreement,
+            'terms_use' => $this->onboarding_terms_use,
+            'terms_ip' => $this->onboarding_terms_ip,
+            'terms_termination' => $this->onboarding_terms_termination,
+            'terms_liability' => $this->onboarding_terms_liability,
+            'terms_law' => $this->onboarding_terms_law,
+            'terms_changes' => $this->onboarding_terms_changes,
+            'terms_contact' => $this->onboarding_terms_contact,
             default => '',
         };
     }
@@ -242,6 +266,38 @@ class SettingsManager extends Component
             case 'disclosure':
                 $this->onboarding_disclosure = $value;
                 Setting::set('onboarding_disclosure', $value, 'onboarding');
+                break;
+            case 'terms_agreement':
+                $this->onboarding_terms_agreement = $value;
+                Setting::set('onboarding_terms_agreement', $value, 'onboarding');
+                break;
+            case 'terms_use':
+                $this->onboarding_terms_use = $value;
+                Setting::set('onboarding_terms_use', $value, 'onboarding');
+                break;
+            case 'terms_ip':
+                $this->onboarding_terms_ip = $value;
+                Setting::set('onboarding_terms_ip', $value, 'onboarding');
+                break;
+            case 'terms_termination':
+                $this->onboarding_terms_termination = $value;
+                Setting::set('onboarding_terms_termination', $value, 'onboarding');
+                break;
+            case 'terms_liability':
+                $this->onboarding_terms_liability = $value;
+                Setting::set('onboarding_terms_liability', $value, 'onboarding');
+                break;
+            case 'terms_law':
+                $this->onboarding_terms_law = $value;
+                Setting::set('onboarding_terms_law', $value, 'onboarding');
+                break;
+            case 'terms_changes':
+                $this->onboarding_terms_changes = $value;
+                Setting::set('onboarding_terms_changes', $value, 'onboarding');
+                break;
+            case 'terms_contact':
+                $this->onboarding_terms_contact = $value;
+                Setting::set('onboarding_terms_contact', $value, 'onboarding');
                 break;
         }
 
