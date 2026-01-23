@@ -899,7 +899,23 @@
             </div>
         </div>
         <script>
-            console.log("Service details script loading...");
+document.addEventListener("DOMContentLoaded", function () {
+    const overlay = document.getElementById("service-details-modal-container");
+    const modal = document.getElementById("service-details-modal");
+
+    overlay.addEventListener("click", function (e) {
+        // Sirf overlay par click ho, modal ke andar nahi
+       
+            modal.style.display = "none";
+            overlay.style.display = "none";
+      
+    });
+});
+</script>
+
+        <script>
+
+console.log("Service details script loading...");
 
             function toggleVideo(el) {
                 const container = el.closest('.video-container');
