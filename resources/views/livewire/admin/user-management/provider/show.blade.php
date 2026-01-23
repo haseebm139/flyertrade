@@ -83,7 +83,7 @@
 
         #videos-swiper .custom-video {
             width: 100% !important;
-            height: 100% !important;
+            height: 7.813vw !important;
             object-fit: cover;
             cursor: pointer;
         }
@@ -215,6 +215,53 @@
         body.modal-open {
             overflow: hidden !important;
         }
+
+
+        .video-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.custom-video {
+    width: 100%;
+       height: 7.813vw;
+    display: none; /* start me hidden */
+}
+
+.video-placeholder {
+    position: relative;
+    width: 100%;
+    cursor: pointer;
+}
+
+.video-placeholder img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    display: block;
+}
+
+.play-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 60px;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.2);
+    width: 100%;
+    height: 100%;
+    border-radius: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.play-icon svg{
+    width:2vw;
+    height: 2vw;
+}
+
     </style>
 
     <div class="users-toolbar">
@@ -787,76 +834,43 @@
                                 );
                             @endphp
                             @forelse($videos as $video)
-                                <div class="video-container swiper-slide">
-                                    <video class="custom-video" preload="metadata" playsinline>
-                                        <source src="{{ asset($video->file_path) }}" type="video/mp4">
-                                        Your browser does not support the video tag.
-                                    </video>
-                                    <div class="custom-controls" style="z-index: 10; pointer-events: none;">
-                                        <div class="custom-btn play-btn" style="pointer-events: auto;"
-                                            onclick="window.toggleVideo(this)">▶</div>
-                                        <div class="custom-progress" style="pointer-events: auto;">
-                                            <input type="range" class="progress-bar" value="0" max="100">
-                                        </div>
-                                    </div>
-                                </div>
+                           
+                                                          <div class="video-container swiper-slide">
+    <!-- Placeholder -->
+    <div class="video-placeholder">
+        <img src="{{ asset('assets/images/icons/service_one.svg') }}" alt="Video Placeholder">
+        <div class="play-icon" onclick="window.toggleVideo(this)"><svg  viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M13.2734 17.4999V15.3416C13.2734 12.5562 15.2422 11.4333 17.6484 12.8187L19.5151 13.8978L21.3818 14.977C23.788 16.3624 23.788 18.6374 21.3818 20.0228L19.5151 21.102L17.6484 22.1812C15.2422 23.5666 13.2734 22.4291 13.2734 19.6583V17.4999Z" stroke="white" stroke-width="1.52" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M17.4974 32.0832C25.5515 32.0832 32.0807 25.554 32.0807 17.4998C32.0807 9.44568 25.5515 2.9165 17.4974 2.9165C9.44324 2.9165 2.91406 9.44568 2.91406 17.4998C2.91406 25.554 9.44324 32.0832 17.4974 32.0832Z" stroke="white" stroke-width="1.52" stroke-linecap="round" stroke-linejoin="round"/>
+</svg></div>
+    </div>
+
+    <!-- Video -->
+    <video class="custom-video" preload="metadata" playsinline controls>
+        <source src="{{ asset($video->file_path) }}" type="video/mp4">
+    </video>
+</div>
                             @empty
-                                <div class="video-container swiper-slide">
-                                    <video class="custom-video" preload="metadata" playsinline>
-                                        <source src="{{ asset('assets/videos/video1.mp4') }}" type="video/mp4">
-                                        Your browser does not support the video tag.
-                                    </video>
-                                    <div class="custom-controls" style="z-index: 10; pointer-events: none;">
-                                        <div class="custom-btn play-btn" style="pointer-events: auto;"
-                                            onclick="window.toggleVideo(this)">▶</div>
-                                        <div class="custom-progress" style="pointer-events: auto;">
-                                            <input type="range" class="progress-bar" value="0" max="100">
-                                        </div>
-                                    </div>
-                                </div>
-                                           <div class="video-container swiper-slide">
-                                    <video class="custom-video" preload="metadata" playsinline>
-                                        <source src="{{ asset('assets/videos/Countdown3.mp4') }}" type="video/mp4">
-                                        Your browser does not support the video tag.
-                                    </video>
-                                    <div class="custom-controls" style="z-index: 10; pointer-events: none;">
-                                        <div class="custom-btn play-btn" style="pointer-events: auto;"
-                                            onclick="window.toggleVideo(this)">▶</div>
-                                        <div class="custom-progress" style="pointer-events: auto;">
-                                            <input type="range" class="progress-bar" value="0" max="100">
-                                        </div>
-                                    </div>
-                                </div>
+                              
+                                                                                          <div class="video-container swiper-slide">
+    <!-- Placeholder -->
+    <div class="video-placeholder">
+        <img src="{{ asset('assets/images/icons/service_one.svg') }}" alt="Video Placeholder">
+        <div class="play-icon" onclick="window.toggleVideo(this)"><svg  viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M13.2734 17.4999V15.3416C13.2734 12.5562 15.2422 11.4333 17.6484 12.8187L19.5151 13.8978L21.3818 14.977C23.788 16.3624 23.788 18.6374 21.3818 20.0228L19.5151 21.102L17.6484 22.1812C15.2422 23.5666 13.2734 22.4291 13.2734 19.6583V17.4999Z" stroke="white" stroke-width="1.52" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M17.4974 32.0832C25.5515 32.0832 32.0807 25.554 32.0807 17.4998C32.0807 9.44568 25.5515 2.9165 17.4974 2.9165C9.44324 2.9165 2.91406 9.44568 2.91406 17.4998C2.91406 25.554 9.44324 32.0832 17.4974 32.0832Z" stroke="white" stroke-width="1.52" stroke-linecap="round" stroke-linejoin="round"/>
+</svg></div>
+    </div>
+
+    <!-- Video -->
+    <video class="custom-video" preload="metadata" playsinline controls>
+        <source src="{{ asset('assets/videos/video1.mp4') }}" type="video/mp4">
+    </video>
+</div>
 
 
-                                              <div class="video-container swiper-slide">
-                                    <video class="custom-video" preload="metadata" playsinline>
-                                        <source src="{{ asset('assets/videos/1.mp4') }}" type="video/mp4">
-                                        Your browser does not support the video tag.
-                                    </video>
-                                    <div class="custom-controls" style="z-index: 10; pointer-events: none;">
-                                        <div class="custom-btn play-btn" style="pointer-events: auto;"
-                                            onclick="window.toggleVideo(this)">▶</div>
-                                        <div class="custom-progress" style="pointer-events: auto;">
-                                            <input type="range" class="progress-bar" value="0" max="100">
-                                        </div>
-                                    </div>
-                                </div>
 
 
-                                              <div class="video-container swiper-slide">
-                                    <video class="custom-video" preload="metadata" playsinline>
-                                        <source src="{{ asset('assets/videos/2.mp4') }}" type="video/mp4">
-                                        Your browser does not support the video tag.
-                                    </video>
-                                    <div class="custom-controls" style="z-index: 10; pointer-events: none;">
-                                        <div class="custom-btn play-btn" style="pointer-events: auto;"
-                                            onclick="window.toggleVideo(this)">▶</div>
-                                        <div class="custom-progress" style="pointer-events: auto;">
-                                            <input type="range" class="progress-bar" value="0" max="100">
-                                        </div>
-                                    </div>
-                                </div>
                             @endforelse
                     </div>
                 @endif
@@ -885,34 +899,60 @@
     </div>
     <script>
 console.log("Service details script loading...");
-
-/* =====================================
-   PLAY / PAUSE (MULTIPLE VIDEOS SAFE)
-===================================== */
-function toggleVideo(btn) {
-    const container = btn.closest('.video-container');
+function toggleVideo(el) {
+    const container = el.closest('.video-container');
     const video = container.querySelector('.custom-video');
+    const placeholder = container.querySelector('.video-placeholder');
 
     // Pause all other videos
     document.querySelectorAll('.custom-video').forEach(v => {
         if (v !== video) {
             v.pause();
-            const c = v.closest('.video-container');
-            c.querySelector('.play-btn').textContent = '▶';
-            c.classList.remove('playing');
+            v.style.display = 'none';
+            v.closest('.video-container')
+                .querySelector('.video-placeholder').style.display = 'block';
         }
     });
 
-    if (video.paused) {
-        video.play();
-        btn.textContent = '⏸';
-        container.classList.add('playing');
-    } else {
-        video.pause();
-        btn.textContent = '▶';
-        container.classList.remove('playing');
-    }
+    // Play current
+    placeholder.style.display = 'none';
+    video.style.display = 'block';
+    video.play();
+
+    // Jab video pause/end ho → placeholder wapas
+    video.onpause = video.onended = () => {
+        video.style.display = 'none';
+        placeholder.style.display = 'block';
+    };
 }
+
+/* =====================================
+   PLAY / PAUSE (MULTIPLE VIDEOS SAFE)
+===================================== */
+// function toggleVideo(btn) {
+//     const container = btn.closest('.video-container');
+//     const video = container.querySelector('.custom-video');
+
+//     // Pause all other videos
+//     document.querySelectorAll('.custom-video').forEach(v => {
+//         if (v !== video) {
+//             v.pause();
+//             const c = v.closest('.video-container');
+//             c.querySelector('.play-btn').textContent = '▶';
+//             c.classList.remove('playing');
+//         }
+//     });
+
+//     if (video.paused) {
+//         video.play();
+//         btn.textContent = '⏸';
+//         container.classList.add('playing');
+//     } else {
+//         video.pause();
+//         btn.textContent = '▶';
+//         container.classList.remove('playing');
+//     }
+// }
 
 /* =====================================
    PROGRESS BAR UPDATE (ONE TIME ONLY)
