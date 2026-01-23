@@ -34,7 +34,7 @@
                             ->unique(fn($c) => strtolower($c->currency_code))
                             ->values();
                         $selectedCurrency = $currencyOptions->first(
-                            fn($c) => strtolower($c->currency_code) === strtolower($currency ?? '')
+                            fn($c) => strtolower($c->currency_code) === strtolower($currency ?? ''),
                         );
                     @endphp
                     <div class="setting-wrapper">
@@ -93,7 +93,8 @@
                                             {{-- <span class="currency-code">{{ strtoupper($selectedCurrency->currency_code) }}</span> --}}
                                             <span class="currency-name">{{ $selectedCurrency->currency_name }}</span>
                                             @if (!empty($selectedCurrency->currency_symbol))
-                                                <span class="currency-symbol">({{ $selectedCurrency->currency_symbol }})</span>
+                                                <span
+                                                    class="currency-symbol">({{ $selectedCurrency->currency_symbol }})</span>
                                             @endif
                                         @else
                                             <span>Select currency</span>
@@ -103,8 +104,8 @@
                                 </button>
                                 <div class="currency-list">
                                     <div class="currency-search">
-                                        <input type="text" class="currency-search-input" placeholder="Search currency"
-                                            oninput="filterCurrencyList(this)">
+                                        <input type="text" class="currency-search-input"
+                                            placeholder="Search currency" oninput="filterCurrencyList(this)">
                                     </div>
                                     @foreach ($currencyOptions as $currencyItem)
                                         <button type="button"
@@ -115,7 +116,8 @@
                                             {{-- <span class="currency-code">{{ strtoupper($currencyItem->currency_code) }}</span> --}}
                                             <span class="currency-name">{{ $currencyItem->currency_name }}</span>
                                             @if (!empty($currencyItem->currency_symbol))
-                                                <span class="currency-symbol">({{ $currencyItem->currency_symbol }})</span>
+                                                <span
+                                                    class="currency-symbol">({{ $currencyItem->currency_symbol }})</span>
                                             @endif
                                         </button>
                                     @endforeach
@@ -128,8 +130,8 @@
                     <div class="setting-wrapper">
                         <div class="charge-col">
                             <label class="charge-label">Commission Fee (%)</label>
-                            <input type="number" wire:model="commission_fee" class="charge-input" step="1" min="0" max="100"
-                                placeholder="Enter commission fee" />
+                            <input type="number" wire:model="commission_fee" class="charge-input" step="1"
+                                min="0" max="100" placeholder="Enter commission fee" />
                             @error('commission_fee')
                                 <div class="text-danger mt-1">{{ $message }}</div>
                             @enderror
@@ -170,10 +172,271 @@
                             </label>
                         </div>
                     </div>
+                    <br /> 
+                    <div class="setting-wrapper">
+                        <h2 style="font-size: 1.042vw;">Specific notification reminders</h2>
+                        <br />
+                        <h4 style="font-size: 1vw;">User Service</h4>
+                        <div class="permission-item">
+                            <span>Upcoming service reminder</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" wire:model.live="user_reminder_enabled" />
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="permission-item">
+                            <span>Reminder timing</span>
+                            <!-- <label class="toggle-switch">
+                            <input type="checkbox" />
+                            <span class="slider"></span>
+                        </label> -->
+                        </div>
+                        <div class="permission-items">
+                            <input type="checkbox" wire:model="user_reminder_times" value="15m" />
+                            <span>15 minutes before</span>
+                        </div>
+                        <div class="permission-items">
+                            <input type="checkbox" wire:model="user_reminder_times" value="30m" />
+                            <span>30 minutes before</span>
+                        </div>
+                        <div class="permission-items">
+                            <input type="checkbox" wire:model="user_reminder_times" value="45m" />
+                            <span>45 minutes before</span>
+                        </div>
+                        <br />
+                        <h4 style="font-size: 1vw;">Reminder Content</h4>
+                        <div
+                            style="border: 1px solid #ccc; border-radius: 0.4vw; padding: 0.8vw; background-color: #fff; width: 100%; font-family: sans-serif;">
+                            <!-- Row 1 -->
+                            <div class="message-row"
+                                style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #eee; padding: 0.6vw 0;">
+                                <div style="flex: 1;">
+                                    <span style="font-size: 0.9vw; font-weight: 300; color: #a7a5a5;">15 minutes
+                                        before&nbsp;</span>
+                                    @if ($editingMessageKey === 'user_15')
+                                        <input type="text" class="charge-input"
+                                            wire:model="editingMessageValue" />
+                                    @else
+                                        <p style="margin: 0; font-size: 0.95vw; color: #333;">
+                                            {{ $user_reminder_message_15 ?: 'Your booked service will begin in 15 minutes. Be available at your chosen location.' }}
+                                        </p>
+                                    @endif
+                                </div>
+                                <div class="message-actions">
+                                    @if ($editingMessageKey === 'user_15')
+                                        <button class="view-btn" style="font-weight: 600;" wire:click="saveMessage">
+                                            Save
+                                        </button>
+                                        <button class="view-btn cancel-btn-sm" wire:click="cancelMessage">
+                                            Cancel
+                                        </button>
+                                    @else
+                                        <button class="view-btn" style="font-weight: 600;"
+                                            wire:click="editMessage('user_15')">
+                                            Edit
+                                        </button>
+                                    @endif
+                                </div>
+                            </div>
+                            <!-- Row 2 -->
+                            <div class="message-row"
+                                style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #eee; padding: 0.6vw 0;">
+                                <div style="flex: 1;">
+                                    <span style="font-size: 0.9vw; font-weight: 300; color: #a7a5a5;">1 hour
+                                        before&nbsp;</span>
+                                    @if ($editingMessageKey === 'user_60')
+                                        <input type="text" class="charge-input"
+                                            wire:model="editingMessageValue" />
+                                    @else
+                                        <p style="margin: 0; font-size: 0.95vw; color: #333;">
+                                            {{ $user_reminder_message_60 ?: 'Reminder: your artist will arrive in approximately 1 hour.' }}
+                                        </p>
+                                    @endif
+                                </div>
+                                <div class="message-actions">
+                                    @if ($editingMessageKey === 'user_60')
+                                        <button class="view-btn" style="font-weight: 600;" wire:click="saveMessage">
+                                            Save
+                                        </button>
+                                        <button class="view-btn cancel-btn-sm" wire:click="cancelMessage">
+                                            Cancel
+                                        </button>
+                                    @else
+                                        <button class="view-btn" style="font-weight: 600;"
+                                            wire:click="editMessage('user_60')">
+                                            Edit
+                                        </button>
+                                    @endif
+                                </div>
+                            </div>
+                            <!-- Row 3 -->
+                            <div class="message-row"
+                                style="display: flex; align-items: center; justify-content: space-between; padding: 0.6vw 0;">
+                                <div style="flex: 1;">
+                                    <span style="font-size: 0.9vw; font-weight: 300; color: #a7a5a5;">1 day
+                                        before&nbsp;</span>
+                                    @if ($editingMessageKey === 'user_1d')
+                                        <input type="text" class="charge-input"
+                                            wire:model="editingMessageValue" />
+                                    @else
+                                        <p style="margin: 0; font-size: 0.95vw; color: #333;">
+                                            {{ $user_reminder_message_1d ?: 'Don’t forget your appointment tomorrow. Prepare your setup and be on time.' }}
+                                        </p>
+                                    @endif
+                                </div>
+                                <div class="message-actions">
+                                    @if ($editingMessageKey === 'user_1d')
+                                        <button class="view-btn" style="font-weight: 600;" wire:click="saveMessage">
+                                            Save
+                                        </button>
+                                        <button class="view-btn cancel-btn-sm" wire:click="cancelMessage">
+                                            Cancel
+                                        </button>
+                                    @else
+                                        <button class="view-btn" style="font-weight: 600;"
+                                            wire:click="editMessage('user_1d')">
+                                            Edit
+                                        </button>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="setting-wrapper">
+                        <h2 style="font-size: 1.042vw;">Specific notification reminders</h2>
+                        <br />
+                        <h4 style="font-size: 1vw;">Service Providers</h4>
+                        <div class="permission-item">
+                            <span>Upcoming service reminder</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" wire:model.live="provider_reminder_enabled" />
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="permission-item">
+                            <span>Reminder timing</span>
+                            <!-- <label class="toggle-switch">
+                            <input type="checkbox" />
+                            <span class="slider"></span>
+                        </label> -->
+                        </div>
+                        <div class="permission-items">
+                            <input type="checkbox" wire:model="provider_reminder_times" value="15m" />
+                            <span>15 minutes before</span>
+                        </div>
+                        <div class="permission-items">
+                            <input type="checkbox" wire:model="provider_reminder_times" value="30m" />
+                            <span>30 minutes before</span>
+                        </div>
+                        <div class="permission-items">
+                            <input type="checkbox" wire:model="provider_reminder_times" value="45m" />
+                            <span>45 minutes before</span>
+                        </div>
+                        <br />
+                        <h4 style="font-size: 1vw;">Reminder Content</h4>
+                        <div
+                            style="border: 1px solid #ccc; border-radius: 0.4vw; padding: 0.8vw; background-color: #fff; width: 100%; font-family: sans-serif;">
+                            <!-- Row 1 -->
+                            <div class="message-row"
+                                style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #eee; padding: 0.6vw 0;">
+                                <div style="flex: 1;">
+                                    <span style="font-size: 0.9vw; font-weight: 300; color: #a7a5a5;">15 minutes
+                                        before&nbsp;</span>
+                                    @if ($editingMessageKey === 'provider_15')
+                                        <input type="text" class="charge-input"
+                                            wire:model="editingMessageValue" />
+                                    @else
+                                        <p style="margin: 0; font-size: 0.95vw; color: #333;">
+                                            {{ $provider_reminder_message_15 ?: 'Your booked service will begin in 15 minutes. Be available at your chosen location.' }}
+                                        </p>
+                                    @endif
+                                </div>
+                                <div class="message-actions">
+                                    @if ($editingMessageKey === 'provider_15')
+                                        <button class="view-btn" style="font-weight: 600;" wire:click="saveMessage">
+                                            Save
+                                        </button>
+                                        <button class="view-btn cancel-btn-sm" wire:click="cancelMessage">
+                                            Cancel
+                                        </button>
+                                    @else
+                                        <button class="view-btn" style="font-weight: 600;"
+                                            wire:click="editMessage('provider_15')">
+                                            Edit
+                                        </button>
+                                    @endif
+                                </div>
+                            </div>
+                            <!-- Row 2 -->
+                            <div class="message-row"
+                                style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #eee; padding: 0.6vw 0;">
+                                <div style="flex: 1;">
+                                    <span style="font-size: 0.9vw; font-weight: 300; color: #a7a5a5;">1 hour
+                                        before&nbsp;</span>
+                                    @if ($editingMessageKey === 'provider_60')
+                                        <input type="text" class="charge-input"
+                                            wire:model="editingMessageValue" />
+                                    @else
+                                        <p style="margin: 0; font-size: 0.95vw; color: #333;">
+                                            {{ $provider_reminder_message_60 ?: 'Reminder: your artist will arrive in approximately 1 hour.' }}
+                                        </p>
+                                    @endif
+                                </div>
+                                <div class="message-actions">
+                                    @if ($editingMessageKey === 'provider_60')
+                                        <button class="view-btn" style="font-weight: 600;" wire:click="saveMessage">
+                                            Save
+                                        </button>
+                                        <button class="view-btn cancel-btn-sm" wire:click="cancelMessage">
+                                            Cancel
+                                        </button>
+                                    @else
+                                        <button class="view-btn" style="font-weight: 600;"
+                                            wire:click="editMessage('provider_60')">
+                                            Edit
+                                        </button>
+                                    @endif
+                                </div>
+                            </div>
+                            <!-- Row 3 -->
+                            <div class="message-row"
+                                style="display: flex; align-items: center; justify-content: space-between; padding: 0.6vw 0;">
+                                <div style="flex: 1;">
+                                    <span style="font-size: 0.9vw; font-weight: 300; color: #a7a5a5;">1 day
+                                        before&nbsp;</span>
+                                    @if ($editingMessageKey === 'provider_1d')
+                                        <input type="text" class="charge-input"
+                                            wire:model="editingMessageValue" />
+                                    @else
+                                        <p style="margin: 0; font-size: 0.95vw; color: #333;">
+                                            {{ $provider_reminder_message_1d ?: 'Don’t forget your appointment tomorrow. Prepare your setup and be on time.' }}
+                                        </p>
+                                    @endif
+                                </div>
+                                <div class="message-actions">
+                                    @if ($editingMessageKey === 'provider_1d')
+                                        <button class="view-btn" style="font-weight: 600;" wire:click="saveMessage">
+                                            Save
+                                        </button>
+                                        <button class="view-btn cancel-btn-sm" wire:click="cancelMessage">
+                                            Cancel
+                                        </button>
+                                    @else
+                                        <button class="view-btn" style="font-weight: 600;"
+                                            wire:click="editMessage('provider_1d')">
+                                            Edit
+                                        </button>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <br />
                     <div class="form-actions d-flex justify-content-end theme-btn-class-roles-module">
                         <button type="button" class="cancel-btn" wire:click="loadSettings">Cancel</button>
-                        <button type="button" class="submit-btn" wire:click="saveNotifications">Save Changes</button>
+                        <button type="button" class="submit-btn" wire:click="saveNotifications">Save
+                            Changes</button>
                     </div>
                 </div>
             @endif
@@ -194,8 +457,107 @@
 
             @if ($activeTab === 'onboarding')
                 <div id="onboarding" class="tab-content active">
-                    <h3>Onboarding</h3>
-                    <p>Onboarding settings content goes here.</p>
+                    <div class="setting-wrapper">
+                        <h2 class="settings-section-title">Privacy policy</h2>
+                        <div class="onboarding-card">
+                            <div class="onboarding-row">
+                                <div class="onboarding-row-header">
+                                    <h4>Introduction</h4>
+                                    <div class="onboarding-actions">
+                                        @if ($onboardingEditingKey === 'intro')
+                                            <button class="view-btn" wire:click="saveOnboarding">Save</button>
+                                            <button class="view-btn cancel-btn-sm" wire:click="cancelOnboarding">Cancel</button>
+                                        @else
+                                            <button class="view-btn" wire:click="editOnboarding('intro')">
+                                                <img class="icons-btn" src="{{ asset('assets/images/icons/edit.svg') }}" alt="">  <span class="edit-text">Edit</span> 
+                                            </button>
+                                             
+                                        @endif
+                                    </div>
+                                </div>
+                                @if ($onboardingEditingKey === 'intro')
+                                    <textarea class="onboarding-textarea" rows="4"
+                                        wire:model="onboardingEditingValue"></textarea>
+                                @else
+                                    <p class="onboarding-text">
+                                        {{ $onboarding_intro ?: 'Add introduction text here.' }}
+                                    </p>
+                                @endif
+                            </div>
+
+                            <div class="onboarding-row">
+                                <div class="onboarding-row-header">
+                                    <h4>Information we collect</h4>
+                                    <div class="onboarding-actions">
+                                        @if ($onboardingEditingKey === 'info_collect')
+                                            <button class="view-btn" wire:click="saveOnboarding">Save</button>
+                                            <button class="view-btn cancel-btn-sm" wire:click="cancelOnboarding">Cancel</button>
+                                        @else
+                                            <button class="view-btn" wire:click="editOnboarding('info_collect')">
+                                                <img class="icons-btn" src="{{ asset('assets/images/icons/edit.svg') }}" alt="">  <span class="edit-text">Edit</span> 
+                                            </button>
+                                        @endif
+                                    </div>
+                                </div>
+                                @if ($onboardingEditingKey === 'info_collect')
+                                    <textarea class="onboarding-textarea" rows="4"
+                                        wire:model="onboardingEditingValue"></textarea>
+                                @else
+                                    <p class="onboarding-text">
+                                        {{ $onboarding_info_collect ?: 'Add information we collect here.' }}
+                                    </p>
+                                @endif
+                            </div>
+
+                            <div class="onboarding-row">
+                                <div class="onboarding-row-header">
+                                    <h4>How we use your information</h4>
+                                    <div class="onboarding-actions">
+                                        @if ($onboardingEditingKey === 'use_info')
+                                            <button class="view-btn" wire:click="saveOnboarding">Save</button>
+                                            <button class="view-btn cancel-btn-sm" wire:click="cancelOnboarding">Cancel</button>
+                                        @else
+                                            <button class="view-btn" wire:click="editOnboarding('use_info')">
+                                                <img class="icons-btn" src="{{ asset('assets/images/icons/edit.svg') }}" alt="">  <span class="edit-text">Edit</span> 
+                                            </button>
+                                        @endif
+                                    </div>
+                                </div>
+                                @if ($onboardingEditingKey === 'use_info')
+                                    <textarea class="onboarding-textarea" rows="4"
+                                        wire:model="onboardingEditingValue"></textarea>
+                                @else
+                                    <p class="onboarding-text">
+                                        {{ $onboarding_use_info ?: 'Add usage of information here.' }}
+                                    </p>
+                                @endif
+                            </div>
+
+                            <div class="onboarding-row">
+                                <div class="onboarding-row-header">
+                                    <h4>Disclosure of your information</h4>
+                                    <div class="onboarding-actions">
+                                        @if ($onboardingEditingKey === 'disclosure')
+                                            <button class="view-btn" wire:click="saveOnboarding">Save</button>
+                                            <button class="view-btn cancel-btn-sm" wire:click="cancelOnboarding">Cancel</button>
+                                        @else
+                                            <button class="view-btn" wire:click="editOnboarding('disclosure')">
+                                                <img class="icons-btn" src="{{ asset('assets/images/icons/edit.svg') }}" alt=""> <span class="edit-text">Edit</span> 
+                                            </button>
+                                        @endif
+                                    </div>
+                                </div>
+                                @if ($onboardingEditingKey === 'disclosure')
+                                    <textarea class="onboarding-textarea" rows="4"
+                                        wire:model="onboardingEditingValue"></textarea>
+                                @else
+                                    <p class="onboarding-text">
+                                        {{ $onboarding_disclosure ?: 'Add disclosure information here.' }}
+                                    </p>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
                 </div>
             @endif
 
@@ -209,6 +571,7 @@
     </div>
 
     <style>
+         
         .country-dropdown {
             position: relative;
         }
@@ -226,9 +589,11 @@
             box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
             transition: border-color 0.15s ease, box-shadow 0.15s ease;
         }
+
         .country-select:hover {
             border-color: #d1d5db;
         }
+
         .country-select:focus-visible {
             outline: none;
             border-color: #0b63c9;
@@ -263,6 +628,7 @@
             z-index: 10;
             box-shadow: 0 10px 20px rgba(16, 24, 40, 0.08);
         }
+
         .country-search {
             padding: 8px 12px;
             border-bottom: 1px solid #e5e7eb;
@@ -271,6 +637,7 @@
             top: 0;
             z-index: 1;
         }
+
         .country-search-input {
             width: 100%;
             padding: 6px 10px;
@@ -279,6 +646,7 @@
             font-size: 13px;
             transition: border-color 0.15s ease, box-shadow 0.15s ease;
         }
+
         .country-search-input:focus {
             outline: none;
             border-color: #0b63c9;
@@ -305,6 +673,7 @@
         .country-item:hover {
             background: #f5f5f5;
         }
+
         .country-item.active {
             background: rgba(11, 99, 201, 0.08);
         }
@@ -317,6 +686,7 @@
         .currency-dropdown {
             position: relative;
         }
+
         .currency-select {
             display: flex;
             align-items: center;
@@ -330,30 +700,37 @@
             box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
             transition: border-color 0.15s ease, box-shadow 0.15s ease;
         }
+
         .currency-select:hover {
             border-color: #d1d5db;
         }
+
         .currency-select:focus-visible {
             outline: none;
             border-color: #0b63c9;
             box-shadow: 0 0 0 3px rgba(11, 99, 201, 0.15);
         }
+
         .currency-selected {
             display: inline-flex;
             align-items: center;
             gap: 8px;
             color: #111827;
         }
+
         .currency-code {
             font-weight: 600;
             letter-spacing: 0.4px;
         }
+
         .currency-name {
             color: #374151;
         }
+
         .currency-symbol {
             color: #6b7280;
         }
+
         .currency-list {
             position: absolute;
             top: calc(100% + 6px);
@@ -368,9 +745,11 @@
             z-index: 10;
             box-shadow: 0 10px 20px rgba(16, 24, 40, 0.08);
         }
+
         .currency-dropdown.open .currency-list {
             display: block;
         }
+
         .currency-search {
             padding: 8px 12px;
             border-bottom: 1px solid #e5e7eb;
@@ -379,6 +758,7 @@
             top: 0;
             z-index: 1;
         }
+
         .currency-search-input {
             width: 100%;
             padding: 6px 10px;
@@ -387,11 +767,13 @@
             font-size: 13px;
             transition: border-color 0.15s ease, box-shadow 0.15s ease;
         }
+
         .currency-search-input:focus {
             outline: none;
             border-color: #0b63c9;
             box-shadow: 0 0 0 2px rgba(11, 99, 201, 0.12);
         }
+
         .currency-item {
             width: 100%;
             display: flex;
@@ -404,15 +786,84 @@
             font-size: 14px;
             transition: background 0.15s ease;
         }
+
         .currency-item:hover {
             background: #f5f5f5;
         }
+
         .currency-item.active {
             background: rgba(11, 99, 201, 0.08);
         }
+
         .currency-caret {
             color: #9ca3af;
             font-size: 12px;
+        }
+        .message-actions {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+        .message-row .message-actions {
+            height: 100%;
+            align-self: center;
+        }
+        .settings-section-title {
+            font-size: 1.042vw;
+            margin-bottom: 0.8vw;
+        }
+        .onboarding-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            background: #fff;
+            padding: 12px;
+        }
+        .onboarding-row {
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f1f1;
+        }
+        .onboarding-row:last-child {
+            border-bottom: 0;
+        }
+        .onboarding-row-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .onboarding-row-header h4 {
+            font-size: 0.95vw;
+            margin: 0;
+        }
+        .onboarding-actions {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .onboarding-text {
+            margin: 0;
+            font-size: 0.9vw;
+            color: #555;
+            line-height: 1.5;
+        }
+        .onboarding-textarea {
+            width: 100%;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 0.9vw;
+            color: #333;
+        }
+        .edit-text {
+            
+            font-weight: 500;
+            font-size: 0.8vw;
+             
+        }
+        .cancel-btn-sm {
+            background: #f3f4f6;
+            color: #374151;
         }
     </style>
 
