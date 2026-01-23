@@ -63,23 +63,25 @@
                                 <small class="time">{{ $review->created_at->format('h:i a') }}</small>
                             </td>
                             <td>
-                                <div class="user-info">
+                                <a href="{{ $activeTab === 'users' ? route('user-management.service.users.view', $review->sender_id) : route('user-management.service.providers.view', $review->sender_id) }}"
+                                    class="user-info" style="text-decoration: none;">
                                     <img src="{{ asset($review->reviewer->avatar ?? 'assets/images/icons/person-one.svg') }}"
                                         alt="User">
                                     <div>
                                         <span class="user-theme-name">{{ $review->reviewer->name ?? 'N/A' }}</span>
                                     </div>
-                                </div>
+                                </a>
                             </td>
                             <td>
-                                <div class="user-info">
+                                <a href="{{ $activeTab === 'users' ? route('user-management.service.providers.view', $review->receiver_id) : route('user-management.service.users.view', $review->receiver_id) }}"
+                                    class="user-info" style="text-decoration: none;">
                                     <img src="{{ asset($review->reviewedProvider->avatar ?? 'assets/images/icons/person-one.svg') }}"
                                         alt="User">
                                     <div>
                                         <span
                                             class="user-theme-name">{{ $review->reviewedProvider->name ?? 'N/A' }}</span>
                                     </div>
-                                </div>
+                                </a>
                             </td>
                             <td class="min-width-200">
                                 <div class="stars-rating">
@@ -262,11 +264,7 @@
             border: 1px solid #28a745 !important;
         }
 
-        .status.pending {
-            background-color: #fff3cd !important;
-            color: #856404 !important;
-            border: 1px solid #ffeeba !important;
-        }
+      
 
         .status-dropdown .dropdown-menu {
             width: 100%;
