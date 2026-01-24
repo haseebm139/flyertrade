@@ -471,7 +471,7 @@ class BookingService
             $this->notificationService->notifyRescheduleAccepted($booking, $reschedule);
 
         } elseif ($response === 'reject') {
-            // $booking->update(['status' => 'confirmed']);
+            $booking->update(['status' => 'rejected']);
             $reschedule->update(['status' => 'rejected']);
             
             // Send notification
