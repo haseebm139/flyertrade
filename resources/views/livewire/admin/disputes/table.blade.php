@@ -41,7 +41,7 @@
         <table class="theme-table">
             <thead>
                 <tr>
-                    <th><input type="checkbox"></th>
+                    <th><input type="checkbox" wire:model.live="selectAll"></th>
                     <th class="sortable" wire:click="sortBy('booking_id')">Booking ID 
                         <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon {{ $sortField === 'booking_id' ? ($sortDirection === 'asc' ? '' : 'desc') : '' }}">
                     </th>
@@ -60,7 +60,7 @@
             <tbody>
                 @forelse($disputes as $dispute)
                     <tr wire:key="dispute-{{ $dispute->id }}">
-                        <td><input type="checkbox" value="{{ $dispute->id }}"></td>
+                        <td><input type="checkbox" value="{{ $dispute->id }}" wire:model.live="selected"></td>
                         <td>{{ $dispute->booking->booking_ref ?? 'N/A' }}</td>
                         <td>
                             <span class="date">{{ $dispute->created_at->format('d M, Y') }}</span>

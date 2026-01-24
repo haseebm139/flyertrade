@@ -3,7 +3,15 @@
         <div class="col-6">
             <!-- Review Card -->
             <div class="card border-0 p-3">
-                <h5 class="mb-3 page-title">Review details</h5>
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <a href="{{ route('reviews.index') }}"
+                        onclick="history.back(); return false;"
+                        class="review-back-link"
+                        aria-label="Back to reviews">
+                        <img src="{{ asset('assets/images/icons/back_icon.svg') }}" alt="Back">
+                    </a>
+                    <h5 class="mb-0 page-title">Review details</h5>
+                </div>
 
                 <!-- Reviewer info -->
                 <div class="d-flex align-items-center justify-content-between border rounded p-3"
@@ -162,6 +170,16 @@
     @endcan
 
     <style>
+        .review-back-link img {
+            width: 1.2vw;
+            height: 1.2vw;
+        }
+        @media (max-width: 600px) {
+            .review-back-link img {
+                width: 4vw;
+                height: 4vw;
+            }
+        }
         .view-profile-btn {
             border: 1px solid #004E424D !important;
             color: #004E42 !important;

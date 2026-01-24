@@ -2,7 +2,7 @@
     <div class="container" bis_skin_checked="1">
         <h1 class="page-title">All Reviews</h1>
     </div>
-    <livewire:admin.components.toolbar label="reviews" button_label="" search_label="" :active-filters="$activeFilters" />
+    <livewire:admin.components.toolbar label="reviews" button_label="" search_label="" :active-filters="$activeFilters" :show-add-button="false"/>
 
     <div class="tabs-section">
         <div class="tab {{ $activeTab === 'users' ? 'active' : '' }} roles-tab" wire:click="switchTab('users')">
@@ -18,7 +18,7 @@
             <table class="theme-table">
                 <thead>
                     <tr>
-                        <th><input type="checkbox"></th>
+                        <th><input type="checkbox" wire:model.live="selectAll"></th>
                         <th class="sortable" wire:click="sortBy('booking_id')">Booking ID
                             <img src="{{ asset('assets/images/icons/sort.svg') }}"
                                 class="sort-icon {{ $sortField === 'booking_id' ? ($sortDirection === 'asc' ? '' : 'desc') : '' }}">
@@ -54,7 +54,7 @@
                 <tbody>
                     @forelse($reviews as $review)
                         <tr wire:key="review-{{ $review->id }}">
-                            <td><input type="checkbox" value="{{ $review->id }}"></td>
+                            <td><input type="checkbox" value="{{ $review->id }}" wire:model.live="selected"></td>
                             <td>{{ $review->booking_id ?? 'N/A' }}</td>
                             {{-- <td>{{ $review->booking->booking_ref ?? 'N/A' }}</td> --}}
                             <td>

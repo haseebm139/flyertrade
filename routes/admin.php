@@ -1,8 +1,9 @@
 <?php
+
+use App\Http\Controllers\Admin\DashboardController;
+
 Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
 
     // User Management

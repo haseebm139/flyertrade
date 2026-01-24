@@ -18,6 +18,8 @@ class Table extends Component
     public $status = '';
     public $fromDate = '';
     public $toDate = '';
+    public $selected = [];
+    public $selectAll = false;
 
     public $tempStatus = '';
     public $tempFromDate = '';
@@ -162,6 +164,23 @@ class Table extends Component
                 $q->whereBetween('created_at', [$this->fromDate . ' 00:00:00', $this->toDate . ' 23:59:59']);
             })
             ->orderBy($this->sortField, $this->sortDirection);
+    }
+
+    public function updatedSelectAll($value)
+    {
+        if ($value) {
+            $this->selected = $this->getDataQuery()
+                ->pluck('id')
+                ->map(fn ($id) => (string) $id)
+                ->toArray();
+        } else {
+            $this->selected = [];
+        }
+    }
+
+    public function updatedSelected()
+    {
+        $this->selectAll = false;
     }
 
     public function render()

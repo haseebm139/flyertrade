@@ -19,49 +19,26 @@
         <div class="col-lg-9">
             <!-- top stat cards -->
 
-            <livewire:admin.user-stats mode="users" />
+            <div class="row ">
+                @foreach ($stats as $stat)
+                    <div class="col-md-3 col-sm-6 col-6">
+                        <div class="dashboard-card">
+                            <div>
+                                <h6>{{ $stat['label'] }}</h6>
+                                <h2>{{ $stat['value'] ?? 0 }}</h2>
+                            </div>
+                            <div class="icon-box">
+                                <img src="{{ asset($stat['icon']) }}" alt="icon">
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
 
             <!-- finances & disputes row -->
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <div class="finances-card mt-4">
-                        <!-- Header -->
-                        <div class="finances-header">
-                            <h5 class="card-title ">Finances</h5>
-                            <x-custom-select name="month" :options="['February', 'January', 'March']" placeholder="Select month"
-                                class="form-select-sm" style="width: 25%; padding: 0.2vw 0.4vw 0.2vw 0.4vw;" />
-                        </div>
-
-                        <!-- Progress bars -->
-                        <div class="finances-progress">
-                            <div class="progress-bar-custom progress-green"></div>
-                            <div class="progress-bar-custom progress-brown"></div>
-                        </div>
-
-                        <!-- Stats -->
-                        <div class="finance-stats">
-                            <div class="stat-box">
-                                <div class="stat-title">
-                                    <span class="revenue-dot"></span> Total revenue
-                                </div>
-                                <div class="stat-value">
-                                    $3000 <span class="stat-up"><img src="{{ asset('assets/images/icons/value-high.svg') }}"
-                                            class="img-log" alt=""></span>
-                                </div>
-                            </div>
-
-                            <div class="stat-box">
-                                <div class="stat-title">
-                                    <span class="payout-dot"></span> Total payout
-                                </div>
-                                <div class="stat-value">
-                                    $800 <span class="stat-down"><img
-                                            src="{{ asset('assets/images/icons/value-down.svg') }}" class="img-log"
-                                            alt=""></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <livewire:admin.finance-summary />
                 </div>
 
                 <div class="col-md-6 mb-4">
@@ -84,35 +61,22 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="user-info name-2">
-                                                <img src="{{ asset('assets/images/icons/person.svg') }}" alt="User">
-                                                Johnbosco Davies
-                                            </div>
-                                        </td>
-                                        <td>Service provider did not show up at the scheduled time and did
-                                            not
-                                            provide prior notice.</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="user-info name-2">
-                                                <img src="{{ asset('assets/images/icons/person.svg') }}" alt="User">
-                                                Johnbosco Davies
-                                            </div>
-                                        </td>
-                                        <td>Provider left before finishing the work and did not return.</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="user-info name-2">
-                                                <img src="{{ asset('assets/images/icons/person.svg') }}" alt="User">
-                                                Johnbosco Davies
-                                            </div>
-                                        </td>
-                                        <td>Provider left before finishing the work and did not return.</td>
-                                    </tr>
+                                    @forelse ($recentDisputes as $dispute)
+                                        <tr>
+                                            <td>
+                                                <div class="user-info name-2">
+                                                    <img src="{{ asset($dispute->user?->avatar ?? 'assets/images/icons/person.svg') }}"
+                                                        alt="User">
+                                                    {{ $dispute->user?->name ?? 'N/A' }}
+                                                </div>
+                                            </td>
+                                            <td>{{ \Illuminate\Support\Str::limit($dispute->message ?? '', 80) }}</td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="2">No disputes found.</td>
+                                        </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
@@ -127,18 +91,28 @@
                         <!-- Header -->
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h5 class="card-title mb-0">Recently added users</h5>
-                            @can('Read Users')
-                                <a class="dashboard-view-all" href="{{ route('user-management.service.users.index') }}" style="font-weight:400,color:#1b1b1b ,font-size:0.875vw" >View all</a>
-                            @endcan
+                            @canany(['Read Users', 'Read Providers'])
+                                <a class="dashboard-view-all"
+                                    href="{{ route('user-management.service.users.index') }}"
+                                    style="font-weight:400,color:#1b1b1b ,font-size:0.875vw">
+                                    View all
+                                </a>
+                            @endcanany
                         </div>
                         <nav>
                             <div class="nav nav-tabs tabs-recently-added-users" id="nav-tab" role="tablist">
                                 <button class="nav-link tab active" id="nav-home-tab" data-bs-toggle="tab"
                                     data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home"
-                                    aria-selected="true">Service users</button>
+                                    aria-selected="true"
+                                    data-view-url="{{ route('user-management.service.users.index') }}">
+                                    Service users
+                                </button>
                                 <button class="nav-link tab" id="nav-profile-tab" data-bs-toggle="tab"
                                     data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile"
-                                    aria-selected="false">Service providers</button>
+                                    aria-selected="false"
+                                    data-view-url="{{ route('user-management.service.providers.index') }}">
+                                    Service providers
+                                </button>
                             </div>
                         </nav>
                         <div class="tab-content d-block" id="nav-tabContent">
@@ -156,54 +130,28 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td class="user-data asq">1234</td>
-                                                <td>
-                                                    <div class="d-flex align-items-center">
-                                                        <img src="https://i.pravatar.cc/40" class="rounded-circle me-2"
-                                                            alt="User">
-                                                        <div>
-                                                            <div class="fw-semibold name">Johnbosco Davies</div>
-                                                            <small
-                                                                class="text-muted name-2">johnboscodavies@gmail.com</small>
+                                            @forelse ($recentUsers as $user)
+                                                <tr>
+                                                    <td class="user-data asq">{{ $user->id }}</td>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            <img src="{{ asset($user->avatar ?? 'assets/images/avatar/default.png') }}"
+                                                                class="rounded-circle me-2" alt="User">
+                                                            <div>
+                                                                <div class="fw-semibold name">{{ $user->name ?? 'N/A' }}</div>
+                                                                <small
+                                                                    class="text-muted name-2">{{ $user->email ?? '-' }}</small>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </td>
-                                                <td class="user-data asq">123, ABC Road, Dubai</td>
-                                                <td class="user-data asq">+234 4746 763 57</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="user-data asq">1234</td>
-                                                <td>
-                                                    <div class="d-flex align-items-center">
-                                                        <img src="https://i.pravatar.cc/40?img=2"
-                                                            class="rounded-circle me-2" alt="User">
-                                                        <div>
-                                                            <div class="fw-semibold name">Johnbosco Davies</div>
-                                                            <small
-                                                                class="text-muted name-2">johnboscodavies@gmail.com</small>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td class="user-data asq">123, ABC Road, Dubai</td>
-                                                <td class="user-data asq">+234 4746 763 57</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="user-data asq">1234</td>
-                                                <td>
-                                                    <div class="d-flex align-items-center">
-                                                        <img src="https://i.pravatar.cc/40?img=3"
-                                                            class="rounded-circle me-2" alt="User">
-                                                        <div>
-                                                            <div class="fw-semibold name">Johnbosco Davies</div>
-                                                            <small
-                                                                class="text-muted name-2">johnboscodavies@gmail.com</small>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td class="user-data asq ">123, ABC Road, Dubai</td>
-                                                <td class="user-data asq">+234 4746 763 57</td>
-                                            </tr>
+                                                    </td>
+                                                    <td class="user-data asq">{{ $user->address ?? '-' }}</td>
+                                                    <td class="user-data asq">{{ $user->phone ?? '-' }}</td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="4">No users found.</td>
+                                                </tr>
+                                            @endforelse
                                         </tbody>
                                     </table>
                                 </div>
@@ -222,54 +170,28 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td class="user-data asq">1234</td>
-                                                <td>
-                                                    <div class="d-flex align-items-center">
-                                                        <img src="https://i.pravatar.cc/40" class="rounded-circle me-2"
-                                                            alt="User">
-                                                        <div>
-                                                            <div class="fw-semibold name">Johnbosco Davies</div>
-                                                            <small
-                                                                class="text-muted name-2">johnboscodavies@gmail.com</small>
+                                            @forelse ($recentProviders as $user)
+                                                <tr>
+                                                    <td class="user-data asq">{{ $user->id }}</td>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            <img src="{{ asset($user->avatar ?? 'assets/images/avatar/default.png') }}"
+                                                                class="rounded-circle me-2" alt="User">
+                                                            <div>
+                                                                <div class="fw-semibold name">{{ $user->name ?? 'N/A' }}</div>
+                                                                <small
+                                                                    class="text-muted name-2">{{ $user->email ?? '-' }}</small>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </td>
-                                                <td class="user-data asq">123, ABC Road, Dubai</td>
-                                                <td class="user-data asq">+234 4746 763 57</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="user-data asq">1234</td>
-                                                <td>
-                                                    <div class="d-flex align-items-center">
-                                                        <img src="https://i.pravatar.cc/40?img=2"
-                                                            class="rounded-circle me-2" alt="User">
-                                                        <div>
-                                                            <div class="fw-semibold name">Johnbosco Davies</div>
-                                                            <small
-                                                                class="text-muted name-2">johnboscodavies@gmail.com</small>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td class="user-data asq">123, ABC Road, Dubai</td>
-                                                <td class="user-data asq">+234 4746 763 57</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="user-data asq">1234</td>
-                                                <td>
-                                                    <div class="d-flex align-items-center">
-                                                        <img src="https://i.pravatar.cc/40?img=3"
-                                                            class="rounded-circle me-2" alt="User">
-                                                        <div>
-                                                            <div class="fw-semibold name">Johnbosco Davies</div>
-                                                            <small
-                                                                class="text-muted name-2">johnboscodavies@gmail.com</small>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td class="user-data asq ">123, ABC Road, Dubai</td>
-                                                <td class="user-data asq">+234 4746 763 57</td>
-                                            </tr>
+                                                    </td>
+                                                    <td class="user-data asq">{{ $user->address ?? '-' }}</td>
+                                                    <td class="user-data asq">{{ $user->phone ?? '-' }}</td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="4">No providers found.</td>
+                                                </tr>
+                                            @endforelse
                                         </tbody>
                                     </table>
                                 </div>
@@ -375,4 +297,33 @@
         </div>
 
     </div> <!-- end main row -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const viewAllLink = document.querySelector('.dashboard-view-all');
+            const tabs = document.querySelectorAll('.tabs-recently-added-users [data-bs-toggle="tab"]');
+
+            if (!viewAllLink || tabs.length === 0) {
+                return;
+            }
+
+            const updateLink = (tab) => {
+                const url = tab?.dataset?.viewUrl;
+                if (url) {
+                    viewAllLink.setAttribute('href', url);
+                }
+            };
+
+            const activeTab = document.querySelector('.tabs-recently-added-users .nav-link.active');
+            if (activeTab) {
+                updateLink(activeTab);
+            }
+
+            tabs.forEach((tab) => {
+                tab.addEventListener('shown.bs.tab', (event) => {
+                    updateLink(event.target);
+                });
+            });
+        });
+    </script>
 @endsection

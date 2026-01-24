@@ -17,6 +17,8 @@ class ReviewsTable extends Component
     public $sortField = 'created_at';
     public $sortDirection = 'desc';
     public $activeTab = 'users'; // 'users' or 'providers'
+    public $selected = [];
+    public $selectAll = false;
     
     public $showFilterModal = false;
     public $fromDate = '';
@@ -51,6 +53,8 @@ class ReviewsTable extends Component
     public function switchTab($tab)
     {
         $this->activeTab = $tab;
+        $this->selected = [];
+        $this->selectAll = false;
         $this->resetPage();
     }
 
@@ -198,6 +202,23 @@ class ReviewsTable extends Component
         }
 
         return $query->orderBy($this->sortField, $this->sortDirection);
+    }
+
+    public function updatedSelectAll($value)
+    {
+        if ($value) {
+            $this->selected = $this->getDataQuery()
+                ->pluck('id')
+                ->map(fn ($id) => (string) $id)
+                ->toArray();
+        } else {
+            $this->selected = [];
+        }
+    }
+
+    public function updatedSelected()
+    {
+        $this->selectAll = false;
     }
 
     public function exportCsv()
