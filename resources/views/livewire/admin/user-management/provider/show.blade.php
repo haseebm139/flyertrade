@@ -17,32 +17,32 @@
         /* Override style.css static grid for swiper */
         #photos-swiper,
         #videos-swiper {
-            display: block !important;
+            display: block;
             width: 100%;
             overflow: hidden;
             position: relative;
             padding-bottom: 20px !important;
         }
 
-        #photos-swiper .swiper-wrapper,
+        /* #photos-swiper .swiper-wrapper,
         #videos-swiper .swiper-wrapper {
             display: flex !important;
             flex-wrap: nowrap !important;
-        }
+        } */
 
         /* Figma Image Styles */
-        #photos-swiper .swiper-slide {
+        /* #photos-swiper .swiper-slide {
             width: 194px !important;
             height: 147px !important;
             margin-right: 15px;
-        }
+        } */
 
         #photos-swiper .swiper-slide img {
-            width: 194px !important;
+            width: 100% !important;
             height: 147px !important;
-            object-fit: cover;
+            object-fit: contain;
             border-radius: 4px !important;
-            box-shadow: 0px 16px 48px 3px rgba(181, 181, 181, 0.24);
+            /* box-shadow: 0px 16px 48px 3px rgba(181, 181, 181, 0.24); */
         }
 
         .videos-grid-layout {
