@@ -52,7 +52,7 @@
                         </div>
 
                         <!-- Table -->
-                        <div class="table-responsive">
+                        <div class="table-responsive1">
                             <table class="table mb-0" border="0">
                                 <thead>
                                     <tr>
@@ -213,85 +213,10 @@
                     <!-- Header -->
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h5 class="card-title mb-0">Recent activities</h5>
-
                     </div>
 
-                    <!-- Activity item -->
-                    <div class="activity-item">
-                        <div class="activity-icon bg-beige">
-                            <img src="{{ asset('assets/images/icons/new-booking.svg') }}" alt=""
-                                class="icon-boxs">
-                        </div>
-                        <div class="activity-text">
-                            <p class="title">New Booking Created:
-                                <span>Alexander Johnson just booked Plumbing Service with Michael O.</span>
-                            </p>
-                            <small>1 hour ago</small>
-                        </div>
-                    </div>
-
-                    <div class="activity-item">
-                        <div class="activity-icon bg-green">
-                            <img src="{{ asset('assets/images/icons/new-provides.svg') }}" alt=""
-                                class="icon-boxs">
-                        </div>
-                        <div class="activity-text">
-                            <p class="title">New Service Provider Registered:
-                                <span>Jonathan Davies just signed up as a Home Cleaner</span>
-                            </p>
-                            <small>1 hour ago</small>
-                        </div>
-                    </div>
-
-                    <div class="activity-item">
-                        <div class="activity-icon bg-blue">
-                            <img src="{{ asset('assets/images/icons/new-dispute.svg') }}" alt=""
-                                class="icon-boxs">
-                        </div>
-                        <div class="activity-text">
-                            <p class="title">New dispute:
-                                <span>Dispute raised for Booking #FT32075 - Reason - Provider No-Show</span>
-                            </p>
-                            <small>1 hour ago</small>
-                        </div>
-                    </div>
-
-                    <div class="activity-item">
-                        <div class="activity-icon bg-light-brown">
-                            <img src="{{ asset('assets/images/icons/review-posted.svg') }}" alt=""
-                                class="icon-boxs">
-                        </div>
-                        <div class="activity-text">
-                            <p class="title">New Review Posted:
-                                <span>Alexander Sarah K. rated Johnson Davies 'Home Cleaning' service 5
-                                    stars</span>
-                            </p>
-                            <small>1 hour ago</small>
-                        </div>
-                    </div>
-
-                    <div class="activity-item">
-                        <div class="activity-icon bg-beige">
-                            <img src="{{ asset('assets/images/icons/verification-pending.svg') }}" alt=""
-                                class="icon-boxs">
-                        </div>
-                        <div class="activity-text">
-                            <p class="title">Verification Pending:
-                                <span>3 new provider documents pending approval</span>
-                            </p>
-                            <small>1 hour ago</small>
-                        </div>
-                    </div>
-
-                    <!-- Pagination -->
-                    <!-- <div class="pagination-controls">
-                                                    <button class="btn btn-light btn-sm me-1 rounded-circle border">
-                                                    <i class="bi bi-chevron-left"></i>
-                                                    </button>
-                                                    <button class="btn btn-light btn-sm rounded-circle border">
-                                                    <i class="bi bi-chevron-right"></i>
-                                                    </button>
-                                                </div> -->
+                    <!-- Dynamic Activities -->
+                    <livewire:admin.recent-activities />
                 </div>
             </div>
         </div>

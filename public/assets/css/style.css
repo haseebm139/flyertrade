@@ -1174,7 +1174,7 @@ table.dataTable thead th {
 }
 
 .recent-activities {
-    border: 0.0625vw solid #004e42;
+    /* border: 0.0625vw solid #004e42; */
     border-radius: 0.75vw;
     padding: 1.042vw;
     width: 100%;
