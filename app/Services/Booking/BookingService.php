@@ -401,8 +401,9 @@ class BookingService
         ]);
 
         $isCustomer = Auth::id() === $booking->customer_id;
-        $booking->update([
-            'status' => $isCustomer ? 'reschedule_pending_provider' : 'reschedule_pending_customer',
+        $booking->update([ 
+            'reschedule_initiated_by' => $isCustomer ? 'customer' : 'provider',
+            'reschedule_response' => null, // Reset response when new request is made
         ]);
         
         // Send notification
@@ -464,15 +465,23 @@ class BookingService
             }
             
              
-            $booking->update(['status' => 'confirmed']);
+            $booking->update([
+                'status' => 'confirmed',
+                'reschedule_response' => 'accepted',
+            ]);
             $reschedule->update(['status' => 'accepted']);
             
             // Send notification
             $this->notificationService->notifyRescheduleAccepted($booking, $reschedule);
 
         } elseif ($response === 'reject') {
-            $booking->update(['status' => 'rejected']);
+            
             $reschedule->update(['status' => 'rejected']);
+            
+             
+            $booking->update([
+                'reschedule_response' => 'rejected',
+            ]);
             
             // Send notification
             $this->notificationService->notifyRescheduleRejected($booking, $reschedule);
