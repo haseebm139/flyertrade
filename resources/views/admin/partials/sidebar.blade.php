@@ -155,11 +155,11 @@
 
         <!-- Messaging -->
         @can('Read Messages')
-            <a href="#"
-                class="nav-link {{ request()->routeIs('messaging.*') ? 'active' : '' }}">
+            <a href="{{ route('messages.index') }}"
+                class="nav-link {{ request()->routeIs('messages.*') ? 'active' : '' }}">
                 <span>
                     <img
-                        src="{{ asset(request()->routeIs('messaging.*') 
+                        src="{{ asset(request()->routeIs('messages.*') 
                     ? 'assets/images/icons/message-active.svg' 
                     : 'assets/images/icons/message.svg') }}"
                         alt="Messaging"
