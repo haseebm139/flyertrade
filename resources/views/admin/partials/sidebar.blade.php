@@ -155,7 +155,7 @@
 
         <!-- Messaging -->
         @can('Read Messages')
-            <a href="{{ route('messages.index') }}"
+            <a href="#"
                 class="nav-link {{ request()->routeIs('messages.*') ? 'active' : '' }}">
                 <span>
                     <img
