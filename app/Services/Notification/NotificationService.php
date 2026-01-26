@@ -1186,7 +1186,7 @@ class NotificationService
             [
                 'provider_id' => $provider->id,
                 'document_type' => $documentType,
-                'action_url' => "/provider/profile"
+                'action_url' => route('user-management.service.providers.view', ['id' => $provider->id])
             ],
             NotificationIcon::DOCUMENT_VERIFICATION,
             'admin_actions'
@@ -1214,7 +1214,7 @@ class NotificationService
                 'provider_id' => $provider->id,
                 'document_type' => $documentType,
                 'rejection_reason' => $reason,
-                'action_url' => "/provider/profile"
+                'action_url' => route('user-management.service.providers.view', ['id' => $provider->id])
             ],
             NotificationIcon::WARNING,
             'admin_actions'
@@ -1235,7 +1235,7 @@ class NotificationService
             $provider,
             [
                 'provider_id' => $provider->id,
-                'action_url' => "/provider/profile"
+                'action_url' => route('user-management.service.providers.view', ['id' => $provider->id])
             ],
             NotificationIcon::DOCUMENT_VERIFICATION,
             'admin_actions'
