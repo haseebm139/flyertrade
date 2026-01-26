@@ -282,9 +282,13 @@
                 </span>
             </div>
             <div class="profile-card">
-                <img src="{{ asset('assets/images/icons/person.svg') }}" alt="User">
-                <div style="font-weight:500;" class="flyertrade-admin">Flyertrade Admin</div>
-                <div class="muted small flyertrade-email">flyertrade@example.com</div>
+                @php
+                    $avatar = auth()->user()->avatar ?? '';
+                    $avatarSrc = $avatar ? asset($avatar) : asset('assets/images/icons/person.svg');
+                @endphp
+                <img src="{{ $avatarSrc }}" alt="User" onerror="this.onerror=null;this.src='{{ asset('assets/images/icons/person.svg') }}';">
+                <div style="font-weight:500;" class="flyertrade-admin">{{ auth()->user()->name ?? '-' }}</div>
+                <div class="muted small flyertrade-email">{{ auth()->user()->email ?? '-'}}</div>
 
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                     @csrf
@@ -472,11 +476,17 @@
                     const linkText = hasProfile ? 'View Profile' : 'View';
                     const isUnread = !notif.read_at; // Check if read_at is null
                     const bgColor = isUnread ? 'background-color: #f0f9ff; border-left: 3px solid #00796B;' : '';
-                    const actionLink = actionUrl !== '#' 
+                    const hasAction = actionUrl !== '#';
+                    const actionLink = hasAction
                         ? '<a href="' + actionUrl + '" class="provider-view-profile" onclick="event.preventDefault(); const comp = Livewire.find(\'' + componentId + '\'); if(comp) comp.call(\'markAsRead\', ' + notif.id + ').then(() => window.location.href = \'' + actionUrl + '\');">' + linkText + '</a>'
                         : '<span class="provider-view-profile" style="cursor: default; color: #999;">-</span>';
                     
-                    html += '<div class="provider-item" style="' + bgColor + '">';
+                    const itemClick = hasAction
+                        ? 'onclick="event.preventDefault(); const comp = Livewire.find(\'' + componentId + '\'); if(comp) comp.call(\'markAsRead\', ' + notif.id + ').then(() => window.location.href = \'' + actionUrl + '\'); else window.location.href = \'' + actionUrl + '\';"'
+                        : '';
+                    const itemStyle = bgColor + (hasAction ? ' cursor: pointer;' : '');
+
+                    html += '<div class="provider-item" style="' + itemStyle + '" ' + itemClick + '>';
                     html += '<img src="' + iconUrl + '" alt="">';
                     html += '<span>' + message + '</span>';
                     html += actionLink;
@@ -535,11 +545,17 @@
                         const linkText = hasProfile ? 'View Profile' : 'View';
                         const isUnread = !notif.read_at; // Check if read_at is null
                         const bgColor = isUnread ? 'background-color: #f0f9ff; border-left: 3px solid #00796B;' : '';
-                        const actionLink = actionUrl !== '#' 
+                        const hasAction = actionUrl !== '#';
+                        const actionLink = hasAction
                             ? '<a href="' + actionUrl + '" class="provider-view-profile" onclick="event.preventDefault(); const comp = Livewire.find(\'' + componentId + '\'); if(comp) comp.call(\'markAsRead\', ' + notif.id + ').then(() => window.location.href = \'' + actionUrl + '\');">' + linkText + '</a>'
                             : '<span class="provider-view-profile" style="cursor: default; color: #999;">-</span>';
                         
-                        html += '<div class="provider-item" style="' + bgColor + '">';
+                        const itemClick = hasAction
+                            ? 'onclick="event.preventDefault(); const comp = Livewire.find(\'' + componentId + '\'); if(comp) comp.call(\'markAsRead\', ' + notif.id + ').then(() => window.location.href = \'' + actionUrl + '\'); else window.location.href = \'' + actionUrl + '\';"'
+                            : '';
+                        const itemStyle = bgColor + (hasAction ? ' cursor: pointer;' : '');
+
+                        html += '<div class="provider-item" style="' + itemStyle + '" ' + itemClick + '>';
                         html += '<img src="' + iconUrl + '" alt="">';
                         html += '<span>' + message + '</span>';
                         html += actionLink;
