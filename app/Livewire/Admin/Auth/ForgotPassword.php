@@ -4,6 +4,7 @@ namespace App\Livewire\Admin\Auth;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Password;
+use App\Models\User;
 
 class ForgotPassword extends Component
 {
@@ -13,6 +14,16 @@ class ForgotPassword extends Component
     public function sendResetLink()
     {
         $this->validate(['email' => 'required|email']);
+
+        $user = User::where('email', $this->email)->first();
+        if (!$user) {
+            $this->addError('email', 'Email not found.');
+            return;
+        }
+        if ($user->hasAnyRole(['customer', 'provider', 'guest', 'multi'])) {
+            $this->addError('email', 'Unauthorized role for admin reset.');
+            return;
+        }
 
         $status = Password::sendResetLink(['email' => $this->email]);
 

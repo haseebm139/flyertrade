@@ -4,6 +4,7 @@ namespace App\Livewire\Admin\Auth;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class Login extends Component
 {
@@ -19,11 +20,19 @@ class Login extends Component
             'email' => 'required|email|exists:users,email',
             'password' => 'required',
         ]);
- 
+              
         if (Auth::attempt($validated)) {
             session()->regenerate();
-
              
+            $user = Auth::user();
+            if ($user && $user->hasAnyRole(['customer', 'provider','guest','multi'])) {
+                Auth::logout();
+                session()->invalidate();
+                session()->regenerateToken();
+                $this->dispatch('swal-error', message: 'Unauthorized role for admin panel.');
+                return;
+            }
+
             $this->dispatch('swal-success',message: 'Login successfully!', redirect: route('dashboard'));  
         } else {
              
