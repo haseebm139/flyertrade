@@ -30,29 +30,36 @@
         </div>
     </div>
     <br>
-    
+
     <div class="container">
         <h1 class="page-title">All dispute</h1>
     </div>
 
-    <livewire:admin.components.toolbar label="disputes" button_label="" search_label="user or booking ref" :active-filters="$activeFilters" :show-add-button="false" />
+    <livewire:admin.components.toolbar label="disputes" button_label="" search_label="user or booking ref"
+        :active-filters="$activeFilters" :show-add-button="false" />
 
     <div class="table-responsive">
         <table class="theme-table">
             <thead>
                 <tr>
                     <th><input type="checkbox" wire:model.live="selectAll"></th>
-                    <th class="sortable" wire:click="sortBy('booking_id')">Booking ID 
-                        <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon {{ $sortField === 'booking_id' ? ($sortDirection === 'asc' ? '' : 'desc') : '' }}">
+                    <th class="sortable" wire:click="sortBy('booking_id')" >Booking ID
+                        <img src="{{ asset('assets/images/icons/sort.svg') }}"
+                            class="sort-icon {{ $sortField === 'booking_id' ? ($sortDirection === 'asc' ? '' : 'desc') : '' }}">
                     </th>
                     <th class="sortable" wire:click="sortBy('created_at')">Date created
-                        <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon {{ $sortField === 'created_at' ? ($sortDirection === 'asc' ? '' : 'desc') : '' }}">
+                        <img src="{{ asset('assets/images/icons/sort.svg') }}"
+                            class="sort-icon {{ $sortField === 'created_at' ? ($sortDirection === 'asc' ? '' : 'desc') : '' }}">
                     </th>
-                    <th class="sortable">Affected user<img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
-                    <th class="sortable">Service Type <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
-                    <th class="sortable">Dispute issue <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
-                    <th class="sortable" wire:click="sortBy('status')"> Status 
-                        <img src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon {{ $sortField === 'status' ? ($sortDirection === 'asc' ? '' : 'desc') : '' }}">
+                    <th class="sortable">Affected user<img src="{{ asset('assets/images/icons/sort.svg') }}"
+                            class="sort-icon"></th>
+                    <th class="sortable">Service Type <img src="{{ asset('assets/images/icons/sort.svg') }}"
+                            class="sort-icon"></th>
+                    <th class="sortable">Dispute issue <img src="{{ asset('assets/images/icons/sort.svg') }}"
+                            class="sort-icon"></th>
+                    <th class="sortable" wire:click="sortBy('status')"> Status
+                        <img src="{{ asset('assets/images/icons/sort.svg') }}"
+                            class="sort-icon {{ $sortField === 'status' ? ($sortDirection === 'asc' ? '' : 'desc') : '' }}">
                     </th>
                     <th></th>
                 </tr>
@@ -61,7 +68,12 @@
                 @forelse($disputes as $dispute)
                     <tr wire:key="dispute-{{ $dispute->id }}">
                         <td><input type="checkbox" value="{{ $dispute->id }}" wire:model.live="selected"></td>
-                        <td>{{ $dispute->booking->booking_ref ?? 'N/A' }}</td>
+                        <td wire:click="viewDispute({{ $dispute->id }})" style="cursor: pointer">
+
+
+                            {{ $dispute->booking->booking_ref ?? 'N/A' }}
+
+                        </td>
                         <td>
                             <span class="date">{{ $dispute->created_at->format('d M, Y') }}</span>
                             <br>
@@ -69,7 +81,8 @@
                         </td>
                         <td>
                             <div class="user-info">
-                                <img src="{{ asset($dispute->user->avatar ?? 'assets/images/icons/person-one.svg') }}" alt="User">
+                                <img src="{{ asset($dispute->user->avatar ?? 'assets/images/icons/person-one.svg') }}"
+                                    alt="User">
                                 <div>
                                     <span class="user-theme-name ">{{ $dispute->user->name ?? 'N/A' }}</span>
                                 </div>
@@ -83,17 +96,16 @@
                                     <span class="status active {{ $dispute->status }}" onclick="toggleDropdown(this)">
                                         {{ ucfirst(str_replace('_', ' ', $dispute->status)) }}
                                         <svg class="arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                            stroke-linejoin="round">
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
                                             <polyline points="6 9 12 15 18 9"></polyline>
                                         </svg>
                                     </span>
                                     <ul class="dropdown-menu" style="display: none;">
                                         @if ($dispute->status == 'resolved')
-                                        <li wire:click="setStatus({{ $dispute->id }}, 'unresolved')">Unresolved</li>
+                                            <li style="font-weight: 400;" wire:click="setStatus({{ $dispute->id }}, 'unresolved')">Unresolved</li>
                                         @else
-                                        <li wire:click="setStatus({{ $dispute->id }}, 'resolved')">Resolved</li>
-
+                                            <li style="font-weight: 400;" wire:click="setStatus({{ $dispute->id }}, 'resolved')">Resolved</li>
                                         @endif
                                     </ul>
                                 @else
@@ -105,16 +117,20 @@
                         </td>
                         <td>
                             <div class="actions-dropdown">
-                                <button class="actions-btn" onclick="toggleActions(this)"> <img src="{{ asset('assets/images/icons/three_dots.svg') }}" class="dots-img "></button>
+                                <button class="actions-btn" onclick="toggleActions(this)"> <img
+                                        src="{{ asset('assets/images/icons/three_dots.svg') }}"
+                                        class="dots-img "></button>
                                 <div class="actions-menu" style="display: none; right: 0px !important;">
+                                    {{-- <a wire:click="viewDispute({{ $dispute->id }})">View details</a> --}}
                                     @can('Write Disputes')
-                                        @if($dispute->status === 'resolved')
-                                            <a wire:click="setStatus({{ $dispute->id }}, 'unresolved')">Mark as unresolved</a>
+                                        @if ($dispute->status === 'resolved')
+                                            <a style="cursor: pointer" wire:click="setStatus({{ $dispute->id }}, 'unresolved')">Mark as
+                                                unresolved</a>
                                         @else
-                                            <a wire:click="setStatus({{ $dispute->id }}, 'resolved')">Resolve Dispute</a>
+                                            <a style="cursor: pointer" wire:click="setStatus({{ $dispute->id }}, 'resolved')">Resolve Dispute</a>
                                         @endif
                                     @endcan
-                                     
+
                                 </div>
                             </div>
                         </td>
@@ -181,19 +197,122 @@
         </div>
     @endif
 
+    @if ($showDisputeModal && $selectedDispute)
+        <div id="view-booking" class="view-booking-modal" style="display: flex;">
+            <div class="view-booking-content">
+                <div class="modal-header" style="margin-bottom:1.563vw">
+                    <h2 style="font-size:1.146vw;font-weight: 600;line-height:1;">Booking details</h2>
+                    <div class="header-actions">
+                        <span class="close-btn" style="line-height:1;" wire:click="closeDisputeModal">
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M0.75 11.236L5.993 5.993L11.236 11.236M11.236 0.75L5.992 5.993L0.75 0.75"
+                                    stroke="#717171" stroke-width="1.5" stroke-linecap="round"
+                                    stroke-linejoin="round"></path>
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+                <div class="service-header-icons">
+                    <h4 style="font-size:0.938vw;font-weight: 500; letter-spacing: -0.04em;">Service details</h4>
+                    <h5 wire:click="downloadDisputeDetails" style="cursor: pointer;">
+                        <img src="{{ asset('assets/images/icons/download.svg') }}" alt="Download"
+                            class="download-icon">
+                        <small style="color:grey;font-size:0.938vw;">Download </small>
+                    </h5>
+                </div>
+
+                <div class="modal-section">
+                    <div class="details-grid">
+                        <div>Booking ID</div>
+                        <div style="cursor:pointer">{{ $selectedDispute->booking->booking_ref ?? 'N/A' }}</div>
+                        <div>Date</div>
+                        <div>{{ optional($selectedDispute->booking?->created_at)->format('d M, Y') ?? 'N/A' }}</div>
+                        <div>Time</div>
+                        <div>{{ optional($selectedDispute->booking?->created_at)->format('h:i A') ?? 'N/A' }}</div>
+                        <div>Duration</div>
+                        <div>{{ $selectedDispute->booking->duration ?? '-' }}</div>
+                        <div>Location</div>
+                        <div>{{ $selectedDispute->booking->booking_address ?? '-' }}</div>
+                        <div>Service type</div>
+                        <div>{{ $selectedDispute->booking->service->name ?? '-' }}</div>
+                        <div>Service cost</div>
+                        <div>${{ number_format($selectedDispute->booking->total_price ?? 0, 2) }}</div>
+                        <div>Status</div>
+                        <div>
+                            @php
+                                $statusClasses = [
+                                    'awaiting_provider' => 'pending',
+                                    'confirmed' => 'active',
+                                    'in_progress' => 'active',
+                                    'completed' => 'completed',
+                                    'cancelled' => 'cancelled',
+                                    'rejected' => 'cancelled',
+                                    'reschedule_pending_customer' => 'pending',
+                                ];
+                                $statusClass = $statusClasses[$selectedDispute->booking->status] ?? 'inactive';
+                            @endphp
+                            <span class="status {{ $statusClass }}"
+                                style="border-radius: 1.042vw; font-weight: 500;  display: inline-block;">
+                                {{ str_replace('_', ' ', ucfirst($selectedDispute->booking->status)) }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-section">
+                    <br>
+                    <h4 style="font-size:0.938vw;font-weight: 500; letter-spacing: -0.04em;">Users details</h4>
+                    <div class="details-grid">
+                        <div>Service provider</div>
+                        <div class="text-end">{{ $selectedDispute->booking->provider->name ?? '-' }}</div>
+                        <div>Service user</div>
+                        <div class="text-end">{{ $selectedDispute->booking->customer->name ?? '-' }}</div>
+                    </div>
+                </div>
+
+                <div class="modal-section">
+                    <br>
+                    <h4 style="font-size:0.938vw;font-weight: 500; letter-spacing: -0.04em;">Dispute issue</h4>
+                    <div class="dispute-text">
+                        <div style="color:#717171;">
+                            {{ $selectedDispute->message ?? '-' }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
     <style>
+        
+        .theme-table td,
+        .date,
+        span.desf {
+            font-weight: 500;
+        }
+
+        @media (max-width:600px) {
+            .booking_id {
+                min-width: 100px;
+            }
+        }
+   
         .desc {
             transform: rotate(180deg);
         }
+
         .sort-icon {
             transition: transform 0.3s ease;
         }
+
         .resolved {
             color: #17A55A;
             border-color: #17A55A;
             background-color: rgba(23, 165, 90, 0.1);
         }
-        .unresolved {           
+
+        .unresolved {
 
             color: #dc3545;
             border-color: #dc3545;
