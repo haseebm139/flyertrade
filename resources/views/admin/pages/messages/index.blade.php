@@ -3,7 +3,90 @@
 @section('title', 'Messaging')
 @section('header', 'Messaging')
 @section('content')
+    <style>
+        .sidebars{
+            background: #F6F6F6;
+             width:20vw;
+        }
+        .filters{
+           flex-wrap: wrap;
+           background: rgba(23, 165, 90, 0.1);
+               border-radius: 0.417vw;
+               justify-content: space-between;
+        }
+        .filter-btn{
+            border:none !important;
+            color:#004e42;
+            padding: 0.5vw 0.7vw;
+                line-height: 1;
+                min-width:3.073vw;
+        }
+        .tab.active{
+            border-radius: 0.208vw;
+        }
+        .chat-user-sections{
+            justify-content: flex-start;
+        }
+        .tab.active, .tab:hover{
+                       background: rgba(23, 165, 90, 0.1);
+        }
+        .tab.chat-tabss{
+            font-size:0.833vw;
+        }
+        .user-infos strong{
+            font-size: 0.833vw;
+        }
+        .user-infos{
+            gap:10px;
+        }
+        .msg_info_part{
+                display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap:10px;
+        }
+        .user-infos small {
+        font-size: 0.729vw;
+    }
+    .user-list-item {
+    display: flex;
+    align-items: stretch;
+}
+.search-bars input::placeholder{
+    font-size: 0.833vw;
 
+    color:#555;
+    /* font-weight: 500; */
+}
+.search-bars input{
+    font-size: 0.833vw;
+    padding-left: 2.083vw;
+    color:#555;
+    font-weight: 500;
+}
+.search-bars{
+    position: relative;
+}
+.searc_icon{
+    position: absolute;
+    left: 10px;
+    top: 30%;
+    transform: translateY(-30%);
+}
+
+.message-chat-theme .chat-header{
+    background: #fff;
+}
+.message-chat-theme .new-email{
+    font-size: 0.729vw;
+    color:#004e42;
+    font-weight: 600;
+
+}
+.header-right span{
+    color: #717171;
+}
+    </style>
     <div class="users-toolbar border-0 p-0">
         <div class="toolbar-left">
             @can('Create Messages')
@@ -23,6 +106,9 @@
     <div class="messages-email-container">
         <aside class="sidebars">
             <div class="search-bars">
+                <svg class="searc_icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M21 21L15.0001 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="#555555" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+</svg>
                 <input type="search" placeholder="Search" />
             </div>
 
@@ -104,20 +190,28 @@
                         <div class="user-infos">
                             <div class="user-header">
                                 <strong>Johnson James</strong>
-                                <span class="time">12:00pm</span>
+                           
                             </div>
                             <small>Hi, I booked a plumber for tomorrow.</small>
                         </div>
-                        <span class="unread-count">2</span>
+                        <div class="msg_info_part">
+                            <span class="time">12:00pm</span>
+                            <span class="unread-count">2</span>
+                        </div>
+                       
                     </li>
                     <li class="user-list-item">
                         <img src="{{asset('assets/images/icons/five.svg')}}" class="user-avatar" />
                         <div class="user-infos">
                             <div class="user-header">
                                 <strong>Emma Watson</strong>
-                                <span class="time">11:45am</span>
+                         
                             </div>
                             <small>Thanks for the quick help!</small>
+                        </div>
+                                    <div class="msg_info_part">
+                            <span class="time">12:00pm</span>
+                            <!-- <span class="unread-count">2</span> -->
                         </div>
                     </li>
                 </ul>
@@ -126,16 +220,20 @@
             <!-- ====== UNREAD TAB ====== -->
             <div id="unread" class="tab-content">
                 <ul class="user-list">
-                    <li class="user-list-item">
+                                    <li class="user-list-item">
                         <img src="{{asset('assets/images/icons/five.svg')}}" class="user-avatar" />
                         <div class="user-infos">
                             <div class="user-header">
-                                <strong>Ali Raza</strong>
-                                <span class="time">9:30am</span>
+                                <strong>Johnson James</strong>
+                           
                             </div>
-                            <small>Can you confirm the service time?</small>
+                            <small>Hi, I booked a plumber for tomorrow.</small>
                         </div>
-                        <span class="unread-count">1</span>
+                        <div class="msg_info_part">
+                            <span class="time">12:00pm</span>
+                            <span class="unread-count">2</span>
+                        </div>
+                       
                     </li>
                 </ul>
             </div>
@@ -147,10 +245,14 @@
                         <img src="{{asset('assets/images/icons/five.svg')}}" class="user-avatar" />
                         <div class="user-infos">
                             <div class="user-header">
-                                <strong>Support Team</strong>
-                                <span class="time">Yesterday</span>
+                                <strong>Emma Watson</strong>
+                         
                             </div>
-                            <small>Your invoice #4523 has been sent.</small>
+                            <small>Thanks for the quick help!</small>
+                        </div>
+                                    <div class="msg_info_part">
+                            <span class="time">Yesterday</span>
+                            <!-- <span class="unread-count">2</span> -->
                         </div>
                     </li>
                 </ul>
@@ -159,25 +261,33 @@
             <!-- ====== CHATS TAB ====== -->
             <div id="chats" class="tab-content">
                 <ul class="user-list">
-                    <li class="user-list-item">
+                        <li class="user-list-item">
                         <img src="{{asset('assets/images/icons/five.svg')}}" class="user-avatar" />
                         <div class="user-infos">
                             <div class="user-header">
-                                <strong>Ali Khan</strong>
-                                <span class="time">10:15am</span>
+                                <strong>Johnson James</strong>
+                           
                             </div>
-                            <small>Can we reschedule for tomorrow?</small>
+                            <small>Hi, I booked a plumber for tomorrow.</small>
                         </div>
-                        <span class="unread-count">1</span>
+                        <div class="msg_info_part">
+                            <span class="time">12:00pm</span>
+                            <span class="unread-count">2</span>
+                        </div>
+                       
                     </li>
-                    <li class="user-list-item">
+                  <li class="user-list-item">
                         <img src="{{asset('assets/images/icons/five.svg')}}" class="user-avatar" />
                         <div class="user-infos">
                             <div class="user-header">
-                                <strong>Lucy Cleaner</strong>
-                                <span class="time">8:00am</span>
+                                <strong>Emma Watson</strong>
+                         
                             </div>
-                            <small>Just finished cleaning at 12th Ave.</small>
+                            <small>Thanks for the quick help!</small>
+                        </div>
+                                    <div class="msg_info_part">
+                            <span class="time">12:00pm</span>
+                            <!-- <span class="unread-count">2</span> -->
                         </div>
                     </li>
                 </ul>
@@ -270,7 +380,27 @@
                 </p>
             </div>
         </div>
+<style>
+    .message-chat-theme .message-left, .message-chat-theme .message-right{
+        background: #fff;
+    }
+     .message-chat-theme .message-left p {
+        background: rgba(149, 109, 55, 0.1);
+        padding:1.042vw;
+        border-radius: 0.417vw 0.417vw 0 0.417vw;
+        color:#8e8e8e;
+     }
+     .message-chat-theme .message-right p{
 
+         background: #004e42;
+        padding:1.042vw;
+        border-radius: 0.417vw 0.417vw 0 0.417vw;
+     }
+     .message-chat-theme .timestamp{
+        text-align:right;
+        color: #555;
+     }
+</style>
         <!-- MESSAGE CHAT -->
         <div class="message-chat-theme">
             <div class="chat-header">
@@ -296,7 +426,9 @@
                         <img src="{{asset('assets/images/icons/dots_message.svg')}}" alt="Refresh Icon">
 
                     </div>
-                    <button class="new-email new-email-btn">+ New email</button>
+                    <button class="new-email new-email-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M6.58333 0.75V12.4167M0.75 6.58333H12.4167" stroke="#004E42" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+</svg> New email</button>
                 </div>
             </div>
 
@@ -308,7 +440,7 @@
                         sodales sem. Gravida maecenas condimentum elementum felis. Eu non et in sed. Odio
                         magna lectus condimentum neque nibh duis id. A morbi tristique quis velit sit.
                     </p>
-                    <span class="timestamp" style="color:grey;">Message sent 12pm</span>
+                    <span class="timestamp" style="color:#8e8e8e;">Message sent 12pm</span>
                 </div>
 
                 <!-- Message 2 Right -->
@@ -327,7 +459,7 @@
                         sodales sem. Gravida maecenas condimentum elementum felis. Eu non et in sed. Odio
                         magna lectus condimentum neque nibh duis id. A morbi tristique quis velit sit.
                     </p>
-                    <span class="timestamp" style="color:grey;">Message sent 12pm</span>
+                    <span class="timestamp" style="color:#8e8e8e;">Message sent 12pm</span>
                 </div>
 
                 <!-- Message 4 Right -->
@@ -346,7 +478,7 @@
                         sodales sem. Gravida maecenas condimentum elementum felis. Eu non et in sed. Odio
                         magna lectus condimentum neque nibh duis id. A morbi tristique quis velit sit.
                     </p>
-                    <span class="timestamp" style="color:grey;">Message sent 12pm</span>
+                    <span class="timestamp" style="color:#8e8e8e;">Message sent 12pm</span>
                 </div>
             </div>
 
