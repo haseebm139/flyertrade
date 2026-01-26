@@ -119,6 +119,15 @@ class Table extends Component
         $this->dispatch('addItemRequested');
     }
 
+    public function openUserProvidersModal($serviceId)
+    {
+        if (!$serviceId) {
+            return;
+        }
+
+        $this->dispatch('open-user-providers-modal', serviceId: $serviceId);
+    }
+
     public function edit($id)
     {
         if (!auth()->user()->can('Write Service Categories')) {

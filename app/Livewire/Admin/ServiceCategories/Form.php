@@ -5,12 +5,17 @@ namespace App\Livewire\Admin\ServiceCategories;
 use Livewire\Component;
 use App\Models\Service;
 use Livewire\Attributes\On;
+use Livewire\WithFileUploads;
 class Form extends Component
 {
+    use WithFileUploads;
+
     public $showModal = false;
     public $categoryId;
     public $name = '';
     public $description = '';
+    public $icon;
+    public $existingIcon = '';
      
     protected $listeners = [        
         'addItemRequested' => 'open',
@@ -26,6 +31,7 @@ class Form extends Component
                 $this->categoryId   = $cat->id;
                 $this->name         = $cat->name;
                 $this->description  = $cat->description;
+                $this->existingIcon = $cat->icon ?? '';
             }
         }
 
@@ -42,12 +48,19 @@ class Form extends Component
         $this->validate([
             'name' => 'required|string|max:255|unique:services,name,' . $this->categoryId,
             'description' => 'nullable|string|max:500',
+            'icon' => 'nullable|image|max:2048',
         ]);
 
         try {
+            $iconPath = $this->existingIcon;
+            if ($this->icon) {
+                $iconPath = $this->icon->storePublicly('service-categories', 'public');
+                $iconPath = 'storage/' . ltrim($iconPath, '/');
+            }
+
             Service::updateOrCreate(
                 ['id' => $this->categoryId],
-                ['name' => $this->name, 'description' => $this->description]
+                ['name' => $this->name, 'description' => $this->description, 'icon' => $iconPath]
             );
             $this->dispatch('showSweetAlert', 'success', 'Service ' . ($this->categoryId ? 'updated' : 'created') . ' successfully.', 'Success');
             
@@ -64,6 +77,8 @@ class Form extends Component
         $this->categoryId = null;
         $this->name = '';
         $this->description = '';
+        $this->icon = null;
+        $this->existingIcon = '';
     }
     public function render()
     {

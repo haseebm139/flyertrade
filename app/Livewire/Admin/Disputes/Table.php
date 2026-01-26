@@ -208,6 +208,8 @@ class Table extends Component
             fputcsv($handle, ['Service Provider', $dispute->booking->provider->name ?? 'N/A']);
             fputcsv($handle, ['Service User', $dispute->booking->customer->name ?? 'N/A']);
             fputcsv($handle, ['Dispute Issue', $dispute->message ?? '']);
+            $attachmentUrl = $dispute->attachment ? rtrim(config('app.url'), '/') . '/' . ltrim($dispute->attachment, '/') : '';
+            fputcsv($handle, ['Attachment', $attachmentUrl]);
             fclose($handle);
         };
 
