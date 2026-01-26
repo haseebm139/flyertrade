@@ -473,7 +473,7 @@
                     const message = notif.message || '';
                     const actionUrl = notif.action_url || '#';
                     const hasProfile = notif.has_profile || (notif.data && (notif.data.provider_id || notif.data.customer_id));
-                    const linkText = hasProfile ? 'View Profile' : 'View';
+                    const linkText = notif.type === 'provider_registered' ? 'View Profile' : 'View';
                     const isUnread = !notif.read_at; // Check if read_at is null
                     const bgColor = isUnread ? 'background-color: #f0f9ff; border-left: 3px solid #00796B;' : '';
                     const hasAction = actionUrl !== '#';
