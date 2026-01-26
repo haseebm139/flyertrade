@@ -10,6 +10,10 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class ProviderService extends Model
 {
      protected $guarded = [];
+     protected $casts = [
+         'is_primary' => 'boolean',
+         'show_certificate' => 'boolean',
+     ];
 
 
 
