@@ -34,7 +34,7 @@
                     <div class="form-group">
                         <label>Image</label>
                         <input type="file" class="form-input @error('icon') error-input @enderror" wire:model="icon"
-                            accept="image/*" wire:loading.attr="disabled" wire:target="save,icon">
+                            accept=".jpg,.jpeg,.png,.webp,.svg" wire:loading.attr="disabled" wire:target="save,icon">
                         @error('icon')
                             <div class="error-message" style="margin-top: 0.5rem;">
                                 <i class="fa-solid fa-circle-exclamation"></i>
