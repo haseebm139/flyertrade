@@ -249,6 +249,23 @@ class NotificationsList extends Component
         $data = $notification->data ?? [];
         $type = $notification->type ?? '';
         $category = $notification->category ?? '';
+        $rawActionUrl = is_string($notification->action_url ?? null) ? trim($notification->action_url) : null;
+
+        if ($rawActionUrl !== null && $rawActionUrl !== '') {
+            $normalized = strtolower($rawActionUrl);
+
+            if (in_array($normalized, ['viewprofile', 'view_profile', 'view-profile'], true)) {
+                if (isset($data['provider_id'])) {
+                    return "/admin/providers/{$data['provider_id']}";
+                }
+                // Fall back to data-based routing if provider_id is missing
+                $rawActionUrl = null;
+            } elseif ($normalized !== 'view') {
+                return $rawActionUrl;
+            } else {
+                $rawActionUrl = null;
+            }
+        }
 
         // Priority 1: Check category first
         if ($category === 'bookings' && isset($data['booking_id'])) {
