@@ -624,7 +624,10 @@ class BookingService
 
     public function cancelledBookingsCustomer($customerId)
     {
-        return Booking::with('slots', 'provider', 'customer','providerService.service')->where('customer_id', $customerId)->where('status', 'cancelled')->paginate(10);
+        return Booking::with('slots', 'provider', 'customer','providerService.service')
+            ->where('customer_id', $customerId)
+            ->whereIn('status', ['cancelled', 'rejected'])
+            ->paginate(10);
     }
 
     public function processPayment($id): array
