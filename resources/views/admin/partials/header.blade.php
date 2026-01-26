@@ -481,10 +481,8 @@
                         ? '<a href="' + actionUrl + '" class="provider-view-profile" onclick="event.preventDefault(); const comp = Livewire.find(\'' + componentId + '\'); if(comp) comp.call(\'markAsRead\', ' + notif.id + ').then(() => window.location.href = \'' + actionUrl + '\');">' + linkText + '</a>'
                         : '<span class="provider-view-profile" style="cursor: default; color: #999;">-</span>';
                     
-                    const itemClick = hasAction
-                        ? 'onclick="event.preventDefault(); const comp = Livewire.find(\'' + componentId + '\'); if(comp) comp.call(\'markAsRead\', ' + notif.id + ').then(() => window.location.href = \'' + actionUrl + '\'); else window.location.href = \'' + actionUrl + '\';"'
-                        : '';
-                    const itemStyle = bgColor + (hasAction ? ' cursor: pointer;' : '');
+                    const itemClick = 'onclick="event.preventDefault(); const comp = Livewire.find(\'' + componentId + '\'); if(comp) comp.call(\'markAsRead\', ' + notif.id + ').then(() => { if (\'' + actionUrl + '\' !== \'#\') { window.location.href = \'' + actionUrl + '\'; } });"';
+                    const itemStyle = bgColor + ' cursor: pointer;';
 
                     html += '<div class="provider-item" style="' + itemStyle + '" ' + itemClick + '>';
                     html += '<img src="' + iconUrl + '" alt="">';
@@ -550,10 +548,8 @@
                             ? '<a href="' + actionUrl + '" class="provider-view-profile" onclick="event.preventDefault(); const comp = Livewire.find(\'' + componentId + '\'); if(comp) comp.call(\'markAsRead\', ' + notif.id + ').then(() => window.location.href = \'' + actionUrl + '\');">' + linkText + '</a>'
                             : '<span class="provider-view-profile" style="cursor: default; color: #999;">-</span>';
                         
-                        const itemClick = hasAction
-                            ? 'onclick="event.preventDefault(); const comp = Livewire.find(\'' + componentId + '\'); if(comp) comp.call(\'markAsRead\', ' + notif.id + ').then(() => window.location.href = \'' + actionUrl + '\'); else window.location.href = \'' + actionUrl + '\';"'
-                            : '';
-                        const itemStyle = bgColor + (hasAction ? ' cursor: pointer;' : '');
+                        const itemClick = 'onclick="event.preventDefault(); const comp = Livewire.find(\'' + componentId + '\'); if(comp) comp.call(\'markAsRead\', ' + notif.id + ').then(() => { if (\'' + actionUrl + '\' !== \'#\') { window.location.href = \'' + actionUrl + '\'; } });"';
+                        const itemStyle = bgColor + ' cursor: pointer;';
 
                         html += '<div class="provider-item" style="' + itemStyle + '" ' + itemClick + '>';
                         html += '<img src="' + iconUrl + '" alt="">';

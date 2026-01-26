@@ -297,7 +297,11 @@ class NotificationService
             'New Booking Created',
             "New booking #{$booking->booking_ref} has been created",
             $booking,
-            ['booking_id' => $booking->id, 'booking_ref' => $booking->booking_ref]
+            [
+                'booking_id' => $booking->id,
+                'booking_ref' => $booking->booking_ref,
+                'action_url' => route('booking.index')
+            ]
         );
     }
 
@@ -361,7 +365,11 @@ class NotificationService
             'Booking Cancelled',
             "Booking #{$booking->booking_ref} has been cancelled",
             $booking,
-            ['booking_id' => $booking->id, 'booking_ref' => $booking->booking_ref]
+            [
+                'booking_id' => $booking->id,
+                'booking_ref' => $booking->booking_ref,
+                'action_url' => route('booking.index')
+            ]
         );
     }
 
@@ -458,16 +466,23 @@ class NotificationService
     /**
      * Notify admin about document verification pending
      */
-    public function notifyDocumentVerificationPending(int $count = 0): int
+    public function notifyDocumentVerificationPending(int $count = 0, ?int $providerId = null): int
     {
 
-     
+        $actionUrl = $providerId
+            ? route('user-management.service.providers.view', ['id' => $providerId])
+            : route('user-management.service.providers.index');
+        $extraData = ['count' => $count, 'action_url' => $actionUrl];
+        if ($providerId) {
+            $extraData['provider_id'] = $providerId;
+        }
+
         return $this->sendToAdmins(
             'document_verification',
             'Document verification',
             $count > 0 ? "{$count} New Providers Awaiting Document Verification." : "New Providers Awaiting Document Verification.",
             null,
-            ['count' => $count, 'action_url' => '/admin/providers/pending-verification'],
+            $extraData,
             NotificationIcon::DOCUMENT_VERIFICATION,
             'admin_actions'
         );
@@ -487,7 +502,7 @@ class NotificationService
                 'provider_id' => $providerId,
                 'provider_name' => $providerName,
                 'cancellation_count' => $cancellationCount,
-                'action_url' => "/admin/providers/{$providerId}"
+                'action_url' => route('user-management.service.providers.view', ['id' => $providerId])
             ],
             NotificationIcon::HIGH_CANCELLATION_ALERT,
             'admin_actions'
@@ -509,7 +524,7 @@ class NotificationService
                 'booking_ref' => $booking->booking_ref,
                 'customer_id' => $booking->customer_id,
                 'provider_id' => $booking->provider_id,
-                'action_url' => "/admin/bookings/{$booking->id}"
+                'action_url' => route('booking.index')
             ],
             NotificationIcon::ESCALATION,
             'admin_actions'
@@ -543,7 +558,7 @@ class NotificationService
                 'customer_id' => $booking->customer_id,
                 'provider_id' => $booking->provider_id,
                 'service_name' => $serviceName,
-                'action_url' => "/admin/bookings/{$booking->id}"
+                'action_url' => route('booking.index')
             ],
             NotificationIcon::BOOKING_CREATED,
             'bookings'
@@ -576,7 +591,7 @@ class NotificationService
                 'provider_id' => $provider->id,
                 'provider_name' => $provider->name,
                 'service_name' => $serviceName,
-                'action_url' => "/admin/providers/{$provider->id}"
+                'action_url' => route('user-management.service.providers.view', ['id' => $provider->id])
             ],
             NotificationIcon::PROVIDER_REGISTERED,
             'admin_actions'
@@ -601,7 +616,7 @@ class NotificationService
                 'booking_id' => $dispute->booking_id ?? null,
                 'booking_ref' => $bookingRef,
                 'reason' => $reason,
-                'action_url' => "/admin/disputes/{$dispute->id}"
+                'action_url' => route('dispute.index')
             ],
             NotificationIcon::DISPUTE,
             'admin_actions'
@@ -635,7 +650,7 @@ class NotificationService
                 'provider_id' => $review->receiver_id,
                 'rating' => $review->rating,
                 'service_name' => $serviceName,
-                'action_url' => "/admin/reviews/{$review->id}"
+                'action_url' => route('reviews.show', ['id' => $review->id])
             ],
             NotificationIcon::REVIEW_RECEIVED,
             'reviews'
@@ -846,7 +861,7 @@ class NotificationService
                 'booking_ref' => $booking->booking_ref,
                 'customer_id' => $booking->customer_id,
                 'provider_id' => $booking->provider_id,
-                'action_url' => "/admin/bookings/{$booking->id}"
+                'action_url' => route('booking.index')
             ],
             NotificationIcon::BOOKING_CANCELLED,
             'bookings'
@@ -1057,7 +1072,7 @@ class NotificationService
             [
                 'booking_id' => $booking->id,
                 'booking_ref' => $booking->booking_ref,
-                'action_url' => "/admin/bookings/{$booking->id}"
+                'action_url' => route('booking.index')
             ],
             NotificationIcon::BOOKING_CANCELLED,
             'bookings'
@@ -1100,7 +1115,7 @@ class NotificationService
             [
                 'transaction_id' => $transaction->id,
                 'booking_id' => $transaction->booking_id,
-                'action_url' => "/admin/transactions/{$transaction->id}"
+                'action_url' => route('transaction.index')
             ],
             NotificationIcon::REFUND_PROCESSED,
             'transactions'
@@ -1148,7 +1163,7 @@ class NotificationService
                 'transaction_id' => $transaction->id,
                 'booking_id' => $transaction->booking_id,
                 'failure_reason' => $reason,
-                'action_url' => "/admin/transactions/{$transaction->id}"
+                'action_url' => route('transaction.index')
             ],
             NotificationIcon::REFUND_FAILED,
             'transactions'
@@ -1330,7 +1345,7 @@ class NotificationService
             [
                 'dispute_id' => $dispute->id,
                 'booking_id' => $dispute->booking_id ?? null,
-                'action_url' => "/admin/disputes/{$dispute->id}"
+                'action_url' => route('dispute.index')
             ],
             NotificationIcon::ADMIN_ACTION,
             'admin_actions'

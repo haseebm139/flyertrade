@@ -174,7 +174,7 @@ class ProviderProfileService
             // Send notification to admin if any document was uploaded
             if ($documentUploaded) {
                 try {
-                    $result = $this->notificationService->notifyDocumentVerificationPending();
+                    $result = $this->notificationService->notifyDocumentVerificationPending(0, $user->id);
                      
                     \Log::info('Document verification notification sent. Count: ' . $result);
                 } catch (\Exception $e) {
