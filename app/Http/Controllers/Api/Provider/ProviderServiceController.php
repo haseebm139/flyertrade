@@ -61,7 +61,6 @@ class ProviderServiceController extends BaseController
             'services.rate_mid'        => 'nullable|numeric|min:0',
             'services.rate_max'        => 'nullable|numeric|min:0',
             'services.is_primary'      => 'boolean',
-            'services.show_certificates' => 'boolean',
 
             // Media
             'services.photos.*'        => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
@@ -129,7 +128,6 @@ class ProviderServiceController extends BaseController
             'services.rate_mid'        => 'nullable|numeric|min:0',
             'services.rate_max'        => 'nullable|numeric|min:0',
             'services.is_primary'      => 'boolean',
-            'services.show_certificates' => 'boolean',
 
             // Media
             'services.photos.*'        => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
