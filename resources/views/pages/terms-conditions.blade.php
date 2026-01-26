@@ -56,13 +56,27 @@
             .back-link:hover {
                 text-decoration: underline;
             }
+
+            .page-logo {
+                display: flex;
+                justify-content: center;
+                margin-bottom: 20px;
+            }
+            .page-logo img {
+                max-width: 180px;
+                width: 100%;
+                height: auto;
+            }
         </style>
     </head>
     <body>
         <div class="container">
-            <a href="/" class="back-link">← Back to Home</a>
+            {{-- <a href="/" class="back-link">← Back to Home</a> --}}
+            <div class="page-logo">
+                <img src="{{ asset('assets/images/icons/logo.svg') }}" alt="Flyertrade Logo">
+            </div>
             <h1>Terms and Conditions</h1>
-            <p>Last updated: {{ date('F d, Y') }}</p>
+            {{-- <p>Last updated: {{ date('F d, Y') }}</p> --}}
 
             @php
                 $terms = [
