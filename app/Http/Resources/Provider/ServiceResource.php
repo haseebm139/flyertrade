@@ -23,6 +23,7 @@ class ServiceResource extends JsonResource
             'provider_profile_id'        => $this->provider_profile_id,
             'is_primary'        => $this->is_primary,
             'show_certificate'        => $this->show_certificate,
+            'show_certificates'        => $this->show_certificates ?? $this->show_certificate,
             'title'        => $this->title,
             'about' => $this->about,
             'description' => $this->description,
