@@ -3592,6 +3592,7 @@ span.timestamp-user {
     background: #fff;
     border-radius: 0.4vw;
     overflow: hidden;
+    margin-top: 1vw;
 }
 
 .file-upload {
