@@ -5,6 +5,7 @@
             <thead>
                 <tr>
                     <th><input type="checkbox" wire:model.live="selectAll"></th>
+                    <th>Image</th>
                     <th class="sortable">
                         Service category
                         <img src="{{ asset('assets/images/icons/sort.svg') }}" wire:click="sortBy('name')"
@@ -32,10 +33,15 @@
                 @forelse ($data as $item)
                     <tr wire:key="service-category-{{ $item->id }}">
                         <td><input type="checkbox" value="{{ $item->id }}" wire:model.live="selected"></td>
+                        <td>
+                            <img src="{{ asset($item->icon ?? 'assets/images/icons/service_providers.svg') }}"
+                                alt="Category"
+                                style="width:2vw;height:2vw;object-fit:cover;border-radius:0.4vw;">
+                        </td>
                         <td style="font-weight:500;">{{ $item->name }}</td>
 
                         <td style="cursor:pointer;"
-                            @if ($item->providers_count > 0) wire:click="$dispatch('open-user-providers-modal', { serviceId: {{ $item->id }} })" @endif>
+                            @if ($item->providers_count > 0) wire:click="openUserProvidersModal({{ $item->id }})" @endif>
                             @if ($item->providers_count > 0)
                                 <div class="user-info">
                                     <img src="{{ asset($item->providers[0]->avatar ?? 'assets/images/icons/person-one.svg') }}"

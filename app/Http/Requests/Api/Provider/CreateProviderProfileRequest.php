@@ -51,6 +51,7 @@ class CreateProviderProfileRequest extends FormRequest
             'services.rate_min'        => 'nullable|numeric|min:0',
             'services.rate_max'        => 'nullable|numeric|min:0',
             'services.is_primary'      => 'boolean',
+            'services.show_certificate' => 'boolean',
 
             // Media
             'services.photos.*'        => 'nullable|file|mimes:jpg,jpeg,png|max:2048',

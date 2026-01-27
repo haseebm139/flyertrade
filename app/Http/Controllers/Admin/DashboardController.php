@@ -46,7 +46,7 @@ class DashboardController extends Controller
 
         $recentDisputes = Dispute::with(['user', 'booking'])
             ->latest()
-            ->take(5)
+            ->take(2)
             ->get();
 
         $recentUsers = User::customers()

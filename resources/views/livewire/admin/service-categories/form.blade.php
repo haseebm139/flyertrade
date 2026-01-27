@@ -31,6 +31,28 @@
                             </div>
                         @enderror
                     </div>
+                    <div class="form-group">
+                        <label>Image</label>
+                        <input type="file" class="form-input @error('icon') error-input @enderror" wire:model="icon"
+                            accept=".jpg,.jpeg,.png,.webp,.svg" wire:loading.attr="disabled" wire:target="save,icon">
+                        @error('icon')
+                            <div class="error-message" style="margin-top: 0.5rem;">
+                                <i class="fa-solid fa-circle-exclamation"></i>
+                                <span>{{ $message }}</span>
+                            </div>
+                        @enderror
+                        @if ($icon)
+                            <div style="margin-top: 0.8vw;">
+                                <img src="{{ $icon->temporaryUrl() }}" alt="Preview"
+                                    style="width:3vw;height:3vw;object-fit:cover;border-radius:0.5vw;">
+                            </div>
+                        @elseif ($existingIcon)
+                            <div style="margin-top: 0.8vw;">
+                                <img src="{{ asset($existingIcon) }}" alt="Current"
+                                    style="width:3vw;height:3vw;object-fit:cover;border-radius:0.5vw;">
+                            </div>
+                        @endif
+                    </div>
                     <div class="form-actions">
                         <button type="button" wire:click="close" class="cancel-btn" wire:loading.attr="disabled"
                             wire:target="save">Cancel</button>

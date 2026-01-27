@@ -223,7 +223,7 @@ if ($initialValue !== null) {
     }
 
     .custom-select-option-label {
-        font-size: 0.833vw;
+        font-size: 0.786vw;
         color: #374151;
     }
 

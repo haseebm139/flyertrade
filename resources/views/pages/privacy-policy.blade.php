@@ -56,13 +56,38 @@
             .back-link:hover {
                 text-decoration: underline;
             }
+            .page-logo {
+                display: flex;
+                justify-content: left;
+                margin-bottom: 20px;
+                background: #004E42;
+            }
+            .page-logo img {
+                max-width: 50px;
+                width: 100%;
+                height: auto;
+                padding: 0.5vw;
+                margin-left: 0.5vw
+            }
+            .page-logo span {
+                
+                font-weight: 500;
+                font-size: 1vw;
+                line-height: 1.25vw;                 
+                color: #ffffff;
+                align-self: center;
+            }
         </style>
     </head>
     <body>
         <div class="container">
-            <a href="/" class="back-link">← Back to Home</a>
+            <div class="page-logo">
+                <img src="{{ asset('assets/images/icons/small_logo.svg') }}" alt="Flyertrade Logo">
+                <span>FlyerTrader</span>
+            </div>
+            {{-- <a href="/" class="back-link">← Back to Home</a> --}}
             <h1>Privacy Policy</h1>
-            <p>Last updated: {{ date('F d, Y') }}</p>
+            {{-- <p>Last updated: {{ date('F d, Y') }}</p> --}}
 
             <h2>1. Introduction</h2>
             <p>Welcome to Flyertrade. We respect your privacy and are committed to protecting your personal data. This privacy policy will inform you about how we look after your personal data when you visit our website or use our application.</p>

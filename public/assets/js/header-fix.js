@@ -94,7 +94,7 @@ function initializeHeaderFix() {
 
          
     } else {
-        console.log('Notification button or popup not found');
+         
     }
 
     // Enhanced close functionality

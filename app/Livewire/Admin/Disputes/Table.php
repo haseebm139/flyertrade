@@ -20,6 +20,8 @@ class Table extends Component
     public $toDate = '';
     public $selected = [];
     public $selectAll = false;
+    public $showDisputeModal = false;
+    public $selectedDispute = null;
 
     public $tempStatus = '';
     public $tempFromDate = '';
@@ -142,6 +144,76 @@ class Table extends Component
         $dispute = Dispute::findOrFail($disputeId);
         $dispute->update(['status' => strtolower($status)]);
         $this->dispatch('showSweetAlert', 'success', 'Status updated successfully.', 'Success');
+    }
+
+    public function viewDispute($disputeId)
+    {
+        $this->selectedDispute = Dispute::with([
+            'user',
+            'booking.service',
+            'booking.provider',
+            'booking.customer',
+        ])->find($disputeId);
+
+        if (!$this->selectedDispute) {
+            $this->dispatch('showSweetAlert', 'error', 'Dispute not found.', 'Error');
+            return;
+        }
+
+        $this->showDisputeModal = true;
+    }
+
+    public function closeDisputeModal()
+    {
+        $this->showDisputeModal = false;
+        $this->selectedDispute = null;
+    }
+
+    public function downloadDisputeDetails()
+    {
+        if (!$this->selectedDispute) {
+            $this->dispatch('showSweetAlert', 'error', 'Dispute not found.', 'Error');
+            return;
+        }
+
+        $dispute = Dispute::with([
+            'user',
+            'booking.service',
+            'booking.provider',
+            'booking.customer',
+        ])->find($this->selectedDispute->id);
+
+        if (!$dispute) {
+            $this->dispatch('showSweetAlert', 'error', 'Dispute not found.', 'Error');
+            return;
+        }
+
+        $fileName = 'dispute-' . ($dispute->booking->booking_ref ?? $dispute->id) . '.csv';
+        $headers = [
+            "Content-Type" => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+        ];
+
+        $callback = function () use ($dispute) {
+            $handle = fopen('php://output', 'w');
+            fputcsv($handle, ['Field', 'Details']);
+            fputcsv($handle, ['Dispute ID', $dispute->id]);
+            fputcsv($handle, ['Status', ucfirst($dispute->status)]);
+            fputcsv($handle, ['Created At', optional($dispute->created_at)->format('d M, Y h:i A')]);
+            fputcsv($handle, ['User', $dispute->user->name ?? 'N/A']);
+            fputcsv($handle, ['User Email', $dispute->user->email ?? 'N/A']);
+            fputcsv($handle, ['Booking ID', $dispute->booking->booking_ref ?? 'N/A']);
+            fputcsv($handle, ['Service Type', $dispute->booking->service->name ?? 'N/A']);
+            fputcsv($handle, ['Service Cost', '$' . number_format($dispute->booking->total_price ?? 0, 2)]);
+            fputcsv($handle, ['Service Provider', $dispute->booking->provider->name ?? 'N/A']);
+            fputcsv($handle, ['Service User', $dispute->booking->customer->name ?? 'N/A']);
+            fputcsv($handle, ['Dispute Issue', $dispute->message ?? '']);
+            $attachmentUrl = $dispute->attachment ? rtrim(config('app.url'), '/') . '/' . ltrim($dispute->attachment, '/') : '';
+            fputcsv($handle, ['Attachment', $attachmentUrl]);
+            fclose($handle);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 
     public function getDataQuery()

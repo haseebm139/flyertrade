@@ -1,6 +1,6 @@
 // Main JavaScript file for Flyertrade Admin Panel
 document.addEventListener('DOMContentLoaded', function () {
-    console.log('Main.js loaded - Flyertrade Admin Panel');
+     
 
     // Initialize all components
     initializeHeader();

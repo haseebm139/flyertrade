@@ -224,6 +224,7 @@ class Show extends Component
             $this->user->providerProfile->update([
                 $field . '_status' => $dbStatus
             ]);
+            $this->syncVerificationStatus();
 
             $this->dispatch('showSweetAlert', 'success', 'Document status updated to ' . ucfirst($status) . '.', 'Success');
         } catch (\Exception $e) {
@@ -257,12 +258,44 @@ class Show extends Component
 
             $this->user->providerProfile->update($updateData);
             $this->selectedDocs = [];
+            $this->syncVerificationStatus();
 
             $this->dispatch('showSweetAlert', 'success', 'Selected documents updated to ' . ucfirst($status) . '.', 'Success');
         } catch (\Exception $e) {
             \Log::error('Error bulk updating document status: ' . $e->getMessage());
             $this->dispatch('showSweetAlert', 'error', 'Error updating document status: ' . $e->getMessage(), 'Error');
         }
+    }
+
+    private function syncVerificationStatus(): void
+    {
+        $profile = $this->user->providerProfile;
+        if (!$profile) {
+            return;
+        }
+
+        $idStatus = $profile->id_photo_status ?? 'pending';
+        $passportStatus = $profile->passport_status ?? 'pending';
+        $workPermitStatus = $profile->work_permit_status ?? 'pending';
+
+        $hasRejected = in_array('rejected', [$idStatus, $passportStatus, $workPermitStatus], true);
+        if ($hasRejected) {
+            $this->user->is_verified = 'declined';
+            $this->user->save();
+            return;
+        }
+
+        $workPermitApproved = $workPermitStatus === 'approved';
+        $idApproved = $idStatus === 'approved';
+        $passportApproved = $passportStatus === 'approved';
+
+        if ($workPermitApproved && ($idApproved || $passportApproved)) {
+            $this->user->is_verified = 'verified';
+        } else {
+            $this->user->is_verified = 'pending';
+        }
+
+        $this->user->save();
     }
 
     public function render()

@@ -179,7 +179,7 @@
                                 $statusClass = $statusClasses[$selectedBooking->status] ?? 'inactive';
                             @endphp
                             <span class="status {{ $statusClass }}"
-                                style="border-radius: 1.042vw; font-weight: 500; padding: 0.5vw 1vw; display: inline-block;">
+                                style="border-radius: 1.042vw; font-weight: 500;  display: inline-block;">
                                 {{ str_replace('_', ' ', ucfirst($selectedBooking->status)) }}
                             </span>
                         </div>
