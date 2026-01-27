@@ -15,31 +15,145 @@ class Board extends Component
     public string $filter = 'all';
     public string $audience = 'service-users';
     public ?string $activeConversationId = null;
+    protected $queryString = [
+        'filter' => ['except' => 'all'],
+        'audience' => ['except' => 'service-users'],
+    ];
+    protected $updatesQueryString = ['filter', 'audience'];
+    public array $cachedConversations = [];
 
-    public function setFilter(string $filter): void
+
+    public array $messages = [];
+    public bool $loadingMessages = false;
+    public string $replyMessage = '';
+    // Conversation
+    public function sendReply(): void
     {
-        $this->filter = $filter;
+        if (!$this->activeConversationId || trim($this->replyMessage) === '') {
+            return;
+        }
+
+        $database = $this->firestoreDatabase();
+
+        try {
+            $database
+                ->collection('support_chat')
+                ->document($this->activeConversationId)
+                ->collection('messages')
+                ->add([
+                    'text' => $this->replyMessage,
+                    'senderType' => 'support',
+                    'createdAt' => new Timestamp(new \DateTime()),
+                    'seen' => false,
+                ]);
+
+            // update parent doc
+            $database->collection('support_chat')
+                ->document($this->activeConversationId)
+                ->update([
+                    ['path' => 'lastMessage', 'value' => $this->replyMessage],
+                    ['path' => 'lastMessageTime', 'value' => now()],
+                    ['path' => 'unreadCount.support', 'value' => 0],
+                ]);
+
+            $this->replyMessage = '';
+            $this->loadMessages($this->activeConversationId);
+
+        } catch (\Throwable $e) {
+            Log::error('Send reply failed: ' . $e->getMessage());
+        }
     }
 
-    public function setAudience(string $audience): void
+    private function loadMessages(string $conversationId): void
     {
-        $this->audience = $audience;
-    }
+        $this->loadingMessages = true;
+        $this->messages = [];
+        
+        $database = $this->firestoreDatabase();
+        
+        dd($database);
+        if ($database) {
+            $documents = $database
+            ->collection('support_chat')
+            ->document($conversationId)
+            ->collection('messages')
+            ->orderBy('createdAt')
+            ->documents();
+            
+            dd($documents);
+            foreach ($documents as $doc) {
+                if (!$doc->exists()) continue;
 
+                $data = $doc->data();
+
+                $this->messages[] = [
+                    'id' => $doc->id(),
+                    'text' => $data['text'] ?? '',
+                    'sender' => $data['senderType'] ?? 'user',
+                    'time' => $this->normalizeTimestamp($data['createdAt'])?->diffForHumans(),
+                ];
+            }
+        }
+        try {
+        } catch (\Throwable $e) {
+            Log::error('Load messages failed: ' . $e->getMessage());
+        }
+
+        $this->loadingMessages = false;
+    }    
     public function selectConversation(string $conversationId): void
     {
+         
+        if ($this->activeConversationId === $conversationId) {
+            return;
+        }
+
         $this->activeConversationId = $conversationId;
+
+        $this->dispatch('scroll-chat-bottom');
+
+        $this->loadMessages($conversationId);
+    }
+    // Side Bar
+    public function updatedSearch(): void
+    {
+        $this->activeConversationId = null;
+        $this->cachedConversations = [];
+    }
+     
+    public function getHasActiveConversationProperty(): bool
+    {
+        return !empty($this->activeConversationId);
     }
 
+    public function refreshInbox(): void
+    {
+        $this->cachedConversations = [];
+    }
     public function render()
     {
 
-         
-        return view('livewire.admin.messages.board', [
-            'conversations' => $this->loadConversations(),
-        ]);
-    }
+        if (empty($this->cachedConversations)) {
+            $this->cachedConversations = $this->loadConversations();
+        }
 
+        return view('livewire.admin.messages.board', [
+            'conversations' => $this->cachedConversations,
+        ]);
+         
+    }
+    public function switchTab(string $type, string $value)
+    {
+        if ($type === 'filter') {
+            $this->filter = $value;
+        }
+
+        if ($type === 'audience') {
+            $this->audience = $value;
+        }
+
+        $this->cachedConversations = [];
+    }
     private function loadConversations(): array
     {
         $database = $this->firestoreDatabase();
@@ -467,19 +581,21 @@ class Board extends Component
     private function firestoreDatabase()
     {
         if (!extension_loaded('grpc')) {
+            dd(storage_path('firebase/firebase_credentials.json'));
+            
             Log::warning('Firestore gRPC extension missing; using REST fallback.');
             return null;
         }
-
         $serviceAccountPath = env('FIREBASE_CREDENTIALS', storage_path('firebase/firebase_credentials.json'));
         if (!file_exists($serviceAccountPath)) {
+             
             Log::warning('Firebase credentials file not found at: ' . $serviceAccountPath);
             return null;
         }
 
+        $factory = (new Factory)->withServiceAccount($serviceAccountPath);
+        return $factory->createFirestore()->database();
         try {
-            $factory = (new Factory)->withServiceAccount($serviceAccountPath);
-            return $factory->createFirestore()->database();
         } catch (\Throwable $e) {
             Log::error('Firestore init failed: ' . $e->getMessage());
             return null;

@@ -6,7 +6,7 @@
 <style>
         .sidebars {
             background: #F6F6F6;
-            width: 20vw;
+            width: 23.3vw;
         }
 
         .filters {
@@ -108,6 +108,30 @@
         .header-right span {
             color: #717171;
         }
-    </style>
+        .message-chat-theme .message-left,
+        .message-chat-theme .message-right {
+            background: #fff;
+        }
+
+        .message-chat-theme .message-left p {
+            background: rgba(149, 109, 55, 0.1);
+            padding: 1.042vw;
+            border-radius: 0.417vw 0.417vw 0 0.417vw;
+            color: #8e8e8e;
+        }
+
+        .message-chat-theme .message-right p {
+
+            background: #004e42;
+            padding: 1.042vw;
+            border-radius: 0.417vw 0.417vw 0 0.417vw;
+        }
+
+        .message-chat-theme .timestamp {
+            text-align: right;
+            color: #555;
+        }
+     
+    </style> 
     <livewire:admin.messages.board />
 @endsection
