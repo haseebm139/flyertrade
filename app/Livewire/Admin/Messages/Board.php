@@ -63,6 +63,71 @@ class Board extends Component
             Log::error('Send reply failed: ' . $e->getMessage());
         }
     }
+    private function loadMessagesFromRest(string $conversationId): void
+    {
+        
+        $this->loadingMessages = true;
+        $this->messages = [];
+
+        $serviceAccount = $this->loadServiceAccount();
+        if (!$serviceAccount) {
+            $this->loadingMessages = false;
+            return;
+        }
+
+        $projectId = $serviceAccount['project_id'] ?? null;
+        if (!$projectId) {
+            $this->loadingMessages = false;
+            return;
+        }
+
+        $token = $this->fetchAccessToken($serviceAccount);
+        if (!$token) {
+            $this->loadingMessages = false;
+            return;
+        }
+
+        $client = $this->makeHttpClient();
+        $response = $client->get(
+            "https://firestore.googleapis.com/v1/projects/{$projectId}/databases/(default)/documents/support_chat/{$conversationId}/messages",
+            [
+                'query' => ['pageSize' => 200, 'orderBy' => 'createdAt asc'],
+                'headers' => [
+                    'Authorization' => "Bearer {$token}",
+                ],
+            ]
+        );
+
+        $payload = json_decode((string) $response->getBody(), true);
+        $documents = $payload['documents'] ?? [];
+            
+        foreach ($documents as $doc) {
+            
+            $fields = $doc['fields'] ?? []; 
+            if (!$fields) continue; 
+            }
+            try {
+            $this->messages[] = [
+                // 'id' => $doc->id() ?? basename($doc['name'] ?? ''),
+                'text' => $data['message'] ?? $this->getFirestoreFieldValue($fields, 'message', ''),
+                'messageType' => $data['messageType'] ?? $this->getFirestoreFieldValue($fields, 'messageType', 'text'),
+                'senderId' => $data['senderId'] ?? $this->getFirestoreFieldValue($fields, 'senderId', null),
+                'senderName' => $data['senderName'] ?? $this->getFirestoreFieldValue($fields, 'senderName', 'Unknown'),
+                'senderImage' => $data['senderImage'] ?? $this->getFirestoreFieldValue($fields, 'senderImage', 'assets/images/avatar/default.png'),
+                'receiverId' => $data['receiverId'] ?? $this->getFirestoreFieldValue($fields, 'receiverId', null),
+                'receiverName' => $data['receiverName'] ?? $this->getFirestoreFieldValue($fields, 'receiverName', 'Support'),
+                'receiverImage' => $data['receiverImage'] ?? $this->getFirestoreFieldValue($fields, 'receiverImage', null),
+                'isRead' => $data['isRead'] ?? $this->getFirestoreFieldValue($fields, 'isRead', false),
+                'mediaURL' => $data['mediaURL'] ?? $this->getFirestoreFieldValue($fields, 'mediaURL', null),
+                'mediaThumbnail' => $data['mediaThumbnail'] ?? $this->getFirestoreFieldValue($fields, 'mediaThumbnail', null),
+                'time' => $this->normalizeTimestamp($data['createdAt'] ?? $this->getFirestoreFieldValue($fields, 'createdAt'))?->diffForHumans(),
+            ];
+        } catch (\Throwable $e) {
+            Log::error('Load messages REST fallback failed: ' . $e->getMessage());
+        }
+
+        $this->loadingMessages = false;
+    }
 
     private function loadMessages(string $conversationId): void
     {
@@ -70,36 +135,40 @@ class Board extends Component
         $this->messages = [];
         
         $database = $this->firestoreDatabase();
-        
-        dd($database);
+         
         if ($database) {
-            $documents = $database
-            ->collection('support_chat')
-            ->document($conversationId)
-            ->collection('messages')
-            ->orderBy('createdAt')
-            ->documents();
-            
-            dd($documents);
-            foreach ($documents as $doc) {
-                if (!$doc->exists()) continue;
+            try {
+                $documents = $database
+                    ->collection('support_chat')
+                    ->document($conversationId)
+                    ->collection('messages')
+                    ->orderBy('createdAt')
+                    ->documents();
 
-                $data = $doc->data();
+                foreach ($documents as $doc) {
+                    if (!$doc->exists()) continue;
 
-                $this->messages[] = [
-                    'id' => $doc->id(),
-                    'text' => $data['text'] ?? '',
-                    'sender' => $data['senderType'] ?? 'user',
-                    'time' => $this->normalizeTimestamp($data['createdAt'])?->diffForHumans(),
-                ];
+                    $data = $doc->data();
+
+                    $this->messages[] = [
+                        'id' => $doc->id(),
+                        'text' => $data['text'] ?? '',
+                        'sender' => $data['senderType'] ?? 'user',
+                        'time' => $this->normalizeTimestamp($data['createdAt'])?->diffForHumans(),
+                    ];
+                }
+
+                $this->loadingMessages = false;
+                return; // success, no need REST
+            } catch (\Throwable $e) {
+                Log::warning('Load messages gRPC failed, using REST fallback: ' . $e->getMessage());
             }
-        }
-        try {
-        } catch (\Throwable $e) {
-            Log::error('Load messages failed: ' . $e->getMessage());
+        } else {
+            Log::warning('Firestore gRPC missing, using REST fallback for messages.');
         }
 
-        $this->loadingMessages = false;
+        // Fallback to REST
+        $this->loadMessagesFromRest($conversationId);
     }    
     public function selectConversation(string $conversationId): void
     {
@@ -533,7 +602,7 @@ class Board extends Component
     }
 
     private function getFirestoreFieldValue(array $fields, string $key, $default = null)
-    {
+    { 
         if (!isset($fields[$key])) {
             return $default;
         }
@@ -581,7 +650,7 @@ class Board extends Component
     private function firestoreDatabase()
     {
         if (!extension_loaded('grpc')) {
-            dd(storage_path('firebase/firebase_credentials.json'));
+             
             
             Log::warning('Firestore gRPC extension missing; using REST fallback.');
             return null;
