@@ -45,10 +45,18 @@
                         <li class="user-list-item {{ $activeConversationId === $conversation['id'] ? 'active' : '' }}"
                             wire:click="selectConversation('{{ $conversation['id'] }}')">
                             @php
-                                $image = $conversation['userImage'] ?? 'assets/images/avatar/default.png';
+                                $defaultAvatar = 'assets/images/avatar/default.png';
+                                $image = $conversation['userImage'] ?? $defaultAvatar;
+                                $image = trim((string) $image);
+                                if ($image === '' || $image === 'null') {
+                                    $image = $defaultAvatar;
+                                }
                                 $isUrl = \Illuminate\Support\Str::startsWith($image, ['http://', 'https://']);
+                                $imageSrc = $isUrl ? $image : asset($image);
+                                $fallbackSrc = asset($defaultAvatar);
                             @endphp
-                            <img src="{{ $isUrl ? $image : asset($image) }}" class="user-avatar" />
+                            <img src="{{ $imageSrc }}" class="user-avatar"
+                                onerror="this.onerror=null;this.src='{{ $fallbackSrc }}';" />
                             <div class="user-infos">
                                 <div class="user-header">
                                     <strong>{{ $conversation['userName'] ?? 'Unknown' }}</strong>

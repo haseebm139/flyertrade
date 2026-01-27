@@ -84,6 +84,14 @@ class Board extends Component
             $userName = (string) ($data['userName'] ?? 'Unknown');
             $userId = (string) ($data['userId'] ?? '');
             $userType = (string) ($data['userType'] ?? '');
+            $rawConversationType = (string) ($data['conversationType']
+                ?? $data['conversation_type']
+                ?? $data['messageType']
+                ?? $data['message_type']
+                ?? $data['channel']
+                ?? $data['type']
+                ?? '');
+            $conversationType = $this->normalizeConversationType($rawConversationType);
             $normalizedType = str_replace(['_', ' '], '-', mb_strtolower(trim($userType)));
             $isCustomer = $normalizedType !== '' && in_array($normalizedType, [
                 'customer',
@@ -100,10 +108,10 @@ class Board extends Component
                 'serviceproviders',
             ], true);
 
-            if ($this->audience === 'service-users' && $normalizedType !== '' && !$isCustomer) {
+            if ($this->audience === 'service-users' && !$isCustomer) {
                 continue;
             }
-            if ($this->audience === 'service-provider' && $normalizedType !== '' && !$isProvider) {
+            if ($this->audience === 'service-provider' && !$isProvider) {
                 continue;
             }
 
@@ -126,6 +134,12 @@ class Board extends Component
             }
 
             if ($this->filter === 'unread' && $unreadCount === 0) {
+                continue;
+            }
+            if ($this->filter === 'emails' && $conversationType !== 'email') {
+                continue;
+            }
+            if ($this->filter === 'chats' && $conversationType !== 'chat') {
                 continue;
             }
 
@@ -207,6 +221,14 @@ class Board extends Component
             $userName = (string) $this->getFirestoreFieldValue($fields, 'userName', 'Unknown');
             $userId = (string) $this->getFirestoreFieldValue($fields, 'userId', '');
             $userType = (string) $this->getFirestoreFieldValue($fields, 'userType', '');
+            $rawConversationType = (string) ($this->getFirestoreFieldValue($fields, 'conversationType')
+                ?? $this->getFirestoreFieldValue($fields, 'conversation_type')
+                ?? $this->getFirestoreFieldValue($fields, 'messageType')
+                ?? $this->getFirestoreFieldValue($fields, 'message_type')
+                ?? $this->getFirestoreFieldValue($fields, 'channel')
+                ?? $this->getFirestoreFieldValue($fields, 'type')
+                ?? '');
+            $conversationType = $this->normalizeConversationType($rawConversationType);
             $normalizedType = str_replace(['_', ' '], '-', mb_strtolower(trim($userType)));
             $isCustomer = $normalizedType !== '' && in_array($normalizedType, [
                 'customer',
@@ -223,10 +245,10 @@ class Board extends Component
                 'serviceproviders',
             ], true);
 
-            if ($this->audience === 'service-users' && $normalizedType !== '' && !$isCustomer) {
+            if ($this->audience === 'service-users' && !$isCustomer) {
                 continue;
             }
-            if ($this->audience === 'service-provider' && $normalizedType !== '' && !$isProvider) {
+            if ($this->audience === 'service-provider' && !$isProvider) {
                 continue;
             }
 
@@ -251,6 +273,12 @@ class Board extends Component
             }
 
             if ($this->filter === 'unread' && $unreadCount === 0) {
+                continue;
+            }
+            if ($this->filter === 'emails' && $conversationType !== 'email') {
+                continue;
+            }
+            if ($this->filter === 'chats' && $conversationType !== 'chat') {
                 continue;
             }
 
@@ -373,6 +401,21 @@ class Board extends Component
     private function base64UrlEncode(string $value): string
     {
         return rtrim(strtr(base64_encode($value), '+/', '-_'), '=');
+    }
+
+    private function normalizeConversationType(string $rawType): string
+    {
+        $normalized = str_replace(['_', ' '], '-', mb_strtolower(trim($rawType)));
+        if ($normalized === '') {
+            return 'chat';
+        }
+        if (in_array($normalized, ['email', 'emails'], true)) {
+            return 'email';
+        }
+        if (in_array($normalized, ['chat', 'chats', 'support-chat', 'supportchat', 'support'], true)) {
+            return 'chat';
+        }
+        return 'chat';
     }
 
     private function getFirestoreFieldValue(array $fields, string $key, $default = null)
