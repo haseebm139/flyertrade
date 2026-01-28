@@ -107,6 +107,14 @@ class AuthController extends BaseController
     private function createOrUpdateUserWithRole($user, $request, $role)
     {
         if ($user) {
+
+            $existingRole = $user->user_type; // or role_id
+            if ($existingRole !== $role) {
+                abort(response()->json([
+                    'status' => false,
+                    'message' => "This email already exists as {$existingRole}. Please login using that role."
+                ], 409));
+            }
             // Already has this role → just return user
             if ($user->roles()->where('name', $role)->exists()) {
                 return $user;
