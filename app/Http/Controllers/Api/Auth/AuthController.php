@@ -316,7 +316,7 @@ class AuthController extends BaseController
 
     public function googleLogin(Request $request)
     {
-         dd(config('services.google.client_id'));
+        
         $validator = Validator::make($request->all(), [
             'id_token' => 'required',
             'role' => 'required'
