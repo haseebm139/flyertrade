@@ -155,7 +155,8 @@ class AuthController extends BaseController
         $user = User::create($data);
         $user->assignRole($role);
         if ($role == 'provider') {
-            $profile = $user->providerProfile()->create([]);
+            $profile = $user->providerProfile;
+            // $profile = $user->providerProfile()->create([]);
             ProviderWorkingHour::seedDefaultHours($user->id, $profile->id);
         }
         return $user;
