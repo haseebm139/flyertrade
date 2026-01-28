@@ -28,7 +28,8 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
     Route::post('register','register');
     Route::post('login', 'login');
     Route::post('guest', 'guestLogin');
-    Route::post('{proverder}/login','socialLogin');
+    Route::post('google/login','socialLogin');
+    Route::post('login/google','googleLogin');
     Route::post('facebook_login', 'facebookLogin');
     Route::post('apple_login', 'appleLogin');
     Route::post('send-code-to-email', 'sendCodeToEmail');
