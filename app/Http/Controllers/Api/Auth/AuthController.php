@@ -72,7 +72,7 @@ class AuthController extends BaseController
         ], 'Login successful');
     }
 
-    public  function socialLogin(SocialRequest $request, $provider)
+    public  function socialLogin(SocialRequest $request, $provider = 'google')
     {
         $providerField = $provider . '_id';
          
@@ -83,8 +83,7 @@ class AuthController extends BaseController
         if ($user) {
             $user->update([
                 $providerField => $request->social_id,
-                'name'         => $request->name,
-                'password'     => Hash::make($request->social_id),
+                'name'         => $request->name, 
                 'latitude'     => $request->latitude ?? $user->latitude ?? null,
                 'longitude'    => $request->longitude ?? $user->longitude ?? null,
                 'country'      => $request->country ?? $user->country ?? null,
@@ -128,12 +127,12 @@ class AuthController extends BaseController
             $user->assignRole($role);
 
             // If user now has multiple roles, mark as multi
-            if ($user->roles()->count() > 1) {
-                $user->update([
-                    'role_id'   => 'multi',
-                    'user_type' => 'multi',
-                ]);
-            }
+            // if ($user->roles()->count() > 1) {
+            //     $user->update([
+            //         'role_id'   => 'multi',
+            //         'user_type' => 'multi',
+            //     ]);
+            // }
 
             return $user;
         }
