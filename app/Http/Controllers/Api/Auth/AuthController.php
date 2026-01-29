@@ -293,7 +293,7 @@ class AuthController extends BaseController
         }
 
         $user = auth()->user();
-
+        
         // ✅ Check current password
         if (!Hash::check($request->current_password, $user->password)) {
             return $this->sendError("Your current password is incorrect.",400);

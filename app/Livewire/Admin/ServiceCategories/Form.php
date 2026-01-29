@@ -48,7 +48,7 @@ class Form extends Component
         $this->validate([
             'name' => 'required|string|max:255|unique:services,name,' . $this->categoryId,
             'description' => 'nullable|string|max:500',
-            'icon' => 'nullable|file|mimes:jpg,jpeg,png,webp,svg|max:2048',
+            'icon' => 'nullable|file|mimes:jpg,jpeg,png,webp,svg|max:51200',
         ]);
 
         try {
