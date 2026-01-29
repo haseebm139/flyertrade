@@ -577,7 +577,7 @@ class BookingService
 
     public function upcomingBookingsProvider($providerId)
     {
-        return Booking::with('slots', 'provider', 'customer','providerService.service','reschedules')->where('provider_id', $providerId)->where('status', 'confirmed')->paginate(10);
+        return Booking::with('slots', 'provider', 'customer','providerService.service','reschedules','latestPendingReschedule')->where('provider_id', $providerId)->where('status', 'confirmed')->paginate(10);
     }
 
     public function completedBookingsProvider($providerId)

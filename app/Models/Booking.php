@@ -64,4 +64,11 @@ class Booking extends Model
     {
         return $this->hasMany(BookingReschedule::class);
     }
+
+    public function latestPendingReschedule()
+    {
+        return $this->hasOne(BookingReschedule::class)
+            ->where('status', 'pending')
+            ->latest();
+    }
 }
