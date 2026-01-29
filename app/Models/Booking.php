@@ -59,4 +59,9 @@ class Booking extends Model
     {
         return $this->review()->exists();
     }
+
+    public function reschedules()
+    {
+        return $this->hasMany(BookingReschedule::class);
+    }
 }

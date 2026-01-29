@@ -88,7 +88,7 @@ class BookingController extends BaseController
     // Show booking
     public function show($id): JsonResponse
     {
-        $booking = Booking::with(['slots', 'customer', 'provider', 'providerService.service'])->find($id);
+        $booking = Booking::with(['slots', 'customer', 'provider', 'providerService.service', 'reschedules'])->find($id);
 
         if (!$booking) {
             return $this->sendError('Booking not found', 404);
