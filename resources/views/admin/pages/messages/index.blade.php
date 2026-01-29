@@ -445,7 +445,7 @@
                     <img src="{{asset('assets/images/icons/message-icon-next.svg')}}" alt="Expand Icon">
                 </div>
                 <div class="icons">
-                    <img src="{{asset('assets/images/icons/dots_message.svg')}}" alt="Refresh Icon">
+                    <img src="{{asset('assets/images/icons/dots_message.png')}}" alt="Refresh Icon">
 
                 </div>
                 <button class="new-email new-email-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
