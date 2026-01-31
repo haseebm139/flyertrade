@@ -13,6 +13,7 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
+
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.2.2
         with:
@@ -20,46 +21,58 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
-          timeout: 120s
-          command_timeout: 20m
+          timeout: 120s               
+          command_timeout: 15m        
           script: |
-            # Define paths
-            APP_DIR=/var/www/flyertrade
-            RELEASES_DIR=$APP_DIR/releases
-            CURRENT_DIR=$APP_DIR/current
-            TIMESTAMP=$(date +"%Y%m%d%H%M%S")
-            NEW_RELEASE=$RELEASES_DIR/$TIMESTAMP
+            cd /var/www/flyertrade
+            
+            echo "👉 Clearing old config/cache before pull..."
+            php artisan config:clear || true 
+            php artisan cache:clear || true
 
-            echo "👉 Creating new release folder..."
-            mkdir -p $NEW_RELEASE
 
-            echo "👉 Copying code into release folder..."
-            rsync -av --exclude='.git' ./ $NEW_RELEASE/
-
-            echo "👉 Installing composer dependencies..."
-            php -d memory_limit=-1 $(which composer) install --no-dev --optimize-autoloader --no-interaction -d $NEW_RELEASE
-
-            echo "👉 Setting storage and bootstrap/cache permissions..."
-            sudo chown -R www-data:www-data $NEW_RELEASE/storage $NEW_RELEASE/bootstrap/cache
-            sudo chmod -R 775 $NEW_RELEASE/storage $NEW_RELEASE/bootstrap/cache
-
-            echo "👉 Linking current release..."
-            ln -sfn $NEW_RELEASE $CURRENT_DIR
+            echo "👉 Fixing Git permissions..."
+            sudo chown -R ubuntu:ubuntu .git
+            sudo chown -R ubuntu:ubuntu .
+            
+            echo "👉 Pulling latest code..."
+            git fetch origin main
+            git reset --hard origin/main
+            
+            echo "👉 Removing old vendor folder and caches..."
+            rm -rf vendor composer.lock || true
+            rm -f bootstrap/cache/services.php bootstrap/cache/packages.php || true
+            
+            echo "👉 Installing dependencies (production only)..." 
+            composer install --no-dev --optimize-autoloader --no-interaction
+            
+            echo "👉 Clearing all Laravel caches..."
+            php artisan optimize:clear || true
+            
+            echo "👉 Re-discovering packages (without dev dependencies)..."
+            php artisan package:discover --ansi || true
 
             echo "👉 Running migrations..."
-            php $CURRENT_DIR/artisan migrate --force
+            php artisan migrate --force
 
-            echo "👉 Clearing and caching config/routes/views..."
-            php $CURRENT_DIR/artisan config:cache
-            php $CURRENT_DIR/artisan route:cache
-            php $CURRENT_DIR/artisan view:cache
+            echo "👉 Clearing all caches..."
+            php artisan optimize:clear
+            
+            echo "👉 Caching for production..."
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+            
+            echo "👉 Fixing Laravel storage permissions..."
+            sudo chown -R www-data:www-data storage bootstrap/cache
+            sudo chmod -R 775 storage bootstrap/cache 
 
-            echo "👉 Reloading services..."
-            sudo systemctl reload php8.2-fpm || true
+            echo "👉 Reloading services..." 
+            sudo systemctl reload php8.2-fpm || true 
             sudo systemctl reload nginx || true
-
-            echo "👉 Cleaning old releases (keep last 5)..."
-            cd $RELEASES_DIR
-            ls -1tr | head -n -5 | xargs -d '\n' rm -rf --
-
-            echo "✅ Deployment completed!"
+    
+             
+ 
+               
+             
+ 
