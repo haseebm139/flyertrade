@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
         // 1. Global Data (Countries, States, Cities, Flags, Currencies)
         $this->call(GlobalLocationSeeder::class);
 
+        
         // 2. Roles and Permissions
         $this->call(PermissionSeeder::class);
         
