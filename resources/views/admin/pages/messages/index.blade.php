@@ -3,12 +3,7 @@
 @section('title', 'Messaging')
 @section('header', 'Messaging')
 @section('content')
-<style>
-    .sidebars{
-            width: 20vw;
-                background: #F6F6F6;
-    }
-</style>
+
     <div class="users-toolbar border-0 p-0">
         <div class="toolbar-left">
             @can('Create Messages')
@@ -28,6 +23,7 @@
     <div class="messages-email-container">
         <aside class="sidebars">
             <div class="search-bars">
+
                 <input type="search" placeholder="Search" />
             </div>
 
