@@ -121,6 +121,16 @@ class BookingService
              
              
         }         
+        $pricingResult = $this->resolveBookingPricing($data, $totalMinutes);
+        if ($pricingResult['error']) {
+            return $pricingResult;
+        }
+        
+        $data['total_price'] = $pricingResult['total_price'];
+        $data['booking_type'] = $pricingResult['booking_type'];
+        $hourlyRateUsed = $pricingResult['hourly_rate'] ?? null;
+         
+
         // Stripe charge (in cents)
         $amountCents = (int) round($data['total_price'] * 100);
          
@@ -143,7 +153,7 @@ class BookingService
         // }
           
         // Persist booking + slots
-        return DB::transaction(function () use ($data, $totalMinutes,$providerHasService) {
+        return DB::transaction(function () use ($data, $totalMinutes,$providerHasService,$hourlyRateUsed) {
             // Calculate service charges dynamically based on admin settings
             $percentage = (float) \App\Models\Setting::get('service_charge_percentage', 25); 
             $serviceCharges = ($data['total_price'] * $percentage) / 100;
@@ -157,6 +167,8 @@ class BookingService
                 'booking_address' => $data['booking_address'],
                 'booking_description' => $data['booking_description'] ?? null,
                 'status' => 'awaiting_provider',
+                'booking_type' => $data['booking_type'] ?? 'hourly',
+                'hourly_rate' => $hourlyRateUsed,
                 'booking_working_minutes' => $totalMinutes,
                 'total_price' => $data['total_price'] ,
                 'service_charges' => $serviceCharges,
@@ -528,6 +540,65 @@ class BookingService
          
         return $s->diffInMinutes($e);
     }
+
+    private function resolveBookingPricing(array $data, int $totalMinutes): array
+    {
+        $bookingType = $data['booking_type'] ?? 'hourly';
+
+        if ($bookingType === 'hourly') {
+            if (!isset($data['hourly_rate'])) {
+                return [
+                    'error' => true,
+                    'message' => 'Hourly rate is required for hourly bookings.',
+                ];
+            }
+
+            $hourlyRate = (float) $data['hourly_rate'];
+            if ($hourlyRate <= 0) {
+                return [
+                    'error' => true,
+                    'message' => 'Hourly rate must be greater than zero.',
+                ];
+            }
+
+            $totalPrice = $this->calculateHourlyPrice($hourlyRate, $totalMinutes);
+            if ($totalPrice <= 0) {
+                return [
+                    'error' => true,
+                    'message' => 'Calculated total price is invalid.',
+                ];
+            }
+        } else {
+            if (!isset($data['total_price'])) {
+                return [
+                    'error' => true,
+                    'message' => 'Total price is required for custom bookings.',
+                ];
+            }
+
+            $totalPrice = (float) $data['total_price'];
+            if ($totalPrice <= 0) {
+                return [
+                    'error' => true,
+                    'message' => 'Custom total price must be greater than zero.',
+                ];
+            }
+        }
+
+        return [
+            'error' => false,
+            'total_price' => round($totalPrice, 2),
+            'booking_type' => $bookingType,
+            'hourly_rate' => $bookingType === 'hourly' ? (float) $data['hourly_rate'] : null,
+        ];
+    }
+
+    private function calculateHourlyPrice(float $hourlyRate, int $totalMinutes): float
+    {
+        $hours = $totalMinutes / 60;
+        return round($hourlyRate * $hours, 2);
+    }
+
 
     private function providerHasConflict(int $providerId, string $date, string $start, string $end,): bool
     {
