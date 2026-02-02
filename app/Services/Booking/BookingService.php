@@ -8,10 +8,13 @@ use App\Models\ProviderWorkingHour;
 use App\Models\BookingReschedule;
 use App\Models\ProviderService;
 use App\Models\Review;
+use App\Models\Transaction;
+use App\Models\UserPaymentMethod;
 
 use Carbon\Carbon;
 use Illuminate\Support\Str; 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use App\Services\Payment\StripeService;
 use App\Services\Notification\NotificationService;
 use Illuminate\Support\Facades\DB; 
@@ -600,6 +603,26 @@ class BookingService
     }
 
 
+    private function resolveCustomerPaymentMethod(int $userId, ?int $methodId): ?UserPaymentMethod
+    {
+        if ($methodId) {
+            return UserPaymentMethod::where('user_id', $userId)
+                ->where('id', $methodId)
+                ->first();
+        }
+
+        $method = UserPaymentMethod::where('user_id', $userId)
+            ->where('is_default', true)
+            ->first();
+
+        if ($method) {
+            return $method;
+        }
+
+        return UserPaymentMethod::where('user_id', $userId)->latest()->first();
+    }
+
+
     private function providerHasConflict(int $providerId, string $date, string $start, string $end,): bool
     {
         // Conflict if any existing booking (awaiting_provider or confirmed) overlaps
@@ -701,26 +724,86 @@ class BookingService
             ->paginate(10);
     }
 
-    public function processPayment($id): array
+    public function processPayment(int $id, ?int $userPaymentMethodId = null): array
     {
         $booking = Booking::with('slots')->find($id);
         if (!$booking) {
-            return ['error' => true, 'message' => 'Booking not found'];
+            return ['error' => true, 'message' => 'Booking not found.'];
         }
-        $booking->paid_at = now();
-        $booking->save();
-        
-        // Send notification (if transaction exists)
-        // $transaction = \App\Models\Transaction::where('booking_id', $booking->id)
-        //     ->where('status', 'succeeded')
-        //     ->first();
-        
-        // if ($transaction) {
-        //     $this->notificationService->notifyPaymentSuccess($transaction);
-        //     $this->notificationService->notifyPaymentSuccessful($transaction);
-        // }
-        
-        return ['error' => false, 'message' => 'Payment processed successfully.'];
+
+        $user = Auth::user();
+        if (!$user || $booking->customer_id !== $user->id) {
+            return ['error' => true, 'message' => 'Unauthorized access to this booking.'];
+        }
+
+        $paymentMethod = $this->resolveCustomerPaymentMethod($user->id, $userPaymentMethodId);
+        if (!$paymentMethod) {
+            return ['error' => true, 'message' => 'No saved payment method found.'];
+        }
+
+        $amountCents = (int) round($booking->total_price * 100);
+        if ($amountCents <= 0) {
+            return ['error' => true, 'message' => 'Invalid booking amount.'];
+        }
+
+        $currency = strtolower(Setting::get('currency', 'USD'));
+
+        try {
+            $customerId = $this->stripe->ensureCustomer($user);
+            $intent = $this->stripe->chargeCustomer(
+                customerId: $customerId,
+                paymentMethodId: $paymentMethod->stripe_payment_method_id,
+                amountCents: $amountCents,
+                currency: $currency,
+                metadata: [
+                    'booking_id' => (string) $booking->id,
+                    'customer_id' => (string) $user->id,
+                ],
+            );
+        } catch (\Throwable $e) {
+            Log::error('Booking payment failed: '.$e->getMessage(), ['booking_id' => $booking->id]);
+            return ['error' => true, 'message' => 'Stripe error: '.$e->getMessage()];
+        }
+
+        if ($intent->status !== 'succeeded') {
+            return ['error' => true, 'message' => 'Payment requires additional authentication.'];
+        }
+
+        $charge = $intent->charges->data[0] ?? null;
+        $intentMetadata = $intent->metadata ?? [];
+        if (!is_array($intentMetadata)) {
+            $intentMetadata = (array) $intentMetadata;
+        }
+
+        $transaction = Transaction::create([
+            'booking_id' => $booking->id,
+            'customer_id' => $user->id,
+            'provider_id' => $booking->provider_id,
+            'transaction_ref' => Transaction::generateRef(),
+            'type' => 'payment',
+            'status' => 'succeeded',
+            'amount' => $booking->total_price,
+            'service_charges' => $booking->service_charges ?? 0,
+            'net_amount' => max(0, $booking->total_price - ($booking->service_charges ?? 0)),
+            'currency' => strtoupper($currency),
+            'stripe_payment_intent_id' => $intent->id,
+            'stripe_payment_method_id' => $paymentMethod->stripe_payment_method_id,
+            'stripe_charge_id' => $charge->id ?? null,
+            'stripe_customer_id' => $customerId,
+            'processed_at' => now(),
+            'completed_at' => now(),
+            'metadata' => $intentMetadata,
+            'notes' => 'Charged via saved card.',
+        ]);
+
+        $booking->update([
+            'paid_at' => now(),
+            'stripe_payment_intent_id' => $intent->id,
+        ]);
+
+        $this->notificationService->notifyPaymentSuccess($transaction);
+
+        return ['error' => false, 'message' => 'Payment processed successfully.', 'transaction' => $transaction];
     }
     public function onGoingBookingsCustomer($customerId)
     {

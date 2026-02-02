@@ -64,6 +64,20 @@ class StripeService
         return Refund::create(['payment_intent' => $paymentIntentId]);
     }
 
+    public function chargeCustomer(string $customerId, string $paymentMethodId, int $amountCents, string $currency, array $metadata = []): PaymentIntent
+    {
+        return PaymentIntent::create([
+            'amount' => $amountCents,
+            'currency' => $currency,
+            'customer' => $customerId,
+            'payment_method' => $paymentMethodId,
+            'off_session' => true,
+            'confirm' => true,
+            'payment_method_types' => ['card'],
+            'metadata' => $metadata,
+        ]);
+    }
+
     /**
      * Ensure a Stripe customer exists for the given user and return the id.
      */
