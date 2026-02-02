@@ -6,8 +6,10 @@ use Stripe\PaymentIntent;
 use Stripe\Refund; 
 use Stripe\PaymentMethod;
 use Stripe\Customer;
+use Stripe\Exception\InvalidRequestException;
 use App\Models\User;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\JsonResponse;
 class StripeService
 {
@@ -62,13 +64,33 @@ class StripeService
         return Refund::create(['payment_intent' => $paymentIntentId]);
     }
 
+    public function chargeCustomer(string $customerId, string $paymentMethodId, int $amountCents, string $currency, array $metadata = []): PaymentIntent
+    {
+        return PaymentIntent::create([
+            'amount' => $amountCents,
+            'currency' => $currency,
+            'customer' => $customerId,
+            'payment_method' => $paymentMethodId,
+            'off_session' => true,
+            'confirm' => true,
+            'payment_method_types' => ['card'],
+            'metadata' => $metadata,
+        ]);
+    }
+
     /**
      * Ensure a Stripe customer exists for the given user and return the id.
      */
     public function ensureCustomer(User $user): string
     {
         if (!empty($user->stripe_customer_id)) {
-            return $user->stripe_customer_id;
+            try {
+                Customer::retrieve($user->stripe_customer_id);
+                return $user->stripe_customer_id;
+            } catch (InvalidRequestException $e) {
+                Log::warning('Stripe customer missing: '.$e->getMessage());
+                $user->forceFill(['stripe_customer_id' => null])->save();
+            }
         }
 
         $customer = Customer::create([

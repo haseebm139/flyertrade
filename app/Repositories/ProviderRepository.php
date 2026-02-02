@@ -303,7 +303,7 @@ class ProviderRepository
 
         $workingHours = \App\Models\ProviderWorkingHour::where('user_id', $providerId)
             ->where('is_active', true)
-            ->get(['day', 'start_time', 'end_time']);
+            ->get();
 
         return [
             'booked_slots' => $bookedSlots,

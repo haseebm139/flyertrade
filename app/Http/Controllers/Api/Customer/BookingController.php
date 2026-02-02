@@ -88,7 +88,7 @@ class BookingController extends BaseController
     // Show booking
     public function show($id): JsonResponse
     {
-        $booking = Booking::with(['slots', 'customer', 'provider', 'providerService.service'])->find($id);
+        $booking = Booking::with(['slots', 'customer', 'provider', 'providerService.service','latestPendingReschedule'])->find($id);
 
         if (!$booking) {
             return $this->sendError('Booking not found', 404);
@@ -191,9 +191,13 @@ class BookingController extends BaseController
         return $this->sendResponse($upcoming, 'Cancelled bookings.'); 
     }
 
-    public function processPayment($id): JsonResponse
+    public function processPayment(Request $request, $id): JsonResponse
     {
-        $payment = $this->bookingsService->processPayment($id);
+        $data = $request->validate([
+            'user_payment_method_id' => 'nullable|integer|exists:user_payment_methods,id',
+        ]);
+
+        $payment = $this->bookingsService->processPayment($id, $data['user_payment_method_id'] ?? null);
         if ($payment['error'] === true) {
             return $this->sendError($payment['message']);
         } 

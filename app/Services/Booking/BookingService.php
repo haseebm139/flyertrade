@@ -8,10 +8,13 @@ use App\Models\ProviderWorkingHour;
 use App\Models\BookingReschedule;
 use App\Models\ProviderService;
 use App\Models\Review;
+use App\Models\Transaction;
+use App\Models\UserPaymentMethod;
 
 use Carbon\Carbon;
 use Illuminate\Support\Str; 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use App\Services\Payment\StripeService;
 use App\Services\Notification\NotificationService;
 use Illuminate\Support\Facades\DB; 
@@ -121,6 +124,16 @@ class BookingService
              
              
         }         
+        $pricingResult = $this->resolveBookingPricing($data, $totalMinutes);
+        if ($pricingResult['error']) {
+            return $pricingResult;
+        }
+        
+        $data['total_price'] = $pricingResult['total_price'];
+        $data['booking_type'] = $pricingResult['booking_type'];
+        $hourlyRateUsed = $pricingResult['hourly_rate'] ?? null;
+         
+
         // Stripe charge (in cents)
         $amountCents = (int) round($data['total_price'] * 100);
          
@@ -143,7 +156,7 @@ class BookingService
         // }
           
         // Persist booking + slots
-        return DB::transaction(function () use ($data, $totalMinutes,$providerHasService) {
+        return DB::transaction(function () use ($data, $totalMinutes,$providerHasService,$hourlyRateUsed) {
             // Calculate service charges dynamically based on admin settings
             $percentage = (float) \App\Models\Setting::get('service_charge_percentage', 25); 
             $serviceCharges = ($data['total_price'] * $percentage) / 100;
@@ -157,6 +170,8 @@ class BookingService
                 'booking_address' => $data['booking_address'],
                 'booking_description' => $data['booking_description'] ?? null,
                 'status' => 'awaiting_provider',
+                'booking_type' => $data['booking_type'] ?? 'hourly',
+                'hourly_rate' => $hourlyRateUsed,
                 'booking_working_minutes' => $totalMinutes,
                 'total_price' => $data['total_price'] ,
                 'service_charges' => $serviceCharges,
@@ -529,6 +544,85 @@ class BookingService
         return $s->diffInMinutes($e);
     }
 
+    private function resolveBookingPricing(array $data, int $totalMinutes): array
+    {
+        $bookingType = $data['booking_type'] ?? 'hourly';
+
+        if ($bookingType === 'hourly') {
+            if (!isset($data['hourly_rate'])) {
+                return [
+                    'error' => true,
+                    'message' => 'Hourly rate is required for hourly bookings.',
+                ];
+            }
+
+            $hourlyRate = (float) $data['hourly_rate'];
+            if ($hourlyRate <= 0) {
+                return [
+                    'error' => true,
+                    'message' => 'Hourly rate must be greater than zero.',
+                ];
+            }
+
+            $totalPrice = $this->calculateHourlyPrice($hourlyRate, $totalMinutes);
+            if ($totalPrice <= 0) {
+                return [
+                    'error' => true,
+                    'message' => 'Calculated total price is invalid.',
+                ];
+            }
+        } else {
+            if (!isset($data['total_price'])) {
+                return [
+                    'error' => true,
+                    'message' => 'Total price is required for custom bookings.',
+                ];
+            }
+
+            $totalPrice = (float) $data['total_price'];
+            if ($totalPrice <= 0) {
+                return [
+                    'error' => true,
+                    'message' => 'Custom total price must be greater than zero.',
+                ];
+            }
+        }
+
+        return [
+            'error' => false,
+            'total_price' => round($totalPrice, 2),
+            'booking_type' => $bookingType,
+            'hourly_rate' => $bookingType === 'hourly' ? (float) $data['hourly_rate'] : null,
+        ];
+    }
+
+    private function calculateHourlyPrice(float $hourlyRate, int $totalMinutes): float
+    {
+        $hours = $totalMinutes / 60;
+        return round($hourlyRate * $hours, 2);
+    }
+
+
+    private function resolveCustomerPaymentMethod(int $userId, ?int $methodId): ?UserPaymentMethod
+    {
+        if ($methodId) {
+            return UserPaymentMethod::where('user_id', $userId)
+                ->where('id', $methodId)
+                ->first();
+        }
+
+        $method = UserPaymentMethod::where('user_id', $userId)
+            ->where('is_default', true)
+            ->first();
+
+        if ($method) {
+            return $method;
+        }
+
+        return UserPaymentMethod::where('user_id', $userId)->latest()->first();
+    }
+
+
     private function providerHasConflict(int $providerId, string $date, string $start, string $end,): bool
     {
         // Conflict if any existing booking (awaiting_provider or confirmed) overlaps
@@ -577,7 +671,7 @@ class BookingService
 
     public function upcomingBookingsProvider($providerId)
     {
-        return Booking::with('slots', 'provider', 'customer','providerService.service')->where('provider_id', $providerId)->where('status', 'confirmed')->paginate(10);
+        return Booking::with('slots', 'provider', 'customer','providerService.service','latestPendingReschedule')->where('provider_id', $providerId)->where('status', 'confirmed')->paginate(10);
     }
 
     public function completedBookingsProvider($providerId)
@@ -630,26 +724,86 @@ class BookingService
             ->paginate(10);
     }
 
-    public function processPayment($id): array
+    public function processPayment(int $id, ?int $userPaymentMethodId = null): array
     {
         $booking = Booking::with('slots')->find($id);
         if (!$booking) {
-            return ['error' => true, 'message' => 'Booking not found'];
+            return ['error' => true, 'message' => 'Booking not found.'];
         }
-        $booking->paid_at = now();
-        $booking->save();
-        
-        // Send notification (if transaction exists)
-        // $transaction = \App\Models\Transaction::where('booking_id', $booking->id)
-        //     ->where('status', 'succeeded')
-        //     ->first();
-        
-        // if ($transaction) {
-        //     $this->notificationService->notifyPaymentSuccess($transaction);
-        //     $this->notificationService->notifyPaymentSuccessful($transaction);
-        // }
-        
-        return ['error' => false, 'message' => 'Payment processed successfully.'];
+
+        $user = Auth::user();
+        if (!$user || $booking->customer_id !== $user->id) {
+            return ['error' => true, 'message' => 'Unauthorized access to this booking.'];
+        }
+
+        $paymentMethod = $this->resolveCustomerPaymentMethod($user->id, $userPaymentMethodId);
+        if (!$paymentMethod) {
+            return ['error' => true, 'message' => 'No saved payment method found.'];
+        }
+
+        $amountCents = (int) round($booking->total_price * 100);
+        if ($amountCents <= 0) {
+            return ['error' => true, 'message' => 'Invalid booking amount.'];
+        }
+
+        $currency = strtolower(Setting::get('currency', 'USD'));
+
+        try {
+            $customerId = $this->stripe->ensureCustomer($user);
+            $intent = $this->stripe->chargeCustomer(
+                customerId: $customerId,
+                paymentMethodId: $paymentMethod->stripe_payment_method_id,
+                amountCents: $amountCents,
+                currency: $currency,
+                metadata: [
+                    'booking_id' => (string) $booking->id,
+                    'customer_id' => (string) $user->id,
+                ],
+            );
+        } catch (\Throwable $e) {
+            Log::error('Booking payment failed: '.$e->getMessage(), ['booking_id' => $booking->id]);
+            return ['error' => true, 'message' => 'Stripe error: '.$e->getMessage()];
+        }
+
+        if ($intent->status !== 'succeeded') {
+            return ['error' => true, 'message' => 'Payment requires additional authentication.'];
+        }
+
+        $charge = $intent->charges->data[0] ?? null;
+        $intentMetadata = $intent->metadata ?? [];
+        if (!is_array($intentMetadata)) {
+            $intentMetadata = (array) $intentMetadata;
+        }
+
+        $transaction = Transaction::create([
+            'booking_id' => $booking->id,
+            'customer_id' => $user->id,
+            'provider_id' => $booking->provider_id,
+            'transaction_ref' => Transaction::generateRef(),
+            'type' => 'payment',
+            'status' => 'succeeded',
+            'amount' => $booking->total_price,
+            'service_charges' => $booking->service_charges ?? 0,
+            'net_amount' => max(0, $booking->total_price - ($booking->service_charges ?? 0)),
+            'currency' => strtoupper($currency),
+            'stripe_payment_intent_id' => $intent->id,
+            'stripe_payment_method_id' => $paymentMethod->stripe_payment_method_id,
+            'stripe_charge_id' => $charge->id ?? null,
+            'stripe_customer_id' => $customerId,
+            'processed_at' => now(),
+            'completed_at' => now(),
+            'metadata' => $intentMetadata,
+            'notes' => 'Charged via saved card.',
+        ]);
+
+        $booking->update([
+            'paid_at' => now(),
+            'stripe_payment_intent_id' => $intent->id,
+        ]);
+
+        $this->notificationService->notifyPaymentSuccess($transaction);
+
+        return ['error' => false, 'message' => 'Payment processed successfully.', 'transaction' => $transaction];
     }
     public function onGoingBookingsCustomer($customerId)
     {

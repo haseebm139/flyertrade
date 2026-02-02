@@ -64,11 +64,11 @@ class ProviderServiceController extends BaseController
             'services.show_certificate' => 'boolean',
 
             // Media
-            'services.photos.*'        => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
-            'services.videos.*'        => 'nullable|file|mimes:mp4,mov,avi|max:10240',
+            'services.photos.*'        => 'nullable|file|mimes:jpg,jpeg,png|max:51200',
+            'services.videos.*'        => 'nullable|file|mimes:mp4,mov,avi|max:51200',
 
             // Certificates
-            'services.certificates.*'        => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
+            'services.certificates.*'        => 'nullable|file|mimes:jpg,jpeg,png|max:51200',
 
         ]);
         if ($validator->fails()) {
@@ -132,14 +132,14 @@ class ProviderServiceController extends BaseController
             'services.show_certificate' => 'boolean',
 
             // Media
-            'services.photos.*'        => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
-            'services.videos.*'        => 'nullable|file|mimes:mp4,mov,avi|max:10240',
+            'services.photos.*'        => 'nullable|file|mimes:jpg,jpeg,png|max:51200',
+            'services.videos.*'        => 'nullable|file|mimes:mp4,mov,avi|max:51200',
             'services.delete_photos'   => 'nullable',
             'services.delete_videos'   => 'nullable',
             'services.delete_certificates'   => 'nullable',
 
             // Certificates
-            'services.certificates.*'  => 'nullable|file|mimes:jpg,jpeg,png|max:5120',
+            'services.certificates.*'  => 'nullable|file|mimes:jpg,jpeg,png|max:51200',
         ]);
 
         if ($validator->fails()) {

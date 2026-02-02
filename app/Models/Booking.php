@@ -10,7 +10,7 @@ class Booking extends Model
 {
     protected $fillable = [
         'booking_ref','customer_id','provider_id','service_id','provider_service_id','booking_address','booking_description',
-        'status','booking_working_minutes','total_price','service_charges',
+        'status','booking_working_minutes','total_price','service_charges','hourly_rate',
         'stripe_payment_intent_id','stripe_payment_method_id','paid_at','expires_at','booking_type','cancelled_reason','cancelled_at',
         'late_action_taken','late_action_type','late_action_at',
         'reschedule_initiated_by','reschedule_response'
@@ -21,6 +21,7 @@ class Booking extends Model
         'expires_at' => 'datetime',
         'late_action_at' => 'datetime',
         'late_action_taken' => 'boolean',
+        'hourly_rate' => 'decimal:2',
     ];
 
 
@@ -58,5 +59,17 @@ class Booking extends Model
     public function getIsReviewGivenAttribute(): bool
     {
         return $this->review()->exists();
+    }
+
+    public function reschedules()
+    {
+        return $this->hasMany(BookingReschedule::class);
+    }
+
+    public function latestPendingReschedule()
+    {
+        return $this->hasOne(BookingReschedule::class)
+            ->where('status', 'pending')
+            ->latest();
     }
 }

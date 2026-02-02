@@ -18,6 +18,7 @@ use App\Models\ProviderWorkingHour;
 use App\Models\User;
 use App\Mail\OtpCodeMail;
 use Str;
+use Illuminate\Support\Facades\Http;  
 class AuthController extends BaseController
 {
     public function register(RegisterRequest $request)
@@ -71,16 +72,18 @@ class AuthController extends BaseController
         ], 'Login successful');
     }
 
-    public  function socialLogin(SocialRequest $request, $provider)
+    public  function socialLogin(SocialRequest $request, $provider = 'google')
     {
         $providerField = $provider . '_id';
-
+         
+        if ($providerField !== 'google_id') {
+            return $this->sendError('Invalid provider');
+        }  
         $user = User::where('email', $request->email)->first();
         if ($user) {
             $user->update([
                 $providerField => $request->social_id,
-                'name'         => $request->name,
-                'password'     => Hash::make($request->social_id),
+                'name'         => $request->name, 
                 'latitude'     => $request->latitude ?? $user->latitude ?? null,
                 'longitude'    => $request->longitude ?? $user->longitude ?? null,
                 'country'      => $request->country ?? $user->country ?? null,
@@ -107,6 +110,14 @@ class AuthController extends BaseController
     private function createOrUpdateUserWithRole($user, $request, $role)
     {
         if ($user) {
+
+            $existingRole = $user->user_type; // or role_id
+            if ($existingRole !== $role) {
+                abort(response()->json([
+                    'status' => false,
+                    'message' => "This email already exists as {$existingRole}. Please login using that role."
+                ], 409));
+            }
             // Already has this role → just return user
             if ($user->roles()->where('name', $role)->exists()) {
                 return $user;
@@ -116,12 +127,12 @@ class AuthController extends BaseController
             $user->assignRole($role);
 
             // If user now has multiple roles, mark as multi
-            if ($user->roles()->count() > 1) {
-                $user->update([
-                    'role_id'   => 'multi',
-                    'user_type' => 'multi',
-                ]);
-            }
+            // if ($user->roles()->count() > 1) {
+            //     $user->update([
+            //         'role_id'   => 'multi',
+            //         'user_type' => 'multi',
+            //     ]);
+            // }
 
             return $user;
         }
@@ -147,7 +158,8 @@ class AuthController extends BaseController
         $user = User::create($data);
         $user->assignRole($role);
         if ($role == 'provider') {
-            $profile = $user->providerProfile()->create([]);
+            $profile = $user->providerProfile;
+            // $profile = $user->providerProfile()->create([]);
             ProviderWorkingHour::seedDefaultHours($user->id, $profile->id);
         }
         return $user;
@@ -281,7 +293,7 @@ class AuthController extends BaseController
         }
 
         $user = auth()->user();
-
+        
         // ✅ Check current password
         if (!Hash::check($request->current_password, $user->password)) {
             return $this->sendError("Your current password is incorrect.",400);
@@ -301,5 +313,84 @@ class AuthController extends BaseController
 
     }
 
+    public function googleLogin(Request $request)
+    {
+        
+        $validator = Validator::make($request->all(), [
+            'id_token' => 'required',
+            'role' => 'required'
+        ]);
 
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first());
+        }
+
+        // 🔐 verify token from Google
+        $response = Http::get(
+            'https://oauth2.googleapis.com/tokeninfo',
+            ['id_token' => $request->id_token]
+        );
+
+        if (!$response->ok()) {
+            return $this->sendError('Invalid Google token');
+            
+        }
+
+        $googleUser = $response->json();
+
+        // 🔥 verify this token is for YOUR app
+        if ($googleUser['aud'] !== config('services.google.client_id')) {
+            return $this->sendError('Token does not belong to this application');             
+        }
+
+        if ($googleUser['email_verified'] !== 'true') {
+            return $this->sendError('Google email not verified');
+            
+        }
+
+        $email    = $googleUser['email'] ??'Googleuser@gmail.com';
+        $googleId = $googleUser['sub'] ?? null;
+        $name     = $googleUser['name'] ?? 'Google User';
+
+        // 🔎 find user
+        $user = User::where('email', $email)->first();
+
+        // ❌ email exists with other role
+        if ($user && $user->user_type !== $request->role) {
+            return $this->sendError("This email already exists as {$user->user_type}. Please login using that role.");
+             
+        }
+
+        // ✅ create user if not exists
+        if (!$user) {
+            $user = User::create([
+                'name'      => $name,
+                'email'     => $email,
+                'google_id' => $googleId,
+                'role_id'   => $request->role,
+                'user_type' => $request->role,
+                'password'  => Hash::make(Str::random(30)),
+            ]);
+
+            $user->assignRole($request->role);
+
+            // provider setup
+            if ($request->role === 'provider') { 
+                ProviderWorkingHour::seedDefaultHours($user->id, $profile->id);
+            }
+        } else {
+            // update google id if missing
+            if (!$user->google_id) {
+                $user->update([
+                    'google_id' => $googleId
+                ]);
+            }
+        }
+        $token = $user->createToken('guest_token')->plainTextToken;
+        return $this->sendResponse([
+            'token' => $token,
+            'user'  => $user->load('providerProfile'), // Load roles for response
+        ], 'Login With Google successfully');
+         
+    }
 }

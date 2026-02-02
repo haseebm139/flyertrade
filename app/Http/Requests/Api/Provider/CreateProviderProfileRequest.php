@@ -25,8 +25,8 @@ class CreateProviderProfileRequest extends FormRequest
             // Profile
 
 
-            'avatar'         => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
-            'cover_photo'    => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
+            'avatar'         => 'nullable|file|mimes:jpg,jpeg,png|max:51200',
+            'cover_photo'    => 'nullable|file|mimes:jpg,jpeg,png|max:51200',
             'phone'          => 'nullable|string|max:20',
             'country'        => 'nullable|string|max:100',
             'city'           => 'nullable|string|max:100',
@@ -54,16 +54,16 @@ class CreateProviderProfileRequest extends FormRequest
             'services.show_certificate' => 'boolean',
 
             // Media
-            'services.photos.*'        => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
-            'services.videos.*'        => 'nullable|file|mimes:mp4,mov,avi|max:10240',
+            'services.photos.*'        => 'nullable|file|mimes:jpg,jpeg,png|max:51200',
+            'services.videos.*'        => 'nullable|file|mimes:mp4,mov,avi|max:51200',
 
             // Certificates
             'services.certificates.*'        => 'nullable|file|mimes:jpg,jpeg,png|max:5120',
 
             // Document
-            'id_photo'                   => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
-            'passport'                   => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
-            'work_permit'                => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
+            'id_photo'                   => 'nullable|file|mimes:jpg,jpeg,png|max:51200',
+            'passport'                   => 'nullable|file|mimes:jpg,jpeg,png|max:51200',
+            'work_permit'                => 'nullable|file|mimes:jpg,jpeg,png|max:51200',
             'fcm_token'                  => 'nullable|string',
         ];
     }
