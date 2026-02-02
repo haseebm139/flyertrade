@@ -25,50 +25,25 @@ jobs:
           command_timeout: 15m        
           script: |
             cd /var/www/flyertrade
-            
-            echo "👉 Clearing old config/cache before pull..."
-            php artisan config:clear || true 
-            php artisan cache:clear || true
 
-
-            echo "👉 Fixing Git permissions..."
-            sudo chown -R ubuntu:ubuntu .git
-            sudo chown -R ubuntu:ubuntu .
-            
-            echo "👉 Pulling latest code..."
             git fetch origin main
             git reset --hard origin/main
-            
-            echo "👉 Cleaning old caches..."
-            rm -f bootstrap/cache/services.php bootstrap/cache/packages.php || true
 
-            echo "👉 Installing dependencies (production only)..." 
             composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
-            
-            echo "👉 Clearing all Laravel caches..."
-            php artisan optimize:clear || true
-            
-            echo "👉 Re-discovering packages (without dev dependencies)..."
-            php artisan package:discover --ansi || true
 
-            echo "👉 Running migrations..."
             php artisan migrate --force
 
-            echo "👉 Clearing all caches..."
             php artisan optimize:clear
-            
-            echo "👉 Caching for production..."
             php artisan config:cache
             php artisan route:cache
             php artisan view:cache
-            
-            echo "👉 Fixing Laravel storage permissions..."
-            sudo chown -R www-data:www-data storage bootstrap/cache
-            sudo chmod -R 775 storage bootstrap/cache 
 
-            echo "👉 Reloading services..." 
-            sudo systemctl reload php8.2-fpm || true 
-            sudo systemctl reload nginx || true
+            sudo chown -R www-data:www-data storage bootstrap/cache
+            sudo chmod -R 775 storage bootstrap/cache
+
+            sudo systemctl reload php8.2-fpm
+            sudo systemctl reload nginx
+            
     
              
  
