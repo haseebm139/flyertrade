@@ -39,12 +39,11 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
             
-            echo "👉 Removing old vendor folder and caches..."
-            rm -rf vendor composer.lock || true
+            echo "👉 Cleaning old caches..."
             rm -f bootstrap/cache/services.php bootstrap/cache/packages.php || true
-            
+
             echo "👉 Installing dependencies (production only)..." 
-            composer install --no-dev --optimize-autoloader --no-interaction
+            composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
             
             echo "👉 Clearing all Laravel caches..."
             php artisan optimize:clear || true
