@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Messages;
 
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Kreait\Firebase\Factory;
@@ -15,6 +16,11 @@ class Board extends Component
     public string $filter = 'all';
     public string $audience = 'service-users';
     public ?string $activeConversationId = null;
+    public array $activeConversationMeta = [
+        'userName' => 'Unknown',
+        'userEmail' => '',
+        'userImage' => 'assets/images/icons/five.svg',
+    ];
     protected $queryString = [
         'filter' => ['except' => 'all'],
         'audience' => ['except' => 'service-users'],
@@ -26,42 +32,205 @@ class Board extends Component
     public array $messages = [];
     public bool $loadingMessages = false;
     public string $replyMessage = '';
+    public ?string $replyMediaUrl = null;
+    public ?string $replyMediaType = null;
+    public bool $selectAll = false;
+    public string $filterStatus = 'all';
     // Conversation
     public function sendReply(): void
     {
-        if (!$this->activeConversationId || trim($this->replyMessage) === '') {
+        $messageText = trim($this->replyMessage);
+        if (!$this->activeConversationId || ($messageText === '' && !$this->replyMediaUrl)) {
             return;
         }
 
         $database = $this->firestoreDatabase();
 
         try {
-            $database
-                ->collection('support_chat')
-                ->document($this->activeConversationId)
-                ->collection('messages')
-                ->add([
-                    'text' => $this->replyMessage,
+            $senderName = auth()->user()?->name ?? 'Support Team';
+            $senderId = auth()->id();
+            $senderImage = 'assets/images/avatar/default.png';
+            $receiverId = $this->activeConversationMeta['userId'] ?? null;
+            $receiverName = $this->activeConversationMeta['userName'] ?? 'Support Team';
+            $receiverImage = $this->activeConversationMeta['userImage'] ?? null;
+            $messageType = $this->replyMediaType ?: 'text';
+
+            if ($database) {
+                $payload = [
+                    'message' => $messageText,
+                    'messageType' => $messageType,
+                    'senderId' => $senderId,
+                    'senderName' => $senderName,
+                    'senderImage' => $senderImage,
+                    'receiverId' => $receiverId,
+                    'receiverName' => $receiverName,
+                    'receiverImage' => $receiverImage,
+                    'isRead' => false,
                     'senderType' => 'support',
                     'createdAt' => new Timestamp(new \DateTime()),
+                    'updatedAt' => new Timestamp(new \DateTime()),
                     'seen' => false,
-                ]);
+                ];
+                if ($this->replyMediaUrl) {
+                    $payload['mediaUrl'] = $this->replyMediaUrl;
+                    $payload['mediaThumbnail'] = null;
+                }
+                if ($this->replyMediaType) {
+                    $payload['mediaType'] = $this->replyMediaType;
+                }
 
-            // update parent doc
-            $database->collection('support_chat')
-                ->document($this->activeConversationId)
-                ->update([
-                    ['path' => 'lastMessage', 'value' => $this->replyMessage],
-                    ['path' => 'lastMessageTime', 'value' => now()],
-                    ['path' => 'unreadCount.support', 'value' => 0],
-                ]);
+                $database
+                    ->collection('support_chat')
+                    ->document($this->activeConversationId)
+                    ->collection('messages')
+                    ->add($payload);
 
+                $lastMessageText = $messageText !== ''
+                    ? $messageText
+                    : (($this->replyMediaType ?? 'media') . ' attachment');
+
+                // update parent doc
+                $database->collection('support_chat')
+                    ->document($this->activeConversationId)
+                    ->update([
+                        ['path' => 'lastMessage', 'value' => $lastMessageText],
+                        ['path' => 'lastMessageTime', 'value' => new Timestamp(new \DateTime())],
+                        ['path' => 'lastMessageSenderId', 'value' => 'support'],
+                        ['path' => 'unreadCount.support', 'value' => 0],
+                    ]);
+            } else {
+                $this->sendReplyViaRest(
+                    $this->activeConversationId,
+                    $messageText,
+                    $messageType,
+                    $senderId,
+                    $senderName,
+                    $senderImage,
+                    $receiverId,
+                    $receiverName,
+                    $receiverImage,
+                    $this->replyMediaUrl,
+                    $this->replyMediaType
+                );
+            }
+
+            $this->messages[] = [
+                'id' => 'local-' . uniqid(),
+                'text' => $messageText,
+                'sender' => 'support',
+                'mediaUrl' => $this->replyMediaUrl,
+                'messageType' => $messageType,
+                'time' => now()->diffForHumans(),
+            ];
             $this->replyMessage = '';
+            $this->replyMediaUrl = null;
+            $this->replyMediaType = null;
+            $this->cachedConversations = [];
+            $this->dispatch('scroll-chat-bottom');
             $this->loadMessages($this->activeConversationId);
-
         } catch (\Throwable $e) {
             Log::error('Send reply failed: ' . $e->getMessage());
         }
+    }
+
+    private function sendReplyViaRest(
+        string $conversationId,
+        string $message,
+        string $messageType,
+        $senderId,
+        string $senderName,
+        string $senderImage,
+        $receiverId,
+        string $receiverName,
+        ?string $receiverImage,
+        ?string $mediaUrl = null,
+        ?string $mediaType = null
+    ): void
+    {
+        $serviceAccount = $this->loadServiceAccount();
+        if (!$serviceAccount) {
+            throw new \RuntimeException('Firebase credentials missing.');
+        }
+
+        $projectId = $serviceAccount['project_id'] ?? null;
+        if (!$projectId) {
+            throw new \RuntimeException('Firebase project_id missing.');
+        }
+
+        $token = $this->fetchAccessToken($serviceAccount);
+        if (!$token) {
+            throw new \RuntimeException('Unable to fetch Firestore access token.');
+        }
+
+        $client = $this->makeHttpClient();
+        $now = now()->toRfc3339String();
+
+        $messageFields = [
+            'message' => ['stringValue' => $message],
+            'messageType' => ['stringValue' => $messageType],
+            'senderName' => ['stringValue' => $senderName],
+            'senderImage' => ['stringValue' => $senderImage],
+            'receiverName' => ['stringValue' => $receiverName],
+            'senderType' => ['stringValue' => 'support'],
+            'createdAt' => ['timestampValue' => $now],
+            'updatedAt' => ['timestampValue' => $now],
+            'isRead' => ['booleanValue' => false],
+            'seen' => ['booleanValue' => false],
+        ];
+        if ($senderId !== null) {
+            $messageFields['senderId'] = ['integerValue' => (string) $senderId];
+        }
+        if ($receiverId !== null) {
+            $messageFields['receiverId'] = ['integerValue' => (string) $receiverId];
+        }
+        if ($receiverImage !== null) {
+            $messageFields['receiverImage'] = ['stringValue' => $receiverImage];
+        }
+        if ($mediaUrl) {
+            $messageFields['mediaUrl'] = ['stringValue' => $mediaUrl];
+            $messageFields['mediaThumbnail'] = ['nullValue' => null];
+        }
+        if ($mediaType) {
+            $messageFields['mediaType'] = ['stringValue' => $mediaType];
+        }
+
+        $client->post(
+            "https://firestore.googleapis.com/v1/projects/{$projectId}/databases/(default)/documents/support_chat/{$conversationId}/messages",
+            [
+                'headers' => [
+                    'Authorization' => "Bearer {$token}",
+                    'Content-Type' => 'application/json',
+                ],
+                'json' => [
+                    'fields' => $messageFields,
+                ],
+            ]
+        );
+
+        $lastMessageText = $message !== '' ? $message : (($mediaType ?? 'media') . ' attachment');
+        $client->patch(
+            "https://firestore.googleapis.com/v1/projects/{$projectId}/databases/(default)/documents/support_chat/{$conversationId}?updateMask.fieldPaths=lastMessage&updateMask.fieldPaths=lastMessageTime&updateMask.fieldPaths=lastMessageSenderId&updateMask.fieldPaths=unreadCount.support",
+            [
+                'headers' => [
+                    'Authorization' => "Bearer {$token}",
+                    'Content-Type' => 'application/json',
+                ],
+                'json' => [
+                    'fields' => [
+                        'lastMessage' => ['stringValue' => $lastMessageText],
+                        'lastMessageTime' => ['timestampValue' => $now],
+                        'lastMessageSenderId' => ['stringValue' => 'support'],
+                        'unreadCount' => [
+                            'mapValue' => [
+                                'fields' => [
+                                    'support' => ['integerValue' => '0'],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        );
     }
     private function loadMessagesFromRest(string $conversationId): void
     {
@@ -91,7 +260,7 @@ class Board extends Component
         $response = $client->get(
             "https://firestore.googleapis.com/v1/projects/{$projectId}/databases/(default)/documents/support_chat/{$conversationId}/messages",
             [
-                'query' => ['pageSize' => 200, 'orderBy' => 'createdAt asc'],
+                'query' => ['pageSize' => 30, 'orderBy' => 'createdAt desc'],
                 'headers' => [
                     'Authorization' => "Bearer {$token}",
                 ],
@@ -101,31 +270,36 @@ class Board extends Component
         $payload = json_decode((string) $response->getBody(), true);
         $documents = $payload['documents'] ?? [];
             
+        $messages = [];
         foreach ($documents as $doc) {
-            
-            $fields = $doc['fields'] ?? []; 
-            if (!$fields) continue; 
+            $fields = $doc['fields'] ?? [];
+            if (!$fields) {
+                continue;
             }
+
             try {
-            $this->messages[] = [
-                // 'id' => $doc->id() ?? basename($doc['name'] ?? ''),
-                'text' => $data['message'] ?? $this->getFirestoreFieldValue($fields, 'message', ''),
-                'messageType' => $data['messageType'] ?? $this->getFirestoreFieldValue($fields, 'messageType', 'text'),
-                'senderId' => $data['senderId'] ?? $this->getFirestoreFieldValue($fields, 'senderId', null),
-                'senderName' => $data['senderName'] ?? $this->getFirestoreFieldValue($fields, 'senderName', 'Unknown'),
-                'senderImage' => $data['senderImage'] ?? $this->getFirestoreFieldValue($fields, 'senderImage', 'assets/images/avatar/default.png'),
-                'receiverId' => $data['receiverId'] ?? $this->getFirestoreFieldValue($fields, 'receiverId', null),
-                'receiverName' => $data['receiverName'] ?? $this->getFirestoreFieldValue($fields, 'receiverName', 'Support'),
-                'receiverImage' => $data['receiverImage'] ?? $this->getFirestoreFieldValue($fields, 'receiverImage', null),
-                'isRead' => $data['isRead'] ?? $this->getFirestoreFieldValue($fields, 'isRead', false),
-                'mediaURL' => $data['mediaURL'] ?? $this->getFirestoreFieldValue($fields, 'mediaURL', null),
-                'mediaThumbnail' => $data['mediaThumbnail'] ?? $this->getFirestoreFieldValue($fields, 'mediaThumbnail', null),
-                'time' => $this->normalizeTimestamp($data['createdAt'] ?? $this->getFirestoreFieldValue($fields, 'createdAt'))?->diffForHumans(),
-            ];
-        } catch (\Throwable $e) {
-            Log::error('Load messages REST fallback failed: ' . $e->getMessage());
+                $createdAt = $this->getFirestoreFieldValue($fields, 'createdAt');
+                $messageText = (string) $this->getFirestoreFieldValue($fields, 'message', $this->getFirestoreFieldValue($fields, 'text', ''));
+                $mediaUrl = $this->getFirestoreFieldValue($fields, 'mediaUrl', $this->getFirestoreFieldValue($fields, 'mediaURL', null));
+                $messageType = (string) $this->getFirestoreFieldValue($fields, 'messageType', ($mediaUrl ? 'media' : 'text'));
+                $senderName = (string) $this->getFirestoreFieldValue($fields, 'senderName', '');
+                $senderType = (string) $this->getFirestoreFieldValue($fields, 'senderType', $senderName === 'Support Team' ? 'support' : 'user');
+
+                $message = [
+                    'id' => basename((string) ($doc['name'] ?? '')),
+                    'text' => $messageText,
+                    'sender' => $senderType,
+                    'mediaUrl' => $mediaUrl,
+                    'messageType' => $messageType,
+                    'time' => $this->normalizeTimestamp($createdAt)?->diffForHumans(),
+                ];
+                $messages[] = $message;
+            } catch (\Throwable $e) {
+                Log::error('Load messages REST fallback failed: ' . $e->getMessage());
+            }
         }
 
+        $this->messages = array_reverse($messages);
         $this->loadingMessages = false;
     }
 
@@ -142,22 +316,34 @@ class Board extends Component
                     ->collection('support_chat')
                     ->document($conversationId)
                     ->collection('messages')
-                    ->orderBy('createdAt')
+                    ->orderBy('createdAt', 'DESC')
+                    ->limit(30)
                     ->documents();
+
+                $messages = [];
 
                 foreach ($documents as $doc) {
                     if (!$doc->exists()) continue;
 
                     $data = $doc->data();
 
-                    $this->messages[] = [
-                        'id' => $doc->id(),
-                        'text' => $data['text'] ?? '',
-                        'sender' => $data['senderType'] ?? 'user',
-                        'time' => $this->normalizeTimestamp($data['createdAt'])?->diffForHumans(),
-                    ];
+                $messageText = $data['message'] ?? $data['text'] ?? '';
+                $messageType = $data['messageType'] ?? ($data['mediaUrl'] ?? null ? 'media' : 'text');
+                $mediaUrl = $data['mediaUrl'] ?? $data['mediaURL'] ?? null;
+                $senderType = $data['senderType']
+                    ?? (($data['senderName'] ?? '') === 'Support Team' ? 'support' : 'user');
+
+                $messages[] = [
+                    'id' => $doc->id(),
+                    'text' => $messageText,
+                    'sender' => $senderType,
+                    'mediaUrl' => $mediaUrl,
+                    'messageType' => $messageType,
+                    'time' => $this->normalizeTimestamp($data['createdAt'])?->diffForHumans(),
+                ];
                 }
 
+                $this->messages = array_reverse($messages);
                 $this->loadingMessages = false;
                 return; // success, no need REST
             } catch (\Throwable $e) {
@@ -172,16 +358,89 @@ class Board extends Component
     }    
     public function selectConversation(string $conversationId): void
     {
-         
         if ($this->activeConversationId === $conversationId) {
             return;
         }
 
         $this->activeConversationId = $conversationId;
+        $this->activeConversationMeta = $this->resolveActiveConversationMeta($conversationId);
 
         $this->dispatch('scroll-chat-bottom');
-
+        $this->markConversationRead($conversationId);
         $this->loadMessages($conversationId);
+    }
+
+    public function closeConversation(): void
+    {
+        $this->activeConversationId = null;
+        $this->messages = [];
+    }
+
+    public function clearAttachment(): void
+    {
+        $this->replyMediaUrl = null;
+        $this->replyMediaType = null;
+    }
+
+    private function markConversationRead(string $conversationId): void
+    {
+        $database = $this->firestoreDatabase();
+
+        try {
+            if ($database) {
+                $database->collection('support_chat')
+                    ->document($conversationId)
+                    ->update([
+                        ['path' => 'unreadCount.support', 'value' => 0],
+                    ]);
+            } else {
+                $this->markConversationReadViaRest($conversationId);
+            }
+
+            $this->cachedConversations = [];
+        } catch (\Throwable $e) {
+            Log::warning('Mark conversation read failed: ' . $e->getMessage());
+        }
+    }
+
+    private function markConversationReadViaRest(string $conversationId): void
+    {
+        $serviceAccount = $this->loadServiceAccount();
+        if (!$serviceAccount) {
+            return;
+        }
+
+        $projectId = $serviceAccount['project_id'] ?? null;
+        if (!$projectId) {
+            return;
+        }
+
+        $token = $this->fetchAccessToken($serviceAccount);
+        if (!$token) {
+            return;
+        }
+
+        $client = $this->makeHttpClient();
+        $client->patch(
+            "https://firestore.googleapis.com/v1/projects/{$projectId}/databases/(default)/documents/support_chat/{$conversationId}?updateMask.fieldPaths=unreadCount.support",
+            [
+                'headers' => [
+                    'Authorization' => "Bearer {$token}",
+                    'Content-Type' => 'application/json',
+                ],
+                'json' => [
+                    'fields' => [
+                        'unreadCount' => [
+                            'mapValue' => [
+                                'fields' => [
+                                    'support' => ['integerValue' => '0'],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        );
     }
     // Side Bar
     public function updatedSearch(): void
@@ -205,6 +464,7 @@ class Board extends Component
         if (empty($this->cachedConversations)) {
             $this->cachedConversations = $this->loadConversations();
         }
+        $this->activeConversationMeta = $this->resolveActiveConversationMeta($this->activeConversationId);
 
         return view('livewire.admin.messages.board', [
             'conversations' => $this->cachedConversations,
@@ -219,6 +479,10 @@ class Board extends Component
 
         if ($type === 'audience') {
             $this->audience = $value;
+        }
+
+        if ($type === 'filter') {
+            $this->audience = 'service-users';
         }
 
         $this->cachedConversations = [];
@@ -350,6 +614,41 @@ class Board extends Component
         }
 
         return $rows;
+    }
+
+    private function resolveActiveConversationMeta(?string $id): array
+    {
+        if (!$id) {
+            return [
+                'userName' => 'Support',
+                'userEmail' => '',
+                'userImage' => 'assets/images/icons/five.svg',
+            ];
+        }
+
+        foreach ($this->cachedConversations as $conversation) {
+            if ((string) $conversation['id'] === $id) {
+                return [
+                    'userName' => $conversation['userName'] ?? 'Unknown',
+                    'userEmail' => $conversation['userId'] ?? '',
+                    'userImage' => $conversation['userImage'] ?? 'assets/images/icons/five.svg',
+                    'userId' => $conversation['userId'] ?? null,
+                ];
+            }
+        }
+
+        return [
+            'userName' => 'Support',
+            'userEmail' => '',
+            'userImage' => 'assets/images/icons/five.svg',
+        ];
+    }
+
+    public function pollMessages(): void
+    {
+        if ($this->activeConversationId && !$this->loadingMessages) {
+            $this->loadMessages($this->activeConversationId);
+        }
     }
 
     private function loadConversationsFromRest(): array
@@ -514,6 +813,11 @@ class Board extends Component
 
     private function fetchAccessToken(array $serviceAccount): ?string
     {
+        $cachedToken = Cache::get('firebase_access_token');
+        if (is_string($cachedToken) && $cachedToken !== '') {
+            return $cachedToken;
+        }
+
         $clientEmail = $serviceAccount['client_email'] ?? null;
         $privateKey = $serviceAccount['private_key'] ?? null;
         $tokenUri = $serviceAccount['token_uri'] ?? 'https://oauth2.googleapis.com/token';
@@ -553,6 +857,9 @@ class Board extends Component
                 Log::error('Firestore REST fallback failed: access token not returned.');
                 return null;
             }
+
+            $expiresIn = (int) ($tokenData['expires_in'] ?? 3600);
+            Cache::put('firebase_access_token', $accessToken, now()->addSeconds(max(300, $expiresIn - 60)));
 
             return $accessToken;
         } catch (\Throwable $e) {
