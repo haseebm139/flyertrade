@@ -20,7 +20,6 @@ class IncidentReportController extends Controller
                  
                 // 1. Security Check: Verify Booking ownership and existence
                 $booking = Booking::where('id', $bookingId)
-                    ->where('customer_id', $userId)
                     ->first(); 
                 if (!$booking) {
                     return response()->json([
