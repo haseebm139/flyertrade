@@ -310,30 +310,32 @@
 
 
                 <div class="chat-footer">
-                    <div class="chat-attachment-preview">
-                        @if ($replyMediaType === 'image')
-                            <img src="{{ $replyMediaUrl }}" alt="Attachment preview">
-                        @elseif ($replyMediaType === 'video')
-                            <video src="{{ $replyMediaUrl }}" controls></video>
-                        @else
-                        <img src="{{ $replyMediaUrl?? 'assets/images/icons/ic_attachment.svg' }}" alt="Attachment preview">
-                            {{-- <span class="attachment-filename">{{ $replyMediaUrl?? 'assets/images/icons/ic_attachment.svg' }}</span> --}}
-                        @endif
-                        <button type="button" class="attachment-remove" wire:click="clearAttachment">×</button>
-                    </div>
-                    @if (!empty($replyMediaUrl))
+                     @if (!empty($replyMediaUrl))
+                        <div class="chat-attachment-preview">
+                            @if ($replyMediaType === 'image')
+                                <img src="{{ $replyMediaUrl }}" alt="Attachment preview">
+                            @elseif ($replyMediaType === 'video')
+                                <video src="{{ $replyMediaUrl }}" controls></video>
+                            @else
+                                <span class="attachment-filename">{{ $replyMediaUrl }}</span>
+                            @endif
+                            <button type="button" class="attachment-remove" wire:click="clearAttachment">×</button>
+                        </div>
                     @endif
                     <input id="chatInput" wire:model="replyMessage" wire:keydown.enter.prevent="sendReply"
                         type="text" placeholder="Reply message......">
-                    <div class="footer-icons"><img src="{{ asset('assets/images/icons/emoji.svg') }}"
-                            alt=""><img src="{{ asset('assets/images/icons/txt.svg') }}"
-                            alt=""><span class="attachment" wire:ignore>
+                    <div class="footer-icons">
+                        {{-- <img src="{{ asset('assets/images/icons/emoji.svg') }}" alt="">
+                        <img src="{{ asset('assets/images/icons/txt.svg') }}" alt=""> --}}
+                        <span
+                            class="attachment" wire:ignore>
                             <div class="file-upload">
                                 <img class="attach theme-attach"
                                     src="{{ asset('assets/images/icons/ic_attachment.svg') }}" alt="Attach">
                                 <input id="chatAttachmentInput" type="file" accept="image/*,video/*">
                             </div>
-                        </span></div>
+                        </span>
+                    </div>
                     <button id="sendBtn" class="send-btn" type="button" wire:click="sendReply"><img
                             src="{{ asset('assets/images/icons/send-chat-icon.svg') }}" alt=""></button>
                 </div>

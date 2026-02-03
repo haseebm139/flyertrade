@@ -62,7 +62,9 @@ class Board extends Component
             $receiverId = $this->activeConversationMeta['userId'] ?? null;
             $receiverName = $this->activeConversationMeta['userName'] ?? 'Support Team';
             $receiverImage = $this->activeConversationMeta['userImage'] ?? null;
-            $messageType = $this->replyMediaType ?: 'text';
+            $hasAttachment = !empty($this->replyMediaUrl);
+            $messageType = $this->replyMediaType ?: ($hasAttachment ? 'media' : 'text');
+            $mediaType = $this->replyMediaType ?: null;
 
             if ($database) {
                 $payload = [
@@ -84,8 +86,8 @@ class Board extends Component
                     $payload['mediaUrl'] = $this->replyMediaUrl;
                     $payload['mediaThumbnail'] = null;
                 }
-                if ($this->replyMediaType) {
-                    $payload['mediaType'] = $this->replyMediaType;
+                if ($mediaType) {
+                    $payload['mediaType'] = $mediaType;
                 }
 
                 $database
@@ -111,7 +113,7 @@ class Board extends Component
                 $this->sendReplyViaRest(
                     $this->activeConversationId,
                     $messageText,
-                    $messageType,
+                $messageType,
                     $senderId,
                     $senderName,
                     $senderImage,
@@ -119,28 +121,90 @@ class Board extends Component
                     $receiverName,
                     $receiverImage,
                     $this->replyMediaUrl,
-                    $this->replyMediaType
+                $mediaType
                 );
             }
 
-            $this->messages[] = [
+            $createdAtTs = now()->timestamp;
+            $localMessage = [
                 'id' => 'local-' . uniqid(),
                 'text' => $messageText,
                 'sender' => 'support',
                 'mediaUrl' => $this->replyMediaUrl,
                 'messageType' => $messageType,
                 'time' => now()->diffForHumans(),
+                'createdAtTs' => $createdAtTs,
             ];
+            $this->messages[] = $localMessage;
             $this->replyMessage = '';
             $this->replyMediaUrl = null;
             $this->replyMediaType = null;
-            $this->cachedConversations = [];
-            $this->allConversations = [];
+            $this->messagesCache[$this->activeConversationId] = $this->messages;
+            $this->messagesConversationId = $this->activeConversationId;
+            $this->newIncomingCount = 0;
+
+            $lastMessageText = $messageText !== ''
+                ? $messageText
+                : (($this->replyMediaType ?? 'media') . ' attachment');
+            $this->updateConversationPreview($this->activeConversationId, $lastMessageText, $createdAtTs);
             $this->dispatch('scroll-chat-bottom');
-            $this->loadMessages($this->activeConversationId);
         } catch (\Throwable $e) {
             Log::error('Send reply failed: ' . $e->getMessage());
         }
+    }
+
+    private function updateConversationPreview(string $conversationId, string $lastMessage, int $timestamp): void
+    {
+        $timeLabel = \Carbon\Carbon::createFromTimestamp($timestamp)->diffForHumans();
+        $this->cachedConversations = $this->updateConversationCollection(
+            $this->cachedConversations,
+            $conversationId,
+            $lastMessage,
+            $timeLabel,
+            $timestamp
+        );
+        $this->allConversations = $this->updateConversationCollection(
+            $this->allConversations,
+            $conversationId,
+            $lastMessage,
+            $timeLabel,
+            $timestamp
+        );
+    }
+
+    private function updateConversationCollection(
+        array $conversations,
+        string $conversationId,
+        string $lastMessage,
+        string $timeLabel,
+        int $timestamp
+    ): array {
+        if (empty($conversations)) {
+            return $conversations;
+        }
+
+        $index = null;
+        foreach ($conversations as $i => $conversation) {
+            if ((string) ($conversation['id'] ?? '') === $conversationId) {
+                $index = $i;
+                break;
+            }
+        }
+
+        if ($index === null) {
+            return $conversations;
+        }
+
+        $conversation = $conversations[$index];
+        $conversation['lastMessage'] = $lastMessage;
+        $conversation['lastMessageTime'] = $timeLabel;
+        $conversation['lastMessageAt'] = $timestamp;
+        $conversation['unreadCount'] = 0;
+
+        unset($conversations[$index]);
+        array_unshift($conversations, $conversation);
+
+        return array_values($conversations);
     }
 
     private function sendReplyViaRest(
@@ -297,7 +361,11 @@ class Board extends Component
                 $createdAt = $this->getFirestoreFieldValue($fields, 'createdAt');
                 $messageText = (string) $this->getFirestoreFieldValue($fields, 'message', $this->getFirestoreFieldValue($fields, 'text', ''));
                 $mediaUrl = $this->getFirestoreFieldValue($fields, 'mediaUrl', $this->getFirestoreFieldValue($fields, 'mediaURL', null));
-                $messageType = (string) $this->getFirestoreFieldValue($fields, 'messageType', ($mediaUrl ? 'media' : 'text'));
+                $messageType = (string) $this->getFirestoreFieldValue(
+                    $fields,
+                    'messageType',
+                    $this->getFirestoreFieldValue($fields, 'mediaType', ($mediaUrl ? 'media' : 'text'))
+                );
                 $senderName = (string) $this->getFirestoreFieldValue($fields, 'senderName', '');
                 $senderType = (string) $this->getFirestoreFieldValue($fields, 'senderType', $senderName === 'Support Team' ? 'support' : 'user');
 
@@ -361,7 +429,9 @@ class Board extends Component
                     $data = $doc->data();
 
                 $messageText = $data['message'] ?? $data['text'] ?? '';
-                $messageType = $data['messageType'] ?? ($data['mediaUrl'] ?? null ? 'media' : 'text');
+                $messageType = $data['messageType']
+                    ?? ($data['mediaType'] ?? null)
+                    ?? ($data['mediaUrl'] ?? null ? 'media' : 'text');
                 $mediaUrl = $data['mediaUrl'] ?? $data['mediaURL'] ?? null;
                 $senderType = $data['senderType']
                     ?? (($data['senderName'] ?? '') === 'Support Team' ? 'support' : 'user');
@@ -424,7 +494,9 @@ class Board extends Component
 
                     $data = $doc->data();
                     $messageText = $data['message'] ?? $data['text'] ?? '';
-                    $messageType = $data['messageType'] ?? ($data['mediaUrl'] ?? null ? 'media' : 'text');
+                    $messageType = $data['messageType']
+                        ?? ($data['mediaType'] ?? null)
+                        ?? ($data['mediaUrl'] ?? null ? 'media' : 'text');
                     $mediaUrl = $data['mediaUrl'] ?? $data['mediaURL'] ?? null;
                     $senderType = $data['senderType']
                         ?? (($data['senderName'] ?? '') === 'Support Team' ? 'support' : 'user');
@@ -508,7 +580,7 @@ class Board extends Component
             $messageType = (string) $this->getFirestoreFieldValue(
                 $fields,
                 'messageType',
-                ($mediaUrl ? 'media' : 'text')
+                $this->getFirestoreFieldValue($fields, 'mediaType', ($mediaUrl ? 'media' : 'text'))
             );
             $senderName = (string) $this->getFirestoreFieldValue($fields, 'senderName', '');
             $senderType = (string) $this->getFirestoreFieldValue(
