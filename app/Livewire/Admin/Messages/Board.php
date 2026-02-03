@@ -27,6 +27,7 @@ class Board extends Component
     ];
     protected $updatesQueryString = ['filter', 'audience'];
     public array $cachedConversations = [];
+    public array $allConversations = [];
 
 
     public array $messages = [];
@@ -126,6 +127,7 @@ class Board extends Component
             $this->replyMediaUrl = null;
             $this->replyMediaType = null;
             $this->cachedConversations = [];
+            $this->allConversations = [];
             $this->dispatch('scroll-chat-bottom');
             $this->loadMessages($this->activeConversationId);
         } catch (\Throwable $e) {
@@ -398,6 +400,7 @@ class Board extends Component
             }
 
             $this->cachedConversations = [];
+            $this->allConversations = [];
         } catch (\Throwable $e) {
             Log::warning('Mark conversation read failed: ' . $e->getMessage());
         }
@@ -457,6 +460,7 @@ class Board extends Component
     public function refreshInbox(): void
     {
         $this->cachedConversations = [];
+        $this->allConversations = [];
     }
     public function render()
     {
@@ -465,7 +469,7 @@ class Board extends Component
             $this->cachedConversations = $this->loadConversations();
         }
         $this->activeConversationMeta = $this->resolveActiveConversationMeta($this->activeConversationId);
-
+         
         return view('livewire.admin.messages.board', [
             'conversations' => $this->cachedConversations,
         ]);
@@ -489,56 +493,107 @@ class Board extends Component
     }
     private function loadConversations(): array
     {
-        $database = $this->firestoreDatabase();
-         
-        if (!$database) {
-            return $this->loadConversationsFromRest();
-        }
+        if (empty($this->allConversations)) {
+            $database = $this->firestoreDatabase();
 
-        $documents = null;
-        $usedFallback = false;
+            if (!$database) {
+                $this->allConversations = $this->loadConversationsFromRest();
+            } else {
+                $documents = null;
+                $usedFallback = false;
 
-        try {
-            $documents = $database->collection('support_chat')
-                ->orderBy('lastMessageTime', 'DESC')
-                ->limit(100)
-                ->documents();
-        } catch (\Throwable $e) {
-            Log::warning('OrderBy lastMessageTime failed, falling back to unsorted fetch: ' . $e->getMessage());
-            $usedFallback = true;
-        }
+                try {
+                    $documents = $database->collection('support_chat')
+                        ->orderBy('lastMessageTime', 'DESC')
+                        ->limit(100)
+                        ->documents();
+                } catch (\Throwable $e) {
+                    Log::warning('OrderBy lastMessageTime failed, falling back to unsorted fetch: ' . $e->getMessage());
+                    $usedFallback = true;
+                }
 
-        if ($documents === null) {
-            try {
-                $documents = $database->collection('support_chat')
-                    ->limit(100)
-                    ->documents();
-            } catch (\Throwable $e) {
-                Log::error('Failed to load support_chat conversations: ' . $e->getMessage());
-                return $this->loadConversationsFromRest();
+                if ($documents === null) {
+                    try {
+                        $documents = $database->collection('support_chat')
+                            ->limit(100)
+                            ->documents();
+                    } catch (\Throwable $e) {
+                        Log::error('Failed to load support_chat conversations: ' . $e->getMessage());
+                        $this->allConversations = $this->loadConversationsFromRest();
+                        $documents = null;
+                    }
+                }
+
+                if ($documents !== null) {
+                    $rows = [];
+                    foreach ($documents as $doc) {
+                        if (!$doc->exists()) {
+                            continue;
+                        }
+
+                        $data = $doc->data();
+                        $userName = (string) ($data['userName'] ?? 'Unknown');
+                        $userId = (string) ($data['userId'] ?? '');
+                        $userType = (string) ($data['userType'] ?? '');
+                        $rawConversationType = (string) ($data['conversationType']
+                            ?? $data['conversation_type']
+                            ?? $data['messageType']
+                            ?? $data['message_type']
+                            ?? $data['channel']
+                            ?? $data['type']
+                            ?? '');
+                        $conversationType = $this->normalizeConversationType($rawConversationType);
+
+                        $lastMessageTime = $this->normalizeTimestamp($data['lastMessageTime'] ?? null);
+                        $unreadCount = 0;
+                        if (isset($data['unreadCount'])) {
+                            if (is_array($data['unreadCount'])) {
+                                $unreadCount = (int) ($data['unreadCount']['support'] ?? 0);
+                            } else {
+                                $unreadCount = (int) $data['unreadCount'];
+                            }
+                        }
+
+                        $rows[] = [
+                            'id' => $doc->id(),
+                            'userName' => $userName,
+                            'userId' => $userId,
+                            'userType' => $userType,
+                            'userImage' => (string) ($data['userImage'] ?? 'assets/images/avatar/default.png'),
+                            'lastMessage' => (string) ($data['lastMessage'] ?? ''),
+                            'lastMessageTime' => $lastMessageTime?->diffForHumans(),
+                            'lastMessageAt' => $lastMessageTime?->timestamp ?? 0,
+                            'unreadCount' => $unreadCount,
+                            'conversationType' => $conversationType,
+                        ];
+                    }
+
+                    if ($usedFallback) {
+                        usort($rows, static function (array $left, array $right): int {
+                            return ($right['lastMessageAt'] ?? 0) <=> ($left['lastMessageAt'] ?? 0);
+                        });
+                    }
+
+                    $this->allConversations = $rows;
+                }
             }
         }
 
+        return $this->applyConversationFilters($this->allConversations);
+    }
+
+    private function applyConversationFilters(array $rows): array
+    {
         $search = trim(mb_strtolower($this->search));
-        $rows = [];
+        $filtered = [];
 
-        foreach ($documents as $doc) {
-            if (!$doc->exists()) {
-                continue;
-            }
+        foreach ($rows as $row) {
+            $userName = (string) ($row['userName'] ?? 'Unknown');
+            $userId = (string) ($row['userId'] ?? '');
+            $userType = (string) ($row['userType'] ?? '');
+            $conversationType = (string) ($row['conversationType'] ?? 'chat');
+            $unreadCount = (int) ($row['unreadCount'] ?? 0);
 
-            $data = $doc->data();
-            $userName = (string) ($data['userName'] ?? 'Unknown');
-            $userId = (string) ($data['userId'] ?? '');
-            $userType = (string) ($data['userType'] ?? '');
-            $rawConversationType = (string) ($data['conversationType']
-                ?? $data['conversation_type']
-                ?? $data['messageType']
-                ?? $data['message_type']
-                ?? $data['channel']
-                ?? $data['type']
-                ?? '');
-            $conversationType = $this->normalizeConversationType($rawConversationType);
             $normalizedType = str_replace(['_', ' '], '-', mb_strtolower(trim($userType)));
             $isCustomer = $normalizedType !== '' && in_array($normalizedType, [
                 'customer',
@@ -570,16 +625,6 @@ class Board extends Component
                 }
             }
 
-            $lastMessageTime = $this->normalizeTimestamp($data['lastMessageTime'] ?? null);
-            $unreadCount = 0;
-            if (isset($data['unreadCount'])) {
-                if (is_array($data['unreadCount'])) {
-                    $unreadCount = (int) ($data['unreadCount']['support'] ?? 0);
-                } else {
-                    $unreadCount = (int) $data['unreadCount'];
-                }
-            }
-
             if ($this->filter === 'unread' && $unreadCount === 0) {
                 continue;
             }
@@ -590,30 +635,14 @@ class Board extends Component
                 continue;
             }
 
-            $rows[] = [
-                'id' => $doc->id(),
-                'userName' => $userName,
-                'userId' => $userId,
-                'userType' => $userType,
-                'userImage' => (string) ($data['userImage'] ?? 'assets/images/avatar/default.png'),
-                'lastMessage' => (string) ($data['lastMessage'] ?? ''),
-                'lastMessageTime' => $lastMessageTime?->diffForHumans(),
-                'lastMessageAt' => $lastMessageTime?->timestamp ?? 0,
-                'unreadCount' => $unreadCount,
-            ];
+            $filtered[] = $row;
         }
 
-        if ($usedFallback) {
-            usort($rows, static function (array $left, array $right): int {
-                return ($right['lastMessageAt'] ?? 0) <=> ($left['lastMessageAt'] ?? 0);
-            });
+        foreach ($filtered as $index => $row) {
+            unset($filtered[$index]['lastMessageAt']);
         }
 
-        foreach ($rows as $index => $row) {
-            unset($rows[$index]['lastMessageAt']);
-        }
-
-        return $rows;
+        return $filtered;
     }
 
     private function resolveActiveConversationMeta(?string $id): array
@@ -626,7 +655,9 @@ class Board extends Component
             ];
         }
 
-        foreach ($this->cachedConversations as $conversation) {
+        $source = !empty($this->allConversations) ? $this->allConversations : $this->cachedConversations;
+
+        foreach ($source as $conversation) {
             if ((string) $conversation['id'] === $id) {
                 return [
                     'userName' => $conversation['userName'] ?? 'Unknown',
@@ -691,7 +722,6 @@ class Board extends Component
             return [];
         }
 
-        $search = trim(mb_strtolower($this->search));
         $rows = [];
 
         foreach ($documents as $doc) {
@@ -711,36 +741,6 @@ class Board extends Component
                 ?? $this->getFirestoreFieldValue($fields, 'type')
                 ?? '');
             $conversationType = $this->normalizeConversationType($rawConversationType);
-            $normalizedType = str_replace(['_', ' '], '-', mb_strtolower(trim($userType)));
-            $isCustomer = $normalizedType !== '' && in_array($normalizedType, [
-                'customer',
-                'service-user',
-                'service-users',
-                'serviceuser',
-                'serviceusers',
-            ], true);
-            $isProvider = $normalizedType !== '' && in_array($normalizedType, [
-                'provider',
-                'service-provider',
-                'service-providers',
-                'serviceprovider',
-                'serviceproviders',
-            ], true);
-
-            if ($this->audience === 'service-users' && !$isCustomer) {
-                continue;
-            }
-            if ($this->audience === 'service-provider' && !$isProvider) {
-                continue;
-            }
-
-            if ($search !== '') {
-                $nameMatch = mb_strpos(mb_strtolower($userName), $search) !== false;
-                $idMatch = mb_strpos(mb_strtolower($userId), $search) !== false;
-                if (!$nameMatch && !$idMatch) {
-                    continue;
-                }
-            }
 
             $lastMessageTime = $this->normalizeTimestamp(
                 $this->getFirestoreFieldValue($fields, 'lastMessageTime')
@@ -754,16 +754,6 @@ class Board extends Component
                 $unreadCount = (int) $unreadField;
             }
 
-            if ($this->filter === 'unread' && $unreadCount === 0) {
-                continue;
-            }
-            if ($this->filter === 'emails' && $conversationType !== 'email') {
-                continue;
-            }
-            if ($this->filter === 'chats' && $conversationType !== 'chat') {
-                continue;
-            }
-
             $rows[] = [
                 'id' => basename((string) ($doc['name'] ?? '')),
                 'userName' => $userName,
@@ -774,16 +764,13 @@ class Board extends Component
                 'lastMessageTime' => $lastMessageTime?->diffForHumans(),
                 'lastMessageAt' => $lastMessageTime?->timestamp ?? 0,
                 'unreadCount' => $unreadCount,
+                'conversationType' => $conversationType,
             ];
         }
 
         usort($rows, static function (array $left, array $right): int {
             return ($right['lastMessageAt'] ?? 0) <=> ($left['lastMessageAt'] ?? 0);
         });
-
-        foreach ($rows as $index => $row) {
-            unset($rows[$index]['lastMessageAt']);
-        }
 
         return $rows;
     }
