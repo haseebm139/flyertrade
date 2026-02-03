@@ -32,10 +32,17 @@ class Board extends Component
 
     public array $messages = [];
     public bool $loadingMessages = false;
+    public bool $loadingMoreMessages = false;
+    public bool $hasMoreMessages = false;
+    public int $messagesLimit = 5;
+    public array $messagesCache = [];
+    public array $messagesHasMoreCache = [];
+    public ?string $messagesConversationId = null;
     public string $replyMessage = '';
     public ?string $replyMediaUrl = null;
     public ?string $replyMediaType = null;
     public bool $selectAll = false;
+    public array $selectedConversationIds = [];
     public string $filterStatus = 'all';
     // Conversation
     public function sendReply(): void
@@ -234,35 +241,41 @@ class Board extends Component
             ]
         );
     }
-    private function loadMessagesFromRest(string $conversationId): void
+    private function loadMessagesFromRest(string $conversationId, int $limit, bool $reset = true): void
     {
-        
-        $this->loadingMessages = true;
-        $this->messages = [];
+        if ($reset) {
+            $this->loadingMessages = true;
+        } else {
+            $this->loadingMoreMessages = true;
+        }
 
         $serviceAccount = $this->loadServiceAccount();
         if (!$serviceAccount) {
             $this->loadingMessages = false;
+            $this->loadingMoreMessages = false;
             return;
         }
 
         $projectId = $serviceAccount['project_id'] ?? null;
         if (!$projectId) {
             $this->loadingMessages = false;
+            $this->loadingMoreMessages = false;
             return;
         }
 
         $token = $this->fetchAccessToken($serviceAccount);
         if (!$token) {
             $this->loadingMessages = false;
+            $this->loadingMoreMessages = false;
             return;
         }
 
         $client = $this->makeHttpClient();
+        $fetchLimit = $limit + 1;
         $response = $client->get(
             "https://firestore.googleapis.com/v1/projects/{$projectId}/databases/(default)/documents/support_chat/{$conversationId}/messages",
             [
-                'query' => ['pageSize' => 30, 'orderBy' => 'createdAt desc'],
+                'query' => ['pageSize' => $fetchLimit, 'orderBy' => 'createdAt desc'],
                 'headers' => [
                     'Authorization' => "Bearer {$token}",
                 ],
@@ -287,6 +300,7 @@ class Board extends Component
                 $senderName = (string) $this->getFirestoreFieldValue($fields, 'senderName', '');
                 $senderType = (string) $this->getFirestoreFieldValue($fields, 'senderType', $senderName === 'Support Team' ? 'support' : 'user');
 
+                $createdAtTs = $this->normalizeTimestamp($createdAt)?->timestamp ?? 0;
                 $message = [
                     'id' => basename((string) ($doc['name'] ?? '')),
                     'text' => $messageText,
@@ -294,6 +308,7 @@ class Board extends Component
                     'mediaUrl' => $mediaUrl,
                     'messageType' => $messageType,
                     'time' => $this->normalizeTimestamp($createdAt)?->diffForHumans(),
+                    'createdAtTs' => $createdAtTs,
                 ];
                 $messages[] = $message;
             } catch (\Throwable $e) {
@@ -301,25 +316,40 @@ class Board extends Component
             }
         }
 
+        $hasMore = count($messages) > $limit;
+        if ($hasMore) {
+            $messages = array_slice($messages, 0, $limit);
+        }
         $this->messages = array_reverse($messages);
+        $this->messagesLimit = $limit;
+        $this->hasMoreMessages = $hasMore;
         $this->loadingMessages = false;
+        $this->loadingMoreMessages = false;
+        $this->messagesCache[$conversationId] = $this->messages;
+        $this->messagesHasMoreCache[$conversationId] = $this->hasMoreMessages;
+        $this->messagesConversationId = $conversationId;
     }
 
-    private function loadMessages(string $conversationId): void
+    private function loadMessages(string $conversationId, ?int $limit = null, bool $reset = true): void
     {
-        $this->loadingMessages = true;
-        $this->messages = [];
+        $limit = $limit ?? $this->messagesLimit;
+        if ($reset) {
+            $this->loadingMessages = true;
+        } else {
+            $this->loadingMoreMessages = true;
+        }
         
         $database = $this->firestoreDatabase();
          
         if ($database) {
             try {
+                $fetchLimit = $limit + 1;
                 $documents = $database
                     ->collection('support_chat')
                     ->document($conversationId)
                     ->collection('messages')
                     ->orderBy('createdAt', 'DESC')
-                    ->limit(30)
+                    ->limit($fetchLimit)
                     ->documents();
 
                 $messages = [];
@@ -335,6 +365,7 @@ class Board extends Component
                 $senderType = $data['senderType']
                     ?? (($data['senderName'] ?? '') === 'Support Team' ? 'support' : 'user');
 
+                $createdAtTs = $this->normalizeTimestamp($data['createdAt'] ?? null)?->timestamp ?? 0;
                 $messages[] = [
                     'id' => $doc->id(),
                     'text' => $messageText,
@@ -342,11 +373,22 @@ class Board extends Component
                     'mediaUrl' => $mediaUrl,
                     'messageType' => $messageType,
                     'time' => $this->normalizeTimestamp($data['createdAt'])?->diffForHumans(),
+                    'createdAtTs' => $createdAtTs,
                 ];
                 }
 
+                $hasMore = count($messages) > $limit;
+                if ($hasMore) {
+                    $messages = array_slice($messages, 0, $limit);
+                }
                 $this->messages = array_reverse($messages);
+                $this->messagesLimit = $limit;
+                $this->hasMoreMessages = $hasMore;
                 $this->loadingMessages = false;
+                $this->loadingMoreMessages = false;
+                $this->messagesCache[$conversationId] = $this->messages;
+                $this->messagesHasMoreCache[$conversationId] = $this->hasMoreMessages;
+                $this->messagesConversationId = $conversationId;
                 return; // success, no need REST
             } catch (\Throwable $e) {
                 Log::warning('Load messages gRPC failed, using REST fallback: ' . $e->getMessage());
@@ -356,8 +398,137 @@ class Board extends Component
         }
 
         // Fallback to REST
-        $this->loadMessagesFromRest($conversationId);
+        $this->loadMessagesFromRest($conversationId, $limit, $reset);
     }    
+
+    private function fetchLatestMessages(string $conversationId, int $limit): array
+    {
+        $database = $this->firestoreDatabase();
+        $messages = [];
+
+        if ($database) {
+            try {
+                $documents = $database
+                    ->collection('support_chat')
+                    ->document($conversationId)
+                    ->collection('messages')
+                    ->orderBy('createdAt', 'DESC')
+                    ->limit($limit)
+                    ->documents();
+
+                foreach ($documents as $doc) {
+                    if (!$doc->exists()) {
+                        continue;
+                    }
+
+                    $data = $doc->data();
+                    $messageText = $data['message'] ?? $data['text'] ?? '';
+                    $messageType = $data['messageType'] ?? ($data['mediaUrl'] ?? null ? 'media' : 'text');
+                    $mediaUrl = $data['mediaUrl'] ?? $data['mediaURL'] ?? null;
+                    $senderType = $data['senderType']
+                        ?? (($data['senderName'] ?? '') === 'Support Team' ? 'support' : 'user');
+                    $createdAtTs = $this->normalizeTimestamp($data['createdAt'] ?? null)?->timestamp ?? 0;
+
+                    $messages[] = [
+                        'id' => $doc->id(),
+                        'text' => $messageText,
+                        'sender' => $senderType,
+                        'mediaUrl' => $mediaUrl,
+                        'messageType' => $messageType,
+                        'time' => $this->normalizeTimestamp($data['createdAt'] ?? null)?->diffForHumans(),
+                        'createdAtTs' => $createdAtTs,
+                    ];
+                }
+
+                return array_reverse($messages);
+            } catch (\Throwable $e) {
+                Log::warning('Fetch latest messages gRPC failed, using REST fallback: ' . $e->getMessage());
+            }
+        }
+
+        return $this->fetchLatestMessagesFromRest($conversationId, $limit);
+    }
+
+    private function fetchLatestMessagesFromRest(string $conversationId, int $limit): array
+    {
+        $serviceAccount = $this->loadServiceAccount();
+        if (!$serviceAccount) {
+            return [];
+        }
+
+        $projectId = $serviceAccount['project_id'] ?? null;
+        if (!$projectId) {
+            return [];
+        }
+
+        $token = $this->fetchAccessToken($serviceAccount);
+        if (!$token) {
+            return [];
+        }
+
+        try {
+            $client = $this->makeHttpClient();
+            $response = $client->get(
+                "https://firestore.googleapis.com/v1/projects/{$projectId}/databases/(default)/documents/support_chat/{$conversationId}/messages",
+                [
+                    'query' => ['pageSize' => $limit, 'orderBy' => 'createdAt desc'],
+                    'headers' => [
+                        'Authorization' => "Bearer {$token}",
+                    ],
+                ]
+            );
+
+            $payload = json_decode((string) $response->getBody(), true);
+            $documents = $payload['documents'] ?? [];
+        } catch (\Throwable $e) {
+            Log::warning('Fetch latest messages REST failed: ' . $e->getMessage());
+            return [];
+        }
+
+        $messages = [];
+        foreach ($documents as $doc) {
+            $fields = $doc['fields'] ?? [];
+            if (!$fields) {
+                continue;
+            }
+
+            $createdAt = $this->getFirestoreFieldValue($fields, 'createdAt');
+            $createdAtTs = $this->normalizeTimestamp($createdAt)?->timestamp ?? 0;
+            $messageText = (string) $this->getFirestoreFieldValue(
+                $fields,
+                'message',
+                $this->getFirestoreFieldValue($fields, 'text', '')
+            );
+            $mediaUrl = $this->getFirestoreFieldValue(
+                $fields,
+                'mediaUrl',
+                $this->getFirestoreFieldValue($fields, 'mediaURL', null)
+            );
+            $messageType = (string) $this->getFirestoreFieldValue(
+                $fields,
+                'messageType',
+                ($mediaUrl ? 'media' : 'text')
+            );
+            $senderName = (string) $this->getFirestoreFieldValue($fields, 'senderName', '');
+            $senderType = (string) $this->getFirestoreFieldValue(
+                $fields,
+                'senderType',
+                $senderName === 'Support Team' ? 'support' : 'user'
+            );
+
+            $messages[] = [
+                'id' => basename((string) ($doc['name'] ?? '')),
+                'text' => $messageText,
+                'sender' => $senderType,
+                'mediaUrl' => $mediaUrl,
+                'messageType' => $messageType,
+                'time' => $this->normalizeTimestamp($createdAt)?->diffForHumans(),
+                'createdAtTs' => $createdAtTs,
+            ];
+        }
+
+        return array_reverse($messages);
+    }
     public function selectConversation(string $conversationId): void
     {
         if ($this->activeConversationId === $conversationId) {
@@ -367,9 +538,48 @@ class Board extends Component
         $this->activeConversationId = $conversationId;
         $this->activeConversationMeta = $this->resolveActiveConversationMeta($conversationId);
 
+        $this->messagesLimit = 5;
+        $this->hasMoreMessages = false;
+        if (isset($this->messagesCache[$conversationId]) && !empty($this->messagesCache[$conversationId])) {
+            $this->messages = $this->messagesCache[$conversationId];
+            $this->messagesConversationId = $conversationId;
+            $this->loadingMessages = false;
+            $this->messagesLimit = max($this->messagesLimit, count($this->messages));
+            $this->hasMoreMessages = $this->messagesHasMoreCache[$conversationId] ?? false;
+        } else {
+            $this->messages = [];
+            $this->messagesConversationId = null;
+            $this->loadingMessages = true;
+            $this->hasMoreMessages = false;
+        }
+    }
+
+    public function initConversation(): void
+    {
+        if (!$this->activeConversationId) {
+            return;
+        }
+
+        if ($this->messagesConversationId === $this->activeConversationId && !empty($this->messages)) {
+            // Cached messages already shown; skip reload for faster switching.
+            $this->dispatch('scroll-chat-bottom');
+            return;
+        }
+
+        $this->markConversationRead($this->activeConversationId);
+        $this->loadMessages($this->activeConversationId, $this->messagesLimit, true);
         $this->dispatch('scroll-chat-bottom');
-        $this->markConversationRead($conversationId);
-        $this->loadMessages($conversationId);
+    }
+
+    public function loadMoreMessages(): void
+    {
+        if (!$this->activeConversationId || $this->loadingMessages || $this->loadingMoreMessages) {
+            return;
+        }
+
+        $nextLimit = $this->messagesLimit + 5;
+        $this->loadMessages($this->activeConversationId, $nextLimit, false);
+        $this->dispatch('scroll-chat-top');
     }
 
     public function closeConversation(): void
@@ -399,10 +609,23 @@ class Board extends Component
                 $this->markConversationReadViaRest($conversationId);
             }
 
-            $this->cachedConversations = [];
-            $this->allConversations = [];
+            $this->updateUnreadCount($conversationId, 0);
         } catch (\Throwable $e) {
             Log::warning('Mark conversation read failed: ' . $e->getMessage());
+        }
+    }
+
+    private function updateUnreadCount(string $conversationId, int $count): void
+    {
+        foreach ($this->cachedConversations as $index => $conversation) {
+            if ((string) ($conversation['id'] ?? '') === $conversationId) {
+                $this->cachedConversations[$index]['unreadCount'] = $count;
+            }
+        }
+        foreach ($this->allConversations as $index => $conversation) {
+            if ((string) ($conversation['id'] ?? '') === $conversationId) {
+                $this->allConversations[$index]['unreadCount'] = $count;
+            }
         }
     }
 
@@ -449,7 +672,8 @@ class Board extends Component
     public function updatedSearch(): void
     {
         $this->activeConversationId = null;
-        $this->cachedConversations = [];
+        $this->refreshConversationsCache();
+        $this->resetSelection();
     }
      
     public function getHasActiveConversationProperty(): bool
@@ -461,12 +685,24 @@ class Board extends Component
     {
         $this->cachedConversations = [];
         $this->allConversations = [];
+        $this->resetSelection();
     }
     public function render()
     {
 
         if (empty($this->cachedConversations)) {
-            $this->cachedConversations = $this->loadConversations();
+            $this->refreshConversationsCache();
+        }
+        $visibleIds = array_values(array_map(
+            static fn($conversation) => (string) ($conversation['id'] ?? ''),
+            $this->cachedConversations
+        ));
+        if ($this->selectAll) {
+            $this->selectedConversationIds = $visibleIds;
+        } else {
+            $this->selectedConversationIds = array_values(
+                array_intersect($this->selectedConversationIds, $visibleIds)
+            );
         }
         $this->activeConversationMeta = $this->resolveActiveConversationMeta($this->activeConversationId);
          
@@ -489,7 +725,53 @@ class Board extends Component
             $this->audience = 'service-users';
         }
 
-        $this->cachedConversations = [];
+        $this->refreshConversationsCache();
+        $this->resetSelection();
+    }
+
+    private function refreshConversationsCache(): void
+    {
+        $this->cachedConversations = $this->loadConversations();
+    }
+
+    public function toggleSelectAll(): void
+    {
+        $visibleIds = array_values(array_map(
+            static fn($conversation) => (string) ($conversation['id'] ?? ''),
+            $this->cachedConversations
+        ));
+
+        if (empty($visibleIds)) {
+            $this->selectAll = false;
+            $this->selectedConversationIds = [];
+            return;
+        }
+
+        if ($this->selectAll) {
+            $this->selectAll = false;
+            $this->selectedConversationIds = [];
+            return;
+        }
+
+        $this->selectAll = true;
+        $this->selectedConversationIds = $visibleIds;
+    }
+
+    public function updatedSelectedConversationIds(): void
+    {
+        $visibleIds = array_values(array_map(
+            static fn($conversation) => (string) ($conversation['id'] ?? ''),
+            $this->cachedConversations
+        ));
+        $selectedVisible = array_values(array_intersect($this->selectedConversationIds, $visibleIds));
+        $this->selectedConversationIds = $selectedVisible;
+        $this->selectAll = !empty($visibleIds) && count($selectedVisible) === count($visibleIds);
+    }
+
+    private function resetSelection(): void
+    {
+        $this->selectAll = false;
+        $this->selectedConversationIds = [];
     }
     private function loadConversations(): array
     {
@@ -677,9 +959,50 @@ class Board extends Component
 
     public function pollMessages(): void
     {
-        if ($this->activeConversationId && !$this->loadingMessages) {
-            $this->loadMessages($this->activeConversationId);
+        if ($this->activeConversationId && !$this->loadingMessages && !$this->loadingMoreMessages) {
+            $this->appendNewMessages($this->activeConversationId);
         }
+    }
+
+    private function appendNewMessages(string $conversationId): void
+    {
+        $snapshot = $this->fetchLatestMessages($conversationId, 5);
+        if (empty($snapshot)) {
+            return;
+        }
+
+        $existingIds = array_flip(array_map(
+            static fn($message) => (string) ($message['id'] ?? ''),
+            $this->messages
+        ));
+
+        $newMessages = [];
+        foreach ($snapshot as $message) {
+            $id = (string) ($message['id'] ?? '');
+            if ($id === '' || isset($existingIds[$id])) {
+                continue;
+            }
+            $newMessages[] = $message;
+        }
+
+        if (empty($newMessages)) {
+            return;
+        }
+
+        $this->messages = array_values(array_merge($this->messages, $newMessages));
+        usort($this->messages, static function (array $left, array $right): int {
+            return ($left['createdAtTs'] ?? 0) <=> ($right['createdAtTs'] ?? 0);
+        });
+    }
+
+    public function pollConversations(): void
+    {
+        if ($this->loadingMessages || $this->loadingMoreMessages || $this->activeConversationId) {
+            return;
+        }
+        $this->allConversations = [];
+        $this->cachedConversations = [];
+        $this->refreshConversationsCache();
     }
 
     private function loadConversationsFromRest(): array

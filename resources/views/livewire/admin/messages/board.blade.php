@@ -1,4 +1,12 @@
-<div>
+<div x-data="{
+    uiActiveId: @entangle('activeConversationId'),
+    messagesId: @entangle('messagesConversationId'),
+    previewName: '',
+    previewEmail: '',
+    previewImage: '',
+    switching: false,
+    loading: @entangle('loadingMessages')
+}" x-effect="if (!loading && messagesId === uiActiveId) switching = false">
     <div class="users-toolbar border-0 p-0">
         <div class="toolbar-left">
             @can('Create Messages')
@@ -16,7 +24,8 @@
     </div>
 
     <div class="messages-email-container">
-        <aside class="sidebars" wire:key="conversation-sidebar">
+        <aside class="sidebars" wire:key="conversation-sidebar" wire:poll.5000ms="pollConversations" wire:ignore.self
+            x-data="{ search: '' }">
             <div class="search-bars">
                 <svg class="searc_icon" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
@@ -24,10 +33,10 @@
                         d="M21 21L15.0001 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z"
                         stroke="#555555" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
-                <input type="search" placeholder="Search" wire:model.debounce.500ms="search" />
+                <input type="search" placeholder="Search" x-model.debounce.200ms="search" />
             </div>
 
-            <div class="filters">
+            <div class="filters" data-livewire-tabs="true">
 
                 <button class="tab filter-btn {{ $filter === 'all' ? 'tab-active' : '' }}"
                     wire:click="switchTab('filter','all')">
@@ -62,22 +71,37 @@
             </div>
 
             <div class="tab-content active">
-                <div class="user-actions">
-                    <label>
-                        <input type="checkbox" id="selectAll" wire:model="selectAll" /> Select all
-                    </label>
-                    <div class="filter-menu">
-                        <select id="filterStatus" wire:model="filterStatus">
-                            <option value="all">All</option>
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
-                        </select>
+                @if (!empty($conversations))
+                    <div class="user-actions">
+                        <label>
+                            <input type="checkbox" id="selectAll" data-livewire-select="true"
+                                @checked($selectAll) wire:click="toggleSelectAll" />
+                            Select all
+                        </label>
+                        <div class="filter-menu">
+                            <select id="filterStatus" wire:model="filterStatus">
+                                <option value="all">All</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
+                @endif
                 <ul class="user-list" wire:key="conversation-list">
                     @forelse ($conversations as $conversation)
-                        <li class="user-list-item {{ $activeConversationId === $conversation['id'] ? 'active' : '' }}"
-                            wire:click="selectConversation('{{ (string) $conversation['id'] }}')">
+                        <li wire:key="conversation-{{ (string) $conversation['id'] }}"
+                            class="user-list-item {{ $activeConversationId === $conversation['id'] ? 'active' : '' }}"
+                            :class="{ 'active': uiActiveId === '{{ (string) $conversation['id'] }}' }"
+                            data-search="{{ \Illuminate\Support\Str::lower((string) ($conversation['userName'] ?? '') . ' ' . (string) ($conversation['userId'] ?? '')) }}"
+                            data-name="{{ $conversation['userName'] ?? 'Unknown' }}"
+                            data-email="{{ $conversation['userId'] ?? '' }}"
+                            x-show="!search || ($el.dataset.search && $el.dataset.search.includes(search.toLowerCase().trim()))"
+                            wire:click="selectConversation('{{ (string) $conversation['id'] }}')"
+                            @click="uiActiveId = '{{ (string) $conversation['id'] }}';
+                                previewName = $el.dataset.name || '';
+                                previewEmail = $el.dataset.email || '';
+                                previewImage = $el.dataset.image || '';
+                                switching = true;">
                             @php
                                 $defaultAvatar = 'assets/images/avatar/default.png';
                                 $image = $conversation['userImage'] ?? $defaultAvatar;
@@ -89,7 +113,7 @@
                                 $imageSrc = $isUrl ? $image : asset($image);
                                 $fallbackSrc = asset($defaultAvatar);
                             @endphp
-                            <img src="{{ $imageSrc }}" class="user-avatar"
+                            <img src="{{ $imageSrc }}" class="user-avatar" data-image="{{ $imageSrc }}"
                                 onerror="this.onerror=null;this.src='{{ $fallbackSrc }}';" />
                             <div class="user-infos">
                                 <div class="user-header">
@@ -103,7 +127,8 @@
                                     <span class="unread-count">{{ $conversation['unreadCount'] }}</span>
                                 @endif
                             </div>
-                            <input type="checkbox" class="select-user" onclick="event.stopPropagation()">
+                            <input type="checkbox" class="select-user" wire:model="selectedConversationIds"
+                                wire:click.stop value="{{ (string) $conversation['id'] }}">
                         </li>
                     @empty
                         <li class="user-list-item">
@@ -116,18 +141,31 @@
             </div>
         </aside>
         @if ($this->hasActiveConversation)
-            <div class="message-chat-theme">
+            <div class="message-chat-theme" wire:key="chat-body-{{ $activeConversationId }}"
+                wire:init="initConversation" style="position: relative;">
+                @if ($loadingMessages)
+                    <div class="chat-loading-overlay">
+                        <div class="chat-loading-spinner"></div>
+                        <div class="chat-loading-text">Loading conversation...</div>
+                    </div>
+                @endif
                 <div class="chat-header">
                     <div class="heading-with-icon" bis_skin_checked="1">
                         <img src="{{ asset('assets/images/icons/back.svg') }}" alt="" class="icon-back"
                             role="button" style="cursor:pointer" wire:click="closeConversation">
                         <div class="user-info" bis_skin_checked="1">
-                            <img src="{{ asset($activeConversationMeta['userImage'] ?? 'assets/images/icons/five.svg') }}"
+                            <img :src="switching && previewImage ? previewImage :
+                                '{{ asset($activeConversationMeta['userImage'] ?? 'assets/images/icons/five.svg') }}'"
                                 alt="avatar">
                             <div bis_skin_checked="1">
                                 <p class="user-name" style="font-weight:600; color:black;">
-                                    {{ $activeConversationMeta['userName'] ?? 'Support' }}</p>
-                                <p class="user-email">{{ $activeConversationMeta['userEmail'] ?? '' }}</p>
+                                    <span
+                                        x-text="switching && previewName ? previewName : '{{ $activeConversationMeta['userName'] ?? 'Support' }}'"></span>
+                                </p>
+                                <p class="user-email">
+                                    <span
+                                        x-text="switching && previewEmail ? previewEmail : '{{ $activeConversationMeta['userEmail'] ?? '' }}'"></span>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -152,31 +190,57 @@
                 </div>
 
                 <div class="chat-body" id="chatBody" wire:poll.2000ms="pollMessages">
+                    <div x-show="switching" x-cloak class="chat-skeleton">
+                        <div class="chat-skeleton-row left"></div>
+                        <div class="chat-skeleton-row right"></div>
+                        <div class="chat-skeleton-row left"></div>
+                        <div class="chat-skeleton-row right"></div>
+                        <div class="chat-skeleton-row left"></div>
+                    </div>
+                    @if ($hasMoreMessages)
+                        <div style="padding: 12px; text-align: center;"
+                            x-show="!switching && messagesId === uiActiveId" x-cloak>
+                            @if ($loadingMoreMessages)
+                                <div class="chat-loadmore-shimmer">
+                                    <span class="chat-loadmore-dot"></span>
+                                    <span class="chat-loadmore-dot"></span>
+                                    <span class="chat-loadmore-dot"></span>
+                                </div>
+                                <div class="chat-loadmore-text">Loading older messages...</div>
+                            @else
+                                <button type="button" class="new-email" wire:click="loadMoreMessages">
+                                    Load older messages
+                                </button>
+                            @endif
+                        </div>
+                    @endif
                     @if ($loadingMessages)
                         <p style="padding:20px">Loading...</p>
                     @endif
 
-                    @foreach ($messages as $message)
-                        <div
-                            class="message {{ ($message['sender'] ?? 'user') === 'support' ? 'message-right' : 'message-left' }}">
-                            @if (!empty($message['mediaUrl']))
-                                @if (($message['messageType'] ?? '') === 'image')
-                                    <p><img src="{{ $message['mediaUrl'] }}" alt="attachment"
-                                            style="max-width: 240px; border-radius: 6px;"></p>
-                                @elseif (($message['messageType'] ?? '') === 'video')
-                                    <p><video src="{{ $message['mediaUrl'] }}" controls
-                                            style="max-width: 240px; border-radius: 6px;"></video></p>
-                                @else
-                                    <p><a href="{{ $message['mediaUrl'] }}" target="_blank" rel="noopener">View
-                                            attachment</a></p>
+                    <div x-show="!switching && messagesId === uiActiveId" x-cloak>
+                        @foreach ($messages as $message)
+                            <div
+                                class="message {{ ($message['sender'] ?? 'user') === 'support' ? 'message-right' : 'message-left' }}">
+                                @if (!empty($message['mediaUrl']))
+                                    @if (($message['messageType'] ?? '') === 'image')
+                                        <p><img src="{{ $message['mediaUrl'] }}" alt="attachment"
+                                                style="max-width: 240px; border-radius: 6px;"></p>
+                                    @elseif (($message['messageType'] ?? '') === 'video')
+                                        <p><video src="{{ $message['mediaUrl'] }}" controls
+                                                style="max-width: 240px; border-radius: 6px;"></video></p>
+                                    @else
+                                        <p><a href="{{ $message['mediaUrl'] }}" target="_blank" rel="noopener">View
+                                                attachment</a></p>
+                                    @endif
                                 @endif
-                            @endif
-                            @if (!empty($message['text']))
-                                <p>{{ $message['text'] }}</p>
-                            @endif
-                            <span class="timestamp">{{ $message['time'] ?? '' }}</span>
-                        </div>
-                    @endforeach
+                                @if (!empty($message['text']))
+                                    <p>{{ $message['text'] }}</p>
+                                @endif
+                                <span class="timestamp">{{ $message['time'] ?? '' }}</span>
+                            </div>
+                        @endforeach
+                    </div>
                     {{-- <!-- Message 1 Left -->
                     <div class="message message-left">
                         <p>
@@ -304,6 +368,133 @@
             line-height: 22px;
         }
     </style>
+    <style>
+        .chat-loading-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.85);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            backdrop-filter: blur(2px);
+        }
+
+        .chat-loading-spinner {
+            width: 36px;
+            height: 36px;
+            border: 3px solid #e5e7eb;
+            border-top-color: #004e42;
+            border-radius: 50%;
+            animation: chat-spin 0.9s linear infinite;
+            margin-bottom: 10px;
+        }
+
+        .chat-loading-text {
+            font-size: 0.833vw;
+            color: #555;
+            font-weight: 600;
+        }
+
+        @keyframes chat-spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .chat-loading-text {
+                font-size: 3vw;
+            }
+        }
+
+        .chat-loadmore-shimmer {
+            display: inline-flex;
+            gap: 6px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 6px;
+        }
+
+        .chat-loadmore-dot {
+            width: 8px;
+            height: 8px;
+            background: #004e42;
+            border-radius: 50%;
+            animation: chat-dot-pulse 0.9s ease-in-out infinite;
+            opacity: 0.6;
+        }
+
+        .chat-loadmore-dot:nth-child(2) {
+            animation-delay: 0.15s;
+        }
+
+        .chat-loadmore-dot:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .chat-loadmore-text {
+            font-size: 0.781vw;
+            color: #555;
+            font-weight: 600;
+        }
+
+        @keyframes chat-dot-pulse {
+
+            0%,
+            100% {
+                transform: scale(0.9);
+                opacity: 0.5;
+            }
+
+            50% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .chat-loadmore-text {
+                font-size: 3vw;
+            }
+        }
+
+        .chat-skeleton {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 12px 16px;
+        }
+
+        .chat-skeleton-row {
+            height: 14px;
+            border-radius: 8px;
+            background: linear-gradient(90deg, #f1f1f1 25%, #e7e7e7 37%, #f1f1f1 63%);
+            background-size: 400% 100%;
+            animation: chat-shimmer 1.2s ease-in-out infinite;
+        }
+
+        .chat-skeleton-row.left {
+            width: 55%;
+            align-self: flex-start;
+        }
+
+        .chat-skeleton-row.right {
+            width: 45%;
+            align-self: flex-end;
+        }
+
+        @keyframes chat-shimmer {
+            0% {
+                background-position: 100% 0;
+            }
+
+            100% {
+                background-position: -100% 0;
+            }
+        }
+    </style>
     <script>
         document.addEventListener('livewire:initialized', () => {
             const bindAttachmentInput = () => {
@@ -355,6 +546,10 @@
             Livewire.on('scroll-chat-bottom', () => {
                 const el = document.getElementById('chatBody');
                 if (el) el.scrollTop = el.scrollHeight;
+            });
+            Livewire.on('scroll-chat-top', () => {
+                const el = document.getElementById('chatBody');
+                if (el) el.scrollTop = 0;
             });
 
             bindAttachmentInput();
