@@ -26,7 +26,7 @@ class StoreIncidentRequest extends FormRequest
     {
         return [
             'message' => 'required|string|min:10',
-            'attachment' => 'nullable|image|max:5120', // Max 2MB
+            'attachment' => 'nullable|image|max:10240', // Max 2MB
         ];
     }
 
