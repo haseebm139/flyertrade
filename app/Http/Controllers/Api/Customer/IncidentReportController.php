@@ -16,10 +16,15 @@ class IncidentReportController extends Controller
     {
         try {
             return DB::transaction(function () use ($request, $bookingId) {
-                $userId = Auth::id();
+                $user = Auth::user();
+                $userId = $user?->id;
+                $ownerColumn = in_array($user?->user_type, ['provider', 'multi'], true)
+                    ? 'provider_id'
+                    : 'customer_id';
                  
                 // 1. Security Check: Verify Booking ownership and existence
                 $booking = Booking::where('id', $bookingId)
+                    ->where($ownerColumn, $userId)
                     ->first(); 
                 if (!$booking) {
                     return response()->json([
