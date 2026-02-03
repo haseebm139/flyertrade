@@ -349,13 +349,6 @@
         </div>
     </div>
 
-<<<<<<< HEAD
-    <div class="messages-email-container">
-        <aside class="sidebars">
-            <div class="search-bars">
-
-                <input type="search" placeholder="Search" />
-=======
     <!-- CONTENT PANEL -->
     <section class="content-panel">
         <div class="display-chat">
@@ -372,7 +365,6 @@
             <div class="heading-with-icon">
                 <img src="{{asset('assets/images/icons/back.svg')}}" alt="" class="icon-back">
                 <h2>Compose email</h2>
->>>>>>> 51c6cfed0caea52d1674199601fd33ae1abe77eb
             </div>
 
             <div class="recipient-container">

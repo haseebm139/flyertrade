@@ -285,10 +285,6 @@ class BookingService
 
             $booking = $booking->load('slots', 'customer', 'provider', 'providerService.service');
 
-            // 6. Notify both parties
-            $this->notificationService->notifyBookingCreated($booking);
-            $this->notificationService->notifyBookingConfirmed($booking);
-
             return ['error' => false, 'booking' => $booking];
         });
     }

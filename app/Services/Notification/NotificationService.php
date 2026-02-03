@@ -325,6 +325,39 @@ class NotificationService
     }
 
     /**
+     * Direct booking created & accepted (provider-side)
+     * Notify provider and customer only (no admin).
+     */
+    public function notifyDirectBookingCreated($booking): void
+    {
+        $provider = User::find($booking->provider_id);
+        if ($provider) {
+            $this->send(
+                $provider,
+                'booking_created',
+                'Direct Booking Created',
+                "You created a direct booking #{$booking->booking_ref}.",
+                'provider',
+                $booking,
+                ['booking_id' => $booking->id, 'booking_ref' => $booking->booking_ref]
+            );
+        }
+
+        $customer = User::find($booking->customer_id);
+        if ($customer) {
+            $this->send(
+                $customer,
+                'booking_confirmed',
+                'Booking Confirmed',
+                "Your booking #{$booking->booking_ref} has been confirmed.",
+                'customer',
+                $booking,
+                ['booking_id' => $booking->id, 'booking_ref' => $booking->booking_ref]
+            );
+        }
+    }
+
+    /**
      * Send booking cancelled notification
      */
     public function notifyBookingCancelled($booking, $cancelledBy = 'customer'): void

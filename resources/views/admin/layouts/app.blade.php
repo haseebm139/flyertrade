@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" type="image/png" href="{{ asset('assets/logos/favicon.ico') }}">
 
     <title>@yield('title', 'Flyertrade Admin Dashboard')</title>
@@ -122,22 +123,28 @@
         .sort-icon {
             transition: transform 0.3s ease;
         }
+
         .sort-desc {
             transform: rotate(180deg);
         }
+
         .sort-asc {
-           transform: rotate(180deg);
+            transform: rotate(180deg);
         }
+
         th.sortable {
             cursor: pointer;
         }
+
         th.sortable:hover {
             background-color: #f8f9fa;
         }
+
         .theme-table tbody tr:hover {
             background-color: #f1f1f1;
             transition: background-color 0.2s ease;
         }
+
         #rows,
         #perPage {
             width: 100%;

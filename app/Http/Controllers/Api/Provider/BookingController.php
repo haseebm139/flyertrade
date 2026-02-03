@@ -6,12 +6,16 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Booking;
 use App\Services\Booking\BookingService;
+use App\Services\Notification\NotificationService;
 use Illuminate\Http\JsonResponse;
 use Validator;
 use App\Http\Controllers\Api\BaseController;
 class BookingController extends BaseController
 {
-    public function __construct(private BookingService $bookings) {}
+    public function __construct(
+        private BookingService $bookings,
+        private NotificationService $notificationService
+    ) {}
 
     public function accept(Request $request, $id): JsonResponse
     { 
@@ -60,6 +64,8 @@ class BookingController extends BaseController
             if ($result['error']) {
                 return $this->sendError($result['message'], 422);
             }
+
+            $this->notificationService->notifyDirectBookingCreated($result['booking']);
 
             return $this->sendResponse($result['booking'], 'Direct booking created and accepted successfully.');
         } catch (\Exception $e) {
