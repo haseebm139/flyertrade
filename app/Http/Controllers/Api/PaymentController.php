@@ -83,7 +83,9 @@ class PaymentController extends BaseController
      */
     public function makeDefault($id)
     {
-        $card = UserPaymentMethod::where('user_id', Auth::id())->find($id);
+        $card = UserPaymentMethod::where('user_id', Auth::id())
+            ->whereKey($id)
+            ->first();
 
         if (empty($card)) {
             return $this->sendError('Card not found.', 404);
@@ -98,7 +100,9 @@ class PaymentController extends BaseController
         }
 
         DB::transaction(function () use ($card) {
-            UserPaymentMethod::where('user_id', $card->user_id)->update(['is_default' => false]);
+            UserPaymentMethod::where('user_id', $card->user_id)
+                ->where('id', '!=', $card->id)
+                ->update(['is_default' => false]);
             $card->update(['is_default' => true]);
         });
 
