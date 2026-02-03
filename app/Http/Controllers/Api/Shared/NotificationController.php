@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\Shared;
 
 use App\Http\Controllers\Api\BaseController;
 use App\Models\Notification;
+use App\Models\User;
+use App\Services\Notification\NotificationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -95,6 +97,141 @@ class NotificationController extends BaseController
         }
 
         return $this->sendError('Failed to send push notification. Check laravel.log for details.', 500);
+    }
+
+    /**
+     * Send a custom notification to one or many users (admin only).
+     */
+    public function custom(Request $request, NotificationService $notificationService): JsonResponse
+    {
+        $user = auth()->user();
+          
+        // if (!$user || (!($user->role_id === 'admin') && !($user->user_type === 'admin'))) {
+        //     return $this->sendError('Unauthorized.', 403);
+        // }
+
+        $validator = \Validator::make($request->all(), [
+            'user_id' => 'nullable|integer|exists:users,id',
+            'user_ids' => 'nullable|array',
+            'user_ids.*' => 'integer|exists:users,id',
+            'type' => 'nullable|string',
+            'title' => 'required|string',
+            'message' => 'required|string',
+            'recipient_type' => 'nullable|string',
+            'data' => 'nullable|array',
+            'icon' => 'nullable|string',
+            'category' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), 422);
+        }
+
+        $userIds = [];
+        if (!empty($request->user_id)) {
+            $userIds[] = (int) $request->user_id;
+        }
+        if (!empty($request->user_ids)) {
+            $userIds = array_merge($userIds, array_map('intval', $request->user_ids));
+        }
+        $userIds = array_values(array_unique($userIds));
+
+        if (empty($userIds)) {
+            return $this->sendError('user_id or user_ids is required.', 422);
+        }
+
+        $type = $request->input('type', 'custom');
+        $recipientType = $request->input('recipient_type', 'customer');
+        $title = $request->input('title');
+        $message = $request->input('message');
+        $data = $request->input('data', []);
+        $icon = $request->input('icon');
+        $category = $request->input('category');
+
+        if (count($userIds) === 1) {
+            $targetUser = User::find($userIds[0]);
+            if (!$targetUser) {
+                return $this->sendError('User not found.', 404);
+            }
+
+            $notification = $notificationService->send(
+                $targetUser,
+                $type,
+                $title,
+                $message,
+                $recipientType,
+                null,
+                $data,
+                $icon,
+                $category
+            );
+
+            return $this->sendResponse($notification, 'Notification sent.');
+        }
+
+        $count = $notificationService->sendToMany(
+            $userIds,
+            $type,
+            $title,
+            $message,
+            $recipientType,
+            null,
+            $data,
+            $icon,
+            $category
+        );
+
+        return $this->sendResponse(['count' => $count], 'Notifications sent.');
+    }
+
+    /**
+     * Create "new_message" notification for a user.
+     */
+    public function messageReceived(Request $request, NotificationService $notificationService): JsonResponse
+    {
+        $validator = \Validator::make($request->all(), [
+            'user_id' => 'required|integer|exists:users,id',
+            'title' => 'nullable|string',
+            'message' => 'nullable|string',
+            'recipient_type' => 'nullable|string',
+            'data' => 'nullable|array',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), 422);
+        }
+
+        $targetUser = User::find($request->user_id);
+        if (!$targetUser) {
+            return $this->sendError('User not found.', 404);
+        }
+
+        $title = $request->input('title', 'New message');
+        $message = $request->input('message', 'You have received a new message.');
+        $recipientType = $request->input('recipient_type');
+        if (!$recipientType) {
+            $userType = $targetUser->user_type ?? null;
+            if ($userType === 'provider' || $userType === 'multi') {
+                $recipientType = 'provider';
+            } elseif ($userType === 'admin') {
+                $recipientType = 'admin';
+            } else {
+                $recipientType = 'customer';
+            }
+        }
+        $data = $request->input('data', []);
+
+        $notification = $notificationService->send(
+            $targetUser,
+            'new_message',
+            $title,
+            $message,
+            $recipientType,
+            null,
+            $data
+        );
+
+        return $this->sendResponse([], 'Message notification sent.');
     }
 
     /**

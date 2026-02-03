@@ -42,7 +42,7 @@ class NotificationIcon
     
     // Message Icons
     const MESSAGE_RECEIVED = 'message_received';
-    
+    const NEW_MESSAGE = 'new_message'; // new_message
     // Promotion/Offer Icons
     const SPECIAL_OFFER = 'special_offer'; // Yellow percentage icon
     const PROMOTION = 'promotion'; // Yellow starburst with percentage
@@ -85,6 +85,7 @@ class NotificationIcon
             'dispute_created', 'new_dispute', 'dispute' => self::DISPUTE,
             'provider_registered', 'new_provider_registered' => self::PROVIDER_REGISTERED,
             'message_received' => self::MESSAGE_RECEIVED,
+            'new_message' => self::NEW_MESSAGE,
             'special_offer', 'todays_offer' => self::SPECIAL_OFFER,
             'promotion', 'promotion_offer' => self::PROMOTION,
             'new_service', 'service_available' => self::NEW_SERVICE,
@@ -118,6 +119,7 @@ class NotificationIcon
             'high_cancellation_alert', 'provider_late_escalation', 'admin_action', 'dispute_created', 'new_dispute', 'dispute' => 'admin_actions',
             'provider_registered', 'new_provider_registered' => 'admin_actions',
             'message_received' => 'messages',
+            'new_message' => 'messages',
             'special_offer', 'todays_offer', 'promotion', 'promotion_offer' => 'promotions',
             'new_service', 'service_available' => 'services',
             default => 'all',

@@ -92,6 +92,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/', 'index');
         Route::post('/test-push', 'testPush');
         Route::post('/push-notification', 'pushNotification');
+        Route::post('/custom', 'custom');
+        Route::post('/message/received', 'messageReceived');
         Route::get('/unread-count', 'unreadCount');
         Route::post('/{id}/read', 'markAsRead');
         Route::post('/mark-all-read', 'markAllAsRead');
