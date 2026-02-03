@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-<div>
-=======
 <div x-data="{
     uiActiveId: @entangle('activeConversationId'),
     messagesId: @entangle('messagesConversationId'),
@@ -10,7 +7,6 @@
     switching: false,
     loading: @entangle('loadingMessages')
 }" x-effect="if (!loading && messagesId === uiActiveId) switching = false">
->>>>>>> meg
     <div class="users-toolbar border-0 p-0">
         <div class="toolbar-left">
             @can('Create Messages')
@@ -28,12 +24,8 @@
     </div>
 
     <div class="messages-email-container">
-<<<<<<< HEAD
-        <aside class="sidebars" wire:key="conversation-sidebar">
-=======
         <aside class="sidebars" wire:key="conversation-sidebar" wire:poll.5000ms="pollConversations" wire:ignore.self
             x-data="{ search: '' }">
->>>>>>> meg
             <div class="search-bars">
                 <svg class="searc_icon" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
@@ -41,17 +33,10 @@
                         d="M21 21L15.0001 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z"
                         stroke="#555555" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
-<<<<<<< HEAD
-                <input type="search" placeholder="Search" wire:model.debounce.500ms="search" />
-            </div>
-
-            <div class="filters">
-=======
                 <input type="search" placeholder="Search" x-model.debounce.200ms="search" />
             </div>
 
             <div class="filters" data-livewire-tabs="true">
->>>>>>> meg
 
                 <button class="tab filter-btn {{ $filter === 'all' ? 'tab-active' : '' }}"
                     wire:click="switchTab('filter','all')">
@@ -86,24 +71,6 @@
             </div>
 
             <div class="tab-content active">
-<<<<<<< HEAD
-                <div class="user-actions">
-                    <label>
-                        <input type="checkbox" id="selectAll" wire:model="selectAll" /> Select all
-                    </label>
-                    <div class="filter-menu">
-                        <select id="filterStatus" wire:model="filterStatus">
-                            <option value="all">All</option>
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
-                        </select>
-                    </div>
-                </div>
-                <ul class="user-list" wire:key="conversation-list">
-                    @forelse ($conversations as $conversation)
-                        <li class="user-list-item {{ $activeConversationId === $conversation['id'] ? 'active' : '' }}"
-                            wire:click="selectConversation('{{ (string) $conversation['id'] }}')">
-=======
                 @if (!empty($conversations))
                     <div class="user-actions">
                         <label>
@@ -135,7 +102,6 @@
                                 previewEmail = $el.dataset.email || '';
                                 previewImage = $el.dataset.image || '';
                                 switching = true;">
->>>>>>> meg
                             @php
                                 $defaultAvatar = 'assets/images/avatar/default.png';
                                 $image = $conversation['userImage'] ?? $defaultAvatar;
@@ -147,11 +113,7 @@
                                 $imageSrc = $isUrl ? $image : asset($image);
                                 $fallbackSrc = asset($defaultAvatar);
                             @endphp
-<<<<<<< HEAD
-                            <img src="{{ $imageSrc }}" class="user-avatar"
-=======
                             <img src="{{ $imageSrc }}" class="user-avatar" data-image="{{ $imageSrc }}"
->>>>>>> meg
                                 onerror="this.onerror=null;this.src='{{ $fallbackSrc }}';" />
                             <div class="user-infos">
                                 <div class="user-header">
@@ -165,12 +127,8 @@
                                     <span class="unread-count">{{ $conversation['unreadCount'] }}</span>
                                 @endif
                             </div>
-<<<<<<< HEAD
-                            <input type="checkbox" class="select-user" onclick="event.stopPropagation()">
-=======
                             <input type="checkbox" class="select-user" wire:model="selectedConversationIds"
                                 wire:click.stop value="{{ (string) $conversation['id'] }}">
->>>>>>> meg
                         </li>
                     @empty
                         <li class="user-list-item">
@@ -183,9 +141,6 @@
             </div>
         </aside>
         @if ($this->hasActiveConversation)
-<<<<<<< HEAD
-            <div class="message-chat-theme">
-=======
             <div class="message-chat-theme" wire:key="chat-body-{{ $activeConversationId }}"
                 wire:init="initConversation" style="position: relative;">
                 @if ($loadingMessages)
@@ -194,20 +149,11 @@
                         <div class="chat-loading-text">Loading conversation...</div>
                     </div>
                 @endif
->>>>>>> meg
                 <div class="chat-header">
                     <div class="heading-with-icon" bis_skin_checked="1">
                         <img src="{{ asset('assets/images/icons/back.svg') }}" alt="" class="icon-back"
                             role="button" style="cursor:pointer" wire:click="closeConversation">
                         <div class="user-info" bis_skin_checked="1">
-<<<<<<< HEAD
-                            <img src="{{ asset($activeConversationMeta['userImage'] ?? 'assets/images/icons/five.svg') }}"
-                                alt="avatar">
-                            <div bis_skin_checked="1">
-                                <p class="user-name" style="font-weight:600; color:black;">
-                                    {{ $activeConversationMeta['userName'] ?? 'Support' }}</p>
-                                <p class="user-email">{{ $activeConversationMeta['userEmail'] ?? '' }}</p>
-=======
                             <img :src="switching && previewImage ? previewImage :
                                 '{{ asset($activeConversationMeta['userImage'] ?? 'assets/images/icons/five.svg') }}'"
                                 alt="avatar">
@@ -220,7 +166,6 @@
                                     <span
                                         x-text="switching && previewEmail ? previewEmail : '{{ $activeConversationMeta['userEmail'] ?? '' }}'"></span>
                                 </p>
->>>>>>> meg
                             </div>
                         </div>
                     </div>
@@ -245,8 +190,6 @@
                 </div>
 
                 <div class="chat-body" id="chatBody" wire:poll.2000ms="pollMessages">
-<<<<<<< HEAD
-=======
                     <div x-show="switching" x-cloak class="chat-skeleton">
                         <div class="chat-skeleton-row left"></div>
                         <div class="chat-skeleton-row right"></div>
@@ -271,34 +214,10 @@
                             @endif
                         </div>
                     @endif
->>>>>>> meg
                     @if ($loadingMessages)
                         <p style="padding:20px">Loading...</p>
                     @endif
 
-<<<<<<< HEAD
-                    @foreach ($messages as $message)
-                        <div
-                            class="message {{ ($message['sender'] ?? 'user') === 'support' ? 'message-right' : 'message-left' }}">
-                            @if (!empty($message['mediaUrl']))
-                                @if (($message['messageType'] ?? '') === 'image')
-                                    <p><img src="{{ $message['mediaUrl'] }}" alt="attachment"
-                                            style="max-width: 240px; border-radius: 6px;"></p>
-                                @elseif (($message['messageType'] ?? '') === 'video')
-                                    <p><video src="{{ $message['mediaUrl'] }}" controls
-                                            style="max-width: 240px; border-radius: 6px;"></video></p>
-                                @else
-                                    <p><a href="{{ $message['mediaUrl'] }}" target="_blank" rel="noopener">View
-                                            attachment</a></p>
-                                @endif
-                            @endif
-                            @if (!empty($message['text']))
-                                <p>{{ $message['text'] }}</p>
-                            @endif
-                            <span class="timestamp">{{ $message['time'] ?? '' }}</span>
-                        </div>
-                    @endforeach
-=======
                     <div x-show="!switching && messagesId === uiActiveId" x-cloak>
                         @foreach ($messages as $message)
                             <div
@@ -322,7 +241,6 @@
                             </div>
                         @endforeach
                     </div>
->>>>>>> meg
                     {{-- <!-- Message 1 Left -->
                     <div class="message message-left">
                         <p>
@@ -450,8 +368,6 @@
             line-height: 22px;
         }
     </style>
-<<<<<<< HEAD
-=======
     <style>
         .chat-loading-overlay {
             position: absolute;
@@ -579,7 +495,6 @@
             }
         }
     </style>
->>>>>>> meg
     <script>
         document.addEventListener('livewire:initialized', () => {
             const bindAttachmentInput = () => {
@@ -632,13 +547,10 @@
                 const el = document.getElementById('chatBody');
                 if (el) el.scrollTop = el.scrollHeight;
             });
-<<<<<<< HEAD
-=======
             Livewire.on('scroll-chat-top', () => {
                 const el = document.getElementById('chatBody');
                 if (el) el.scrollTop = 0;
             });
->>>>>>> meg
 
             bindAttachmentInput();
 
