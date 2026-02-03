@@ -129,7 +129,7 @@
 
     <style>
         .notification-item.unread {
-            background-color: #f8f9fa;
+            /* background-color: #f8f9fa; */
             border-left: 3px solid #007bff;
         }
         .notification-item:hover {
