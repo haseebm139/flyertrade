@@ -10,7 +10,6 @@ use Stripe\Exception\InvalidRequestException;
 use App\Models\User;
 
 use Illuminate\Support\Facades\Log;
-use Illuminate\Http\JsonResponse;
 class StripeService
 {
     public function __construct()
@@ -39,15 +38,10 @@ class StripeService
     } 
     public function createAndConfirmIntent(int $amountCents, string $currency , string $paymentMethodId, array $metadata = []): PaymentIntent
     { 
-        $paymentMethod = PaymentMethod::create([
-            'type' => 'card',
-            'card' => ['token' => 'tok_visa'],
-        ]); 
-         
         return PaymentIntent::create([
             'amount' => $amountCents,
             'currency' => $currency,
-            'payment_method' => $paymentMethod->id, 
+            'payment_method' => $paymentMethodId,
             'confirmation_method' => 'automatic',
             'confirm' => true,             
             'payment_method_types' => ['card'],  
@@ -66,6 +60,8 @@ class StripeService
 
     public function chargeCustomer(string $customerId, string $paymentMethodId, int $amountCents, string $currency, array $metadata = []): PaymentIntent
     {
+        $this->attachPaymentMethod($customerId, $paymentMethodId);
+
         return PaymentIntent::create([
             'amount' => $amountCents,
             'currency' => $currency,
@@ -110,7 +106,13 @@ class StripeService
     {
         $paymentMethod = PaymentMethod::retrieve($paymentMethodId);
 
-        $paymentMethod->attach(['customer' => $customerId]);
+        if (!empty($paymentMethod->customer) && $paymentMethod->customer !== $customerId) {
+            throw new \RuntimeException('Payment method already attached to another customer.');
+        }
+
+        if ($paymentMethod->customer !== $customerId) {
+            $paymentMethod->attach(['customer' => $customerId]);
+        }
 
         if ($makeDefault) {
             Customer::update($customerId, [
