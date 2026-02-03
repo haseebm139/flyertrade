@@ -172,10 +172,27 @@
 
 
                     <div class="header-right">
-                        <span>1 of 200</span>
+                        @php
+                            $activeIndex = null;
+                            foreach ($conversations as $idx => $conv) {
+                                if ((string) ($conv['id'] ?? '') === (string) $activeConversationId) {
+                                    $activeIndex = $idx + 1;
+                                    break;
+                                }
+                            }
+                            $totalConversations = is_countable($conversations) ? count($conversations) : 0;
+                        @endphp
+                        <span>{{ $activeIndex ?? 0 }} of {{ $totalConversations }}</span>
+                        @if ($newIncomingCount > 0)
+                            <button type="button" class="new-email" wire:click="markMessagesSeen">
+                                New {{ $newIncomingCount }}
+                            </button>
+                        @endif
                         <div class="icons">
-                            <img src="{{ asset('assets/images/icons/message-icon-prev.svg') }}" alt="Refresh Icon">
-                            <img src="{{ asset('assets/images/icons/message-icon-next.svg') }}" alt="Expand Icon">
+                            <img src="{{ asset('assets/images/icons/message-icon-prev.svg') }}" alt="Prev Icon"
+                                class="chat-nav-icon" role="button" wire:click="selectPreviousConversation">
+                            <img src="{{ asset('assets/images/icons/message-icon-next.svg') }}" alt="Next Icon"
+                                class="chat-nav-icon" role="button" wire:click="selectNextConversation">
                         </div>
                         <div class="icons">
                             <img src="{{ asset('assets/images/icons/dots_message.svg') }}" alt="Refresh Icon">
@@ -237,7 +254,7 @@
                                 @if (!empty($message['text']))
                                     <p>{{ $message['text'] }}</p>
                                 @endif
-                                <span class="timestamp">{{ $message['time'] ?? '' }}</span>
+                                <span class="timestamp" data-ts="{{ (int) ($message['createdAtTs'] ?? 0) }}"></span>
                             </div>
                         @endforeach
                     </div>
@@ -293,17 +310,18 @@
 
 
                 <div class="chat-footer">
+                    <div class="chat-attachment-preview">
+                        @if ($replyMediaType === 'image')
+                            <img src="{{ $replyMediaUrl }}" alt="Attachment preview">
+                        @elseif ($replyMediaType === 'video')
+                            <video src="{{ $replyMediaUrl }}" controls></video>
+                        @else
+                        <img src="{{ $replyMediaUrl?? 'assets/images/icons/ic_attachment.svg' }}" alt="Attachment preview">
+                            {{-- <span class="attachment-filename">{{ $replyMediaUrl?? 'assets/images/icons/ic_attachment.svg' }}</span> --}}
+                        @endif
+                        <button type="button" class="attachment-remove" wire:click="clearAttachment">×</button>
+                    </div>
                     @if (!empty($replyMediaUrl))
-                        <div class="chat-attachment-preview">
-                            @if ($replyMediaType === 'image')
-                                <img src="{{ $replyMediaUrl }}" alt="Attachment preview">
-                            @elseif ($replyMediaType === 'video')
-                                <video src="{{ $replyMediaUrl }}" controls></video>
-                            @else
-                                <span class="attachment-filename">{{ $replyMediaUrl }}</span>
-                            @endif
-                            <button type="button" class="attachment-remove" wire:click="clearAttachment">×</button>
-                        </div>
                     @endif
                     <input id="chatInput" wire:model="replyMessage" wire:keydown.enter.prevent="sendReply"
                         type="text" placeholder="Reply message......">
@@ -494,6 +512,21 @@
                 background-position: -100% 0;
             }
         }
+
+        .chat-nav-icon {
+            cursor: pointer;
+            transition: transform 0.15s ease, opacity 0.15s ease;
+        }
+
+        .chat-nav-icon:hover {
+            transform: translateY(-1px) scale(1.05);
+            opacity: 0.85;
+        }
+
+        .chat-nav-icon:active {
+            transform: translateY(0) scale(0.95);
+            opacity: 0.7;
+        }
     </style>
     <script>
         document.addEventListener('livewire:initialized', () => {
@@ -552,10 +585,38 @@
                 if (el) el.scrollTop = 0;
             });
 
+            const updateTimestamps = () => {
+                const nodes = document.querySelectorAll('.timestamp[data-ts]');
+                const nowMs = Date.now();
+                nodes.forEach(node => {
+                    const ts = parseInt(node.dataset.ts || '0', 10);
+                    if (!ts) return;
+                    const diffSec = Math.max(0, Math.floor((nowMs - ts * 1000) / 1000));
+                    let text = '';
+                    if (diffSec < 60) {
+                        text = 'just now';
+                    } else if (diffSec < 3600) {
+                        const mins = Math.floor(diffSec / 60);
+                        text = mins + ' minute' + (mins === 1 ? '' : 's') + ' ago';
+                    } else if (diffSec < 86400) {
+                        const hours = Math.floor(diffSec / 3600);
+                        text = hours + ' hour' + (hours === 1 ? '' : 's') + ' ago';
+                    } else {
+                        const days = Math.floor(diffSec / 86400);
+                        text = days + ' day' + (days === 1 ? '' : 's') + ' ago';
+                    }
+                    node.textContent = text;
+                });
+            };
+
+            updateTimestamps();
+            setInterval(updateTimestamps, 60000);
+
             bindAttachmentInput();
 
             Livewire.hook('message.processed', () => {
                 bindAttachmentInput();
+                updateTimestamps();
             });
         });
     </script>
