@@ -116,8 +116,8 @@ class ProviderRepository
         }
 
         // 🔹 Sort by Top Rating
+        $query->orderByDesc('published_reviews_avg_rating');
         if (!empty($filters['sort_by']) && $filters['sort_by'] === 'rating') {
-            $query->orderByDesc('published_reviews_avg_rating');
         }
 
         // 🔹 Attach Bookmark Flag
