@@ -4,15 +4,15 @@
 @section('content')
 
 
-<style>
-    table tr:nth-child(3) td {
-    border: 0px solid #000;
-}
-.tabs-recently-added-users .nav-link{
-    border: none;
-}
+    <style>
+        table tr:nth-child(3) td {
+            border: 0px solid #000;
+        }
 
-</style>
+        .tabs-recently-added-users .nav-link {
+            border: none;
+        }
+    </style>
     <!-- two-column area: left (finance + table) and right (recent activities) -->
     <div class="row g-3">
         <!-- MAIN LEFT COLUMN (8/12) -->
@@ -92,8 +92,7 @@
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h5 class="card-title mb-0">Recently added users</h5>
                             @canany(['Read Users', 'Read Providers'])
-                                <a class="dashboard-view-all"
-                                    href="{{ route('user-management.service.users.index') }}"
+                                <a class="dashboard-view-all" href="{{ route('user-management.service.users.index') }}"
                                     style="font-weight:400,color:#1b1b1b ,font-size:0.875vw">
                                     View all
                                 </a>
@@ -103,8 +102,7 @@
                             <div class="nav nav-tabs tabs-recently-added-users" id="nav-tab" role="tablist">
                                 <button class="nav-link tab active" id="nav-home-tab" data-bs-toggle="tab"
                                     data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home"
-                                    aria-selected="true"
-                                    data-view-url="{{ route('user-management.service.users.index') }}">
+                                    aria-selected="true" data-view-url="{{ route('user-management.service.users.index') }}">
                                     Service users
                                 </button>
                                 <button class="nav-link tab" id="nav-profile-tab" data-bs-toggle="tab"
@@ -138,7 +136,8 @@
                                                             <img src="{{ asset($user->avatar ?? 'assets/images/avatar/default.png') }}"
                                                                 class="rounded-circle me-2" alt="User">
                                                             <div>
-                                                                <div class="fw-semibold name">{{ $user->name ?? 'N/A' }}</div>
+                                                                <div class="fw-semibold name">{{ $user->name ?? 'N/A' }}
+                                                                </div>
                                                                 <small
                                                                     class="text-muted name-2">{{ $user->email ?? '-' }}</small>
                                                             </div>
@@ -156,8 +155,7 @@
                                     </table>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="nav-profile" role="tabpanel"
-                                aria-labelledby="nav-profile-tab">
+                            <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                                 <!-- Table -->
                                 <div class="table-responsive">
                                     <table class="table align-middle mb-0">
@@ -178,7 +176,8 @@
                                                             <img src="{{ asset($user->avatar ?? 'assets/images/avatar/default.png') }}"
                                                                 class="rounded-circle me-2" alt="User">
                                                             <div>
-                                                                <div class="fw-semibold name">{{ $user->name ?? 'N/A' }}</div>
+                                                                <div class="fw-semibold name">{{ $user->name ?? 'N/A' }}
+                                                                </div>
                                                                 <small
                                                                     class="text-muted name-2">{{ $user->email ?? '-' }}</small>
                                                             </div>

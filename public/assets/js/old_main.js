@@ -39,16 +39,20 @@ document.addEventListener("DOMContentLoaded", function () {
 const selectAll = document.getElementById("selectAll");
 const userCheckboxes = document.querySelectorAll(".select-user");
 
-selectAll.addEventListener("change", function () {
-    userCheckboxes.forEach(cb => cb.checked = this.checked);
-});
-
-userCheckboxes.forEach(cb => {
-    cb.addEventListener("change", () => {
-        const allChecked = [...userCheckboxes].every(c => c.checked);
-        selectAll.checked = allChecked;
+if (selectAll && selectAll.dataset.livewireSelect === "true") {
+    // Livewire handles selection state.
+} else if (selectAll) {
+    selectAll.addEventListener("change", function () {
+        userCheckboxes.forEach(cb => cb.checked = this.checked);
     });
-});
+
+    userCheckboxes.forEach(cb => {
+        cb.addEventListener("change", () => {
+            const allChecked = [...userCheckboxes].every(c => c.checked);
+            selectAll.checked = allChecked;
+        });
+    });
+}
 
 // Filter functionality
 const filterStatus = document.getElementById("filterStatus");
@@ -106,7 +110,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const newMsgBtn = document.querySelector(".export-btn");
     const userListItems = document.querySelectorAll(".user-list-item");
-    const tabButtons = document.querySelectorAll(".filter-btn");
+    const tabButtons = [...document.querySelectorAll(".filter-btn")]
+        .filter(btn => !btn.closest('[data-livewire-tabs="true"]'));
 
     // ✅ Select ALL buttons with class .new-email-btn (handles both)
     const newEmailBtns = document.querySelectorAll(".new-email-btn");

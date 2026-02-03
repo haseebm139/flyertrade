@@ -90,6 +90,7 @@
         transform: translateY(-30%);
     }
 
+<<<<<<< HEAD
     .message-chat-theme .chat-header {
         background: #fff;
     }
@@ -98,6 +99,11 @@
         font-size: 0.729vw;
         color: #004e42;
         font-weight: 600;
+=======
+        .message-chat-theme .chat-header {
+            background: #fff;
+        }
+>>>>>>> meg
 
     }
 
@@ -121,6 +127,7 @@
     </div>
 </div>
 
+<<<<<<< HEAD
 <div class="messages-email-container">
     <aside class="sidebars">
         <div class="search-bars">
@@ -523,3 +530,11 @@
 
 
     @endsection
+=======
+        .header-right span {
+            color: #717171;
+        }
+    </style>
+    <livewire:admin.messages.board />
+@endsection
+>>>>>>> meg
