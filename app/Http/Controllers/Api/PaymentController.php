@@ -9,7 +9,7 @@ use App\Models\UserPaymentMethod;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Stripe\PaymentMethod;
-
+use Illuminate\Support\Facades\Log;  
 class PaymentController extends BaseController
 {
     public function __construct(private StripeService $stripe) {}
