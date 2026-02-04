@@ -6,12 +6,16 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 use Kreait\Firebase\Factory;
 use Google\Cloud\Core\Timestamp;
 use GuzzleHttp\Client;
 
 class Board extends Component
 {
+    use WithFileUploads;
     public string $search = '';
     public string $filter = 'all';
     public string $audience = 'service-users';
@@ -34,13 +38,16 @@ class Board extends Component
     public bool $loadingMessages = false;
     public bool $loadingMoreMessages = false;
     public bool $hasMoreMessages = false;
-    public int $messagesLimit = 5;
+    public int $messagesLimit = 20;
     public array $messagesCache = [];
     public array $messagesHasMoreCache = [];
     public ?string $messagesConversationId = null;
+    public int $newIncomingCount = 0;
+    public array $pendingLocalMessages = [];
     public string $replyMessage = '';
     public ?string $replyMediaUrl = null;
     public ?string $replyMediaType = null;
+    public $replyMediaFile = null;
     public bool $selectAll = false;
     public array $selectedConversationIds = [];
     public string $filterStatus = 'all';
@@ -48,25 +55,35 @@ class Board extends Component
     public function sendReply(): void
     {
         $messageText = trim($this->replyMessage);
-        if (!$this->activeConversationId || ($messageText === '' && !$this->replyMediaUrl)) {
+        if (
+            !$this->activeConversationId
+            || ($messageText === '' && !$this->replyMediaUrl && !$this->replyMediaFile)
+        ) {
             return;
         }
 
         $database = $this->firestoreDatabase();
 
         try {
+            if ($this->replyMediaFile) {
+                $this->storePendingAttachment();
+            }
             $senderName = auth()->user()?->name ?? 'Support Team';
             $senderId = auth()->id();
             $senderImage = 'assets/images/avatar/default.png';
             $receiverId = $this->activeConversationMeta['userId'] ?? null;
             $receiverName = $this->activeConversationMeta['userName'] ?? 'Support Team';
             $receiverImage = $this->activeConversationMeta['userImage'] ?? null;
-            $messageType = $this->replyMediaType ?: 'text';
+            $hasAttachment = !empty($this->replyMediaUrl);
+            $messageType = $this->replyMediaType ?: ($hasAttachment ? 'media' : 'text');
+            $mediaType = $this->replyMediaType ?: null;
 
+            $clientMessageId = (string) Str::uuid();
             if ($database) {
                 $payload = [
                     'message' => $messageText,
                     'messageType' => $messageType,
+                    'client_message_id' => $clientMessageId,
                     'senderId' => $senderId,
                     'senderName' => $senderName,
                     'senderImage' => $senderImage,
@@ -83,8 +100,8 @@ class Board extends Component
                     $payload['mediaUrl'] = $this->replyMediaUrl;
                     $payload['mediaThumbnail'] = null;
                 }
-                if ($this->replyMediaType) {
-                    $payload['mediaType'] = $this->replyMediaType;
+                if ($mediaType) {
+                    $payload['mediaType'] = $mediaType;
                 }
 
                 $database
@@ -110,7 +127,7 @@ class Board extends Component
                 $this->sendReplyViaRest(
                     $this->activeConversationId,
                     $messageText,
-                    $messageType,
+                $messageType,
                     $senderId,
                     $senderName,
                     $senderImage,
@@ -118,28 +135,125 @@ class Board extends Component
                     $receiverName,
                     $receiverImage,
                     $this->replyMediaUrl,
-                    $this->replyMediaType
+                $mediaType,
+                $clientMessageId
                 );
             }
 
-            $this->messages[] = [
-                'id' => 'local-' . uniqid(),
+            $createdAtTs = now()->timestamp;
+            $sentMediaType = $messageType;
+            $localMessage = [
+                'id' => 'local-' . $clientMessageId,
+                'clientMessageId' => $clientMessageId,
                 'text' => $messageText,
                 'sender' => 'support',
                 'mediaUrl' => $this->replyMediaUrl,
                 'messageType' => $messageType,
                 'time' => now()->diffForHumans(),
+                'createdAtTs' => $createdAtTs,
+            ];
+            $this->messages[] = $localMessage;
+            $this->pendingLocalMessages[$this->activeConversationId][] = [
+                'id' => $localMessage['id'],
+                'clientMessageId' => $clientMessageId,
+                'fingerprint' => $this->messageFingerprint(
+                    $localMessage['text'] ?? '',
+                    $localMessage['mediaUrl'] ?? null,
+                    $localMessage['messageType'] ?? null
+                ),
             ];
             $this->replyMessage = '';
             $this->replyMediaUrl = null;
             $this->replyMediaType = null;
-            $this->cachedConversations = [];
-            $this->allConversations = [];
+            $this->replyMediaFile = null;
+            $this->dispatch('clear-attachment-preview');
+            $this->messagesCache[$this->activeConversationId] = $this->messages;
+            $this->messagesConversationId = $this->activeConversationId;
+            $this->newIncomingCount = 0;
+
+            $lastMessageText = $messageText !== ''
+                ? $messageText
+                : (($sentMediaType ?? 'media') . ' attachment');
+            $this->updateConversationPreview($this->activeConversationId, $lastMessageText, $createdAtTs);
             $this->dispatch('scroll-chat-bottom');
-            $this->loadMessages($this->activeConversationId);
         } catch (\Throwable $e) {
             Log::error('Send reply failed: ' . $e->getMessage());
         }
+    }
+
+    private function storePendingAttachment(): void
+    {
+        $this->validate([
+            'replyMediaFile' => 'file|mimes:jpeg,jpg,png,gif,webp,mp4,avi,mov,wmv,flv,webm|max:51200',
+        ]);
+
+        $mimeType = $this->replyMediaFile->getMimeType();
+        $isImage = Str::startsWith($mimeType, 'image/');
+        $folder = $isImage ? 'chat/images' : 'chat/videos';
+        $directory = $folder . '/' . (auth()->id() ?? 'anonymous');
+        $filename = Str::uuid() . '.' . $this->replyMediaFile->getClientOriginalExtension();
+
+        $path = $this->replyMediaFile->storeAs($directory, $filename, 'public');
+        if (!Storage::disk('public')->exists($path)) {
+            throw new \RuntimeException('Failed to store file. Please check storage permissions.');
+        }
+        
+        $this->replyMediaUrl = Storage::disk('public')->url($path);
+        $this->replyMediaType = $isImage ? 'image' : 'video';
+    }
+
+    private function updateConversationPreview(string $conversationId, string $lastMessage, int $timestamp): void
+    {
+        $timeLabel = \Carbon\Carbon::createFromTimestamp($timestamp)->diffForHumans();
+        $this->cachedConversations = $this->updateConversationCollection(
+            $this->cachedConversations,
+            $conversationId,
+            $lastMessage,
+            $timeLabel,
+            $timestamp
+        );
+        $this->allConversations = $this->updateConversationCollection(
+            $this->allConversations,
+            $conversationId,
+            $lastMessage,
+            $timeLabel,
+            $timestamp
+        );
+    }
+
+    private function updateConversationCollection(
+        array $conversations,
+        string $conversationId,
+        string $lastMessage,
+        string $timeLabel,
+        int $timestamp
+    ): array {
+        if (empty($conversations)) {
+            return $conversations;
+        }
+
+        $index = null;
+        foreach ($conversations as $i => $conversation) {
+            if ((string) ($conversation['id'] ?? '') === $conversationId) {
+                $index = $i;
+                break;
+            }
+        }
+
+        if ($index === null) {
+            return $conversations;
+        }
+
+        $conversation = $conversations[$index];
+        $conversation['lastMessage'] = $lastMessage;
+        $conversation['lastMessageTime'] = $timeLabel;
+        $conversation['lastMessageAt'] = $timestamp;
+        $conversation['unreadCount'] = 0;
+
+        unset($conversations[$index]);
+        array_unshift($conversations, $conversation);
+
+        return array_values($conversations);
     }
 
     private function sendReplyViaRest(
@@ -153,7 +267,8 @@ class Board extends Component
         string $receiverName,
         ?string $receiverImage,
         ?string $mediaUrl = null,
-        ?string $mediaType = null
+        ?string $mediaType = null,
+        ?string $clientMessageId = null
     ): void
     {
         $serviceAccount = $this->loadServiceAccount();
@@ -186,6 +301,9 @@ class Board extends Component
             'isRead' => ['booleanValue' => false],
             'seen' => ['booleanValue' => false],
         ];
+        if ($clientMessageId) {
+            $messageFields['client_message_id'] = ['stringValue' => $clientMessageId];
+        }
         if ($senderId !== null) {
             $messageFields['senderId'] = ['integerValue' => (string) $senderId];
         }
@@ -296,13 +414,19 @@ class Board extends Component
                 $createdAt = $this->getFirestoreFieldValue($fields, 'createdAt');
                 $messageText = (string) $this->getFirestoreFieldValue($fields, 'message', $this->getFirestoreFieldValue($fields, 'text', ''));
                 $mediaUrl = $this->getFirestoreFieldValue($fields, 'mediaUrl', $this->getFirestoreFieldValue($fields, 'mediaURL', null));
-                $messageType = (string) $this->getFirestoreFieldValue($fields, 'messageType', ($mediaUrl ? 'media' : 'text'));
+                $messageType = (string) $this->getFirestoreFieldValue(
+                    $fields,
+                    'messageType',
+                    $this->getFirestoreFieldValue($fields, 'mediaType', ($mediaUrl ? 'media' : 'text'))
+                );
+                $clientMessageId = (string) $this->getFirestoreFieldValue($fields, 'client_message_id', '');
                 $senderName = (string) $this->getFirestoreFieldValue($fields, 'senderName', '');
                 $senderType = (string) $this->getFirestoreFieldValue($fields, 'senderType', $senderName === 'Support Team' ? 'support' : 'user');
 
                 $createdAtTs = $this->normalizeTimestamp($createdAt)?->timestamp ?? 0;
                 $message = [
                     'id' => basename((string) ($doc['name'] ?? '')),
+                    'clientMessageId' => $clientMessageId ?: null,
                     'text' => $messageText,
                     'sender' => $senderType,
                     'mediaUrl' => $mediaUrl,
@@ -360,14 +484,18 @@ class Board extends Component
                     $data = $doc->data();
 
                 $messageText = $data['message'] ?? $data['text'] ?? '';
-                $messageType = $data['messageType'] ?? ($data['mediaUrl'] ?? null ? 'media' : 'text');
+                $messageType = $data['messageType']
+                    ?? ($data['mediaType'] ?? null)
+                    ?? ($data['mediaUrl'] ?? null ? 'media' : 'text');
                 $mediaUrl = $data['mediaUrl'] ?? $data['mediaURL'] ?? null;
+                $clientMessageId = $data['client_message_id'] ?? null;
                 $senderType = $data['senderType']
                     ?? (($data['senderName'] ?? '') === 'Support Team' ? 'support' : 'user');
 
                 $createdAtTs = $this->normalizeTimestamp($data['createdAt'] ?? null)?->timestamp ?? 0;
                 $messages[] = [
                     'id' => $doc->id(),
+                    'clientMessageId' => $clientMessageId ?: null,
                     'text' => $messageText,
                     'sender' => $senderType,
                     'mediaUrl' => $mediaUrl,
@@ -423,14 +551,18 @@ class Board extends Component
 
                     $data = $doc->data();
                     $messageText = $data['message'] ?? $data['text'] ?? '';
-                    $messageType = $data['messageType'] ?? ($data['mediaUrl'] ?? null ? 'media' : 'text');
+                    $messageType = $data['messageType']
+                        ?? ($data['mediaType'] ?? null)
+                        ?? ($data['mediaUrl'] ?? null ? 'media' : 'text');
                     $mediaUrl = $data['mediaUrl'] ?? $data['mediaURL'] ?? null;
+                    $clientMessageId = $data['client_message_id'] ?? null;
                     $senderType = $data['senderType']
                         ?? (($data['senderName'] ?? '') === 'Support Team' ? 'support' : 'user');
                     $createdAtTs = $this->normalizeTimestamp($data['createdAt'] ?? null)?->timestamp ?? 0;
 
                     $messages[] = [
                         'id' => $doc->id(),
+                        'clientMessageId' => $clientMessageId ?: null,
                         'text' => $messageText,
                         'sender' => $senderType,
                         'mediaUrl' => $mediaUrl,
@@ -507,8 +639,9 @@ class Board extends Component
             $messageType = (string) $this->getFirestoreFieldValue(
                 $fields,
                 'messageType',
-                ($mediaUrl ? 'media' : 'text')
+                $this->getFirestoreFieldValue($fields, 'mediaType', ($mediaUrl ? 'media' : 'text'))
             );
+            $clientMessageId = (string) $this->getFirestoreFieldValue($fields, 'client_message_id', '');
             $senderName = (string) $this->getFirestoreFieldValue($fields, 'senderName', '');
             $senderType = (string) $this->getFirestoreFieldValue(
                 $fields,
@@ -518,6 +651,7 @@ class Board extends Component
 
             $messages[] = [
                 'id' => basename((string) ($doc['name'] ?? '')),
+                'clientMessageId' => $clientMessageId ?: null,
                 'text' => $messageText,
                 'sender' => $senderType,
                 'mediaUrl' => $mediaUrl,
@@ -537,8 +671,9 @@ class Board extends Component
 
         $this->activeConversationId = $conversationId;
         $this->activeConversationMeta = $this->resolveActiveConversationMeta($conversationId);
+        $this->newIncomingCount = 0;
 
-        $this->messagesLimit = 5;
+        $this->messagesLimit = 20;
         $this->hasMoreMessages = false;
         if (isset($this->messagesCache[$conversationId]) && !empty($this->messagesCache[$conversationId])) {
             $this->messages = $this->messagesCache[$conversationId];
@@ -560,6 +695,7 @@ class Board extends Component
             return;
         }
 
+        $this->newIncomingCount = 0;
         if ($this->messagesConversationId === $this->activeConversationId && !empty($this->messages)) {
             // Cached messages already shown; skip reload for faster switching.
             $this->dispatch('scroll-chat-bottom');
@@ -577,7 +713,7 @@ class Board extends Component
             return;
         }
 
-        $nextLimit = $this->messagesLimit + 5;
+        $nextLimit = $this->messagesLimit + 20;
         $this->loadMessages($this->activeConversationId, $nextLimit, false);
         $this->dispatch('scroll-chat-top');
     }
@@ -586,13 +722,58 @@ class Board extends Component
     {
         $this->activeConversationId = null;
         $this->messages = [];
+        $this->newIncomingCount = 0;
+    }
+
+    public function selectPreviousConversation(): void
+    {
+        $index = $this->getActiveConversationIndex();
+        if ($index === null || $index <= 0) {
+            return;
+        }
+
+        $prev = $this->cachedConversations[$index - 1] ?? null;
+        if ($prev && !empty($prev['id'])) {
+            $this->selectConversation((string) $prev['id']);
+        }
+    }
+
+    public function selectNextConversation(): void
+    {
+        $index = $this->getActiveConversationIndex();
+        if ($index === null) {
+            return;
+        }
+
+        $next = $this->cachedConversations[$index + 1] ?? null;
+        if ($next && !empty($next['id'])) {
+            $this->selectConversation((string) $next['id']);
+        }
+    }
+
+    private function getActiveConversationIndex(): ?int
+    {
+        if (!$this->activeConversationId) {
+            return null;
+        }
+
+        foreach ($this->cachedConversations as $index => $conversation) {
+            if ((string) ($conversation['id'] ?? '') === (string) $this->activeConversationId) {
+                return $index;
+            }
+        }
+
+        return null;
     }
 
     public function clearAttachment(): void
     {
         $this->replyMediaUrl = null;
         $this->replyMediaType = null;
+        $this->replyMediaFile = null;
     }
+
+    // Attachment is stored on send via storePendingAttachment().
 
     private function markConversationRead(string $conversationId): void
     {
@@ -817,6 +998,8 @@ class Board extends Component
                         $userName = (string) ($data['userName'] ?? 'Unknown');
                         $userId = (string) ($data['userId'] ?? '');
                         $userType = (string) ($data['userType'] ?? '');
+                        $userImage = (string) ($data['userImage'] ?? '');
+                        $userImage = $this->normalizeConversationImage($userImage, $doc->id(), $database);
                         $rawConversationType = (string) ($data['conversationType']
                             ?? $data['conversation_type']
                             ?? $data['messageType']
@@ -841,7 +1024,7 @@ class Board extends Component
                             'userName' => $userName,
                             'userId' => $userId,
                             'userType' => $userType,
-                            'userImage' => (string) ($data['userImage'] ?? 'assets/images/avatar/default.png'),
+                            'userImage' => $userImage,
                             'lastMessage' => (string) ($data['lastMessage'] ?? ''),
                             'lastMessageTime' => $lastMessageTime?->diffForHumans(),
                             'lastMessageAt' => $lastMessageTime?->timestamp ?? 0,
@@ -976,13 +1159,58 @@ class Board extends Component
             $this->messages
         ));
 
+        $pending = $this->pendingLocalMessages[$conversationId] ?? [];
+        $pendingMap = [];
+        $pendingByClientId = [];
+        foreach ($pending as $entry) {
+            $pendingMap[$entry['fingerprint']][] = $entry['id'];
+            if (!empty($entry['clientMessageId'])) {
+                $pendingByClientId[$entry['clientMessageId']] = $entry['id'];
+            }
+        }
+
         $newMessages = [];
+        $clearedLocalIds = [];
         foreach ($snapshot as $message) {
             $id = (string) ($message['id'] ?? '');
             if ($id === '' || isset($existingIds[$id])) {
                 continue;
             }
+            if (($message['sender'] ?? '') === 'support') {
+                $clientMessageId = (string) ($message['clientMessageId'] ?? '');
+                if ($clientMessageId !== '' && isset($pendingByClientId[$clientMessageId])) {
+                    $localId = $pendingByClientId[$clientMessageId];
+                    $this->messages = array_values(array_filter(
+                        $this->messages,
+                        static fn($item) => (string) ($item['id'] ?? '') !== $localId
+                    ));
+                    $clearedLocalIds[] = $localId;
+                } else {
+                $fingerprint = $this->messageFingerprint(
+                    $message['text'] ?? '',
+                    $message['mediaUrl'] ?? null,
+                    $message['messageType'] ?? null
+                );
+                $localIds = $pendingMap[$fingerprint] ?? [];
+                if (!empty($localIds)) {
+                    $localId = array_shift($localIds);
+                    $this->messages = array_values(array_filter(
+                        $this->messages,
+                        static fn($item) => (string) ($item['id'] ?? '') !== $localId
+                    ));
+                    $clearedLocalIds[] = $localId;
+                    if (!empty($localIds)) {
+                        $pendingMap[$fingerprint] = $localIds;
+                    } else {
+                        unset($pendingMap[$fingerprint]);
+                    }
+                }
+                }
+            }
             $newMessages[] = $message;
+            if (($message['sender'] ?? '') !== 'support') {
+                $this->newIncomingCount++;
+            }
         }
 
         if (empty($newMessages)) {
@@ -993,6 +1221,27 @@ class Board extends Component
         usort($this->messages, static function (array $left, array $right): int {
             return ($left['createdAtTs'] ?? 0) <=> ($right['createdAtTs'] ?? 0);
         });
+
+        if (!empty($clearedLocalIds) && !empty($this->pendingLocalMessages[$conversationId])) {
+            $this->pendingLocalMessages[$conversationId] = array_values(array_filter(
+                $this->pendingLocalMessages[$conversationId],
+                static fn($entry) => !in_array($entry['id'] ?? '', $clearedLocalIds, true)
+            ));
+            if (empty($this->pendingLocalMessages[$conversationId])) {
+                unset($this->pendingLocalMessages[$conversationId]);
+            }
+        }
+    }
+
+    private function messageFingerprint(string $text, ?string $mediaUrl, ?string $messageType): string
+    {
+        return md5(trim(mb_strtolower($text)) . '|' . ($mediaUrl ?? '') . '|' . ($messageType ?? ''));
+    }
+
+    public function markMessagesSeen(): void
+    {
+        $this->newIncomingCount = 0;
+        $this->dispatch('scroll-chat-bottom');
     }
 
     public function pollConversations(): void
@@ -1056,6 +1305,7 @@ class Board extends Component
             $userName = (string) $this->getFirestoreFieldValue($fields, 'userName', 'Unknown');
             $userId = (string) $this->getFirestoreFieldValue($fields, 'userId', '');
             $userType = (string) $this->getFirestoreFieldValue($fields, 'userType', '');
+            $userImage = (string) $this->getFirestoreFieldValue($fields, 'userImage', '');
             $rawConversationType = (string) ($this->getFirestoreFieldValue($fields, 'conversationType')
                 ?? $this->getFirestoreFieldValue($fields, 'conversation_type')
                 ?? $this->getFirestoreFieldValue($fields, 'messageType')
@@ -1064,6 +1314,8 @@ class Board extends Component
                 ?? $this->getFirestoreFieldValue($fields, 'type')
                 ?? '');
             $conversationType = $this->normalizeConversationType($rawConversationType);
+            $docId = basename((string) ($doc['name'] ?? ''));
+            $userImage = $this->normalizeConversationImage($userImage, $docId, null, $projectId, $token);
 
             $lastMessageTime = $this->normalizeTimestamp(
                 $this->getFirestoreFieldValue($fields, 'lastMessageTime')
@@ -1078,11 +1330,11 @@ class Board extends Component
             }
 
             $rows[] = [
-                'id' => basename((string) ($doc['name'] ?? '')),
+                'id' => $docId,
                 'userName' => $userName,
                 'userId' => $userId,
                 'userType' => $userType,
-                'userImage' => (string) $this->getFirestoreFieldValue($fields, 'userImage', 'assets/images/avatar/default.png'),
+                'userImage' => $userImage,
                 'lastMessage' => (string) $this->getFirestoreFieldValue($fields, 'lastMessage', ''),
                 'lastMessageTime' => $lastMessageTime?->diffForHumans(),
                 'lastMessageAt' => $lastMessageTime?->timestamp ?? 0,
@@ -1216,6 +1468,65 @@ class Board extends Component
             return 'chat';
         }
         return 'chat';
+    }
+
+    private function normalizeConversationImage(
+        string $image,
+        ?string $conversationId,
+        $database = null,
+        ?string $projectId = null,
+        ?string $token = null
+    ): string {
+        $defaultImage = 'assets/images/avatar/default.png';
+        $normalized = trim($image);
+
+        if ($normalized === '' || $normalized === 'null') {
+            if ($conversationId) {
+                $this->updateConversationImage($conversationId, $defaultImage, $database, $projectId, $token);
+            }
+            return $defaultImage;
+        }
+
+        return $normalized;
+    }
+
+    private function updateConversationImage(
+        string $conversationId,
+        string $image,
+        $database = null,
+        ?string $projectId = null,
+        ?string $token = null
+    ): void {
+        try {
+            if ($database) {
+                $database->collection('support_chat')
+                    ->document($conversationId)
+                    ->update([
+                        ['path' => 'userImage', 'value' => $image],
+                    ]);
+                return;
+            }
+
+            if ($projectId && $token) {
+                $client = $this->makeHttpClient();
+                $client->patch(
+                    "https://firestore.googleapis.com/v1/projects/{$projectId}/databases/(default)/documents/support_chat/{$conversationId}?updateMask.fieldPaths=userImage",
+                    [
+                        'headers' => [
+                            'Authorization' => "Bearer {$token}",
+                            'Content-Type' => 'application/json',
+                        ],
+                        'json' => [
+                            'fields' => [
+                                'userImage' => ['stringValue' => $image],
+                            ],
+                        ],
+                    ]
+                );
+            }
+        } catch (\Throwable $e) {
+            Log::warning('Failed to update conversation userImage: ' . $e->getMessage());
+        }
     }
 
     private function getFirestoreFieldValue(array $fields, string $key, $default = null)

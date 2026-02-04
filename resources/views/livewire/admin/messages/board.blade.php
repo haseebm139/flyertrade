@@ -5,8 +5,14 @@
     previewEmail: '',
     previewImage: '',
     switching: false,
-    loading: @entangle('loadingMessages')
-}" x-effect="if (!loading && messagesId === uiActiveId) switching = false">
+    loading: @entangle('loadingMessages'),
+    attachmentPreviewUrl: '',
+    attachmentPreviewType: ''
+}" x-effect="if (!loading && messagesId === uiActiveId) switching = false"
+    x-init="window.addEventListener('clear-attachment-preview', () => {
+        attachmentPreviewUrl = '';
+        attachmentPreviewType = '';
+    })">
     <div class="users-toolbar border-0 p-0">
         <div class="toolbar-left">
             @can('Create Messages')
@@ -24,122 +30,7 @@
     </div>
 
     <div class="messages-email-container">
-        <aside class="sidebars" wire:key="conversation-sidebar" wire:poll.5000ms="pollConversations" wire:ignore.self
-            x-data="{ search: '' }">
-            <div class="search-bars">
-                <svg class="searc_icon" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M21 21L15.0001 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z"
-                        stroke="#555555" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-                <input type="search" placeholder="Search" x-model.debounce.200ms="search" />
-            </div>
-
-            <div class="filters" data-livewire-tabs="true">
-
-                <button class="tab filter-btn {{ $filter === 'all' ? 'tab-active' : '' }}"
-                    wire:click="switchTab('filter','all')">
-                    All
-                </button>
-
-                <button class="tab filter-btn {{ $filter === 'unread' ? 'tab-active' : '' }}"
-                    wire:click="switchTab('filter','unread')">
-                    Unread
-                </button>
-
-                <button class="tab filter-btn {{ $filter === 'emails' ? 'tab-active' : '' }}"
-                    wire:click="switchTab('filter','emails')">
-                    Emails
-                </button>
-                <button class="tab filter-btn {{ $filter === 'chats' ? 'tab-active' : '' }}"
-                    wire:click="switchTab('filter','chats')">
-                    Chats
-                </button>
-            </div>
-
-            <div class="chat-user-sections">
-
-                <div class="tab chat-tabss {{ $audience === 'service-users' ? 'active' : '' }}"
-                    wire:click="switchTab('audience','service-users')">
-                    Service users
-                </div>
-                <div class="tab chat-tabss {{ $audience === 'service-provider' ? 'active' : '' }}"
-                    wire:click="switchTab('audience','service-provider')">
-                    Service Provider
-                </div>
-            </div>
-
-            <div class="tab-content active">
-                @if (!empty($conversations))
-                    <div class="user-actions">
-                        <label>
-                            <input type="checkbox" id="selectAll" data-livewire-select="true"
-                                @checked($selectAll) wire:click="toggleSelectAll" />
-                            Select all
-                        </label>
-                        <div class="filter-menu">
-                            <select id="filterStatus" wire:model="filterStatus">
-                                <option value="all">All</option>
-                                <option value="active">Active</option>
-                                <option value="inactive">Inactive</option>
-                            </select>
-                        </div>
-                    </div>
-                @endif
-                <ul class="user-list" wire:key="conversation-list">
-                    @forelse ($conversations as $conversation)
-                        <li wire:key="conversation-{{ (string) $conversation['id'] }}"
-                            class="user-list-item {{ $activeConversationId === $conversation['id'] ? 'active' : '' }}"
-                            :class="{ 'active': uiActiveId === '{{ (string) $conversation['id'] }}' }"
-                            data-search="{{ \Illuminate\Support\Str::lower((string) ($conversation['userName'] ?? '') . ' ' . (string) ($conversation['userId'] ?? '')) }}"
-                            data-name="{{ $conversation['userName'] ?? 'Unknown' }}"
-                            data-email="{{ $conversation['userId'] ?? '' }}"
-                            x-show="!search || ($el.dataset.search && $el.dataset.search.includes(search.toLowerCase().trim()))"
-                            wire:click="selectConversation('{{ (string) $conversation['id'] }}')"
-                            @click="uiActiveId = '{{ (string) $conversation['id'] }}';
-                                previewName = $el.dataset.name || '';
-                                previewEmail = $el.dataset.email || '';
-                                previewImage = $el.dataset.image || '';
-                                switching = true;">
-                            @php
-                                $defaultAvatar = 'assets/images/avatar/default.png';
-                                $image = $conversation['userImage'] ?? $defaultAvatar;
-                                $image = trim((string) $image);
-                                if ($image === '' || $image === 'null') {
-                                    $image = $defaultAvatar;
-                                }
-                                $isUrl = \Illuminate\Support\Str::startsWith($image, ['http://', 'https://']);
-                                $imageSrc = $isUrl ? $image : asset($image);
-                                $fallbackSrc = asset($defaultAvatar);
-                            @endphp
-                            <img src="{{ $imageSrc }}" class="user-avatar" data-image="{{ $imageSrc }}"
-                                onerror="this.onerror=null;this.src='{{ $fallbackSrc }}';" />
-                            <div class="user-infos">
-                                <div class="user-header">
-                                    <strong>{{ $conversation['userName'] ?? 'Unknown' }}</strong>
-                                </div>
-                                <small>{{ $conversation['lastMessage'] ?? '' }}</small>
-                            </div>
-                            <div class="msg_info_part">
-                                <span class="time">{{ $conversation['lastMessageTime'] ?? '' }}</span>
-                                @if (!empty($conversation['unreadCount']))
-                                    <span class="unread-count">{{ $conversation['unreadCount'] }}</span>
-                                @endif
-                            </div>
-                            <input type="checkbox" class="select-user" wire:model="selectedConversationIds"
-                                wire:click.stop value="{{ (string) $conversation['id'] }}">
-                        </li>
-                    @empty
-                        <li class="user-list-item">
-                            <div class="user-infos">
-                                <strong>No conversations found.</strong>
-                            </div>
-                        </li>
-                    @endforelse
-                </ul>
-            </div>
-        </aside>
+        @include('livewire.admin.messages.partials.sidebar')
         @if ($this->hasActiveConversation)
             <div class="message-chat-theme" wire:key="chat-body-{{ $activeConversationId }}"
                 wire:init="initConversation" style="position: relative;">
@@ -156,6 +47,9 @@
                         <div class="user-info" bis_skin_checked="1">
                             <img :src="switching && previewImage ? previewImage :
                                 '{{ asset($activeConversationMeta['userImage'] ?? 'assets/images/icons/five.svg') }}'"
+                                class="img-loading" data-shimmer="true"
+                                onload="this.classList.remove('img-loading');this.removeAttribute('data-shimmer');"
+                                onerror="this.classList.remove('img-loading');this.removeAttribute('data-shimmer');"
                                 alt="avatar">
                             <div bis_skin_checked="1">
                                 <p class="user-name" style="font-weight:600; color:black;">
@@ -172,19 +66,36 @@
 
 
                     <div class="header-right">
-                        <span>1 of 200</span>
+                        @php
+                            $activeIndex = null;
+                            foreach ($conversations as $idx => $conv) {
+                                if ((string) ($conv['id'] ?? '') === (string) $activeConversationId) {
+                                    $activeIndex = $idx + 1;
+                                    break;
+                                }
+                            }
+                            $totalConversations = is_countable($conversations) ? count($conversations) : 0;
+                        @endphp
+                        <span>{{ $activeIndex ?? 0 }} of {{ $totalConversations }}</span>
+                        @if ($newIncomingCount > 0)
+                            <button type="button" class="new-email" wire:click="markMessagesSeen">
+                                New {{ $newIncomingCount }}
+                            </button>
+                        @endif
                         <div class="icons">
-                            <img src="{{ asset('assets/images/icons/message-icon-prev.svg') }}" alt="Refresh Icon">
-                            <img src="{{ asset('assets/images/icons/message-icon-next.svg') }}" alt="Expand Icon">
+                            <img src="{{ asset('assets/images/icons/message-icon-prev.svg') }}" alt="Prev Icon"
+                                class="chat-nav-icon" role="button" wire:click="selectPreviousConversation">
+                            <img src="{{ asset('assets/images/icons/message-icon-next.svg') }}" alt="Next Icon"
+                                class="chat-nav-icon" role="button" wire:click="selectNextConversation">
                         </div>
                         <div class="icons">
                             <img src="{{ asset('assets/images/icons/dots_message.svg') }}" alt="Refresh Icon">
 
                         </div>
-                        <button class="new-email new-email-btn"><svg width="14" height="14"
-                                viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M6.58333 0.75V12.4167M0.75 6.58333H12.4167" stroke="#004E42"
-                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                        <button class="new-email new-email-btn"><svg width="14" height="14" viewBox="0 0 14 14"
+                                fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6.58333 0.75V12.4167M0.75 6.58333H12.4167" stroke="#004E42" stroke-width="1.5"
+                                    stroke-linecap="round" stroke-linejoin="round" />
                             </svg> New email</button>
                     </div>
                 </div>
@@ -198,8 +109,8 @@
                         <div class="chat-skeleton-row left"></div>
                     </div>
                     @if ($hasMoreMessages)
-                        <div style="padding: 12px; text-align: center;"
-                            x-show="!switching && messagesId === uiActiveId" x-cloak>
+                        <div style="padding: 12px; text-align: center;" x-show="!switching && messagesId === uiActiveId"
+                            x-cloak>
                             @if ($loadingMoreMessages)
                                 <div class="chat-loadmore-shimmer">
                                     <span class="chat-loadmore-dot"></span>
@@ -224,7 +135,10 @@
                                 class="message {{ ($message['sender'] ?? 'user') === 'support' ? 'message-right' : 'message-left' }}">
                                 @if (!empty($message['mediaUrl']))
                                     @if (($message['messageType'] ?? '') === 'image')
-                                        <p><img src="{{ $message['mediaUrl'] }}" alt="attachment"
+                                        <p><img src="{{ $message['mediaUrl'] }}" alt="attachment" class="img-loading"
+                                                data-shimmer="true"
+                                                onload="this.classList.remove('img-loading');this.removeAttribute('data-shimmer');"
+                                                onerror="this.classList.remove('img-loading');this.removeAttribute('data-shimmer');"
                                                 style="max-width: 240px; border-radius: 6px;"></p>
                                     @elseif (($message['messageType'] ?? '') === 'video')
                                         <p><video src="{{ $message['mediaUrl'] }}" controls
@@ -237,7 +151,7 @@
                                 @if (!empty($message['text']))
                                     <p>{{ $message['text'] }}</p>
                                 @endif
-                                <span class="timestamp">{{ $message['time'] ?? '' }}</span>
+                                <span class="timestamp" data-ts="{{ (int) ($message['createdAtTs'] ?? 0) }}"></span>
                             </div>
                         @endforeach
                     </div>
@@ -293,29 +207,45 @@
 
 
                 <div class="chat-footer">
-                    @if (!empty($replyMediaUrl))
+                    <template x-if="attachmentPreviewUrl">
                         <div class="chat-attachment-preview">
-                            @if ($replyMediaType === 'image')
-                                <img src="{{ $replyMediaUrl }}" alt="Attachment preview">
-                            @elseif ($replyMediaType === 'video')
-                                <video src="{{ $replyMediaUrl }}" controls></video>
-                            @else
-                                <span class="attachment-filename">{{ $replyMediaUrl }}</span>
-                            @endif
-                            <button type="button" class="attachment-remove" wire:click="clearAttachment">×</button>
+                            <template x-if="attachmentPreviewType === 'image'">
+                                <img :src="attachmentPreviewUrl" alt="Attachment preview">
+                            </template>
+                            <template x-if="attachmentPreviewType === 'video'">
+                                <video :src="attachmentPreviewUrl" controls></video>
+                            </template>
+                            <template x-if="attachmentPreviewType !== 'image' && attachmentPreviewType !== 'video'">
+                                <span class="attachment-filename">Attachment selected</span>
+                            </template>
+                            <button type="button" class="attachment-remove"
+                                @click="attachmentPreviewUrl=''; attachmentPreviewType=''; $wire.clearAttachment()">
+                                ×
+                            </button>
                         </div>
-                    @endif
+                    </template>
                     <input id="chatInput" wire:model="replyMessage" wire:keydown.enter.prevent="sendReply"
                         type="text" placeholder="Reply message......">
-                    <div class="footer-icons"><img src="{{ asset('assets/images/icons/emoji.svg') }}"
-                            alt=""><img src="{{ asset('assets/images/icons/txt.svg') }}"
-                            alt=""><span class="attachment" wire:ignore>
+                    <div class="footer-icons">
+                        {{-- <img src="{{ asset('assets/images/icons/emoji.svg') }}" alt="">
+                        <img src="{{ asset('assets/images/icons/txt.svg') }}" alt=""> --}}
+                        <span class="attachment" wire:ignore>
                             <div class="file-upload">
                                 <img class="attach theme-attach"
                                     src="{{ asset('assets/images/icons/ic_attachment.svg') }}" alt="Attach">
-                                <input id="chatAttachmentInput" type="file" accept="image/*,video/*">
+                                <input id="chatAttachmentInput" type="file" accept="image/*,video/*"
+                                    wire:model.defer="replyMediaFile"
+                                    @change="
+                                        const file = $event.target.files?.[0];
+                                        if (!file) return;
+                                        attachmentPreviewUrl = URL.createObjectURL(file);
+                                        attachmentPreviewType = file.type.startsWith('image/')
+                                            ? 'image'
+                                            : (file.type.startsWith('video/') ? 'video' : 'file');
+                                    ">
                             </div>
-                        </span></div>
+                        </span>
+                    </div>
                     <button id="sendBtn" class="send-btn" type="button" wire:click="sendReply"><img
                             src="{{ asset('assets/images/icons/send-chat-icon.svg') }}" alt=""></button>
                 </div>
@@ -494,55 +424,30 @@
                 background-position: -100% 0;
             }
         }
+
+        .img-loading {
+            background: linear-gradient(90deg, #f1f1f1 25%, #e7e7e7 37%, #f1f1f1 63%);
+            background-size: 400% 100%;
+            animation: chat-shimmer 1.2s ease-in-out infinite;
+        }
+
+        .chat-nav-icon {
+            cursor: pointer;
+            transition: transform 0.15s ease, opacity 0.15s ease;
+        }
+
+        .chat-nav-icon:hover {
+            transform: translateY(-1px) scale(1.05);
+            opacity: 0.85;
+        }
+
+        .chat-nav-icon:active {
+            transform: translateY(0) scale(0.95);
+            opacity: 0.7;
+        }
     </style>
     <script>
         document.addEventListener('livewire:initialized', () => {
-            const bindAttachmentInput = () => {
-                const input = document.getElementById('chatAttachmentInput');
-                if (!input || input.dataset.bound === '1') return;
-                input.dataset.bound = '1';
-
-                input.addEventListener('change', async (event) => {
-                    const file = event.target.files?.[0];
-                    if (!file) return;
-
-                    const formData = new FormData();
-                    formData.append('file', file);
-
-                    const csrfToken = document.querySelector('meta[name="csrf-token"]')
-                        ?.getAttribute('content');
-                    const headers = csrfToken ? {
-                        'X-CSRF-TOKEN': csrfToken
-                    } : {};
-
-                    try {
-                        const response = await fetch('/admin/chat/upload-media', {
-                            method: 'POST',
-                            body: formData,
-                            headers,
-                            credentials: 'same-origin',
-                        });
-
-                        const payload = await response.json();
-                        if (!response.ok || payload?.status === 'error') {
-                            throw new Error(payload?.message || 'Upload failed');
-                        }
-
-                        const data = payload?.data || payload;
-                        const component = Livewire.find(@json($this->getId()));
-                        if (component) {
-                            component.set('replyMediaUrl', data.url || '');
-                            component.set('replyMediaType', data.type || '');
-                        }
-                    } catch (err) {
-                        console.error(err);
-                        alert(err?.message || 'Failed to upload file');
-                    } finally {
-                        event.target.value = '';
-                    }
-                });
-            };
-
             Livewire.on('scroll-chat-bottom', () => {
                 const el = document.getElementById('chatBody');
                 if (el) el.scrollTop = el.scrollHeight;
@@ -551,11 +456,52 @@
                 const el = document.getElementById('chatBody');
                 if (el) el.scrollTop = 0;
             });
+            Livewire.on('clear-attachment-preview', () => {
+                window.dispatchEvent(new CustomEvent('clear-attachment-preview'));
+                const input = document.getElementById('chatAttachmentInput');
+                if (input) input.value = '';
+            });
 
-            bindAttachmentInput();
+            const clearLoadedImages = () => {
+                document.querySelectorAll('img.img-loading').forEach(img => {
+                    if (img.complete) {
+                        img.classList.remove('img-loading');
+                        img.removeAttribute('data-shimmer');
+                    }
+                });
+            };
+
+            const updateTimestamps = () => {
+                const nodes = document.querySelectorAll('.timestamp[data-ts]');
+                const nowMs = Date.now();
+                nodes.forEach(node => {
+                    const ts = parseInt(node.dataset.ts || '0', 10);
+                    if (!ts) return;
+                    const diffSec = Math.max(0, Math.floor((nowMs - ts * 1000) / 1000));
+                    let text = '';
+                    if (diffSec < 60) {
+                        text = 'just now';
+                    } else if (diffSec < 3600) {
+                        const mins = Math.floor(diffSec / 60);
+                        text = mins + ' minute' + (mins === 1 ? '' : 's') + ' ago';
+                    } else if (diffSec < 86400) {
+                        const hours = Math.floor(diffSec / 3600);
+                        text = hours + ' hour' + (hours === 1 ? '' : 's') + ' ago';
+                    } else {
+                        const days = Math.floor(diffSec / 86400);
+                        text = days + ' day' + (days === 1 ? '' : 's') + ' ago';
+                    }
+                    node.textContent = text;
+                });
+            };
+
+            updateTimestamps();
+            setInterval(updateTimestamps, 60000);
+            clearLoadedImages();
 
             Livewire.hook('message.processed', () => {
-                bindAttachmentInput();
+                updateTimestamps();
+                clearLoadedImages();
             });
         });
     </script>
