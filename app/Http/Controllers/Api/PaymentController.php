@@ -132,6 +132,36 @@ class PaymentController extends BaseController
             return $this->sendError('Stripe error: '.$e->getMessage(), 422);
         }
     }
+    public function removeCard($id)
+    {
+        $user = Auth::user();
+
+        $card = UserPaymentMethod::where('user_id', $user->id)
+            ->whereKey($id)
+            ->first();
+
+        if (!$card) {
+            return $this->sendError('Card not found.', 404);
+        }
+
+        try {
+            // Detach from Stripe if customer exists
+            if ($user->stripe_customer_id) {
+                \Stripe\PaymentMethod::retrieve($card->stripe_payment_method_id)
+                    ->detach();
+            }
+        } catch (\Throwable $e) {
+            // Log the error but still allow local deletion
+            Log::warning('Stripe detach failed: ' . $e->getMessage(), [
+                'user_id' => $user->id,
+                'card_id' => $card->id,
+            ]);
+        }
+
+        $card->delete();
+
+        return $this->sendResponse([], 'Card removed successfully.');
+    }
 }
 
 
