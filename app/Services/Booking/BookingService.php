@@ -262,13 +262,14 @@ class BookingService
                 'provider_service_id' => $providerService ? $providerService->id : null,
                 'booking_address' => $data['booking_address'],
                 'booking_description' => $data['booking_description'] ?? null,
-                'status' => 'confirmed', // Automatically accepted
                 'booking_type' => 'custom',
                 'booking_working_minutes' => $totalMinutes,
                 'total_price' => $data['total_price'],
                 'service_charges' => $serviceCharges,
+                'status' => 'confirmed', // Automatically accepted
                 'confirmed_at' => now(),
                 'expires_at' => now()->addHours(2), // Standard expiry
+                'paid_at' => null,
             ]);
 
             // 5. Create slots

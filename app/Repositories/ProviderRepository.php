@@ -82,7 +82,7 @@ class ProviderRepository
                 $q->where('id', $filters['service_id'] );
             });
         }
-
+        
         // 🔹 Filter by Price Range (Fixed: Handling 0 and numeric check)
         if (isset($filters['min_price']) && isset($filters['max_price'])) {
             $query->whereHas('providerServices', function ($q) use ($filters) {
@@ -92,7 +92,7 @@ class ProviderRepository
                 });
             });
         }
-
+         
         // 🔹 Filter by Rating (Fixed: Using correct relationship avg column)
         if (!empty($filters['min_rating'])) {
             $query->having('published_reviews_avg_rating', '>=', $filters['min_rating']);
