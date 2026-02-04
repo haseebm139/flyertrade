@@ -85,6 +85,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('cards', [PaymentController::class,'listCards']);
             Route::post('cards/{card}/default', [PaymentController::class,'makeDefault']);
             Route::post('test/create-payment-method', [PaymentController::class,'createTestPaymentMethod']);
+            Route::delete('cards/{card}', [PaymentController::class, 'removeCard']);
         });
 
     // Notifications (Shared for Customer and Provider)
