@@ -5,8 +5,12 @@
     previewEmail: '',
     previewImage: '',
     switching: false,
-    loading: @entangle('loadingMessages')
-}" x-effect="if (!loading && messagesId === uiActiveId) switching = false">
+    loading: @entangle('loadingMessages'),
+    attachmentPreviewUrl: '',
+    attachmentPreviewType: ''
+}" x-effect="if (!loading && messagesId === uiActiveId) switching = false"
+    x-init="window.addEventListener('clear-attachment-preview', () => { attachmentPreviewUrl = '';
+        attachmentPreviewType = ''; })">
     <div class="users-toolbar border-0 p-0">
         <div class="toolbar-left">
             @can('Create Messages')
@@ -310,29 +314,42 @@
 
 
                 <div class="chat-footer">
-                     @if (!empty($replyMediaUrl))
+                    <template x-if="attachmentPreviewUrl">
                         <div class="chat-attachment-preview">
-                            @if ($replyMediaType === 'image')
-                                <img src="{{ $replyMediaUrl }}" alt="Attachment preview">
-                            @elseif ($replyMediaType === 'video')
-                                <video src="{{ $replyMediaUrl }}" controls></video>
-                            @else
-                                <span class="attachment-filename">{{ $replyMediaUrl }}</span>
-                            @endif
-                            <button type="button" class="attachment-remove" wire:click="clearAttachment">×</button>
+                            <template x-if="attachmentPreviewType === 'image'">
+                                <img :src="attachmentPreviewUrl" alt="Attachment preview">
+                            </template>
+                            <template x-if="attachmentPreviewType === 'video'">
+                                <video :src="attachmentPreviewUrl" controls></video>
+                            </template>
+                            <template x-if="attachmentPreviewType !== 'image' && attachmentPreviewType !== 'video'">
+                                <span class="attachment-filename">Attachment selected</span>
+                            </template>
+                            <button type="button" class="attachment-remove"
+                                @click="attachmentPreviewUrl=''; attachmentPreviewType=''; $wire.clearAttachment()">
+                                ×
+                            </button>
                         </div>
-                    @endif
+                    </template>
                     <input id="chatInput" wire:model="replyMessage" wire:keydown.enter.prevent="sendReply"
                         type="text" placeholder="Reply message......">
                     <div class="footer-icons">
                         {{-- <img src="{{ asset('assets/images/icons/emoji.svg') }}" alt="">
                         <img src="{{ asset('assets/images/icons/txt.svg') }}" alt=""> --}}
-                        <span
-                            class="attachment" wire:ignore>
+                        <span class="attachment" wire:ignore>
                             <div class="file-upload">
                                 <img class="attach theme-attach"
                                     src="{{ asset('assets/images/icons/ic_attachment.svg') }}" alt="Attach">
-                                <input id="chatAttachmentInput" type="file" accept="image/*,video/*">
+                                <input id="chatAttachmentInput" type="file" accept="image/*,video/*"
+                                    wire:model.defer="replyMediaFile"
+                                    @change="
+                                        const file = $event.target.files?.[0];
+                                        if (!file) return;
+                                        attachmentPreviewUrl = URL.createObjectURL(file);
+                                        attachmentPreviewType = file.type.startsWith('image/')
+                                            ? 'image'
+                                            : (file.type.startsWith('video/') ? 'video' : 'file');
+                                    ">
                             </div>
                         </span>
                     </div>
@@ -532,52 +549,6 @@
     </style>
     <script>
         document.addEventListener('livewire:initialized', () => {
-            const bindAttachmentInput = () => {
-                const input = document.getElementById('chatAttachmentInput');
-                if (!input || input.dataset.bound === '1') return;
-                input.dataset.bound = '1';
-
-                input.addEventListener('change', async (event) => {
-                    const file = event.target.files?.[0];
-                    if (!file) return;
-
-                    const formData = new FormData();
-                    formData.append('file', file);
-
-                    const csrfToken = document.querySelector('meta[name="csrf-token"]')
-                        ?.getAttribute('content');
-                    const headers = csrfToken ? {
-                        'X-CSRF-TOKEN': csrfToken
-                    } : {};
-
-                    try {
-                        const response = await fetch('/admin/chat/upload-media', {
-                            method: 'POST',
-                            body: formData,
-                            headers,
-                            credentials: 'same-origin',
-                        });
-
-                        const payload = await response.json();
-                        if (!response.ok || payload?.status === 'error') {
-                            throw new Error(payload?.message || 'Upload failed');
-                        }
-
-                        const data = payload?.data || payload;
-                        const component = Livewire.find(@json($this->getId()));
-                        if (component) {
-                            component.set('replyMediaUrl', data.url || '');
-                            component.set('replyMediaType', data.type || '');
-                        }
-                    } catch (err) {
-                        console.error(err);
-                        alert(err?.message || 'Failed to upload file');
-                    } finally {
-                        event.target.value = '';
-                    }
-                });
-            };
-
             Livewire.on('scroll-chat-bottom', () => {
                 const el = document.getElementById('chatBody');
                 if (el) el.scrollTop = el.scrollHeight;
@@ -585,6 +556,11 @@
             Livewire.on('scroll-chat-top', () => {
                 const el = document.getElementById('chatBody');
                 if (el) el.scrollTop = 0;
+            });
+            Livewire.on('clear-attachment-preview', () => {
+                window.dispatchEvent(new CustomEvent('clear-attachment-preview'));
+                const input = document.getElementById('chatAttachmentInput');
+                if (input) input.value = '';
             });
 
             const updateTimestamps = () => {
@@ -614,10 +590,7 @@
             updateTimestamps();
             setInterval(updateTimestamps, 60000);
 
-            bindAttachmentInput();
-
             Livewire.hook('message.processed', () => {
-                bindAttachmentInput();
                 updateTimestamps();
             });
         });
