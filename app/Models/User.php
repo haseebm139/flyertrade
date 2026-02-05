@@ -277,11 +277,9 @@ class User extends Authenticatable
     }
     public function getPublishedReviewsAvgRatingAttribute($value)
     {
-        // if ($value === null) {
-        //     return null; // ya 1 agar force chahte ho
-        // }
-
-        return min(5, max(1, round($value, 1)));
+        return $value
+            ? min(5, round((float) $value, 1))
+            : 0;
     }
 
 }
