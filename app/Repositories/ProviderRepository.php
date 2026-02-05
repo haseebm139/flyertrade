@@ -7,9 +7,7 @@ use App\Models\User;
 use App\Models\Bookmark;
 use App\Models\Review;
 use App\Models\ProviderService;
-use Illuminate\Support\Facades\DB;
-
-use App\Http\Resources\Shared\UserResource;
+use Illuminate\Support\Facades\DB;     
 class ProviderRepository
 {
     /**
@@ -37,7 +35,7 @@ class ProviderRepository
      * @param int $perPage
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function getProviders(array $filters = [], $userId = null, $perPage = 15)
+    public function getProviders1(array $filters = [], $userId = null, $perPage = 15)
     {
          $query = User::query()
             ->providers() // Using scope from User model
@@ -207,6 +205,161 @@ class ProviderRepository
         return $providers;
     }
 
+
+
+
+    public function getProviders(array $filters = [], $userId = null)
+    {
+        $query = User::query()
+            ->providers()
+            ->with([
+                'providerProfile',
+                'providerProfile.services.service',
+                'providerProfile.services.media',
+                'providerProfile.services.certificates',
+                'providerProfile.workingHours'
+            ])
+
+            // =========================
+            // ✅ COUNTS
+            // =========================
+            ->withCount([
+                'providerBookings as provider_bookings_count',
+                'providerServices as provider_services_count',
+                'publishedReviews as published_reviews_count'
+            ])
+
+            // =========================
+            // ✅ AVG RATING (NULL → 0)
+            // =========================
+            ->addSelect([
+                'published_reviews_avg_rating' => Review::select(
+                    DB::raw('COALESCE(AVG(rating), 0)')
+                )
+                ->whereColumn('receiver_id', 'users.id')
+                ->where('status', 'published')
+            ]);
+
+        // =========================
+        // 🔎 FILTERS
+        // =========================
+
+        // Provider name
+        if (!empty($filters['provider_name'])) {
+            $query->where('name', 'like', '%' . $filters['provider_name'] . '%');
+        }
+
+        // Search (provider or service)
+        if (!empty($filters['search'])) {
+            $search = '%' . $filters['search'] . '%';
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', $search)
+                ->orWhereHas('providerServices.service', fn($s) =>
+                        $s->where('name', 'like', $search)
+                );
+            });
+        }
+
+        // Service ID
+        if (!empty($filters['service_id'])) {
+            $query->whereHas('providerServices', fn($q) =>
+                $q->where('service_id', $filters['service_id'])
+            );
+        }
+
+        // Price range
+        if (isset($filters['min_price'], $filters['max_price'])) {
+            $query->whereHas('providerServices', function ($q) use ($filters) {
+                $q->whereBetween('rate_min', [$filters['min_price'], $filters['max_price']])
+                ->orWhereBetween('rate_max', [$filters['min_price'], $filters['max_price']]);
+            });
+        }
+
+        // =========================
+        // ⭐ RATING FILTER (SAFE)
+        // =========================
+        if (isset($filters['min_rating'])) {
+            $query->havingRaw(
+                'published_reviews_avg_rating >= ?',
+                [(float) $filters['min_rating']]
+            );
+        }
+
+        // =========================
+        // 📍 DISTANCE FILTER
+        // =========================
+        if (!empty($filters['latitude']) && !empty($filters['longitude']) && !empty($filters['distance'])) {
+            $lat = (float) $filters['latitude'];
+            $lng = (float) $filters['longitude'];
+            $distance = (float) $filters['distance'];
+
+            $query->addSelect(DB::raw("
+                (
+                    6371 * acos(
+                        cos(radians($lat))
+                        * cos(radians(latitude))
+                        * cos(radians(longitude) - radians($lng))
+                        + sin(radians($lat))
+                        * sin(radians(latitude))
+                    )
+                ) AS distance
+            "))
+            ->having('distance', '<=', $distance)
+            ->orderBy('distance');
+        }
+
+        // =========================
+        // 🔥 SORTING
+        // =========================
+        $query->orderByRaw('published_reviews_avg_rating = 0') // 0-rating last
+            ->orderByDesc('published_reviews_avg_rating');
+
+        // Bookmark flag
+        if ($userId) {
+            $this->attachBookmarkFlag($query, $userId);
+        }
+
+        // =========================
+        // 📄 PAGINATION
+        // =========================
+        $perPage = $filters['per_page'] ?? 10;
+        $providers = $query->paginate($perPage);
+
+        // =========================
+        // 🚀 SERVICE REVIEWS (NO N+1)
+        // =========================
+        $providerIds = $providers->pluck('id');
+
+        if ($providerIds->isNotEmpty()) {
+
+            $reviewsStats = Review::where('status', 'published')
+                ->whereIn('receiver_id', $providerIds)
+                ->select(
+                    'receiver_id',
+                    'service_id',
+                    DB::raw('COUNT(*) as reviews_count'),
+                    DB::raw('AVG(rating) as rating')
+                )
+                ->groupBy('receiver_id', 'service_id')
+                ->get()
+                ->keyBy(fn($r) => "{$r->receiver_id}_{$r->service_id}");
+
+            $providers->getCollection()->transform(function ($provider) use ($reviewsStats) {
+                if ($provider->providerProfile?->services) {
+                    foreach ($provider->providerProfile->services as $service) {
+                        $key = "{$provider->id}_{$service->service_id}";
+                        $stat = $reviewsStats[$key] ?? null;
+
+                        $service->reviews_count = $stat->reviews_count ?? 0;
+                        $service->rating = round($stat->rating ?? 0, 2);
+                    }
+                }
+                return $provider;
+            });
+        }
+
+        return $providers;
+    }
 
     public function providerProfile($id)
     {
