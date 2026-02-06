@@ -104,6 +104,10 @@
     .header-right span {
         color: #717171;
     }
+    .search-bars svg{
+        width:1.25vw;
+        height:1.25vw;
+    }
 </style>
 <div class="users-toolbar border-0 p-0">
     <div class="toolbar-left">
