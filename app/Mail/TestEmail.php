@@ -23,7 +23,7 @@ class TestEmail extends Mailable
 
     public function build()
     {
-        $address = 'haseebm139@gmail.com';
+        $address = 'flyertradead@gmail.com';
         $replyTo = 'no-reply@developer.com';
         $subject = 'Flyertrade Test Email';
         $name = 'Flyertrade Admin';

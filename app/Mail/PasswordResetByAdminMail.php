@@ -31,7 +31,7 @@ class PasswordResetByAdminMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new \Illuminate\Mail\Mailables\Address('haseebm139@gmail.com', 'FlyerTrade'),
+            from: new \Illuminate\Mail\Mailables\Address('flyertradead@gmail.com', 'FlyerTrade'),
             subject: 'FlyerTrade - Your Password Has Been Reset by Admin',
         );
     }
