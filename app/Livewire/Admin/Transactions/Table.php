@@ -285,6 +285,37 @@ class Table extends Component
         }
     }
 
+    public function initiatePayout($id): void
+    {
+        if (!auth()->user()?->can('Write Transactions')) {
+            $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
+            return;
+        }
+
+        $transaction = Transaction::find($id);
+        if (!$transaction) {
+            $this->dispatch('showSweetAlert', 'error', 'Transaction not found.', 'Error');
+            return;
+        }
+
+        if ($transaction->type !== 'payout') {
+            $this->dispatch('showSweetAlert', 'error', 'Only payout transactions can be initiated.', 'Error');
+            return;
+        }
+
+        if (in_array($transaction->status, ['succeeded', 'cancelled', 'failed'], true)) {
+            $this->dispatch('showSweetAlert', 'error', 'This payout cannot be initiated.', 'Error');
+            return;
+        }
+
+        $transaction->update([
+            'status' => 'processing',
+            'processed_at' => $transaction->processed_at ?? now(),
+        ]);
+
+        $this->dispatch('showSweetAlert', 'success', 'Payout initiated successfully.', 'Success');
+    }
+
     public function closeTransactionModal(): void
     {
         $this->showTransactionModal = false;

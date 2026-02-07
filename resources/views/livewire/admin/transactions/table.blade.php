@@ -184,11 +184,13 @@
                                         </a>
                                     @endcan
                                     @can('Write Transactions')
-                                        <a href="#" class="initiateBtn showDeleteModal___"
-                                            data-id="{{ $transaction->id }}" data-user="{{ $associatedUser?->name }}">
-                                            <img style="height:0.7vw;width:0.7vw" src="{{ asset('assets/images/icons/init.svg') }}"
-                                                alt=""> Initiate payout
-                                        </a>
+                                    <a href="#" class="initiateBtn showDeleteModal___"
+                                        data-id="{{ $transaction->id }}" data-user="{{ $associatedUser?->name }}">
+                                        <img style="height:0.7vw;width:0.7vw" src="{{ asset('assets/images/icons/init.svg') }}"
+                                            alt=""> Initiate payout
+                                    </a>
+                                        @if ($transaction->type === 'payout' && in_array($transaction->status, ['pending', 'processing']))
+                                        @endif
                                     @endcan
                                 </div>
                             </div>
@@ -204,7 +206,8 @@
                                     <div class="delete-actions justify-content-start">
                                         <button class="cancel-delete-btn" data-id="{{ $transaction->id }}">Cancel</button>
                                         <button class="confirm-delete-btn"
-                                            style="background-color:#004E42 !important;color:#fff;">Initiate</button>
+                                            style="background-color:#004E42 !important;color:#fff;"
+                                            wire:click="initiatePayout({{ $transaction->id }})">Initiate</button>
                                     </div>
                                 </div>
                             </div>
