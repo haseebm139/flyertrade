@@ -79,8 +79,9 @@
                         </div>
 
                         <div class="compose-body">
-                            <input type="text" class="subject-input" placeholder="Subject">
-                            <textarea class="message-area" placeholder=""></textarea>
+                            <input type="text" class="subject-input" placeholder="Subject"
+                                wire:model.defer="composeEmailSubject">
+                            <textarea class="message-area" placeholder="" wire:model.defer="composeEmailBody"></textarea>
                         </div>
 
                         <div class="compose-footer">
@@ -91,7 +92,14 @@
                                     <input type="file">
                                 </div>
                             </span>
-                            <button class="send-btn" type="button">Send</button>
+                            <button class="send-btn" type="button" wire:click="sendComposeEmail"
+                                wire:loading.attr="disabled" wire:target="sendComposeEmail">
+                                <span wire:loading.remove wire:target="sendComposeEmail">Send</span>
+                                <span class="btn-loading" wire:loading wire:target="sendComposeEmail">
+                                    <span class="btn-spinner" aria-hidden="true"></span>
+                                    Sending...
+                                </span>
+                            </button>
                         </div>
                     </div>
                 @break

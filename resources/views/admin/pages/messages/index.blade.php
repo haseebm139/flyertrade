@@ -4,6 +4,10 @@
 @section('header', 'Messaging')
 @section('content')
     <style>
+         
+        .search-bars input {
+             background: url("/assets/images/icons/search-icon_chat.svg") no-repeat 0.8vw center;
+        }
         .sidebars {
             background: #F6F6F6;
             width: 20vw;
@@ -234,6 +238,7 @@
         }
 
         @keyframes chat-dot-pulse {
+
             0%,
             100% {
                 transform: scale(0.9);
@@ -313,17 +318,22 @@
 @push('scripts')
     <script>
         document.addEventListener('livewire:initialized', () => {
-            const scrollChatBottom = () => {
+            const isNearBottom = (el, threshold = 120) => {
+                return el.scrollHeight - el.scrollTop - el.clientHeight <= threshold;
+            };
+
+            const scrollChatBottom = (force = false) => {
                 const el = document.getElementById('chatBody');
                 if (!el) return;
+                if (!force && !isNearBottom(el)) return;
                 requestAnimationFrame(() => {
                     el.scrollTop = el.scrollHeight;
                 });
             };
 
             Livewire.on('scroll-chat-bottom', () => {
-                scrollChatBottom();
-                setTimeout(scrollChatBottom, 50);
+                scrollChatBottom(true);
+                setTimeout(() => scrollChatBottom(true), 50);
             });
             Livewire.on('scroll-chat-top', () => {
                 const el = document.getElementById('chatBody');
@@ -375,8 +385,9 @@
             Livewire.hook('message.processed', () => {
                 updateTimestamps();
                 clearLoadedImages();
-                if (document.getElementById('messageChatPanel')) {
-                    scrollChatBottom();
+                const body = document.getElementById('chatBody');
+                if (body) {
+                    scrollChatBottom(false);
                 }
             });
         });

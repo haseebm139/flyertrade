@@ -58,6 +58,8 @@ class Board extends Component
     public $composeMediaFile = null;
     public ?string $composeMediaPreviewUrl = null;
     public ?string $composeMediaPreviewType = null;
+    public string $composeEmailSubject = '';
+    public string $composeEmailBody = '';
     public bool $selectAll = false;
     public array $selectedConversationIds = [];
     public string $filterStatus = 'all';
@@ -1022,6 +1024,34 @@ class Board extends Component
         $this->composeMediaPreviewType = null;
         $this->showCompose = false;
         $this->resetSelection();
+    }
+
+    public function sendComposeEmail(): void
+    {
+        $subject = trim($this->composeEmailSubject);
+        $body = trim($this->composeEmailBody);
+        $messageText = $subject;
+        if ($body !== '') {
+            $messageText = $messageText === '' ? $body : $messageText . "\n\n" . $body;
+        }
+        $messageText = trim($messageText);
+        if ($messageText === '') {
+            return;
+        }
+
+        if (empty($this->selectedConversationIds) && $this->activeConversationId) {
+            $defaultRecipient = $this->activeConversationMeta['userId'] ?? $this->activeConversationId;
+            $this->selectedConversationIds = [$defaultRecipient];
+        }
+        if (empty($this->selectedConversationIds)) {
+            return;
+        }
+
+        $this->composeMessageText = $messageText;
+        $this->sendComposeMessage();
+
+        $this->composeEmailSubject = '';
+        $this->composeEmailBody = '';
     }
 
     private function storeComposeAttachment(): void
