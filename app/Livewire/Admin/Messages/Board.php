@@ -848,6 +848,7 @@ class Board extends Component
     public function closeCompose(): void
     {
         $this->showCompose = false;
+        $this->searchCompose = '';
     }
 
     public function getPanelStateProperty(): string

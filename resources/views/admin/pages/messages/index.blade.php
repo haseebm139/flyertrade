@@ -4,11 +4,14 @@
 @section('header', 'Messaging')
 @section('content')
     <style>
-         
         .search-bars input {
-             background: url("/assets/images/icons/search-icon_chat.svg") no-repeat 0.8vw center;
-             background-size: 1vw;
+            background: url("/assets/images/icons/search-icon_chat.svg") no-repeat 0.8vw center;
+            background-size: 1vw;
+            outline: 0px
         }
+
+        
+
         .sidebars {
             background: #F6F6F6;
             width: 20vw;
@@ -74,6 +77,24 @@
             max-height: 60vh;
             overflow-y: auto;
             padding-right: 0.417vw;
+        }
+
+        .chat-jump-btn {
+            position: sticky;
+            bottom: 12px;
+            margin: 8px auto 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 999px;
+            background: #004e42;
+            color: #fff;
+            font-size: 0.729vw;
+            cursor: pointer;
+            z-index: 2;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
         }
 
         .search-bars input::placeholder {
