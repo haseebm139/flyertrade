@@ -5,6 +5,7 @@ namespace App\Livewire\Admin;
 use Livewire\Component;
 use App\Models\User;
 use App\Models\Booking;
+use App\Models\Transaction;
 use Illuminate\Support\Facades\DB;
 class UserStats extends Component
 {
@@ -114,22 +115,31 @@ class UserStats extends Component
                 ];
                 break;
             case 'transactions':
-                 
+                $totalRevenue = Transaction::where('status', 'succeeded')
+                    ->where('type', 'payment')
+                    ->sum('service_charges');
+                $totalPayout = Transaction::where('status', 'succeeded')
+                    ->where('type', 'payout')
+                    ->sum('net_amount');
+                $pendingPayout = Transaction::whereIn('status', ['pending', 'processing'])
+                    ->where('type', 'payout')
+                    ->sum('net_amount');
+
                 $this->stats = [
                     [
-                        'label' => 'Total revenue', 
-                        'value' => '$' . number_format(824.00, 0),
+                        'label' => 'Total revenue',
+                        'value' => '$' . number_format((float) $totalRevenue, 0),
                         'icon' => 'assets/images/icons/payout-icon.svg',
                     ],
                     [
-                        'label' => 'Total payout', 
-                        'value' => '$' . number_format(824.00, 0),
+                        'label' => 'Total payout',
+                        'value' => '$' . number_format((float) $totalPayout, 0),
                         'icon' => 'assets/images/icons/payout-icon.svg'
                     ],
                     [
                         'label' => 'Pending payout',
-                        'value' => '$' . number_format(824.00, 0),
-                        'icon' => 'assets/images/icons/payout-icon.svg'                    
+                        'value' => '$' . number_format((float) $pendingPayout, 0),
+                        'icon' => 'assets/images/icons/payout-icon.svg'
                     ],
                 ];
                 break;
