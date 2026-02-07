@@ -112,3 +112,256 @@
     </style>
     <livewire:admin.messages.board />
 @endsection
+
+@push('styles')
+    <style>
+        .is-hidden {
+            display: none !important;
+        }
+
+        [x-cloak] {
+            display: none !important;
+        }
+
+        .chat-attachment-preview {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            padding: 6px 8px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            background: #fff;
+        }
+
+        .chat-attachment-preview img {
+            max-height: 60px;
+            border-radius: 4px;
+        }
+
+        .chat-attachment-preview video {
+            max-height: 60px;
+            border-radius: 4px;
+        }
+
+        .attachment-remove {
+            border: none;
+            background: #f2f2f2;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 22px;
+        }
+    </style>
+    <style>
+        .chat-loading-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.85);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            backdrop-filter: blur(2px);
+        }
+
+        .chat-loading-spinner {
+            width: 36px;
+            height: 36px;
+            border: 3px solid #e5e7eb;
+            border-top-color: #004e42;
+            border-radius: 50%;
+            animation: chat-spin 0.9s linear infinite;
+            margin-bottom: 10px;
+        }
+
+        .chat-loading-text {
+            font-size: 0.833vw;
+            color: #555;
+            font-weight: 600;
+        }
+
+        @keyframes chat-spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .chat-loading-text {
+                font-size: 3vw;
+            }
+        }
+
+        .chat-loadmore-shimmer {
+            display: inline-flex;
+            gap: 6px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 6px;
+        }
+
+        .chat-loadmore-dot {
+            width: 8px;
+            height: 8px;
+            background: #004e42;
+            border-radius: 50%;
+            animation: chat-dot-pulse 0.9s ease-in-out infinite;
+            opacity: 0.6;
+        }
+
+        .chat-loadmore-dot:nth-child(2) {
+            animation-delay: 0.15s;
+        }
+
+        .chat-loadmore-dot:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .chat-loadmore-text {
+            font-size: 0.781vw;
+            color: #555;
+            font-weight: 600;
+        }
+
+        @keyframes chat-dot-pulse {
+            0%,
+            100% {
+                transform: scale(0.9);
+                opacity: 0.5;
+            }
+
+            50% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .chat-loadmore-text {
+                font-size: 3vw;
+            }
+        }
+
+        .chat-skeleton {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 12px 16px;
+        }
+
+        .chat-skeleton-row {
+            height: 14px;
+            border-radius: 8px;
+            background: linear-gradient(90deg, #f1f1f1 25%, #e7e7e7 37%, #f1f1f1 63%);
+            background-size: 400% 100%;
+            animation: chat-shimmer 1.2s ease-in-out infinite;
+        }
+
+        .chat-skeleton-row.left {
+            width: 55%;
+            align-self: flex-start;
+        }
+
+        .chat-skeleton-row.right {
+            width: 45%;
+            align-self: flex-end;
+        }
+
+        @keyframes chat-shimmer {
+            0% {
+                background-position: 100% 0;
+            }
+
+            100% {
+                background-position: -100% 0;
+            }
+        }
+
+        .img-loading {
+            background: linear-gradient(90deg, #f1f1f1 25%, #e7e7e7 37%, #f1f1f1 63%);
+            background-size: 400% 100%;
+            animation: chat-shimmer 1.2s ease-in-out infinite;
+        }
+
+        .chat-nav-icon {
+            cursor: pointer;
+            transition: transform 0.15s ease, opacity 0.15s ease;
+        }
+
+        .chat-nav-icon:hover {
+            transform: translateY(-1px) scale(1.05);
+            opacity: 0.85;
+        }
+
+        .chat-nav-icon:active {
+            transform: translateY(0) scale(0.95);
+            opacity: 0.7;
+        }
+    </style>
+@endpush
+
+@push('scripts')
+    <script>
+        document.addEventListener('livewire:initialized', () => {
+            Livewire.on('scroll-chat-bottom', () => {
+                const el = document.getElementById('chatBody');
+                if (el) el.scrollTop = el.scrollHeight;
+            });
+            Livewire.on('scroll-chat-top', () => {
+                const el = document.getElementById('chatBody');
+                if (el) el.scrollTop = 0;
+            });
+            Livewire.on('clear-attachment-preview', () => {
+                window.dispatchEvent(new CustomEvent('clear-attachment-preview'));
+                const input = document.getElementById('chatAttachmentInput');
+                if (input) input.value = '';
+            });
+
+            const clearLoadedImages = () => {
+                document.querySelectorAll('img.img-loading').forEach(img => {
+                    if (img.complete) {
+                        img.classList.remove('img-loading');
+                        img.removeAttribute('data-shimmer');
+                    }
+                });
+            };
+
+            const updateTimestamps = () => {
+                const nodes = document.querySelectorAll('.timestamp[data-ts]');
+                const nowMs = Date.now();
+                nodes.forEach(node => {
+                    const ts = parseInt(node.dataset.ts || '0', 10);
+                    if (!ts) return;
+                    const diffSec = Math.max(0, Math.floor((nowMs - ts * 1000) / 1000));
+                    let text = '';
+                    if (diffSec < 60) {
+                        text = 'just now';
+                    } else if (diffSec < 3600) {
+                        const mins = Math.floor(diffSec / 60);
+                        text = mins + ' minute' + (mins === 1 ? '' : 's') + ' ago';
+                    } else if (diffSec < 86400) {
+                        const hours = Math.floor(diffSec / 3600);
+                        text = hours + ' hour' + (hours === 1 ? '' : 's') + ' ago';
+                    } else {
+                        const days = Math.floor(diffSec / 86400);
+                        text = days + ' day' + (days === 1 ? '' : 's') + ' ago';
+                    }
+                    node.textContent = text;
+                });
+            };
+
+            updateTimestamps();
+            setInterval(updateTimestamps, 60000);
+            clearLoadedImages();
+
+            Livewire.hook('message.processed', () => {
+                updateTimestamps();
+                clearLoadedImages();
+            });
+        });
+    </script>
+@endpush

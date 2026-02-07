@@ -3831,7 +3831,7 @@ img.chat-img {
 .email-compose {
     background: #fff;
     border-radius: 0.6vw;
-    width: 80%;
+    width: 100%;
     padding: 1.5vw;
     display: flex;
     flex-direction: column;

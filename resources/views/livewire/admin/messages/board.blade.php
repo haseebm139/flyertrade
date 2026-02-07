@@ -1,39 +1,118 @@
-<div x-data="{
-    uiActiveId: @entangle('activeConversationId'),
-    messagesId: @entangle('messagesConversationId'),
-    previewName: '',
-    previewEmail: '',
-    previewImage: '',
-    switching: false,
-    loading: @entangle('loadingMessages'),
-    attachmentPreviewUrl: '',
-    attachmentPreviewType: ''
-}" x-effect="if (!loading && messagesId === uiActiveId) switching = false"
-    x-init="window.addEventListener('clear-attachment-preview', () => {
-        attachmentPreviewUrl = '';
-        attachmentPreviewType = '';
-    })">
-    <div class="users-toolbar border-0 p-0">
-        <div class="toolbar-left">
-            @can('Create Messages')
-                <button class="add-user-btn new-email-btn" type="button">
-                    <img class="icons-btn" src="{{ asset('assets/images/icons/sms.svg') }}" alt=""> New Email
-                </button>
-                <button class="export-btn" type="button">
-                    <img class="icons-btn" src="{{ asset('assets/images/icons/messages.svg') }}" alt=""> New Message
-                </button>
-            @endcan
+<div class="messages-board-root">
+    <div x-data="{
+        uiActiveId: @entangle('activeConversationId'),
+        messagesId: @entangle('messagesConversationId'),
+        previewName: '',
+        previewEmail: '',
+        previewImage: '',
+        switching: false,
+        loading: @entangle('loadingMessages'),
+        attachmentPreviewUrl: '',
+        attachmentPreviewType: ''
+    }" x-effect="if (!loading && messagesId === uiActiveId) switching = false"
+        x-init="window.addEventListener('clear-attachment-preview', () => {
+            attachmentPreviewUrl = '';
+            attachmentPreviewType = '';
+        })">
+        <div class="users-toolbar border-0 p-0">
+            <div class="toolbar-left">
+                @can('Create Messages')
+                <button class="add-user-btn new-email-btn" type="button" wire:click="openCompose('email')">
+                        <img class="icons-btn" src="{{ asset('assets/images/icons/sms.svg') }}" alt=""> New Email
+                    </button>
+                <button class="export-btn" type="button" wire:click="openCompose('message')">
+                        <img class="icons-btn" src="{{ asset('assets/images/icons/messages.svg') }}" alt=""> New
+                        Message
+                    </button>
+                @endcan
+            </div>
+            <div class="toolbar-right">
+                <h2 class="page-title">Messaging</h2>
+            </div>
         </div>
-        <div class="toolbar-right">
-            <h2 class="page-title">Messaging</h2>
-        </div>
-    </div>
 
-    <div class="messages-email-container">
-        @include('livewire.admin.messages.partials.sidebar')
-        @if ($this->hasActiveConversation)
-            <div class="message-chat-theme" wire:key="chat-body-{{ $activeConversationId }}"
-                wire:init="initConversation" style="position: relative;">
+        <div class="messages-email-container">
+            @include('livewire.admin.messages.partials.sidebar')
+        @if ($showCompose && $composeType === 'email')
+            <div class="email-compose" id="emailComposePanel">
+                <div class="compose-header">
+                    <div class="heading-with-icon">
+                        <img src="{{ asset('assets/images/icons/back.svg') }}" alt=""
+                            class="icon-back compose-back-btn" wire:click="closeCompose">
+                        <h2>Compose email</h2>
+                    </div>
+
+                    <div class="recipient-container">
+                        <span class="label">to</span>
+                        <div class="recipient-list">
+                            <img src="{{ asset('assets/images/icons/five.svg') }}" alt="Recipient 1">
+                            <img src="{{ asset('assets/images/icons/five.svg') }}" alt="Recipient 2">
+                            <img src="{{ asset('assets/images/icons/five.svg') }}" alt="Recipient 3">
+                            <img src="{{ asset('assets/images/icons/five.svg') }}" alt="Recipient 4">
+                            <img src="{{ asset('assets/images/icons/five.svg') }}" alt="Recipient 5">
+                        </div>
+                        <span class="others">+20 others</span>
+                    </div>
+                </div>
+
+                <div class="compose-body">
+                    <input type="text" class="subject-input" placeholder="Subject">
+                    <textarea class="message-area" placeholder=""></textarea>
+                </div>
+
+                <div class="compose-footer">
+                    <span class="attachment">
+                        <div class="file-upload">
+                            <img class="attach" src="{{ asset('assets/images/icons/ic_attachment.svg') }}"
+                                alt="Attach">
+                            <input type="file">
+                        </div>
+                    </span>
+                    <button class="send-btn" type="button">Send</button>
+                </div>
+            </div>
+        @elseif ($showCompose && $composeType === 'message')
+            <div class="email-compose" id="messageComposePanel">
+                <div class="compose-header">
+                    <div class="heading-with-icon">
+                        <img src="{{ asset('assets/images/icons/back.svg') }}" alt=""
+                            class="icon-back compose-back-btn" wire:click="closeCompose">
+                        <h2>Compose message</h2>
+                    </div>
+
+                    <div class="recipient-container">
+                        <span class="label">to</span>
+                        <div class="recipient-list">
+                            <img src="{{ asset('assets/images/icons/five.svg') }}" alt="Recipient 1">
+                            <img src="{{ asset('assets/images/icons/five.svg') }}" alt="Recipient 2">
+                            <img src="{{ asset('assets/images/icons/five.svg') }}" alt="Recipient 3">
+                            <img src="{{ asset('assets/images/icons/five.svg') }}" alt="Recipient 4">
+                            <img src="{{ asset('assets/images/icons/five.svg') }}" alt="Recipient 5">
+                        </div>
+                        <span class="others">+20 others</span>
+                    </div>
+                </div>
+
+                <div class="compose-body">
+                    <input type="text" class="subject-input" placeholder="Subject">
+                    <textarea class="message-area" placeholder=""></textarea>
+                </div>
+
+                <div class="compose-footer">
+                    <span class="attachment">
+                        <div class="file-upload">
+                            <img class="attach" src="{{ asset('assets/images/icons/ic_attachment.svg') }}"
+                                alt="Attach">
+                            <input type="file">
+                        </div>
+                    </span>
+                    <button class="send-btn" type="button">Send</button>
+                </div>
+            </div>
+        @else
+            @if ($this->hasActiveConversation)
+                <div class="message-chat-theme" id="messageChatPanel" wire:key="chat-body-{{ $activeConversationId }}"
+                    wire:init="initConversation" style="position: relative;">
                 @if ($loadingMessages)
                     <div class="chat-loading-overlay">
                         <div class="chat-loading-spinner"></div>
@@ -63,8 +142,8 @@
                             </div>
                         </div>
                     </div>
-
-
+    
+    
                     <div class="header-right">
                         @php
                             $activeIndex = null;
@@ -90,16 +169,17 @@
                         </div>
                         <div class="icons">
                             <img src="{{ asset('assets/images/icons/dots_message.svg') }}" alt="Refresh Icon">
-
+    
                         </div>
-                        <button class="new-email new-email-btn"><svg width="14" height="14" viewBox="0 0 14 14"
-                                fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <button class="new-email new-email-btn" type="button" wire:click="openCompose('email')"><svg
+                                width="14" height="14" viewBox="0 0 14 14" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
                                 <path d="M6.58333 0.75V12.4167M0.75 6.58333H12.4167" stroke="#004E42" stroke-width="1.5"
                                     stroke-linecap="round" stroke-linejoin="round" />
                             </svg> New email</button>
                     </div>
                 </div>
-
+    
                 <div class="chat-body" id="chatBody" wire:poll.2000ms="pollMessages">
                     <div x-show="switching" x-cloak class="chat-skeleton">
                         <div class="chat-skeleton-row left"></div>
@@ -128,7 +208,7 @@
                     @if ($loadingMessages)
                         <p style="padding:20px">Loading...</p>
                     @endif
-
+    
                     <div x-show="!switching && messagesId === uiActiveId" x-cloak>
                         @foreach ($messages as $message)
                             <div
@@ -156,56 +236,56 @@
                         @endforeach
                     </div>
                     {{-- <!-- Message 1 Left -->
-                    <div class="message message-left">
-                        <p>
-                            Lorem ipsum dolor sit amet consectetur. Dui sapien sagittis egestas sit quam nunc
-                            sodales sem. Gravida maecenas condimentum elementum felis. Eu non et in sed. Odio
-                            magna lectus condimentum neque nibh duis id. A morbi tristique quis velit sit.
-                        </p>
-                        <span class="timestamp" style="color:#8e8e8e;">Message sent 12pm</span>
-                    </div>
-
-                    <!-- Message 2 Right -->
-                    <div class="message message-right">
-                        <p>
-                            Lorem ipsum dolor sit amet consectetur. Dui sapien sagittis egestas sit quam nunc
-                            sodales sem. Gravida maecenas condimentum elementum.
-                        </p>
-                        <span class="timestamp">Message sent 12:12pm</span>
-                    </div>
-
-                    <!-- Message 3 Left -->
-                    <div class="message message-left">
-                        <p>
-                            Lorem ipsum dolor sit amet consectetur. Dui sapien sagittis egestas sit quam nunc
-                            sodales sem. Gravida maecenas condimentum elementum felis. Eu non et in sed. Odio
-                            magna lectus condimentum neque nibh duis id. A morbi tristique quis velit sit.
-                        </p>
-                        <span class="timestamp" style="color:#8e8e8e;">Message sent 12pm</span>
-                    </div>
-
-                    <!-- Message 4 Right -->
-                    <div class="message message-right">
-                        <p>
-                            Lorem ipsum dolor sit amet consectetur. Dui sapien sagittis egestas sit quam nunc
-                            sodales sem. Gravida maecenas condimentum elementum.
-                        </p>
-                        <span class="timestamp">Message sent 12:14pm</span>
-                    </div>
-
-                    <!-- Message 5 Left -->
-                    <div class="message message-left">
-                        <p>
-                            Lorem ipsum dolor sit amet consectetur. Dui sapien sagittis egestas sit quam nunc
-                            sodales sem. Gravida maecenas condimentum elementum felis. Eu non et in sed. Odio
-                            magna lectus condimentum neque nibh duis id. A morbi tristique quis velit sit.
-                        </p>
-                        <span class="timestamp" style="color:#8e8e8e;">Message sent 12pm</span>
-                    </div> --}}
+                        <div class="message message-left">
+                            <p>
+                                Lorem ipsum dolor sit amet consectetur. Dui sapien sagittis egestas sit quam nunc
+                                sodales sem. Gravida maecenas condimentum elementum felis. Eu non et in sed. Odio
+                                magna lectus condimentum neque nibh duis id. A morbi tristique quis velit sit.
+                            </p>
+                            <span class="timestamp" style="color:#8e8e8e;">Message sent 12pm</span>
+                        </div>
+    
+                        <!-- Message 2 Right -->
+                        <div class="message message-right">
+                            <p>
+                                Lorem ipsum dolor sit amet consectetur. Dui sapien sagittis egestas sit quam nunc
+                                sodales sem. Gravida maecenas condimentum elementum.
+                            </p>
+                            <span class="timestamp">Message sent 12:12pm</span>
+                        </div>
+    
+                        <!-- Message 3 Left -->
+                        <div class="message message-left">
+                            <p>
+                                Lorem ipsum dolor sit amet consectetur. Dui sapien sagittis egestas sit quam nunc
+                                sodales sem. Gravida maecenas condimentum elementum felis. Eu non et in sed. Odio
+                                magna lectus condimentum neque nibh duis id. A morbi tristique quis velit sit.
+                            </p>
+                            <span class="timestamp" style="color:#8e8e8e;">Message sent 12pm</span>
+                        </div>
+    
+                        <!-- Message 4 Right -->
+                        <div class="message message-right">
+                            <p>
+                                Lorem ipsum dolor sit amet consectetur. Dui sapien sagittis egestas sit quam nunc
+                                sodales sem. Gravida maecenas condimentum elementum.
+                            </p>
+                            <span class="timestamp">Message sent 12:14pm</span>
+                        </div>
+    
+                        <!-- Message 5 Left -->
+                        <div class="message message-left">
+                            <p>
+                                Lorem ipsum dolor sit amet consectetur. Dui sapien sagittis egestas sit quam nunc
+                                sodales sem. Gravida maecenas condimentum elementum felis. Eu non et in sed. Odio
+                                magna lectus condimentum neque nibh duis id. A morbi tristique quis velit sit.
+                            </p>
+                            <span class="timestamp" style="color:#8e8e8e;">Message sent 12pm</span>
+                        </div> --}}
                 </div>
-
-
-
+    
+    
+    
                 <div class="chat-footer">
                     <template x-if="attachmentPreviewUrl">
                         <div class="chat-attachment-preview">
@@ -228,7 +308,7 @@
                         type="text" placeholder="Reply message......">
                     <div class="footer-icons">
                         {{-- <img src="{{ asset('assets/images/icons/emoji.svg') }}" alt="">
-                        <img src="{{ asset('assets/images/icons/txt.svg') }}" alt=""> --}}
+                            <img src="{{ asset('assets/images/icons/txt.svg') }}" alt=""> --}}
                         <span class="attachment" wire:ignore>
                             <div class="file-upload">
                                 <img class="attach theme-attach"
@@ -236,13 +316,13 @@
                                 <input id="chatAttachmentInput" type="file" accept="image/*,video/*"
                                     wire:model.defer="replyMediaFile"
                                     @change="
-                                        const file = $event.target.files?.[0];
-                                        if (!file) return;
-                                        attachmentPreviewUrl = URL.createObjectURL(file);
-                                        attachmentPreviewType = file.type.startsWith('image/')
-                                            ? 'image'
-                                            : (file.type.startsWith('video/') ? 'video' : 'file');
-                                    ">
+                                            const file = $event.target.files?.[0];
+                                            if (!file) return;
+                                            attachmentPreviewUrl = URL.createObjectURL(file);
+                                            attachmentPreviewType = file.type.startsWith('image/')
+                                                ? 'image'
+                                                : (file.type.startsWith('video/') ? 'video' : 'file');
+                                        ">
                             </div>
                         </span>
                     </div>
@@ -250,8 +330,8 @@
                             src="{{ asset('assets/images/icons/send-chat-icon.svg') }}" alt=""></button>
                 </div>
             </div>
-        @else
-            <section class="content-panel">
+            @else
+            <section class="content-panel" id="messageEmptyPanel">
                 <div class="display-chat">
                     <div class="chat-display-img">
                         <img src="{{ asset('assets/images/icons/chat-img.svg') }}" alt="Chat Icon" class="chat-img">
@@ -259,250 +339,8 @@
                     </div>
                 </div>
             </section>
+            @endif
         @endif
-
-
+        </div>
     </div>
-
-
-    <style>
-        .chat-attachment-preview {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
-            padding: 6px 8px;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
-            background: #fff;
-        }
-
-        .chat-attachment-preview img {
-            max-height: 60px;
-            border-radius: 4px;
-        }
-
-        .chat-attachment-preview video {
-            max-height: 60px;
-            border-radius: 4px;
-        }
-
-        .attachment-remove {
-            border: none;
-            background: #f2f2f2;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 16px;
-            line-height: 22px;
-        }
-    </style>
-    <style>
-        .chat-loading-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(255, 255, 255, 0.85);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 5;
-            backdrop-filter: blur(2px);
-        }
-
-        .chat-loading-spinner {
-            width: 36px;
-            height: 36px;
-            border: 3px solid #e5e7eb;
-            border-top-color: #004e42;
-            border-radius: 50%;
-            animation: chat-spin 0.9s linear infinite;
-            margin-bottom: 10px;
-        }
-
-        .chat-loading-text {
-            font-size: 0.833vw;
-            color: #555;
-            font-weight: 600;
-        }
-
-        @keyframes chat-spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        @media (max-width: 600px) {
-            .chat-loading-text {
-                font-size: 3vw;
-            }
-        }
-
-        .chat-loadmore-shimmer {
-            display: inline-flex;
-            gap: 6px;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 6px;
-        }
-
-        .chat-loadmore-dot {
-            width: 8px;
-            height: 8px;
-            background: #004e42;
-            border-radius: 50%;
-            animation: chat-dot-pulse 0.9s ease-in-out infinite;
-            opacity: 0.6;
-        }
-
-        .chat-loadmore-dot:nth-child(2) {
-            animation-delay: 0.15s;
-        }
-
-        .chat-loadmore-dot:nth-child(3) {
-            animation-delay: 0.3s;
-        }
-
-        .chat-loadmore-text {
-            font-size: 0.781vw;
-            color: #555;
-            font-weight: 600;
-        }
-
-        @keyframes chat-dot-pulse {
-
-            0%,
-            100% {
-                transform: scale(0.9);
-                opacity: 0.5;
-            }
-
-            50% {
-                transform: scale(1.2);
-                opacity: 1;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .chat-loadmore-text {
-                font-size: 3vw;
-            }
-        }
-
-        .chat-skeleton {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            padding: 12px 16px;
-        }
-
-        .chat-skeleton-row {
-            height: 14px;
-            border-radius: 8px;
-            background: linear-gradient(90deg, #f1f1f1 25%, #e7e7e7 37%, #f1f1f1 63%);
-            background-size: 400% 100%;
-            animation: chat-shimmer 1.2s ease-in-out infinite;
-        }
-
-        .chat-skeleton-row.left {
-            width: 55%;
-            align-self: flex-start;
-        }
-
-        .chat-skeleton-row.right {
-            width: 45%;
-            align-self: flex-end;
-        }
-
-        @keyframes chat-shimmer {
-            0% {
-                background-position: 100% 0;
-            }
-
-            100% {
-                background-position: -100% 0;
-            }
-        }
-
-        .img-loading {
-            background: linear-gradient(90deg, #f1f1f1 25%, #e7e7e7 37%, #f1f1f1 63%);
-            background-size: 400% 100%;
-            animation: chat-shimmer 1.2s ease-in-out infinite;
-        }
-
-        .chat-nav-icon {
-            cursor: pointer;
-            transition: transform 0.15s ease, opacity 0.15s ease;
-        }
-
-        .chat-nav-icon:hover {
-            transform: translateY(-1px) scale(1.05);
-            opacity: 0.85;
-        }
-
-        .chat-nav-icon:active {
-            transform: translateY(0) scale(0.95);
-            opacity: 0.7;
-        }
-    </style>
-    <script>
-        document.addEventListener('livewire:initialized', () => {
-            Livewire.on('scroll-chat-bottom', () => {
-                const el = document.getElementById('chatBody');
-                if (el) el.scrollTop = el.scrollHeight;
-            });
-            Livewire.on('scroll-chat-top', () => {
-                const el = document.getElementById('chatBody');
-                if (el) el.scrollTop = 0;
-            });
-            Livewire.on('clear-attachment-preview', () => {
-                window.dispatchEvent(new CustomEvent('clear-attachment-preview'));
-                const input = document.getElementById('chatAttachmentInput');
-                if (input) input.value = '';
-            });
-
-            const clearLoadedImages = () => {
-                document.querySelectorAll('img.img-loading').forEach(img => {
-                    if (img.complete) {
-                        img.classList.remove('img-loading');
-                        img.removeAttribute('data-shimmer');
-                    }
-                });
-            };
-
-            const updateTimestamps = () => {
-                const nodes = document.querySelectorAll('.timestamp[data-ts]');
-                const nowMs = Date.now();
-                nodes.forEach(node => {
-                    const ts = parseInt(node.dataset.ts || '0', 10);
-                    if (!ts) return;
-                    const diffSec = Math.max(0, Math.floor((nowMs - ts * 1000) / 1000));
-                    let text = '';
-                    if (diffSec < 60) {
-                        text = 'just now';
-                    } else if (diffSec < 3600) {
-                        const mins = Math.floor(diffSec / 60);
-                        text = mins + ' minute' + (mins === 1 ? '' : 's') + ' ago';
-                    } else if (diffSec < 86400) {
-                        const hours = Math.floor(diffSec / 3600);
-                        text = hours + ' hour' + (hours === 1 ? '' : 's') + ' ago';
-                    } else {
-                        const days = Math.floor(diffSec / 86400);
-                        text = days + ' day' + (days === 1 ? '' : 's') + ' ago';
-                    }
-                    node.textContent = text;
-                });
-            };
-
-            updateTimestamps();
-            setInterval(updateTimestamps, 60000);
-            clearLoadedImages();
-
-            Livewire.hook('message.processed', () => {
-                updateTimestamps();
-                clearLoadedImages();
-            });
-        });
-    </script>
 </div>

@@ -19,6 +19,8 @@ class Board extends Component
     public string $search = '';
     public string $filter = 'all';
     public string $audience = 'service-users';
+    public bool $showCompose = false;
+    public string $composeType = 'email';
     public ?string $activeConversationId = null;
     public array $activeConversationMeta = [
         'userName' => 'Unknown',
@@ -669,6 +671,7 @@ class Board extends Component
             return;
         }
 
+        $this->showCompose = false;
         $this->activeConversationId = $conversationId;
         $this->activeConversationMeta = $this->resolveActiveConversationMeta($conversationId);
         $this->newIncomingCount = 0;
@@ -723,6 +726,17 @@ class Board extends Component
         $this->activeConversationId = null;
         $this->messages = [];
         $this->newIncomingCount = 0;
+    }
+
+    public function openCompose(string $type = 'email'): void
+    {
+        $this->composeType = $type === 'message' ? 'message' : 'email';
+        $this->showCompose = true;
+    }
+
+    public function closeCompose(): void
+    {
+        $this->showCompose = false;
     }
 
     public function selectPreviousConversation(): void
