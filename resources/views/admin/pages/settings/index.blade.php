@@ -22,6 +22,14 @@
     .tabs-vertical-wrapper .tab {
         cursor: pointer;
     }
+
+    .message-row .message-actions {
+        height: 2.865vw;
+    }
+    .message-row input{
+          height: 2.865vw;
+    }
+
 </style>
 
 <livewire:admin.settings.settings-manager />

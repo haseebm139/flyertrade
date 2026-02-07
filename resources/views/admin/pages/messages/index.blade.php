@@ -104,6 +104,11 @@
         .header-right span {
             color: #717171;
         }
+
+        .search-bars svg {
+            width: 1.25vw;
+            height: 1.25vw;
+        }
     </style>
     <livewire:admin.messages.board />
 @endsection

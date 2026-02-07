@@ -496,7 +496,7 @@
 </head>
 
 <body>
-    <!-- <div id="wrapper_mobile_display_none"></div> -->
+    <div id="wrapper_mobile_display_none"></div>
 
     @include('admin.partials.sidebar')
     <div class="wrapper">

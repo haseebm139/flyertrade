@@ -1,3 +1,4 @@
+
 <div>
     <div class="row">
         <div class="col-md-2">
@@ -848,8 +849,8 @@
             white-space: nowrap;
         }
         .message-row .message-actions {
-            height: 100%;
-            align-self: center;
+         
+            align-self: end;
         }
         .settings-section-title {
             font-size: 1.042vw;
