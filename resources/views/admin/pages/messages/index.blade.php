@@ -65,6 +65,12 @@
             align-items: stretch;
         }
 
+        .user-list {
+            max-height: 60vh;
+            overflow-y: auto;
+            padding-right: 0.417vw;
+        }
+
         .search-bars input::placeholder {
             font-size: 0.833vw;
 
@@ -307,9 +313,17 @@
 @push('scripts')
     <script>
         document.addEventListener('livewire:initialized', () => {
-            Livewire.on('scroll-chat-bottom', () => {
+            const scrollChatBottom = () => {
                 const el = document.getElementById('chatBody');
-                if (el) el.scrollTop = el.scrollHeight;
+                if (!el) return;
+                requestAnimationFrame(() => {
+                    el.scrollTop = el.scrollHeight;
+                });
+            };
+
+            Livewire.on('scroll-chat-bottom', () => {
+                scrollChatBottom();
+                setTimeout(scrollChatBottom, 50);
             });
             Livewire.on('scroll-chat-top', () => {
                 const el = document.getElementById('chatBody');
@@ -361,6 +375,9 @@
             Livewire.hook('message.processed', () => {
                 updateTimestamps();
                 clearLoadedImages();
+                if (document.getElementById('messageChatPanel')) {
+                    scrollChatBottom();
+                }
             });
         });
     </script>

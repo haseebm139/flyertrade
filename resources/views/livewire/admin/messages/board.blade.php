@@ -141,20 +141,34 @@
 
                         <div class="compose-body">
                             <textarea class="message-area" placeholder="Type your message" wire:model.defer="composeMessageText"></textarea>
+                            @if ($composeMediaPreviewUrl)
+                                <div class="chat-attachment-preview">
+                                    @if ($composeMediaPreviewType === 'image')
+                                        <img src="{{ $composeMediaPreviewUrl }}" alt="Attachment preview">
+                                    @elseif ($composeMediaPreviewType === 'video')
+                                        <video src="{{ $composeMediaPreviewUrl }}" controls></video>
+                                    @else
+                                        <span class="attachment-filename">Attachment selected</span>
+                                    @endif
+                                    <button type="button" class="attachment-remove" wire:click="clearComposeAttachment">
+                                        ×
+                                    </button>
+                                </div>
+                            @endif
                         </div>
 
                         <div class="compose-footer">
-                            <span class="attachment">
+                            <span class="attachment" wire:ignore>
                                 <div class="file-upload">
                                     <img class="attach" src="{{ asset('assets/images/icons/ic_attachment.svg') }}"
                                         alt="Attach">
-                                    <input type="file">
+                                    <input type="file" accept="image/*,video/*" wire:model="composeMediaFile">
                                 </div>
                             </span>
                             <button class="send-btn" type="button" wire:click="sendComposeMessage"
-                                wire:loading.attr="disabled" wire:target="sendComposeMessage">
-                                <span wire:loading.remove wire:target="sendComposeMessage">Send</span>
-                                <span class="btn-loading" wire:loading wire:target="sendComposeMessage">
+                                wire:loading.attr="disabled" wire:target="sendComposeMessage,composeMediaFile">
+                                <span wire:loading.remove wire:target="sendComposeMessage,composeMediaFile">Send</span>
+                                <span class="btn-loading" wire:loading wire:target="sendComposeMessage,composeMediaFile">
                                     <span class="btn-spinner" aria-hidden="true"></span>
                                     Sending...
                                 </span>
@@ -377,7 +391,7 @@
                                         <img class="attach theme-attach"
                                             src="{{ asset('assets/images/icons/ic_attachment.svg') }}" alt="Attach">
                                         <input id="chatAttachmentInput" type="file" accept="image/*,video/*"
-                                            wire:model.defer="replyMediaFile"
+                                            wire:model="replyMediaFile"
                                             @change="
                                             const file = $event.target.files?.[0];
                                             if (!file) return;
@@ -390,11 +404,11 @@
                                 </span>
                             </div>
                             <button id="sendBtn" class="send-btn" type="button" wire:click="sendReply"
-                                wire:loading.attr="disabled" wire:target="sendReply">
-                                <span class="btn-icon" wire:loading.remove wire:target="sendReply">
+                                wire:loading.attr="disabled" wire:target="sendReply,replyMediaFile">
+                                <span class="btn-icon" wire:loading.remove wire:target="sendReply,replyMediaFile">
                                     <img src="{{ asset('assets/images/icons/send-chat-icon.svg') }}" alt="">
                                 </span>
-                                <span class="btn-loading" wire:loading wire:target="sendReply">
+                                <span class="btn-loading" wire:loading wire:target="sendReply,replyMediaFile">
                                     <span class="btn-spinner" aria-hidden="true"></span>
                                 </span>
                             </button>

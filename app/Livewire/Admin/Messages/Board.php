@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Kreait\Firebase\Factory;
@@ -17,6 +18,7 @@ class Board extends Component
 {
     use WithFileUploads;
     public string $search = '';
+    public string $searchCompose = '';
     public string $filter = 'all';
     public string $audience = 'service-users';
     public bool $showCompose = false;
@@ -51,6 +53,11 @@ class Board extends Component
     public ?string $replyMediaType = null;
     public $replyMediaFile = null;
     public string $composeMessageText = '';
+    public ?string $composeMediaUrl = null;
+    public ?string $composeMediaType = null;
+    public $composeMediaFile = null;
+    public ?string $composeMediaPreviewUrl = null;
+    public ?string $composeMediaPreviewType = null;
     public bool $selectAll = false;
     public array $selectedConversationIds = [];
     public string $filterStatus = 'all';
@@ -259,6 +266,86 @@ class Board extends Component
         return array_values($conversations);
     }
 
+    private function encodeFirestoreId(string $id): string
+    {
+        return rawurlencode($id);
+    }
+
+    private function buildConversationDocumentPayload(array $meta, string $conversationId, string $conversationType): array
+    {
+        $userType = $this->audience === 'service-provider' ? 'provider' : 'customer';
+
+        return [
+            'userName' => $meta['userName'] ?? 'Unknown',
+            'userId' => $meta['userId'] ?? $conversationId,
+            'userType' => $userType,
+            'userImage' => $meta['userImage'] ?? 'assets/images/avatar/default.png',
+            'conversationType' => $conversationType,
+        ];
+    }
+
+    private function ensureConversationDocument($database, string $conversationId, array $meta, string $conversationType): void
+    {
+        if (!$database || $conversationId === '') {
+            return;
+        }
+
+        $payload = $this->buildConversationDocumentPayload($meta, $conversationId, $conversationType);
+        $database->collection('support_chat')
+            ->document($conversationId)
+            ->set($payload, ['merge' => true]);
+    }
+
+    private function ensureConversationDocumentViaRest(string $conversationId, array $meta, string $conversationType): void
+    {
+        if ($conversationId === '') {
+            return;
+        }
+
+        $serviceAccount = $this->loadServiceAccount();
+        if (!$serviceAccount) {
+            return;
+        }
+
+        $projectId = $serviceAccount['project_id'] ?? null;
+        if (!$projectId) {
+            return;
+        }
+
+        $token = $this->fetchAccessToken($serviceAccount);
+        if (!$token) {
+            return;
+        }
+
+        $payload = $this->buildConversationDocumentPayload($meta, $conversationId, $conversationType);
+        $fields = [
+            'userName' => ['stringValue' => (string) $payload['userName']],
+            'userId' => ['stringValue' => (string) $payload['userId']],
+            'userType' => ['stringValue' => (string) $payload['userType']],
+            'userImage' => ['stringValue' => (string) $payload['userImage']],
+            'conversationType' => ['stringValue' => (string) $payload['conversationType']],
+        ];
+        $fieldPaths = implode('&', array_map(
+            static fn($path) => 'updateMask.fieldPaths=' . urlencode($path),
+            array_keys($fields)
+        ));
+
+        $encodedConversationId = $this->encodeFirestoreId($conversationId);
+        $client = $this->makeHttpClient();
+        $client->patch(
+            "https://firestore.googleapis.com/v1/projects/{$projectId}/databases/(default)/documents/support_chat/{$encodedConversationId}?{$fieldPaths}",
+            [
+                'headers' => [
+                    'Authorization' => "Bearer {$token}",
+                    'Content-Type' => 'application/json',
+                ],
+                'json' => [
+                    'fields' => $fields,
+                ],
+            ]
+        );
+    }
+
     private function sendReplyViaRest(
         string $conversationId,
         string $message,
@@ -308,10 +395,12 @@ class Board extends Component
             $messageFields['client_message_id'] = ['stringValue' => $clientMessageId];
         }
         if ($senderId !== null) {
-            $messageFields['senderId'] = ['integerValue' => (string) $senderId];
+            $senderValue = is_numeric($senderId) ? ['integerValue' => (string) $senderId] : ['stringValue' => (string) $senderId];
+            $messageFields['senderId'] = $senderValue;
         }
         if ($receiverId !== null) {
-            $messageFields['receiverId'] = ['integerValue' => (string) $receiverId];
+            $receiverValue = is_numeric($receiverId) ? ['integerValue' => (string) $receiverId] : ['stringValue' => (string) $receiverId];
+            $messageFields['receiverId'] = $receiverValue;
         }
         if ($receiverImage !== null) {
             $messageFields['receiverImage'] = ['stringValue' => $receiverImage];
@@ -324,8 +413,10 @@ class Board extends Component
             $messageFields['mediaType'] = ['stringValue' => $mediaType];
         }
 
+        $encodedConversationId = $this->encodeFirestoreId($conversationId);
+
         $client->post(
-            "https://firestore.googleapis.com/v1/projects/{$projectId}/databases/(default)/documents/support_chat/{$conversationId}/messages",
+            "https://firestore.googleapis.com/v1/projects/{$projectId}/databases/(default)/documents/support_chat/{$encodedConversationId}/messages",
             [
                 'headers' => [
                     'Authorization' => "Bearer {$token}",
@@ -339,7 +430,7 @@ class Board extends Component
 
         $lastMessageText = $message !== '' ? $message : (($mediaType ?? 'media') . ' attachment');
         $client->patch(
-            "https://firestore.googleapis.com/v1/projects/{$projectId}/databases/(default)/documents/support_chat/{$conversationId}?updateMask.fieldPaths=lastMessage&updateMask.fieldPaths=lastMessageTime&updateMask.fieldPaths=lastMessageSenderId&updateMask.fieldPaths=unreadCount.support",
+            "https://firestore.googleapis.com/v1/projects/{$projectId}/databases/(default)/documents/support_chat/{$encodedConversationId}?updateMask.fieldPaths=lastMessage&updateMask.fieldPaths=lastMessageTime&updateMask.fieldPaths=lastMessageSenderId&updateMask.fieldPaths=unreadCount.support",
             [
                 'headers' => [
                     'Authorization' => "Bearer {$token}",
@@ -393,8 +484,9 @@ class Board extends Component
 
         $client = $this->makeHttpClient();
         $fetchLimit = $limit + 1;
+        $encodedConversationId = $this->encodeFirestoreId($conversationId);
         $response = $client->get(
-            "https://firestore.googleapis.com/v1/projects/{$projectId}/databases/(default)/documents/support_chat/{$conversationId}/messages",
+            "https://firestore.googleapis.com/v1/projects/{$projectId}/databases/(default)/documents/support_chat/{$encodedConversationId}/messages",
             [
                 'query' => ['pageSize' => $fetchLimit, 'orderBy' => 'createdAt desc'],
                 'headers' => [
@@ -520,6 +612,9 @@ class Board extends Component
                 $this->messagesCache[$conversationId] = $this->messages;
                 $this->messagesHasMoreCache[$conversationId] = $this->hasMoreMessages;
                 $this->messagesConversationId = $conversationId;
+                if ($reset) {
+                    $this->dispatch('scroll-chat-bottom');
+                }
                 return; // success, no need REST
             } catch (\Throwable $e) {
                 Log::warning('Load messages gRPC failed, using REST fallback: ' . $e->getMessage());
@@ -530,6 +625,9 @@ class Board extends Component
 
         // Fallback to REST
         $this->loadMessagesFromRest($conversationId, $limit, $reset);
+        if ($reset) {
+            $this->dispatch('scroll-chat-bottom');
+        }
     }    
 
     private function fetchLatestMessages(string $conversationId, int $limit): array
@@ -603,8 +701,9 @@ class Board extends Component
 
         try {
             $client = $this->makeHttpClient();
+            $encodedConversationId = $this->encodeFirestoreId($conversationId);
             $response = $client->get(
-                "https://firestore.googleapis.com/v1/projects/{$projectId}/databases/(default)/documents/support_chat/{$conversationId}/messages",
+                "https://firestore.googleapis.com/v1/projects/{$projectId}/databases/(default)/documents/support_chat/{$encodedConversationId}/messages",
                 [
                     'query' => ['pageSize' => $limit, 'orderBy' => 'createdAt desc'],
                     'headers' => [
@@ -735,7 +834,8 @@ class Board extends Component
         $this->composeType = $type === 'message' ? 'message' : 'email';
         $this->showCompose = true;
         if ($this->composeType === 'message' && empty($this->selectedConversationIds) && $this->activeConversationId) {
-            $this->selectedConversationIds = [$this->activeConversationId];
+            $defaultRecipient = $this->activeConversationMeta['userId'] ?? $this->activeConversationId;
+            $this->selectedConversationIds = [$defaultRecipient];
         }
     }
 
@@ -759,6 +859,35 @@ class Board extends Component
 
     public function getSelectedRecipientsProperty(): array
     {
+        if ($this->showCompose) {
+            if (empty($this->selectedConversationIds)) {
+                return [];
+            }
+
+            $indexed = [];
+            foreach ($this->composeUsers as $user) {
+                $email = (string) ($user->email ?? '');
+                if ($email !== '') {
+                    $indexed[$email] = [
+                        'id' => $email,
+                        'userName' => $user->name ?? 'Unknown',
+                        'userId' => $user->email ?? '',
+                        'userImage' => $user->avatar ?? 'assets/images/avatar/default.png',
+                    ];
+                }
+            }
+
+            $recipients = [];
+            foreach ($this->selectedConversationIds as $id) {
+                $id = (string) $id;
+                if (isset($indexed[$id])) {
+                    $recipients[] = $indexed[$id];
+                }
+            }
+
+            return $recipients;
+        }
+
         $source = !empty($this->cachedConversations) ? $this->cachedConversations : $this->allConversations;
         if (empty($source) || empty($this->selectedConversationIds)) {
             return [];
@@ -786,20 +915,28 @@ class Board extends Component
     public function sendComposeMessage(): void
     {
         $messageText = trim($this->composeMessageText);
-        if ($messageText === '') {
+        if ($messageText === '' && !$this->composeMediaFile && !$this->composeMediaUrl) {
             return;
         }
         if (empty($this->selectedConversationIds) && $this->activeConversationId) {
-            $this->selectedConversationIds = [$this->activeConversationId];
+            $defaultRecipient = $this->activeConversationMeta['userId'] ?? $this->activeConversationId;
+            $this->selectedConversationIds = [$defaultRecipient];
         }
         if (empty($this->selectedConversationIds)) {
             return;
+        }
+
+        if ($this->composeMediaFile) {
+            $this->storeComposeAttachment();
         }
 
         $senderName = auth()->user()?->name ?? 'Support Team';
         $senderId = auth()->id();
         $senderImage = 'assets/images/avatar/default.png';
         $createdAtTs = now()->timestamp;
+        $hasAttachment = !empty($this->composeMediaUrl);
+        $messageType = $this->composeMediaType ?: ($hasAttachment ? 'media' : 'text');
+        $mediaType = $this->composeMediaType ?: null;
 
         $database = $this->firestoreDatabase();
         $conversationIds = array_values(array_unique($this->selectedConversationIds));
@@ -814,11 +951,13 @@ class Board extends Component
             $receiverName = $meta['userName'] ?? 'Support Team';
             $receiverImage = $meta['userImage'] ?? null;
             $clientMessageId = (string) Str::uuid();
+            $conversationType = $this->composeType === 'email' ? 'email' : 'chat';
 
             if ($database) {
+                $this->ensureConversationDocument($database, $conversationId, $meta, $conversationType);
                 $payload = [
                     'message' => $messageText,
-                    'messageType' => 'text',
+                    'messageType' => $messageType,
                     'client_message_id' => $clientMessageId,
                     'senderId' => $senderId,
                     'senderName' => $senderName,
@@ -832,6 +971,13 @@ class Board extends Component
                     'updatedAt' => new Timestamp(new \DateTime()),
                     'seen' => false,
                 ];
+                if ($this->composeMediaUrl) {
+                    $payload['mediaUrl'] = $this->composeMediaUrl;
+                    $payload['mediaThumbnail'] = null;
+                }
+                if ($mediaType) {
+                    $payload['mediaType'] = $mediaType;
+                }
 
                 $database
                     ->collection('support_chat')
@@ -848,18 +994,19 @@ class Board extends Component
                         ['path' => 'unreadCount.support', 'value' => 0],
                     ]);
             } else {
+                $this->ensureConversationDocumentViaRest($conversationId, $meta, $conversationType);
                 $this->sendReplyViaRest(
                     $conversationId,
                     $messageText,
-                    'text',
+                    $messageType,
                     $senderId,
                     $senderName,
                     $senderImage,
                     $receiverId,
                     $receiverName,
                     $receiverImage,
-                    null,
-                    null,
+                    $this->composeMediaUrl,
+                    $mediaType,
                     $clientMessageId
                 );
             }
@@ -868,13 +1015,73 @@ class Board extends Component
         }
 
         $this->composeMessageText = '';
+        $this->composeMediaUrl = null;
+        $this->composeMediaType = null;
+        $this->composeMediaFile = null;
+        $this->composeMediaPreviewUrl = null;
+        $this->composeMediaPreviewType = null;
         $this->showCompose = false;
-        $this->selectAll = false;
-        $this->selectedConversationIds = [];
+        $this->resetSelection();
+    }
+
+    private function storeComposeAttachment(): void
+    {
+        $this->validate([
+            'composeMediaFile' => 'file|mimes:jpeg,jpg,png,gif,webp,mp4,avi,mov,wmv,flv,webm|max:51200',
+        ]);
+
+        $mimeType = $this->composeMediaFile->getMimeType();
+        $isImage = Str::startsWith($mimeType, 'image/');
+        $folder = $isImage ? 'chat/images' : 'chat/videos';
+        $directory = $folder . '/' . (auth()->id() ?? 'anonymous');
+        $filename = Str::uuid() . '.' . $this->composeMediaFile->getClientOriginalExtension();
+
+        $path = $this->composeMediaFile->storeAs($directory, $filename, 'public');
+        if (!Storage::disk('public')->exists($path)) {
+            throw new \RuntimeException('Failed to store file. Please check storage permissions.');
+        }
+
+        $this->composeMediaUrl = Storage::disk('public')->url($path);
+        $this->composeMediaType = $isImage ? 'image' : 'video';
+    }
+
+    public function updatedComposeMediaFile(): void
+    {
+        if (!$this->composeMediaFile) {
+            $this->composeMediaPreviewUrl = null;
+            $this->composeMediaPreviewType = null;
+            return;
+        }
+
+        $mimeType = $this->composeMediaFile->getMimeType();
+        $isImage = Str::startsWith($mimeType, 'image/');
+        $this->composeMediaPreviewUrl = $this->composeMediaFile->temporaryUrl();
+        $this->composeMediaPreviewType = $isImage ? 'image' : 'video';
+    }
+
+    public function clearComposeAttachment(): void
+    {
+        $this->composeMediaFile = null;
+        $this->composeMediaPreviewUrl = null;
+        $this->composeMediaPreviewType = null;
+        $this->composeMediaUrl = null;
+        $this->composeMediaType = null;
     }
 
     private function resolveConversationMeta(string $id): array
     {
+        if (str_contains($id, '@')) {
+            $user = User::where('email', $id)->first(['id', 'name', 'email', 'avatar']);
+            if ($user) {
+                return [
+                    'userName' => $user->name ?? 'Unknown',
+                    'userEmail' => $user->email ?? '',
+                    'userImage' => $user->avatar ?? 'assets/images/avatar/default.png',
+                    'userId' => $user->email ?? null,
+                ];
+            }
+        }
+
         $source = !empty($this->allConversations) ? $this->allConversations : $this->cachedConversations;
         foreach ($source as $conversation) {
             if ((string) ($conversation['id'] ?? '') === $id) {
@@ -893,6 +1100,26 @@ class Board extends Component
             'userImage' => 'assets/images/icons/five.svg',
             'userId' => null,
         ];
+    }
+
+    public function getComposeUsersProperty()
+    {
+        $query = User::query();
+        if ($this->audience === 'service-users') {
+            $query->where('user_type', 'customer');
+        } elseif ($this->audience === 'service-provider') {
+            $query->where('user_type', 'provider');
+        }
+
+        $search = trim((string) $this->searchCompose);
+        if ($search !== '') {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%');
+            });
+        }
+
+        return $query->limit(50)->get(['id', 'name', 'email', 'avatar', 'user_type']);
     }
 
     public function selectPreviousConversation(): void
@@ -998,8 +1225,9 @@ class Board extends Component
         }
 
         $client = $this->makeHttpClient();
+        $encodedConversationId = $this->encodeFirestoreId($conversationId);
         $client->patch(
-            "https://firestore.googleapis.com/v1/projects/{$projectId}/databases/(default)/documents/support_chat/{$conversationId}?updateMask.fieldPaths=unreadCount.support",
+            "https://firestore.googleapis.com/v1/projects/{$projectId}/databases/(default)/documents/support_chat/{$encodedConversationId}?updateMask.fieldPaths=unreadCount.support",
             [
                 'headers' => [
                     'Authorization' => "Bearer {$token}",
@@ -1044,10 +1272,7 @@ class Board extends Component
         if (empty($this->cachedConversations)) {
             $this->refreshConversationsCache();
         }
-        $visibleIds = array_values(array_map(
-            static fn($conversation) => (string) ($conversation['id'] ?? ''),
-            $this->cachedConversations
-        ));
+        $visibleIds = $this->visibleSelectionIds();
         if ($this->selectAll) {
             $this->selectedConversationIds = $visibleIds;
         } else {
@@ -1087,10 +1312,7 @@ class Board extends Component
 
     public function toggleSelectAll(): void
     {
-        $visibleIds = array_values(array_map(
-            static fn($conversation) => (string) ($conversation['id'] ?? ''),
-            $this->cachedConversations
-        ));
+        $visibleIds = $this->visibleSelectionIds();
 
         if (empty($visibleIds)) {
             $this->selectAll = false;
@@ -1108,15 +1330,40 @@ class Board extends Component
         $this->selectedConversationIds = $visibleIds;
     }
 
+    public function updatedSelectAll($value): void
+    {
+        $visibleIds = $this->visibleSelectionIds();
+
+        if ($value) {
+            $this->selectedConversationIds = $visibleIds;
+        } else {
+            $this->selectedConversationIds = [];
+        }
+    }
+
     public function updatedSelectedConversationIds(): void
     {
-        $visibleIds = array_values(array_map(
-            static fn($conversation) => (string) ($conversation['id'] ?? ''),
-            $this->cachedConversations
-        ));
+        $visibleIds = $this->visibleSelectionIds();
         $selectedVisible = array_values(array_intersect($this->selectedConversationIds, $visibleIds));
         $this->selectedConversationIds = $selectedVisible;
         $this->selectAll = !empty($visibleIds) && count($selectedVisible) === count($visibleIds);
+    }
+
+    private function visibleSelectionIds(): array
+    {
+        if ($this->showCompose) {
+            return $this->composeUsers
+                ->pluck('email')
+                ->filter()
+                ->map(static fn($value) => (string) $value)
+                ->values()
+                ->all();
+        }
+
+        return array_values(array_map(
+            static fn($conversation) => (string) ($conversation['id'] ?? ''),
+            $this->cachedConversations
+        ));
     }
 
     private function resetSelection(): void
@@ -1679,8 +1926,9 @@ class Board extends Component
 
             if ($projectId && $token) {
                 $client = $this->makeHttpClient();
+                $encodedConversationId = $this->encodeFirestoreId($conversationId);
                 $client->patch(
-                    "https://firestore.googleapis.com/v1/projects/{$projectId}/databases/(default)/documents/support_chat/{$conversationId}?updateMask.fieldPaths=userImage",
+                    "https://firestore.googleapis.com/v1/projects/{$projectId}/databases/(default)/documents/support_chat/{$encodedConversationId}?updateMask.fieldPaths=userImage",
                     [
                         'headers' => [
                             'Authorization' => "Bearer {$token}",
