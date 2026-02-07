@@ -667,7 +667,7 @@ class Board extends Component
     }
     public function selectConversation(string $conversationId): void
     {
-        if ($this->activeConversationId === $conversationId) {
+        if ($this->activeConversationId === $conversationId && !$this->showCompose) {
             return;
         }
 

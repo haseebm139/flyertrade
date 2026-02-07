@@ -94,7 +94,7 @@
                 </div>
 
                 <div class="compose-body">
-                    <input type="text" class="subject-input" placeholder="Subject">
+                     
                     <textarea class="message-area" placeholder=""></textarea>
                 </div>
 
