@@ -151,7 +151,14 @@
                                     <input type="file">
                                 </div>
                             </span>
-                            <button class="send-btn" type="button" wire:click="sendComposeMessage">Send</button>
+                            <button class="send-btn" type="button" wire:click="sendComposeMessage"
+                                wire:loading.attr="disabled" wire:target="sendComposeMessage">
+                                <span wire:loading.remove wire:target="sendComposeMessage">Send</span>
+                                <span class="btn-loading" wire:loading wire:target="sendComposeMessage">
+                                    <span class="btn-spinner" aria-hidden="true"></span>
+                                    Sending...
+                                </span>
+                            </button>
                         </div>
                     </div>
                 @break
@@ -382,8 +389,15 @@
                                     </div>
                                 </span>
                             </div>
-                            <button id="sendBtn" class="send-btn" type="button" wire:click="sendReply"><img
-                                    src="{{ asset('assets/images/icons/send-chat-icon.svg') }}" alt=""></button>
+                            <button id="sendBtn" class="send-btn" type="button" wire:click="sendReply"
+                                wire:loading.attr="disabled" wire:target="sendReply">
+                                <span class="btn-icon" wire:loading.remove wire:target="sendReply">
+                                    <img src="{{ asset('assets/images/icons/send-chat-icon.svg') }}" alt="">
+                                </span>
+                                <span class="btn-loading" wire:loading wire:target="sendReply">
+                                    <span class="btn-spinner" aria-hidden="true"></span>
+                                </span>
+                            </button>
                         </div>
                     </div>
                 @break
