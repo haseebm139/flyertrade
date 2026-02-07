@@ -67,7 +67,8 @@
                     data-email="{{ $conversation['userId'] ?? '' }}"
                     x-show="!search || ($el.dataset.search && $el.dataset.search.includes(search.toLowerCase().trim()))"
                     wire:click="selectConversation('{{ (string) $conversation['id'] }}')"
-                    @click="uiActiveId = '{{ (string) $conversation['id'] }}';
+                    @click="if (uiActiveId === '{{ (string) $conversation['id'] }}') return;
+                        uiActiveId = '{{ (string) $conversation['id'] }}';
                         previewName = $el.dataset.name || '';
                         previewEmail = $el.dataset.email || '';
                         previewImage = $el.dataset.image || '';

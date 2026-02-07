@@ -688,7 +688,7 @@ class BookingService
     }
     public function upcomingBookingsCustomer($customerId)
     {
-        $bookings = Booking::with('slots', 'provider', 'customer','providerService.service')
+        $bookings = Booking::with('slots', 'provider', 'customer','providerService.service','latestPendingReschedule')
             ->where('customer_id', $customerId)
             ->where('status', 'confirmed')
             ->paginate(10);

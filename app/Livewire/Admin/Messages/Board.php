@@ -684,6 +684,7 @@ class Board extends Component
             $this->loadingMessages = false;
             $this->messagesLimit = max($this->messagesLimit, count($this->messages));
             $this->hasMoreMessages = $this->messagesHasMoreCache[$conversationId] ?? false;
+            $this->dispatch('scroll-chat-bottom');
         } else {
             $this->messages = [];
             $this->messagesConversationId = null;
