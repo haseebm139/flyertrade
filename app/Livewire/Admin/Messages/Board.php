@@ -734,6 +734,9 @@ class Board extends Component
     {
         $this->composeType = $type === 'message' ? 'message' : 'email';
         $this->showCompose = true;
+        if ($this->composeType === 'message' && empty($this->selectedConversationIds) && $this->activeConversationId) {
+            $this->selectedConversationIds = [$this->activeConversationId];
+        }
     }
 
     public function closeCompose(): void
@@ -783,7 +786,13 @@ class Board extends Component
     public function sendComposeMessage(): void
     {
         $messageText = trim($this->composeMessageText);
-        if ($messageText === '' || empty($this->selectedConversationIds)) {
+        if ($messageText === '') {
+            return;
+        }
+        if (empty($this->selectedConversationIds) && $this->activeConversationId) {
+            $this->selectedConversationIds = [$this->activeConversationId];
+        }
+        if (empty($this->selectedConversationIds)) {
             return;
         }
 
@@ -793,7 +802,8 @@ class Board extends Component
         $createdAtTs = now()->timestamp;
 
         $database = $this->firestoreDatabase();
-        foreach ($this->selectedConversationIds as $conversationId) {
+        $conversationIds = array_values(array_unique($this->selectedConversationIds));
+        foreach ($conversationIds as $conversationId) {
             $conversationId = (string) $conversationId;
             if ($conversationId === '') {
                 continue;

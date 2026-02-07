@@ -152,7 +152,7 @@ class BookingController extends BaseController
 
     public function respondReschedule(Request $request, $id)
     {
-        $booking = Booking::with('slots')->find($id);
+        $booking = Booking::with('slots', 'provider', 'customer','providerService.service','latestPendingReschedule')->find($id);
         if (!$booking) {
             return $this->sendError('Booking not found', 404);
         }

@@ -505,6 +505,9 @@ class BookingService
             ]; 
         }
 
+        // Keep last reschedule available in API response
+        $booking->setRelation('latestPendingReschedule', $reschedule);
+
         return [
             'error' => false, 
             'reschedule' => $reschedule,
