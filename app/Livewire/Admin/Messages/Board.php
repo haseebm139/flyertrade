@@ -67,10 +67,14 @@ class Board extends Component
     public function sendReply(): void
     {
         $messageText = trim($this->replyMessage);
+        $this->resetErrorBag(['replyMessage']);
         if (
             !$this->activeConversationId
             || ($messageText === '' && !$this->replyMediaUrl && !$this->replyMediaFile)
         ) {
+            if ($messageText === '' && !$this->replyMediaUrl && !$this->replyMediaFile) {
+                $this->addError('replyMessage', 'Message or attachment is required.');
+            }
             return;
         }
 
@@ -917,7 +921,9 @@ class Board extends Component
     public function sendComposeMessage(): void
     {
         $messageText = trim($this->composeMessageText);
+        $this->resetErrorBag(['composeMessageText']);
         if ($messageText === '' && !$this->composeMediaFile && !$this->composeMediaUrl) {
+            $this->addError('composeMessageText', 'Message or attachment is required.');
             return;
         }
         if (empty($this->selectedConversationIds) && $this->activeConversationId) {
@@ -1030,12 +1036,14 @@ class Board extends Component
     {
         $subject = trim($this->composeEmailSubject);
         $body = trim($this->composeEmailBody);
+        $this->resetErrorBag(['composeEmailSubject', 'composeEmailBody']);
         $messageText = $subject;
         if ($body !== '') {
             $messageText = $messageText === '' ? $body : $messageText . "\n\n" . $body;
         }
         $messageText = trim($messageText);
         if ($messageText === '') {
+            $this->addError('composeEmailSubject', 'Subject or body is required.');
             return;
         }
 

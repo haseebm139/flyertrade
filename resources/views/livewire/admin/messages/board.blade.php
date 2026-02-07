@@ -82,8 +82,11 @@
                             <input type="text" class="subject-input" placeholder="Subject"
                                 wire:model.defer="composeEmailSubject">
                             <textarea class="message-area" placeholder="" wire:model.defer="composeEmailBody"></textarea>
-                        </div>
 
+                        </div>
+                        @error('composeEmailSubject')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
                         <div class="compose-footer">
                             <span class="attachment">
                                 <div class="file-upload">
@@ -92,8 +95,8 @@
                                     <input type="file">
                                 </div>
                             </span>
-                            <button class="send-btn" type="button" wire:click="sendComposeEmail"
-                                wire:loading.attr="disabled" wire:target="sendComposeEmail">
+                            <button class="send-btn" type="button" wire:click="sendComposeEmail" wire:loading.attr="disabled"
+                                wire:target="sendComposeEmail">
                                 <span wire:loading.remove wire:target="sendComposeEmail">Send</span>
                                 <span class="btn-loading" wire:loading wire:target="sendComposeEmail">
                                     <span class="btn-spinner" aria-hidden="true"></span>
@@ -149,6 +152,7 @@
 
                         <div class="compose-body">
                             <textarea class="message-area" placeholder="Type your message" wire:model.defer="composeMessageText"></textarea>
+
                             @if ($composeMediaPreviewUrl)
                                 <div class="chat-attachment-preview">
                                     @if ($composeMediaPreviewType === 'image')
@@ -163,6 +167,9 @@
                                     </button>
                                 </div>
                             @endif
+                            @error('composeMessageText')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
                         </div>
 
                         <div class="compose-footer">
@@ -391,6 +398,9 @@
                             </template>
                             <input id="chatInput" wire:model="replyMessage" wire:keydown.enter.prevent="sendReply"
                                 type="text" placeholder="Reply message......">
+                            @error('replyMessage')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
                             <div class="footer-icons">
                                 {{-- <img src="{{ asset('assets/images/icons/emoji.svg') }}" alt="">
                             <img src="{{ asset('assets/images/icons/txt.svg') }}" alt=""> --}}

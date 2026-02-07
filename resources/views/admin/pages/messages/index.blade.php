@@ -7,6 +7,7 @@
          
         .search-bars input {
              background: url("/assets/images/icons/search-icon_chat.svg") no-repeat 0.8vw center;
+             background-size: 1vw;
         }
         .sidebars {
             background: #F6F6F6;
