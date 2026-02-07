@@ -33,7 +33,8 @@
 
         <div class="messages-email-container">
             @include('livewire.admin.messages.partials.sidebar')
-        @if ($showCompose && $composeType === 'email')
+        @switch($this->panelState)
+            @case('compose_email')
             <div class="email-compose" id="emailComposePanel">
                 <div class="compose-header">
                     <div class="heading-with-icon">
@@ -71,7 +72,8 @@
                     <button class="send-btn" type="button">Send</button>
                 </div>
             </div>
-        @elseif ($showCompose && $composeType === 'message')
+            @break
+            @case('compose_message')
             <div class="email-compose" id="messageComposePanel">
                 <div class="compose-header">
                     <div class="heading-with-icon">
@@ -109,10 +111,10 @@
                     <button class="send-btn" type="button">Send</button>
                 </div>
             </div>
-        @else
-            @if ($this->hasActiveConversation)
-                <div class="message-chat-theme" id="messageChatPanel" wire:key="chat-body-{{ $activeConversationId }}"
-                    wire:init="initConversation" style="position: relative;">
+            @break
+            @case('chat')
+            <div class="message-chat-theme" id="messageChatPanel" wire:key="chat-body-{{ $activeConversationId }}"
+                wire:init="initConversation" style="position: relative;">
                 @if ($loadingMessages)
                     <div class="chat-loading-overlay">
                         <div class="chat-loading-spinner"></div>
@@ -330,7 +332,8 @@
                             src="{{ asset('assets/images/icons/send-chat-icon.svg') }}" alt=""></button>
                 </div>
             </div>
-            @else
+            @break
+            @case('empty')
             <section class="content-panel" id="messageEmptyPanel">
                 <div class="display-chat">
                     <div class="chat-display-img">
@@ -339,8 +342,8 @@
                     </div>
                 </div>
             </section>
-            @endif
-        @endif
+            @break
+        @endswitch
         </div>
     </div>
 </div>

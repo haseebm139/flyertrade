@@ -739,6 +739,19 @@ class Board extends Component
         $this->showCompose = false;
     }
 
+    public function getPanelStateProperty(): string
+    {
+        if ($this->showCompose) {
+            return $this->composeType === 'message' ? 'compose_message' : 'compose_email';
+        }
+
+        if ($this->hasActiveConversation) {
+            return 'chat';
+        }
+
+        return 'empty';
+    }
+
     public function selectPreviousConversation(): void
     {
         $index = $this->getActiveConversationIndex();
