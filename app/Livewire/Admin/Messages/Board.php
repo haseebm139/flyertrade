@@ -50,6 +50,7 @@ class Board extends Component
     public ?string $replyMediaUrl = null;
     public ?string $replyMediaType = null;
     public $replyMediaFile = null;
+    public string $composeMessageText = '';
     public bool $selectAll = false;
     public array $selectedConversationIds = [];
     public string $filterStatus = 'all';
@@ -751,6 +752,137 @@ class Board extends Component
         }
 
         return 'empty';
+    }
+
+    public function getSelectedRecipientsProperty(): array
+    {
+        $source = !empty($this->cachedConversations) ? $this->cachedConversations : $this->allConversations;
+        if (empty($source) || empty($this->selectedConversationIds)) {
+            return [];
+        }
+
+        $indexed = [];
+        foreach ($source as $conversation) {
+            $id = (string) ($conversation['id'] ?? '');
+            if ($id !== '') {
+                $indexed[$id] = $conversation;
+            }
+        }
+
+        $recipients = [];
+        foreach ($this->selectedConversationIds as $id) {
+            $id = (string) $id;
+            if (isset($indexed[$id])) {
+                $recipients[] = $indexed[$id];
+            }
+        }
+
+        return $recipients;
+    }
+
+    public function sendComposeMessage(): void
+    {
+        $messageText = trim($this->composeMessageText);
+        if ($messageText === '' || empty($this->selectedConversationIds)) {
+            return;
+        }
+
+        $senderName = auth()->user()?->name ?? 'Support Team';
+        $senderId = auth()->id();
+        $senderImage = 'assets/images/avatar/default.png';
+        $createdAtTs = now()->timestamp;
+
+        $database = $this->firestoreDatabase();
+        foreach ($this->selectedConversationIds as $conversationId) {
+            $conversationId = (string) $conversationId;
+            if ($conversationId === '') {
+                continue;
+            }
+
+            $meta = $this->resolveConversationMeta($conversationId);
+            $receiverId = $meta['userId'] ?? null;
+            $receiverName = $meta['userName'] ?? 'Support Team';
+            $receiverImage = $meta['userImage'] ?? null;
+            $clientMessageId = (string) Str::uuid();
+
+            if ($database) {
+                $payload = [
+                    'message' => $messageText,
+                    'messageType' => 'text',
+                    'client_message_id' => $clientMessageId,
+                    'senderId' => $senderId,
+                    'senderName' => $senderName,
+                    'senderImage' => $senderImage,
+                    'receiverId' => $receiverId,
+                    'receiverName' => $receiverName,
+                    'receiverImage' => $receiverImage,
+                    'isRead' => false,
+                    'senderType' => 'support',
+                    'createdAt' => new Timestamp(new \DateTime()),
+                    'updatedAt' => new Timestamp(new \DateTime()),
+                    'seen' => false,
+                ];
+
+                $database
+                    ->collection('support_chat')
+                    ->document($conversationId)
+                    ->collection('messages')
+                    ->add($payload);
+
+                $database->collection('support_chat')
+                    ->document($conversationId)
+                    ->update([
+                        ['path' => 'lastMessage', 'value' => $messageText],
+                        ['path' => 'lastMessageTime', 'value' => new Timestamp(new \DateTime())],
+                        ['path' => 'lastMessageSenderId', 'value' => 'support'],
+                        ['path' => 'unreadCount.support', 'value' => 0],
+                    ]);
+            } else {
+                $this->sendReplyViaRest(
+                    $conversationId,
+                    $messageText,
+                    'text',
+                    $senderId,
+                    $senderName,
+                    $senderImage,
+                    $receiverId,
+                    $receiverName,
+                    $receiverImage,
+                    null,
+                    null,
+                    $clientMessageId
+                );
+            }
+
+            $this->updateConversationPreview($conversationId, $messageText, $createdAtTs);
+        }
+
+        $this->composeMessageText = '';
+        $this->showCompose = false;
+        $this->selectAll = false;
+        $this->selectedConversationIds = [];
+    }
+
+    private function resolveConversationMeta(string $id): array
+    {
+        $source = !empty($this->allConversations) ? $this->allConversations : $this->cachedConversations;
+        foreach ($source as $conversation) {
+            if ((string) ($conversation['id'] ?? '') === $id) {
+                return [
+                    'userName' => $conversation['userName'] ?? 'Unknown',
+                    'userEmail' => $conversation['userId'] ?? '',
+                    'userImage' => $conversation['userImage'] ?? 'assets/images/icons/five.svg',
+                    'userId' => $conversation['userId'] ?? null,
+                ];
+            }
+        }
+
+        return [
+            'userName' => 'Support',
+            'userEmail' => '',
+            'userImage' => 'assets/images/icons/five.svg',
+            'userId' => null,
+        ];
     }
 
     public function selectPreviousConversation(): void
