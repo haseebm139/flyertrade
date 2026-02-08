@@ -40,7 +40,7 @@ class ProviderController extends BaseController
         ]);
 
 
-        $providers = $this->providerRepo->getProviders($filters,auth()->user()->id, $request->get('limit', 20));
+        $providers = $this->providerRepo->getProviders($filters,auth()->user()->id, $request->get('limit', 10));
 
         return $this->sendResponse($providers, 'Providers');
     }

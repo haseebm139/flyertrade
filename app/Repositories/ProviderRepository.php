@@ -322,7 +322,7 @@ class ProviderRepository
         // =========================
         // 📄 PAGINATION
         // =========================
-        $perPage = $filters['per_page'] ?? 10;
+        $perPage = $filters['per_page'] ?? 50;
         $providers = $query->paginate($perPage);
 
         // =========================
