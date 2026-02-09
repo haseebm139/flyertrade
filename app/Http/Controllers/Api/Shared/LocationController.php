@@ -13,29 +13,35 @@ class LocationController extends BaseController
      */
     public function countries()
     {
+        try {
+            //code...
+            $countries = DB::table('countries')
+                ->leftJoin('currencies', 'countries.id', '=', 'currencies.country_id')
+                ->select(
+                    'countries.id', 
+                    'countries.name', 
+                    'countries.emoji', 
+                    'countries.iso2', 
+                    'countries.phone_code',
+                    'currencies.code as currency_code',
+                    'currencies.symbol as currency_symbol',
+                    'currencies.name as currency_name'
+                )
+                ->where('countries.status', 1)
+                ->orderBy('countries.name')
+                ->get()
+                ->map(function($country) {
+                    // Local PNG Flag URL
+                    $country->flag_url = "assets/images/flags/" . strtolower($country->iso2) . ".png";
+                    return $country;
+                });
+            
+            return $this->sendResponse($countries, 'Countries fetched successfully.');
+        } catch (\Throwable $th) {
+            return $this->sendError('Something went wrong in countries api call.');
+            //throw $th;
+        }
         // Querying directly from DB to include the new 'emoji' column and joining currencies
-        $countries = DB::table('countries')
-            ->leftJoin('currencies', 'countries.id', '=', 'currencies.country_id')
-            ->select(
-                'countries.id', 
-                'countries.name', 
-                'countries.emoji', 
-                'countries.iso2', 
-                'countries.phone_code',
-                'currencies.code as currency_code',
-                'currencies.symbol as currency_symbol',
-                'currencies.name as currency_name'
-            )
-            ->where('countries.status', 1)
-            ->orderBy('countries.name')
-            ->get()
-            ->map(function($country) {
-                // Local PNG Flag URL
-                $country->flag_url = "assets/images/flags/" . strtolower($country->iso2) . ".png";
-                return $country;
-            });
-        
-        return $this->sendResponse($countries, 'Countries fetched successfully.');
     }
 
  
