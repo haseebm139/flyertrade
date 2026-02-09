@@ -18,7 +18,9 @@ Route::get('/test-email', function () {
         return "❌ Failed to send email. Error: " . $e->getMessage();
     }
 });
-
+Route::get('test',function () {
+    return view('emails.custom_template');
+});
 Route::get('/testing', function () {
     dd('Hello world');
 });

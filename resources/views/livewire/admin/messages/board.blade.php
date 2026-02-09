@@ -85,8 +85,9 @@
                         <div class="compose-body">
                             <input type="text" class="subject-input" placeholder="Subject"
                                 wire:model.debounce.300ms="composeEmailSubject">
-                            <textarea class="message-area" placeholder=""
-                                wire:model.debounce.300ms="composeEmailBody"></textarea>
+                            <div wire:ignore x-data x-init="window.initComposeEditor && window.initComposeEditor()">
+                                <textarea class="message-area" id="composeEmailBody" placeholder="">{{ $composeEmailBody }}</textarea>
+                            </div>
 
                         </div>
                         @error('composeEmailSubject')
@@ -100,8 +101,7 @@
                                     <input type="file">
                                 </div>
                             </span>
-                            <button class="send-btn" type="button" wire:click="sendComposeEmail"
-                                @disabled(trim($composeEmailSubject) === '' && trim($composeEmailBody) === '')
+                            <button class="send-btn" type="button" wire:click="sendComposeEmail" @disabled(trim($composeEmailSubject) === '' && trim($composeEmailBody) === '')
                                 wire:loading.attr="disabled" wire:target="sendComposeEmail">
                                 <span wire:loading.remove wire:target="sendComposeEmail">Send</span>
                                 <span class="btn-loading" wire:loading wire:target="sendComposeEmail">
@@ -157,8 +157,7 @@
                         </div>
 
                         <div class="compose-body">
-                        <textarea class="message-area" placeholder="Type your message"
-                            wire:model.debounce.300ms="composeMessageText"></textarea>
+                            <textarea class="message-area" placeholder="Type your message" wire:model.debounce.300ms="composeMessageText"></textarea>
 
                             @if ($composeMediaPreviewUrl)
                                 <div class="chat-attachment-preview">
@@ -187,9 +186,9 @@
                                     <input type="file" accept="image/*,video/*" wire:model="composeMediaFile">
                                 </div>
                             </span>
-                        <button class="send-btn" type="button" wire:click="sendComposeMessage"
-                            @disabled(trim($composeMessageText) === '' && !$composeMediaFile && !$composeMediaUrl)
-                            wire:loading.attr="disabled" wire:target="sendComposeMessage,composeMediaFile">
+                            <button class="send-btn" type="button" wire:click="sendComposeMessage"
+                                @disabled(trim($composeMessageText) === '' && !$composeMediaFile && !$composeMediaUrl) wire:loading.attr="disabled"
+                                wire:target="sendComposeMessage,composeMediaFile">
                                 <span wire:loading.remove wire:target="sendComposeMessage,composeMediaFile">Send</span>
                                 <span class="btn-loading" wire:loading wire:target="sendComposeMessage,composeMediaFile">
                                     <span class="btn-spinner" aria-hidden="true"></span>
@@ -271,12 +270,9 @@
                         </div>
 
                         <div class="chat-body" id="chatBody" wire:poll.2000ms="pollMessages"
-                            x-on:scroll="nearBottom = checkNearBottom($event.target)"
-                            x-init="nearBottom = checkNearBottom($el)">
+                            x-on:scroll="nearBottom = checkNearBottom($event.target)" x-init="nearBottom = checkNearBottom($el)">
                             @if ($newIncomingCount > 0)
-                                <button type="button" class="chat-jump-btn"
-                                    x-show="!nearBottom"
-                                    x-cloak
+                                <button type="button" class="chat-jump-btn" x-show="!nearBottom" x-cloak
                                     @click="$wire.markMessagesSeen()">
                                     New {{ $newIncomingCount }}
                                 </button>
@@ -440,8 +436,8 @@
                                 </span>
                             </div>
                             <button id="sendBtn" class="send-btn" type="button" wire:click="sendReply"
-                                @disabled(trim($replyMessage) === '' && !$replyMediaFile && !$replyMediaUrl)
-                                wire:loading.attr="disabled" wire:target="sendReply,replyMediaFile">
+                                @disabled(trim($replyMessage) === '' && !$replyMediaFile && !$replyMediaUrl) wire:loading.attr="disabled"
+                                wire:target="sendReply,replyMediaFile">
                                 <span class="btn-icon" wire:loading.remove wire:target="sendReply,replyMediaFile">
                                     <img src="{{ asset('assets/images/icons/send-chat-icon.svg') }}" alt="">
                                 </span>

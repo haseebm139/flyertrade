@@ -10,7 +10,7 @@
             outline: 0px
         }
 
-        
+
 
         .sidebars {
             background: #F6F6F6;
@@ -412,6 +412,46 @@
                     scrollChatBottom(false);
                 }
             });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const findComponent = () => {
+                const root = document.querySelector('[wire\\:id]');
+                return root ? Livewire.find(root.getAttribute('wire:id')) : null;
+            };
+
+            window.initComposeEditor = () => {
+                const el = document.getElementById('composeEmailBody');
+                if (!el || typeof CKEDITOR === 'undefined') return;
+                if (CKEDITOR.instances.composeEmailBody) return;
+
+                CKEDITOR.replace('composeEmailBody');
+                CKEDITOR.instances.composeEmailBody.on('change', function() {
+                    const component = findComponent();
+                    if (component) {
+                        component.set('composeEmailBody', CKEDITOR.instances.composeEmailBody.getData());
+                    }
+                });
+            };
+
+            window.initComposeEditor();
+
+            if (window.Livewire) {
+                Livewire.hook('message.processed', () => {
+                    window.initComposeEditor();
+                });
+
+                Livewire.on('clear-compose-editor', () => {
+                    if (CKEDITOR.instances.composeEmailBody) {
+                        CKEDITOR.instances.composeEmailBody.setData('');
+                    }
+                    const component = findComponent();
+                    if (component) {
+                        component.set('composeEmailBody', '');
+                    }
+                });
+            }
         });
     </script>
 @endpush

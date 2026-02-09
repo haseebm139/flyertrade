@@ -849,6 +849,7 @@ class Board extends Component
     {
         $this->showCompose = false;
         $this->searchCompose = '';
+        $this->dispatch('clear-compose-editor');
     }
 
     public function getPanelStateProperty(): string
@@ -1061,6 +1062,7 @@ class Board extends Component
 
         $this->composeEmailSubject = '';
         $this->composeEmailBody = '';
+        $this->dispatch('clear-compose-editor');
     }
 
     private function storeComposeAttachment(): void
