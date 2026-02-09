@@ -241,7 +241,7 @@ class ProviderRepository
             ])
             ->havingRaw(
                 'published_reviews_avg_rating >= ?',
-                [(float) $filters['min_rating']]
+                [(float) 1.0]
             );
         // =========================
         // 🔎 FILTERS
