@@ -238,8 +238,11 @@ class ProviderRepository
                 )
                 ->whereColumn('receiver_id', 'users.id')
                 ->where('status', 'published')
-            ]);
-
+            ])
+            ->havingRaw(
+                'published_reviews_avg_rating >= ?',
+                [(float) $filters['min_rating']]
+            );
         // =========================
         // 🔎 FILTERS
         // =========================
