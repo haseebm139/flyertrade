@@ -278,11 +278,11 @@ class ProviderRepository
         // =========================
         // ⭐ RATING FILTER (SAFE)
         // =========================
+        $query->havingRaw(
+            'published_reviews_avg_rating >= ?',
+            [(float) $filters['min_rating']??1]
+        );
         if (isset($filters['min_rating'])) {
-            $query->havingRaw(
-                'published_reviews_avg_rating >= ?',
-                [(float) $filters['min_rating']]
-            );
         }
 
         // =========================
@@ -322,7 +322,7 @@ class ProviderRepository
         // =========================
         // 📄 PAGINATION
         // =========================
-        $perPage = $filters['per_page'] ?? 50;
+        $perPage = $filters['per_page'] ?? 10;
         $providers = $query->paginate($perPage);
 
         // =========================
