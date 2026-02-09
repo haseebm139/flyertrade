@@ -80,6 +80,15 @@ class AuthController extends BaseController
             return $this->sendError('Invalid provider');
         }  
         $user = User::where('email', $request->email)->first();
+        $role = $request->role ?? null;
+        if (!$role && $user) {
+            $role = $user->role_id ?? null;
+        }
+        if (!$role) {
+            $role = 'customer';
+        }
+        // Create or update user with role (role mismatch handled inside)
+        $user = $this->createOrUpdateUserWithRole($user, $request, $role);
         if ($user) {
             $user->update([
                 $providerField => $request->social_id,
@@ -91,11 +100,8 @@ class AuthController extends BaseController
                 'state'        => $request->state  ?? $user->state ?? null,
                 'zip'          => $request->zip     ?? $user->zip ?? null,
                 'address'      => $request->address ?? $user->address ?? null,
-
             ]);
         }
-        // Create or update user with role
-        $user = $this->createOrUpdateUserWithRole($user, $request, $request->role);
 
         return $this->sendResponse([
             'token' => $user->createToken('guest_token')->plainTextToken,

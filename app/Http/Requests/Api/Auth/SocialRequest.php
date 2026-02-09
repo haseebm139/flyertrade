@@ -26,7 +26,7 @@ class SocialRequest extends FormRequest
             'name'      => 'required|string|max:255',
             'email'     => 'required|email',
             'password'  => 'nullable|string|min:8',
-            'role'      => 'required|in:customer,provider',
+            'role'      => 'nullable|in:customer,provider',
             'latitude'  => ['nullable', 'numeric', 'between:-90,90'],
             'longitude' => ['nullable', 'numeric', 'between:-180,180'],
             'country'   => ['nullable', 'string', 'max:100'],
