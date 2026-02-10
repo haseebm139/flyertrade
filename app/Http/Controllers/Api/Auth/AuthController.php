@@ -255,7 +255,15 @@ class AuthController extends BaseController
 
     public function logout()
     {
-        auth()->user()->fcm_token = null;
+        $user = auth()->user();
+
+        if (!$user) {
+            return $this->sendError('Unauthenticated', [], 401);
+        }
+
+        // Remove FCM token
+        $user->fcm_token = null;
+        $user->save();
         auth()->user()->tokens()->delete();
         return $this->sendResponse([], 'Logged out successfully');
     }
