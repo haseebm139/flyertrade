@@ -81,7 +81,7 @@ class ProviderRepository
             });
         }
         
-        // 🔹 Filter by Price Range (overlapping ranges)
+        // 🔹 Filter by Price Range (service range must be within)
         if (isset($filters['min_price'], $filters['max_price'])) {
             $min = (float) $filters['min_price'];
             $max = (float) $filters['max_price'];
@@ -90,8 +90,8 @@ class ProviderRepository
             }
 
             $query->whereHas('providerServices', function ($q) use ($min, $max) {
-                $q->where('rate_min', '<=', $max)
-                  ->where('rate_max', '>=', $min);
+                $q->where('rate_min', '>=', $min)
+                  ->where('rate_max', '<=', $max);
             });
         }
          
@@ -270,7 +270,7 @@ class ProviderRepository
             );
         }
 
-        // Price range (overlapping ranges)
+        // Price range (service range must be within)
         if (isset($filters['min_price'], $filters['max_price'])) {
             $min = (float) $filters['min_price'];
             $max = (float) $filters['max_price'];
@@ -279,8 +279,8 @@ class ProviderRepository
             }
 
             $query->whereHas('providerServices', function ($q) use ($min, $max) {
-                $q->where('rate_min', '<=', $max)
-                  ->where('rate_max', '>=', $min);
+                $q->where('rate_min', '>=', $min)
+                  ->where('rate_max', '<=', $max);
             });
         }
 
