@@ -481,21 +481,21 @@ class BookingService
             }
             
              
-            $percentage = (float) \App\Models\Setting::get('service_charge_percentage', 25);
-            $hourlyRate = (float) ($booking->hourly_rate ?? 0);
-            $recalculatedTotal = $booking->booking_type === 'hourly'
-                ? $this->calculateHourlyPrice($hourlyRate, $totalMinutes)
-                : $booking->total_price;
-            $serviceCharges = ($recalculatedTotal * $percentage) / 100;
-            $netAmount = max(0, $recalculatedTotal - $serviceCharges);
+            // $percentage = (float) \App\Models\Setting::get('service_charge_percentage', 25);
+            // $hourlyRate = (float) ($booking->hourly_rate ?? 0);
+            // $recalculatedTotal = $booking->booking_type === 'hourly'
+            //     ? $this->calculateHourlyPrice($hourlyRate, $totalMinutes)
+            //     : $booking->total_price;
+            // $serviceCharges = ($recalculatedTotal * $percentage) / 100;
+            // $netAmount = max(0, $recalculatedTotal - $serviceCharges);
 
             $booking->update([
                 'status' => 'confirmed',
                 'reschedule_response' => 'accepted',
                 'booking_working_minutes' => $totalMinutes,
-                'total_price' => $recalculatedTotal,
-                'service_charges' => $serviceCharges,
-                'net_amount' => $netAmount,
+                // 'total_price' => $recalculatedTotal,
+                // 'service_charges' => $serviceCharges,
+                // 'net_amount' => $netAmount,
             ]);
             $reschedule->update(['status' => 'accepted']);
             
