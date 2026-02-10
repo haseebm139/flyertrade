@@ -68,9 +68,11 @@ class NotificationService
              $shouldSendPush = !empty($user->fcm_token);
              if ($shouldSendPush) {
                  if ($category === 'promotions') {
-                     $shouldSendPush = $user->is_promo_option_notification === true;
+                    $shouldSendPush = $user->is_promo_option_notification === true;
                  } elseif ($category === 'bookings') {
-                     $shouldSendPush = $user->is_booking_notification === true;
+                    $shouldSendPush = $user->is_booking_notification === true;
+                 }else{
+                    $shouldSendPush = $user->is_booking_notification === true;
                  }
              }
      
