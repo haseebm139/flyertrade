@@ -255,6 +255,7 @@ class AuthController extends BaseController
 
     public function logout()
     {
+        auth()->user()->fcm_token = null;
         auth()->user()->tokens()->delete();
         return $this->sendResponse([], 'Logged out successfully');
     }
