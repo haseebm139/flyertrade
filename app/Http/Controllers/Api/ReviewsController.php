@@ -19,7 +19,7 @@ class ReviewsController extends BaseController
     {
         $validator = Validator::make($request->all(), [
             'rating' => 'required|integer|min:1|max:5',
-            'review' => 'nullable|string|max:1000',
+            'review' => 'nullable|string',
             'booking_id' => 'required|exists:bookings,id',
             
         ]);
