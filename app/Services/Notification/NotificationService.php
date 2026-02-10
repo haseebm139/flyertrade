@@ -413,7 +413,7 @@ class NotificationService
     {
         $customer = User::find($transaction->customer_id);
         if ($customer) {
-            $amount = $transaction->amount?? 0 + $transaction->service_charges ?? 0;
+            $amount = $transaction->amount?? 0 ;
             $this->send(
                 $customer,
                 'payment_success',
@@ -432,18 +432,19 @@ class NotificationService
 
         // Notify provider
         $provider = User::find($transaction->provider_id);
+        $amount = $transaction->amount?? 0 ;
         if ($provider) {
             $amount = $transaction->amount?? 0 + $transaction->service_charges ?? 0;
             $this->send(
                 $provider,
                 'payment_success',
                 'Payment Received',
-                "You have received payment of {$transaction->currency} {$transaction->net_amount}",
+                "You have received payment of {$transaction->currency} {$amount}",
                 'provider',
                 $transaction,
                 [
                     'transaction_id' => $transaction->id,
-                    'net_amount' => $transaction->net_amount,
+                    'amount' => $amount,
                     'currency' => $transaction->currency,
                     'booking_id' => $transaction->booking_id,
                 ]
@@ -458,16 +459,17 @@ class NotificationService
     {
         $customer = User::find($transaction->customer_id);
         if ($customer) {
+            $amount = $transaction->amount?? 0 ;
             $this->send(
                 $customer,
                 'payment_failed',
                 'Payment Failed',
-                "Payment of {$transaction->currency} {$transaction->amount} failed. Please try again.",
+                "Payment of {$transaction->currency} {$amount} failed. Please try again.",
                 'customer',
                 $transaction,
                 [
                     'transaction_id' => $transaction->id,
-                    'amount' => $transaction->amount,
+                    'amount' => $amount,
                     'currency' => $transaction->currency,
                     'failure_reason' => $transaction->failure_reason,
                 ]
@@ -1121,16 +1123,17 @@ class NotificationService
     {
         $customer = User::find($transaction->customer_id);
         if ($customer) {
+            $amount = $transaction->amount?? 0 ;
             $this->send(
                 $customer,
                 'refund_processed',
                 'Refund Processed',
-                "Refund of {$transaction->currency} {$transaction->amount} has been processed successfully",
+                "Refund of {$transaction->currency} {$amount} has been processed successfully",
                 'customer',
                 $transaction,
                 [
                     'transaction_id' => $transaction->id,
-                    'amount' => $transaction->amount,
+                    'amount' => $amount,
                     'currency' => $transaction->currency,
                     'booking_id' => $transaction->booking_id,
                     'action_url' => "/transactions/{$transaction->id}"
@@ -1142,14 +1145,16 @@ class NotificationService
 
         // Notify admin
         $bookingRef = $transaction->booking ? $transaction->booking->booking_ref : 'N/A';
+        $amount = $transaction->amount?? 0 ;
         $this->sendToAdmins(
             'refund_processed',
             'Refund Processed',
-            "Refund of {$transaction->currency} {$transaction->amount} processed for booking #{$bookingRef}",
+            "Refund of {$transaction->currency} {$amount} processed for booking #{$bookingRef}",
             $transaction,
             [
                 'transaction_id' => $transaction->id,
                 'booking_id' => $transaction->booking_id,
+                'amount' => $amount,
                 'action_url' => route('transaction.index')
             ],
             NotificationIcon::REFUND_PROCESSED,
@@ -1164,9 +1169,10 @@ class NotificationService
     {
         $customer = User::find($transaction->customer_id);
         if ($customer) {
+            $amount = $transaction->amount?? 0 ;
             $message = $reason 
-                ? "Refund of {$transaction->currency} {$transaction->amount} failed: {$reason}"
-                : "Refund of {$transaction->currency} {$transaction->amount} failed";
+                ? "Refund of {$transaction->currency} {$amount} failed: {$reason}"
+                : "Refund of {$transaction->currency} {$amount} failed";
             
             $this->send(
                 $customer,
@@ -1177,7 +1183,7 @@ class NotificationService
                 $transaction,
                 [
                     'transaction_id' => $transaction->id,
-                    'amount' => $transaction->amount,
+                    'amount' => $amount,
                     'currency' => $transaction->currency,
                     'booking_id' => $transaction->booking_id,
                     'failure_reason' => $reason,
