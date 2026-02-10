@@ -59,11 +59,12 @@ class BookingController extends BaseController
                 // Calculate service charges based on the provided price
                 $commissionPercentage = (float) Setting::get('service_charge_percentage', 25) ; 
                 $serviceCharges = ($extensionPrice * $commissionPercentage) / 100;
-
+                
                 // Update the booking
                 $booking->increment('booking_working_minutes', $duration);
                 $booking->increment('total_price', $extensionPrice);
                 $booking->increment('service_charges', $serviceCharges);
+                $booking->increment('net_amount', max(0, $extensionPrice - $serviceCharges));
 
                 return $this->sendResponse($booking->refresh(), 'Booking extended successfully.');
             });

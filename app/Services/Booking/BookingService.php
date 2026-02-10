@@ -176,8 +176,7 @@ class BookingService
                 'booking_working_minutes' => $totalMinutes,
                 'total_price' => $data['total_price'] ,
                 'service_charges' => $serviceCharges,
-                'net_amount' => $netAmount,
-                'net_amount' => $data['total_price'] - $serviceCharges,
+                'net_amount' => $netAmount, 
                 // 'stripe_payment_intent_id' => $intent->id,
                 // 'stripe_payment_method_id' => $data['payment_method_id'],
                 // 'paid_at' => $intent->status === 'succeeded' ? now() : null,
@@ -482,9 +481,21 @@ class BookingService
             }
             
              
+            $percentage = (float) \App\Models\Setting::get('service_charge_percentage', 25);
+            $hourlyRate = (float) ($booking->hourly_rate ?? 0);
+            $recalculatedTotal = $booking->booking_type === 'hourly'
+                ? $this->calculateHourlyPrice($hourlyRate, $totalMinutes)
+                : $booking->total_price;
+            $serviceCharges = ($recalculatedTotal * $percentage) / 100;
+            $netAmount = max(0, $recalculatedTotal - $serviceCharges);
+
             $booking->update([
                 'status' => 'confirmed',
                 'reschedule_response' => 'accepted',
+                'booking_working_minutes' => $totalMinutes,
+                'total_price' => $recalculatedTotal,
+                'service_charges' => $serviceCharges,
+                'net_amount' => $netAmount,
             ]);
             $reschedule->update(['status' => 'accepted']);
             
@@ -787,9 +798,9 @@ class BookingService
             'transaction_ref' => Transaction::generateRef(),
             'type' => 'payment',
             'status' => 'succeeded',
-            'amount' => $booking->total_price,
+            'amount' => $booking->total_price ?? 0,
             'service_charges' => $booking->service_charges ?? 0,
-            'net_amount' => max(0, $booking->total_price - ($booking->service_charges ?? 0)),
+            'net_amount' => $booking->net_amount ?? 0,
             'currency' => strtoupper($currency),
             'stripe_payment_intent_id' => $intent->id,
             'stripe_payment_method_id' => $paymentMethod->stripe_payment_method_id,
