@@ -13,7 +13,7 @@ use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\MediaController;
 use App\Http\Controllers\Api\Shared\NotificationController;
 use App\Http\Controllers\Api\Shared\LocationController;
-
+ 
 Route::post('stripe/webhook', [StripeWebhookController::class, 'handle']);
 
 // Public Location APIs
@@ -39,6 +39,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('location', [AuthController::class,'updateLocation']);
     Route::post('logout', [AuthController::class,'logout']);
     Route::post('/change-password', [AuthController::class,'changePassword']);
+    Route::post('logout', [AuthController::class, 'logout']);
 });
 
 

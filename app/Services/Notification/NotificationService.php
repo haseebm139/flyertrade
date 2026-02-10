@@ -7,8 +7,7 @@ use App\Models\User;
 use App\Helpers\NotificationIcon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Services\FirebaseService;
-
+use App\Services\FirebaseService; 
 class NotificationService
 {
     protected $firebaseService;
@@ -23,6 +22,7 @@ class NotificationService
      */
     public function sendPushNotification($fcmToken, $title, $message, array $data = [])
     {
+        Log::info('Sending FCM push notification'.$fcmToken);
         return $this->firebaseService->sendToToken($fcmToken, $title, $message, $data);
     }
 

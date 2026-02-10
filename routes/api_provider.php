@@ -21,8 +21,7 @@ Route::middleware('auth:sanctum')->controller(ProviderBookingActionController::c
 Route::prefix('provider')->group(function () {
 
 
-  Route::middleware('auth:sanctum')->group(function () {
-    Route::post('logout', [ApiAuthController::class, 'logout']);
+  Route::middleware('auth:sanctum')->group(function () { 
 
     Route::controller(ProfileController::class)->group(function () {
         Route::get('/profile/{id}', 'show');
