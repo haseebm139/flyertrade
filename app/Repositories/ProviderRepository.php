@@ -314,7 +314,8 @@ class ProviderRepository
         // =========================
         // 🔥 SORTING
         // =========================
-        $query->orderByRaw('published_reviews_avg_rating = 0') // 0-rating last
+        // Show providers with reviews first, then by rating
+        $query->orderByRaw('published_reviews_count > 0 DESC')
             ->orderByDesc('published_reviews_avg_rating');
 
         // Bookmark flag
