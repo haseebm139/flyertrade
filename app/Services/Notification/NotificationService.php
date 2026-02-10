@@ -62,26 +62,33 @@ class NotificationService
             'notifiable_id' => $notifiable ? $notifiable->id : null,
             'data' => $data,
         ]);
-         if (!$sendPush) {
+       
+         if ($sendPush) {
              
              // Send FCM push notification if user has a token and preferences allow
              $shouldSendPush = !empty($user->fcm_token);
-             if ($shouldSendPush) {
-                 if ($category === 'promotions') {
-                    $shouldSendPush = $user->is_promo_option_notification === true;
-                 } elseif ($category === 'bookings') {
-                    $shouldSendPush = $user->is_booking_notification === true;
-                 }else{
-                    $shouldSendPush = $user->is_booking_notification === true;
+             
+             if ($shouldSendPush) { 
+                 if($user->is_booking_notification == true ){
+                     
+                         $this->sendPushNotification($user->fcm_token, $title, $message, array_merge($data, [
+                         'notification_id' => $notification->id,
+                         'type' => $type
+                     ]));
                  }
+                //  if ($category === 'promotions') {
+                //     $shouldSendPush = $user->is_promo_option_notification === true;
+                //  } elseif ($category === 'bookings') {
+                //     $shouldSendPush = $user->is_booking_notification === true;
+                //  }else{
+                //     $shouldSendPush = $user->is_booking_notification === true;
+                //  }
+                //  if ($shouldSendPush) {
+                     
+                    
+                //  }
              }
-     
-             if ($shouldSendPush) {
-                 $this->sendPushNotification($user->fcm_token, $title, $message, array_merge($data, [
-                     'notification_id' => $notification->id,
-                     'type' => $type
-                 ]));
-             }
+                 
          }   
 
         return $notification;
@@ -277,6 +284,7 @@ class NotificationService
      */
     public function notifyBookingCreated($booking): void
     {
+        
         // Notify provider
         $provider = User::find($booking->provider_id);
         if ($provider) {
