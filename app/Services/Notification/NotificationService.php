@@ -413,16 +413,17 @@ class NotificationService
     {
         $customer = User::find($transaction->customer_id);
         if ($customer) {
+            $amount = $transaction->amount?? 0 + $transaction->service_charges ?? 0;
             $this->send(
                 $customer,
                 'payment_success',
                 'Payment Successful',
-                "Payment of {$transaction->currency} {$transaction->amount} for booking has been processed successfully",
+                "Payment of {$transaction->currency} {$amount} for booking has been processed successfully",
                 'customer',
                 $transaction,
                 [
                     'transaction_id' => $transaction->id,
-                    'amount' => $transaction->amount,
+                    'amount' => $amount,
                     'currency' => $transaction->currency,
                     'booking_id' => $transaction->booking_id,
                 ]
@@ -432,6 +433,7 @@ class NotificationService
         // Notify provider
         $provider = User::find($transaction->provider_id);
         if ($provider) {
+            $amount = $transaction->amount?? 0 + $transaction->service_charges ?? 0;
             $this->send(
                 $provider,
                 'payment_success',

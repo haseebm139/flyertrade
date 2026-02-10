@@ -160,6 +160,7 @@ class BookingService
             // Calculate service charges dynamically based on admin settings
             $percentage = (float) \App\Models\Setting::get('service_charge_percentage', 25); 
             $serviceCharges = ($data['total_price'] * $percentage) / 100;
+            $netAmount = max(0, $data['total_price'] - $serviceCharges);
               
             $booking = Booking::create([
                 'booking_ref' => $this->makeRef(),
@@ -175,6 +176,8 @@ class BookingService
                 'booking_working_minutes' => $totalMinutes,
                 'total_price' => $data['total_price'] ,
                 'service_charges' => $serviceCharges,
+                'net_amount' => $netAmount,
+                'net_amount' => $data['total_price'] - $serviceCharges,
                 // 'stripe_payment_intent_id' => $intent->id,
                 // 'stripe_payment_method_id' => $data['payment_method_id'],
                 // 'paid_at' => $intent->status === 'succeeded' ? now() : null,
@@ -252,6 +255,7 @@ class BookingService
             // 3. Calculate service charges (admin commission)
             $percentage = (float) Setting::get('service_charge_percentage', 25);
             $serviceCharges = ($data['total_price'] * $percentage) / 100;
+            $netAmount = max(0, $data['total_price'] - $serviceCharges);
 
             // 4. Create the booking with 'confirmed' status
             $booking = Booking::create([
@@ -266,6 +270,7 @@ class BookingService
                 'booking_working_minutes' => $totalMinutes,
                 'total_price' => $data['total_price'],
                 'service_charges' => $serviceCharges,
+                'net_amount' => $netAmount,
                 'status' => 'confirmed', // Automatically accepted
                 'confirmed_at' => now(),
                 'expires_at' => now()->addHours(2), // Standard expiry
