@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\Api\Provider\{ProfileController,ProviderServiceController,BookingController as ProviderBookingActionController,ChatController,PayoutController};
+use App\Http\Controllers\Api\Auth\AuthController as ApiAuthController;
 use App\Http\Controllers\Api\Customer\ProviderController;
 use App\Http\Controllers\Api\PaymentController;
 
@@ -21,6 +22,7 @@ Route::prefix('provider')->group(function () {
 
 
   Route::middleware('auth:sanctum')->group(function () {
+    Route::post('logout', [ApiAuthController::class, 'logout']);
 
     Route::controller(ProfileController::class)->group(function () {
         Route::get('/profile/{id}', 'show');
