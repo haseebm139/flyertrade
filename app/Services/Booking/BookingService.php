@@ -709,7 +709,7 @@ class BookingService
     {
         $bookings = Booking::with('slots', 'provider', 'customer','providerService.service','latestPendingReschedule')
             ->where('customer_id', $customerId)
-            ->where('status',['awaiting_provider','confirmed'])
+            ->whereIn('status', ['awaiting_provider','confirmed'])
             ->paginate(10);
         
         // Add late status for each booking
