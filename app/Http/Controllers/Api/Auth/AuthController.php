@@ -79,6 +79,7 @@ class AuthController extends BaseController
         if ($providerField !== 'google_id') {
             return $this->sendError('Invalid provider');
         }  
+        $password = null;
         $user = User::where('email', $request->email)->first();
         $role = $request->role ?? null;
         if (!$role && $user) {
@@ -86,6 +87,9 @@ class AuthController extends BaseController
         }
         if (!$role) {
             $role = 'customer';
+        }
+        if ($user) {
+            $password = $user->password;
         }
         // Create or update user with role (role mismatch handled inside)
         $user = $this->createOrUpdateUserWithRole($user, $request, $role);
@@ -100,6 +104,7 @@ class AuthController extends BaseController
                 'state'        => $request->state  ?? $user->state ?? null,
                 'zip'          => $request->zip     ?? $user->zip ?? null,
                 'address'      => $request->address ?? $user->address ?? null,
+                'password'     => $password
             ]);
         }
 
