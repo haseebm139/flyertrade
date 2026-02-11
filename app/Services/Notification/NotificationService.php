@@ -93,6 +93,46 @@ class NotificationService
 
         return $notification;
     }
+    public function sendOnlyPushNotification(
+        User $user,
+        string $type,
+        string $title,
+        string $message,
+        string $recipientType = 'customer',
+        $notifiable = null,
+        array $data = [],
+        ?string $icon = null,
+        ?string $category = null,
+        ?bool $sendPush = true
+    ) {         
+       
+         if ($sendPush) {
+             
+             // Send FCM push notification if user has a token and preferences allow
+             $shouldSendPush = !empty($user->fcm_token);
+             
+             if ($shouldSendPush) { 
+                 if($user->is_booking_notification == true ){
+                     
+                         $this->sendPushNotification($user->fcm_token, $title, $message, array_merge($data));
+                 }
+                //  if ($category === 'promotions') {
+                //     $shouldSendPush = $user->is_promo_option_notification === true;
+                //  } elseif ($category === 'bookings') {
+                //     $shouldSendPush = $user->is_booking_notification === true;
+                //  }else{
+                //     $shouldSendPush = $user->is_booking_notification === true;
+                //  }
+                //  if ($shouldSendPush) {
+                     
+                    
+                //  }
+             }
+                 
+         }   
+
+        return $notification ?? [];
+    }
 
     /**
      * Send notification to multiple users

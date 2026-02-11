@@ -221,7 +221,7 @@ class NotificationController extends BaseController
         }
         $data = $request->input('data', []);
 
-        $notification = $notificationService->send(
+        $notification = $notificationService->sendOnlyPushNotification(
             $targetUser,
             'new_message',
             $title,
