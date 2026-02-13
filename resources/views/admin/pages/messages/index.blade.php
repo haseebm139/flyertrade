@@ -417,14 +417,24 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const findComponent = () => {
-                const root = document.querySelector('[wire\\:id]');
-                return root ? Livewire.find(root.getAttribute('wire:id')) : null;
+                const textarea = document.getElementById('composeEmailBody');
+                const root = textarea ? textarea.closest('[data-compose-root]') : null;
+                const wireId = root ? root.getAttribute('wire:id') : null;
+                return wireId ? Livewire.find(wireId) : null;
             };
 
-            window.initComposeEditor = () => {
+            window.initComposeEditor = (attempts = 0) => {
                 const el = document.getElementById('composeEmailBody');
-                if (!el || typeof CKEDITOR === 'undefined') return;
-                if (CKEDITOR.instances.composeEmailBody) return;
+                if (!el || typeof CKEDITOR === 'undefined') {
+                    if (attempts < 5) {
+                        setTimeout(() => window.initComposeEditor(attempts + 1), 150);
+                    }
+                    return;
+                }
+
+                if (CKEDITOR.instances.composeEmailBody) {
+                    CKEDITOR.instances.composeEmailBody.destroy(true);
+                }
 
                 CKEDITOR.replace('composeEmailBody');
                 CKEDITOR.instances.composeEmailBody.on('change', function() {
@@ -439,6 +449,10 @@
 
             if (window.Livewire) {
                 Livewire.hook('message.processed', () => {
+                    window.initComposeEditor();
+                });
+
+                Livewire.on('init-compose-editor', () => {
                     window.initComposeEditor();
                 });
 

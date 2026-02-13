@@ -1,4 +1,4 @@
-<div class="messages-board-root">
+<div class="messages-board-root" data-compose-root>
     <div x-data="{
         uiActiveId: @entangle('activeConversationId'),
         messagesId: @entangle('messagesConversationId'),
@@ -91,6 +91,9 @@
 
                         </div>
                         @error('composeEmailSubject')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
+                        @error('composeEmailBody')
                             <small class="text-danger">{{ $message }}</small>
                         @enderror
                         <div class="compose-footer">
@@ -447,6 +450,52 @@
                             </button>
                         </div>
                     </div>
+                @break
+
+                @case('email_log')
+                    <div class="message-chat-theme" id="emailLogPanel" style="position: relative;">
+                        @if ($this->activeEmailLog)
+                            <div class="chat-header">
+                                <div class="heading-with-icon">
+                                    <h2 style="font-size: 1rem; font-weight: 600;">
+                                        {{ $this->activeEmailLog['subject'] ?? 'Message from Flyertrade' }}
+                                    </h2>
+                                </div>
+                                <div class="header-right">
+                                    <span>{{ $this->activeEmailLog['email'] ?? '' }}</span>
+                                </div>
+                            </div>
+                            <div class="chat-body" style="background:#f4f7f8;">
+                                {!! view('emails.custom_template', [
+                                    'subject' => $this->activeEmailLog['subject'] ?? 'Message from Flyertrade',
+                                    'body' => $this->activeEmailLog['body'] ?? '',
+                                    'name' => $this->activeEmailLog['name'] ?? 'Customer',
+                                ])->render() !!}
+                            </div>
+                        @else
+                            <div class="content-panel" id="emailEmptyPanel">
+                                <div class="display-chat">
+                                    <div class="chat-display-img">
+                                        <img src="{{ asset('assets/images/icons/chat-img.svg') }}" alt="Chat Icon"
+                                            class="chat-img">
+                                        <h2 class="chat-title">Select an email to view</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                @break
+
+                @case('email_log_empty')
+                    <section class="content-panel" id="emailEmptyPanel">
+                        <div class="display-chat">
+                            <div class="chat-display-img">
+                                <img src="{{ asset('assets/images/icons/chat-img.svg') }}" alt="Chat Icon"
+                                    class="chat-img">
+                                <h2 class="chat-title">Select an email to view</h2>
+                            </div>
+                        </div>
+                    </section>
                 @break
 
                 @case('empty')

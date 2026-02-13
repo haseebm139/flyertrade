@@ -7,8 +7,11 @@
         </div>
     @else
         <div class="search-bars">
-             
-            <input type="search" placeholder="Search" wire:model.debounce.300ms="search" />
+            @if ($filter === 'emails')
+                <input type="search" placeholder="Search by email" wire:model.debounce.300ms="emailSearch" />
+            @else
+                <input type="search" placeholder="Search" wire:model.debounce.300ms="search" />
+            @endif
         </div>
     @endif
 
@@ -89,52 +92,69 @@
                     </li>
                 @endforelse
             @else
-                @forelse ($conversations as $conversation)
-                    <li wire:key="conversation-{{ (string) $conversation['id'] }}"
-                        class="user-list-item {{ $activeConversationId === $conversation['id'] ? 'active' : '' }}"
-                        :class="{ 'active': uiActiveId === '{{ (string) $conversation['id'] }}' }"
-                        data-name="{{ $conversation['userName'] ?? 'Unknown' }}"
-                        data-email="{{ $conversation['userId'] ?? '' }}"
-                        wire:click="selectConversation('{{ (string) $conversation['id'] }}')"
-                        @click="if (uiActiveId === '{{ (string) $conversation['id'] }}') return;
-                            uiActiveId = '{{ (string) $conversation['id'] }}';
-                            previewName = $el.dataset.name || '';
-                            previewEmail = $el.dataset.email || '';
-                            previewImage = $el.dataset.image || '';
-                            switching = true;">
+                @if ($filter === 'all')
+                    @forelse ($this->allItems as $item)
                         @php
-                            $defaultAvatar = 'assets/images/avatar/default.png';
-                            $image = $conversation['userImage'] ?? $defaultAvatar;
-                            $image = trim((string) $image);
-                            if ($image === '' || $image === 'null') {
-                                $image = $defaultAvatar;
-                            }
-                            $isUrl = \Illuminate\Support\Str::startsWith($image, ['http://', 'https://']);
-                            $imageSrc = $isUrl ? $image : asset($image);
-                            $fallbackSrc = asset($defaultAvatar);
+                            $itemType = $item['type'] ?? null;
+                            $log = $item['data'] ?? null;
                         @endphp
-                        <img src="{{ $imageSrc }}" class="user-avatar" data-image="{{ $imageSrc }}" loading="lazy"
-                            onerror="this.onerror=null;this.src='{{ $fallbackSrc }}';" />
-                        <div class="user-infos">
-                            <div class="user-header">
-                                <strong>{{ $conversation['userName'] ?? 'Unknown' }}</strong>
-                            </div>  
-                            <small>{{ $conversation['lastMessage'] ?? '' }}</small>
-                        </div>
-                        <div class="msg_info_part">
-                            <span class="time">{{ $conversation['lastMessageTime'] ?? '' }}</span>
-                            @if (!empty($conversation['unreadCount']))
-                                <span class="unread-count">{{ $conversation['unreadCount'] }}</span>
-                            @endif
-                        </div>
-                    </li>
-                @empty
-                    <li class="user-list-item">
-                        <div class="user-infos">
-                            <strong>No conversations found.</strong>
-                        </div>
-                    </li>
-                @endforelse
+                        @if ($itemType === 'email')
+                            @include('livewire.admin.messages.partials.sidebar-email-item', [
+                                'log' => $log,
+                                'wireKey' => 'all-email-' . $log->id,
+                                'isActive' => $activeEmailLogId === $log->id,
+                            ])
+                        @else
+                            @php($conversation = is_array($item['data'] ?? null) ? $item['data'] : [])
+                            @include('livewire.admin.messages.partials.sidebar-chat-item', [
+                                'conversation' => $conversation,
+                                'wireKey' => 'all-chat-' . (string) ($conversation['id'] ?? ''),
+                                'isActive' => $activeConversationId === ($conversation['id'] ?? null),
+                            ])
+                        @endif
+                    @empty
+                        <li class="user-list-item">
+                            <div class="user-infos">
+                                <strong>No items found.</strong>
+                            </div>
+                        </li>
+                    @endforelse
+                @elseif ($filter === 'emails')
+                    @forelse ($this->emailLogs as $log)
+                        @include('livewire.admin.messages.partials.sidebar-email-item', [
+                            'log' => $log,
+                            'wireKey' => 'email-log-' . $log->id,
+                            'isActive' => $activeEmailLogId === $log->id,
+                        ])
+                    @empty
+                        <li class="user-list-item">
+                            <div class="user-infos">
+                                <strong>No emails found.</strong>
+                            </div>
+                        </li>
+                    @endforelse
+                    @if ($this->emailLogs->count() >= $this->emailLogPage * 20)
+                        <li class="user-list-item">
+                            <button type="button" class="new-email" wire:click="loadMoreEmailLogs">
+                                Load more
+                            </button>
+                        </li>
+                    @endif
+                @else
+                    @forelse ($conversations as $conversation)
+                        @include('livewire.admin.messages.partials.sidebar-chat-item', [
+                            'conversation' => $conversation,
+                            'wireKey' => 'conversation-' . (string) ($conversation['id'] ?? ''),
+                            'isActive' => $activeConversationId === ($conversation['id'] ?? null),
+                        ])
+                    @empty
+                        <li class="user-list-item">
+                            <div class="user-infos">
+                                <strong>No conversations found.</strong>
+                            </div>
+                        </li>
+                    @endforelse
+                @endif
             @endif
         </ul>
     </div>

@@ -5,8 +5,10 @@ namespace App\Livewire\Admin\Messages;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use App\Jobs\SendCustomEmailJob;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use App\Models\EmailLog;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -60,6 +62,9 @@ class Board extends Component
     public ?string $composeMediaPreviewType = null;
     public string $composeEmailSubject = '';
     public string $composeEmailBody = '';
+    public ?int $activeEmailLogId = null;
+    public string $emailSearch = '';
+    public int $emailLogPage = 1;
     public bool $selectAll = false;
     public array $selectedConversationIds = [];
     public string $filterStatus = 'all';
@@ -778,6 +783,7 @@ class Board extends Component
         }
 
         $this->showCompose = false;
+        $this->activeEmailLogId = null;
         $this->activeConversationId = $conversationId;
         $this->activeConversationMeta = $this->resolveActiveConversationMeta($conversationId);
         $this->newIncomingCount = 0;
@@ -839,6 +845,7 @@ class Board extends Component
     {
         $this->composeType = $type === 'message' ? 'message' : 'email';
         $this->showCompose = true;
+        $this->dispatch('init-compose-editor');
         if ($this->composeType === 'message' && empty($this->selectedConversationIds) && $this->activeConversationId) {
             $defaultRecipient = $this->activeConversationMeta['userId'] ?? $this->activeConversationId;
             $this->selectedConversationIds = [$defaultRecipient];
@@ -852,17 +859,143 @@ class Board extends Component
         $this->dispatch('clear-compose-editor');
     }
 
+    public function resolveAvatar(?string $image): array
+    {
+        $defaultAvatar = 'assets/images/avatar/default.png';
+        $image = trim((string) ($image ?? $defaultAvatar));
+        if ($image === '' || $image === 'null') {
+            $image = $defaultAvatar;
+        }
+        $isUrl = Str::startsWith($image, ['http://', 'https://']);
+        $imageSrc = $isUrl ? $image : asset($image);
+        $fallbackSrc = asset($defaultAvatar);
+
+        return [
+            'imageSrc' => $imageSrc,
+            'fallbackSrc' => $fallbackSrc,
+        ];
+    }
+
     public function getPanelStateProperty(): string
     {
         if ($this->showCompose) {
             return $this->composeType === 'message' ? 'compose_message' : 'compose_email';
         }
 
+        if ($this->filter === 'emails') {
+            return $this->activeEmailLogId ? 'email_log' : 'email_log_empty';
+        }
+
         if ($this->hasActiveConversation) {
             return 'chat';
         }
 
+        if ($this->activeEmailLogId) {
+            return 'email_log';
+        }
+
         return 'empty';
+    }
+
+    public function selectEmailLog(int $id): void
+    {
+        $this->activeEmailLogId = $id;
+        $this->activeConversationId = null;
+        $this->showCompose = false;
+    }
+
+    public function getEmailLogsProperty()
+    {
+        return $this->buildEmailLogsQuery($this->emailSearch)
+            ->orderByDesc('id')
+            ->limit($this->emailLogPage * 20)
+            ->get();
+    }
+
+    public function getAllItemsProperty(): array
+    {
+        return $this->buildAllItems();
+    }
+
+    private function buildEmailLogsQuery(?string $search = null)
+    {
+        $query = EmailLog::where('sender_id', auth()->id())->with(['recipient:id,name,email,avatar']);
+        if ($this->audience === 'service-users') {
+            $query->where('recipient_type', 'customer');
+        } elseif ($this->audience === 'service-provider') {
+            $query->where('recipient_type', 'provider');
+        }
+        $search = trim((string) $search);
+        if ($search !== '') {
+            $query->where(function ($q) use ($search) {
+                $q->where('recipient_email', 'like', '%' . $search . '%')
+                    ->orWhere('subject', 'like', '%' . $search . '%');
+            });
+        }
+        return $query;
+    }
+
+    private function buildAllItems(): array
+    {
+        $items = [];
+        $search = trim((string) $this->search);
+
+        foreach ($this->cachedConversations as $conversation) {
+            $timestamp = (int) ($conversation['lastMessageAt'] ?? 0);
+            $items[] = [
+                'type' => 'chat',
+                'id' => (string) ($conversation['id'] ?? ''),
+                'timestamp' => $timestamp,
+                'data' => $conversation,
+            ];
+        }
+
+        $emails = $this->buildEmailLogsQuery($search)
+            ->orderByDesc('id')
+            ->limit(50)
+            ->get();
+        foreach ($emails as $log) {
+            $items[] = [
+                'type' => 'email',
+                'id' => (string) $log->id,
+                'timestamp' => $log->created_at?->timestamp ?? 0,
+                'data' => $log,
+            ];
+        }
+
+        usort($items, static function (array $a, array $b): int {
+            return ($b['timestamp'] ?? 0) <=> ($a['timestamp'] ?? 0);
+        });
+
+        return $items;
+    }
+
+    public function getActiveEmailLogProperty(): ?array
+    {
+        if (!$this->activeEmailLogId) {
+            return null;
+        }
+        $log = EmailLog::find($this->activeEmailLogId);
+        if (!$log) {
+            return null;
+        }
+        $name = null;
+        if ($log->recipient_id) {
+            $name = User::find($log->recipient_id)?->name;
+        }
+        return [
+            'subject' => $log->subject ?? 'Message from Flyertrade',
+            'body' => $log->body ?? '',
+            'name' => $name ?? 'Customer',
+            'email' => $log->recipient_email ?? '',
+            'status' => $log->status ?? 'sent',
+            'created_at' => $log->created_at,
+        ];
+    }
+
+    public function loadMoreEmailLogs(): void
+    {
+        $this->emailLogPage++;
     }
 
     public function getSelectedRecipientsProperty(): array
@@ -1039,30 +1172,66 @@ class Board extends Component
         $subject = trim($this->composeEmailSubject);
         $body = trim($this->composeEmailBody);
         $this->resetErrorBag(['composeEmailSubject', 'composeEmailBody']);
-        $messageText = $subject;
-        if ($body !== '') {
-            $messageText = $messageText === '' ? $body : $messageText . "\n\n" . $body;
+        if ($subject === '') {
+            $this->addError('composeEmailSubject', 'Subject is required.');
         }
-        $messageText = trim($messageText);
-        if ($messageText === '') {
-            $this->addError('composeEmailSubject', 'Subject or body is required.');
+        if ($body === '') {
+            $this->addError('composeEmailBody', 'Body is required.');
+        }
+        if ($subject === '' || $body === '') {
             return;
         }
+
+        $messageText = $subject . "\n\n" . $body;
 
         if (empty($this->selectedConversationIds) && $this->activeConversationId) {
             $defaultRecipient = $this->activeConversationMeta['userId'] ?? $this->activeConversationId;
             $this->selectedConversationIds = [$defaultRecipient];
         }
         if (empty($this->selectedConversationIds)) {
+            $this->addError('composeEmailSubject', 'Select at least one recipient.');
             return;
         }
 
-        $this->composeMessageText = $messageText;
-        $this->sendComposeMessage();
+        $recipients = array_values(array_unique($this->selectedConversationIds));
+        $lastLogId = null;
+        foreach ($recipients as $recipientId) {
+            $email = (string) $recipientId;
+            $user = null;
+
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $user = User::find($recipientId);
+                $email = $user?->email ?? '';
+            } else {
+                $user = User::where('email', $email)->first();
+            }
+            if ($email === '') {
+                continue;
+            }
+            $recipientName = $user?->name ?? 'Customer';
+            $recipientType = $user?->user_type ?? ($this->audience === 'service-provider' ? 'provider' : 'customer');
+            $log = EmailLog::create([
+                'sender_id' => auth()->id(),
+                'recipient_id' => $user?->id,
+                'recipient_email' => $email,
+                'recipient_type' => $recipientType,
+                'subject' => $subject,
+                'body' => $body,
+                'status' => 'queued',
+            ]);
+            $lastLogId = $log->id;
+            SendCustomEmailJob::dispatch($log->id);
+        }
 
         $this->composeEmailSubject = '';
         $this->composeEmailBody = '';
         $this->dispatch('clear-compose-editor');
+        $this->resetSelection();
+        $this->showCompose = false;
+        $this->filter = 'emails';
+        if ($lastLogId) {
+            $this->activeEmailLogId = $lastLogId;
+        }
     }
 
     private function storeComposeAttachment(): void
@@ -1344,6 +1513,11 @@ class Board extends Component
 
         $this->refreshConversationsCache();
         $this->resetSelection();
+        if ($type === 'filter' && $value === 'emails') {
+            $this->emailLogPage = 1;
+            $this->activeEmailLogId = null;
+            $this->dispatch('init-compose-editor');
+        }
     }
 
     private function refreshConversationsCache(): void
@@ -1507,12 +1681,35 @@ class Board extends Component
 
     private function applyConversationFilters(array $rows): array
     {
+        $emails = [];
+        foreach ($rows as $row) {
+            $userId = (string) ($row['userId'] ?? '');
+            if (str_contains($userId, '@')) {
+                $emails[] = $userId;
+            }
+        }
+        $emailMap = [];
+        if (!empty($emails)) {
+            $emailUsers = User::whereIn('email', array_unique($emails))
+                ->get(['email', 'name', 'avatar'])
+                ->keyBy('email');
+            foreach ($emailUsers as $email => $user) {
+                $emailMap[$email] = $user;
+            }
+        }
+
         $search = trim(mb_strtolower($this->search));
         $filtered = [];
 
         foreach ($rows as $row) {
             $userName = (string) ($row['userName'] ?? 'Unknown');
             $userId = (string) ($row['userId'] ?? '');
+            if ($userId !== '' && isset($emailMap[$userId])) {
+                $user = $emailMap[$userId];
+                $row['userName'] = $user->name ?? $row['userName'];
+                $row['userImage'] = $user->avatar ?? $row['userImage'];
+                $row['userEmail'] = $user->email ?? ($row['userEmail'] ?? $row['userId']);
+            }
             $userType = (string) ($row['userType'] ?? '');
             $conversationType = (string) ($row['conversationType'] ?? 'chat');
             $unreadCount = (int) ($row['unreadCount'] ?? 0);
@@ -1582,9 +1779,14 @@ class Board extends Component
 
         foreach ($source as $conversation) {
             if ((string) $conversation['id'] === $id) {
+                $userId = (string) ($conversation['userId'] ?? '');
+                $userEmail = $conversation['userEmail'] ?? $userId;
+                if ($userId !== '' && !str_contains($userId, '@')) {
+                    $userEmail = User::find($userId)?->email ?? $userEmail;
+                }
                 return [
                     'userName' => $conversation['userName'] ?? 'Unknown',
-                    'userEmail' => $conversation['userId'] ?? '',
+                    'userEmail' => $userEmail ?? '',
                     'userImage' => $conversation['userImage'] ?? 'assets/images/icons/five.svg',
                     'userId' => $conversation['userId'] ?? null,
                 ];

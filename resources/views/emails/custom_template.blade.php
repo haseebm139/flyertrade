@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Pending update on booking</title>
+    <title>{{ $subject ?? 'Message from Flyertrade' }}</title>
 </head>
 
 <body style="margin:0; padding:0; background: rgba(0, 0, 0, 0.05); font-family: Arial, Helvetica, sans-serif;">
@@ -51,31 +51,16 @@
                         <td style="padding:30px; color:#717171; font-weight: 400; font-size: 14px;">
 
                             <h2 style="margin:0 0 15px 0; font-size:16px; font-weight: 600; color:#393939;">
-                                Pending update on booking
+                                {{ $subject ?? 'Message from Flyertrade' }}
                             </h2>
 
                             <p style="margin:0 0 15px 0;">
-                                Dear Johnson,
+                                Dear {{ $name ?? 'Customer' }},
                             </p>
 
-                            <p style="margin:0 0 15px 0; color:#717171;">
-                                Lorem ipsum dolor sit amet consectetur. Imperdiet nunc auctor amet diam sed etiam.
-                                Vitae sit ultrices volutpat sollicitudine massa. Integer magna consectetur arcu integer
-                                eu faucibus. Mauris viverra risus id maecenas. Diam eu blandit convallis in a sem id
-                                aliquet.
-                            </p>
-
-                            <p style="margin:0 0 15px 0; color:#717171;">
-                                Sed nunc vehicula orci euismod. Sit sed non volutpat cras. Faucibus tempor est a massa
-                                posuere id. Elementum vulputate in varius egestas sit suspendisse sit nec proin.
-                                Sed quis facilisi sem neque ullamcorper.
-                            </p>
-
-                            <p style="margin:0; color:#717171;">
-                                Nullam eget odio placerat facilisis id accumsan dictumst. Nunc magna neque cursus eget
-                                leo faucibus tristique arcu ultrices. Dignissim aliquet urna volutpat senectus aliquam
-                                pulvinar at.
-                            </p>
+                            <div style="margin:0 0 15px 0; color:#717171;">
+                                {!! $body ?? '' !!}
+                            </div>
 
                         </td>
                     </tr>
