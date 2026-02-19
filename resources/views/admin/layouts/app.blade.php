@@ -465,6 +465,8 @@
             .nav-sublink {
                 font-size: 3.5vw;
                 padding-left: 10vw;
+                padding-top:2vw;
+                     padding-bottom:2vw;
             }
 
             .nav-sublink::before {
@@ -489,14 +491,23 @@
                 background-size: 3px;
             }
 
+            .actions-menu a {
+        
+                padding: 1.521vw;
+                font-size: 2vw;
+
+                width: max-content;
+            }
+
         }
+        
     </style>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
 </head>
 
 <body>
-    <div id="wrapper_mobile_display_none"></div>
+    <!-- <div id="wrapper_mobile_display_none"></div> -->
 
     @include('admin.partials.sidebar')
     <div class="wrapper">
