@@ -698,7 +698,7 @@ class BookingService
     public function totalAmountProvider($providerId)
     {
          
-        return Booking::where('provider_id', $providerId)->where('status', 'completed')->sum('total_price');
+        return Booking::where('provider_id', $providerId)->where('status', 'completed')->sum('net_amount');
     }
 
     public function pendingBookingsCustomer($customerId)
