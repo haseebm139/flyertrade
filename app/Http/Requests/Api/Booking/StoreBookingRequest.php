@@ -30,7 +30,7 @@ class StoreBookingRequest extends FormRequest
             'booking_type' => 'required|in:hourly,custom',
             'hourly_rate' => 'required_if:booking_type,hourly|numeric|min:0.01',
             'total_price' => 'required_if:booking_type,custom|numeric|min:0.01',
-            'currency' => 'required|string|size:3', // e.g. usd
+            'currency' => 'required|string', // e.g. usd
             'payment_method_id' => 'nullable|string', // pm_xxx from Flutter
 
             // Multiple-day slots:

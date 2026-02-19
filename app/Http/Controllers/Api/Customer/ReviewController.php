@@ -21,7 +21,7 @@ class ReviewController extends BaseController
     {
         $validator = Validator::make($request->all(), [
             'rating' => 'required|integer|min:1|max:5',
-            'review' => 'nullable|string|max:5000',
+            'review' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -156,7 +156,7 @@ class ReviewController extends BaseController
     {
         $validator = Validator::make($request->all(), [
             'rating' => 'sometimes|required|integer|min:1|max:5',
-            'review' => 'sometimes|nullable|string|max:1000',
+            'review' => 'sometimes|nullable|string',
         ]);
 
         if ($validator->fails()) {

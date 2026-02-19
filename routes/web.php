@@ -12,13 +12,13 @@ Route::get('/test-email', function () {
     try {
         // dd( $serviceAccountPath = storage_path('firebase/firebase_credentials.json'));
         $data = ['message' => 'Hello, this is a test email from Flyertrade!'];
-        Mail::to('haseebm139@gmail.com')->send(new TestEmail($data));
-        return "✅ Email sent successfully to haseebm139@gmail.com!";
+        Mail::to('flyertradead@gmail.com')->send(new TestEmail($data));
+        return "✅ Email sent successfully to flyertradead@gmail.com!";
     } catch (\Exception $e) {
         return "❌ Failed to send email. Error: " . $e->getMessage();
     }
 });
-
+ 
 Route::get('/testing', function () {
     dd('Hello world');
 });

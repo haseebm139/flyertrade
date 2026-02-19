@@ -33,7 +33,7 @@ class AppServiceProvider extends ServiceProvider
                     'email' => $notifiable->getEmailForPasswordReset(),
                 ], false));
 
-                $fromAddress = config('mail.from.address', 'haseebm139@gmail.com');
+                $fromAddress = config('mail.from.address', 'flyertradead@gmail.com');
                 $fromName = config('mail.from.name', config('app.name'));
                 $expire = config('auth.passwords.' . config('auth.defaults.passwords') . '.expire');
 

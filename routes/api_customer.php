@@ -65,6 +65,7 @@ Route::prefix('customer')->group(function () {
             Route::post('cards', [PaymentController::class,'addCard']);
             Route::get('cards', [PaymentController::class,'listCards']);
             Route::post('cards/{card}/default', [PaymentController::class,'makeDefault']);
+            Route::delete('cards/{card}', [PaymentController::class, 'removeCard']);
             // TEST ONLY: Create test payment_method
             Route::post('test/create-payment-method', [PaymentController::class,'createTestPaymentMethod']);
         });

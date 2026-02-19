@@ -527,12 +527,12 @@
 
     @include('admin.partials.foot')
     {{-- <livewire:components.toastr-notifier /> --}}
-    @stack('scripts')
     @livewireScripts
 
     <!-- SweetAlert2 JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+    <script src="{{ asset('assets/js/ckeditor/ckeditor.js') }}"></script>
+    @stack('scripts')
     <!-- Main JavaScript -->
     <script src="{{ asset('assets/js/main.js') }}"></script>
     <!-- Dashboard functionality -->

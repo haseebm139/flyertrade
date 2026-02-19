@@ -7,8 +7,7 @@ use App\Models\User;
 use App\Helpers\NotificationIcon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Services\FirebaseService;
-
+use App\Services\FirebaseService; 
 class NotificationService
 {
     protected $firebaseService;
@@ -23,6 +22,7 @@ class NotificationService
      */
     public function sendPushNotification($fcmToken, $title, $message, array $data = [])
     {
+        Log::info('Sending FCM push notification'.$fcmToken);
         return $this->firebaseService->sendToToken($fcmToken, $title, $message, $data);
     }
 
@@ -47,7 +47,8 @@ class NotificationService
         $notifiable = null,
         array $data = [],
         ?string $icon = null,
-        ?string $category = null
+        ?string $category = null,
+        ?bool $sendPush = true
     ): Notification {
         $notification = Notification::create([
             'user_id' => $user->id,
@@ -61,16 +62,76 @@ class NotificationService
             'notifiable_id' => $notifiable ? $notifiable->id : null,
             'data' => $data,
         ]);
-
-        // Send FCM push notification if user has a token
-        if ($user->fcm_token) {
-            $this->sendPushNotification($user->fcm_token, $title, $message, array_merge($data, [
-                'notification_id' => $notification->id,
-                'type' => $type
-            ]));
-        }
+       
+         if ($sendPush) {
+             
+             // Send FCM push notification if user has a token and preferences allow
+             $shouldSendPush = !empty($user->fcm_token);
+             
+             if ($shouldSendPush) { 
+                 if($user->is_booking_notification == true ){
+                     
+                         $this->sendPushNotification($user->fcm_token, $title, $message, array_merge($data, [
+                         'notification_id' => $notification->id,
+                         'type' => $type
+                     ]));
+                 }
+                //  if ($category === 'promotions') {
+                //     $shouldSendPush = $user->is_promo_option_notification === true;
+                //  } elseif ($category === 'bookings') {
+                //     $shouldSendPush = $user->is_booking_notification === true;
+                //  }else{
+                //     $shouldSendPush = $user->is_booking_notification === true;
+                //  }
+                //  if ($shouldSendPush) {
+                     
+                    
+                //  }
+             }
+                 
+         }   
 
         return $notification;
+    }
+    public function sendOnlyPushNotification(
+        User $user,
+        string $type,
+        string $title,
+        string $message,
+        string $recipientType = 'customer',
+        $notifiable = null,
+        array $data = [],
+        ?string $icon = null,
+        ?string $category = null,
+        ?bool $sendPush = true
+    ) {         
+       
+         if ($sendPush) {
+             
+             // Send FCM push notification if user has a token and preferences allow
+             $shouldSendPush = !empty($user->fcm_token);
+             
+             if ($shouldSendPush) { 
+                 if($user->is_booking_notification == true ){
+                     
+                         $this->sendPushNotification($user->fcm_token, $title, $message, array_merge($data));
+                 }
+                //  if ($category === 'promotions') {
+                //     $shouldSendPush = $user->is_promo_option_notification === true;
+                //  } elseif ($category === 'bookings') {
+                //     $shouldSendPush = $user->is_booking_notification === true;
+                //  }else{
+                //     $shouldSendPush = $user->is_booking_notification === true;
+                //  }
+                //  if ($shouldSendPush) {
+                     
+                    
+                //  }
+             }
+                 
+         }   
+
+        return $notification ?? [];
     }
 
     /**
@@ -263,6 +324,7 @@ class NotificationService
      */
     public function notifyBookingCreated($booking): void
     {
+        
         // Notify provider
         $provider = User::find($booking->provider_id);
         if ($provider) {
@@ -273,7 +335,8 @@ class NotificationService
                 "You have a new booking request from {$booking->customer->name}",
                 'provider',
                 $booking,
-                ['booking_id' => $booking->id, 'booking_ref' => $booking->booking_ref]
+                ['booking_id' => $booking->id, 'booking_ref' => $booking->booking_ref],
+                true
             );
         }
 
@@ -287,7 +350,8 @@ class NotificationService
                 "Your booking #{$booking->booking_ref} has been created successfully",
                 'customer',
                 $booking,
-                ['booking_id' => $booking->id, 'booking_ref' => $booking->booking_ref]
+                ['booking_id' => $booking->id, 'booking_ref' => $booking->booking_ref],
+                false
             );
         }
 
@@ -319,7 +383,8 @@ class NotificationService
                 "Your booking #{$booking->booking_ref} has been confirmed by the provider",
                 'customer',
                 $booking,
-                ['booking_id' => $booking->id, 'booking_ref' => $booking->booking_ref]
+                ['booking_id' => $booking->id, 'booking_ref' => $booking->booking_ref],
+                true
             );
         }
     }
@@ -339,7 +404,8 @@ class NotificationService
                 "You created a direct booking #{$booking->booking_ref}.",
                 'provider',
                 $booking,
-                ['booking_id' => $booking->id, 'booking_ref' => $booking->booking_ref]
+                ['booking_id' => $booking->id, 'booking_ref' => $booking->booking_ref],
+                true
             );
         }
 
@@ -352,7 +418,8 @@ class NotificationService
                 "Your booking #{$booking->booking_ref} has been confirmed.",
                 'customer',
                 $booking,
-                ['booking_id' => $booking->id, 'booking_ref' => $booking->booking_ref]
+                ['booking_id' => $booking->id, 'booking_ref' => $booking->booking_ref],
+                true
             );
         }
     }
@@ -373,7 +440,9 @@ class NotificationService
                     "Booking #{$booking->booking_ref} has been cancelled by the customer",
                     'provider',
                     $booking,
-                    ['booking_id' => $booking->id, 'booking_ref' => $booking->booking_ref]
+                    ['booking_id' => $booking->id, 'booking_ref' => $booking->booking_ref],
+                    true
+                    
                 );
             }
         } else {
@@ -387,7 +456,8 @@ class NotificationService
                     "Your booking #{$booking->booking_ref} has been cancelled by the provider",
                     'customer',
                     $booking,
-                    ['booking_id' => $booking->id, 'booking_ref' => $booking->booking_ref]
+                    ['booking_id' => $booking->id, 'booking_ref' => $booking->booking_ref],
+                    true
                 );
             }
         }
@@ -413,38 +483,42 @@ class NotificationService
     {
         $customer = User::find($transaction->customer_id);
         if ($customer) {
+            $amount = $transaction->amount?? 0 ;
             $this->send(
                 $customer,
                 'payment_success',
                 'Payment Successful',
-                "Payment of {$transaction->currency} {$transaction->amount} for booking has been processed successfully",
+                "Payment of {$transaction->currency} {$amount} for booking has been processed successfully",
                 'customer',
                 $transaction,
                 [
                     'transaction_id' => $transaction->id,
-                    'amount' => $transaction->amount,
+                    'amount' => $amount,
                     'currency' => $transaction->currency,
                     'booking_id' => $transaction->booking_id,
-                ]
+                ],
+                true
             );
         }
 
         // Notify provider
-        $provider = User::find($transaction->provider_id);
+        $provider = User::find($transaction->provider_id); 
         if ($provider) {
+            $amount = $transaction->amount?? 0 ;
             $this->send(
                 $provider,
                 'payment_success',
                 'Payment Received',
-                "You have received payment of {$transaction->currency} {$transaction->net_amount}",
+                "You have received payment of {$transaction->currency} {$amount}",
                 'provider',
                 $transaction,
                 [
                     'transaction_id' => $transaction->id,
-                    'net_amount' => $transaction->net_amount,
+                    'amount' => $amount,
                     'currency' => $transaction->currency,
                     'booking_id' => $transaction->booking_id,
-                ]
+                ],
+                true
             );
         }
     }
@@ -456,19 +530,21 @@ class NotificationService
     {
         $customer = User::find($transaction->customer_id);
         if ($customer) {
+            $amount = $transaction->amount?? 0 ;
             $this->send(
                 $customer,
                 'payment_failed',
                 'Payment Failed',
-                "Payment of {$transaction->currency} {$transaction->amount} failed. Please try again.",
+                "Payment of {$transaction->currency} {$amount} failed. Please try again.",
                 'customer',
                 $transaction,
                 [
                     'transaction_id' => $transaction->id,
-                    'amount' => $transaction->amount,
+                    'amount' => $amount,
                     'currency' => $transaction->currency,
                     'failure_reason' => $transaction->failure_reason,
-                ]
+                ],
+                true
             );
         }
     }
@@ -491,7 +567,8 @@ class NotificationService
                     'review_id' => $review->id,
                     'rating' => $review->rating,
                     'service_id' => $review->service_id,
-                ]
+                ],
+                true
             );
         }
     }
@@ -711,7 +788,9 @@ class NotificationService
                     'action_url' => "/bookings/{$booking->id}/review"
                 ],
                 NotificationIcon::JOB_COMPLETED,
-                'bookings'
+                'bookings',
+                true
+                
             );
         }
     }
@@ -738,7 +817,9 @@ class NotificationService
                 'action_url' => '/offers'
             ], $data),
             NotificationIcon::SPECIAL_OFFER,
-            'promotions'
+            'promotions',
+            true
+            
         );
     }
 
@@ -758,7 +839,8 @@ class NotificationService
                 'action_url' => '/promotions'
             ], $data),
             NotificationIcon::PROMOTION,
-            'promotions'
+            'promotions',
+            true
         );
     }
 
@@ -784,7 +866,9 @@ class NotificationService
                 'action_url' => '/services'
             ], $data),
             NotificationIcon::NEW_SERVICE,
-            'services'
+            'services',
+            true
+            
         );
     }
 
@@ -819,7 +903,9 @@ class NotificationService
                 'action_url' => "/bookings/{$booking->id}"
             ],
             NotificationIcon::BOOKING_REMINDER,
-            'bookings'
+            'bookings',
+            true
+            
         );
     }
 
@@ -854,7 +940,9 @@ class NotificationService
                 'action_url' => "/transactions/{$transaction->id}"
             ],
             NotificationIcon::PAYMENT_SUCCESS,
-            'transactions'
+            'transactions',
+            true
+            
         );
     }
 
@@ -879,7 +967,8 @@ class NotificationService
                     'action_url' => "/bookings/{$booking->id}"
                 ],
                 NotificationIcon::BOOKING_CANCELLED,
-                'bookings'
+                'bookings',
+                true
             );
         }
 
@@ -923,7 +1012,8 @@ class NotificationService
                     'action_url' => "/bookings/{$booking->id}"
                 ],
                 NotificationIcon::BOOKING_CONFIRMED,
-                'bookings'
+                'bookings',
+                true
             );
         }
     }
@@ -951,7 +1041,8 @@ class NotificationService
                         'action_url' => "/bookings/{$booking->id}/reschedule"
                     ],
                     NotificationIcon::RESCHEDULE_REQUEST,
-                    'bookings'
+                    'bookings',
+                    true
                 );
             }
         } else {
@@ -972,7 +1063,8 @@ class NotificationService
                         'action_url' => "/bookings/{$booking->id}/reschedule"
                     ],
                     NotificationIcon::RESCHEDULE_REQUEST,
-                    'bookings'
+                    'bookings',
+                    true
                 );
             }
         }
@@ -1001,7 +1093,8 @@ class NotificationService
                     'action_url' => "/bookings/{$booking->id}"
                 ],
                 NotificationIcon::RESCHEDULE_ACCEPTED,
-                'bookings'
+                'bookings',
+                true
             );
         }
 
@@ -1020,7 +1113,8 @@ class NotificationService
                     'action_url' => "/bookings/{$booking->id}"
                 ],
                 NotificationIcon::RESCHEDULE_ACCEPTED,
-                'bookings'
+                'bookings',
+                true
             );
         }
     }
@@ -1048,7 +1142,8 @@ class NotificationService
                     'action_url' => "/bookings/{$booking->id}"
                 ],
                 NotificationIcon::RESCHEDULE_REJECTED,
-                'bookings'
+                'bookings',
+                true
             );
         }
 
@@ -1067,7 +1162,9 @@ class NotificationService
                     'action_url' => "/bookings/{$booking->id}"
                 ],
                 NotificationIcon::RESCHEDULE_REJECTED,
-                'bookings'
+                'bookings',
+                true
+                
             );
         }
     }
@@ -1092,7 +1189,8 @@ class NotificationService
                     'action_url' => "/bookings/{$booking->id}"
                 ],
                 NotificationIcon::BOOKING_CANCELLED,
-                'bookings'
+                'bookings',
+                true
             );
         }
 
@@ -1119,35 +1217,39 @@ class NotificationService
     {
         $customer = User::find($transaction->customer_id);
         if ($customer) {
+            $amount = $transaction->amount?? 0 ;
             $this->send(
                 $customer,
                 'refund_processed',
                 'Refund Processed',
-                "Refund of {$transaction->currency} {$transaction->amount} has been processed successfully",
+                "Refund of {$transaction->currency} {$amount} has been processed successfully",
                 'customer',
                 $transaction,
                 [
                     'transaction_id' => $transaction->id,
-                    'amount' => $transaction->amount,
+                    'amount' => $amount,
                     'currency' => $transaction->currency,
                     'booking_id' => $transaction->booking_id,
                     'action_url' => "/transactions/{$transaction->id}"
                 ],
                 NotificationIcon::REFUND_PROCESSED,
-                'transactions'
+                'transactions',
+                true
             );
         }
 
         // Notify admin
         $bookingRef = $transaction->booking ? $transaction->booking->booking_ref : 'N/A';
+        $amount = $transaction->amount?? 0 ;
         $this->sendToAdmins(
             'refund_processed',
             'Refund Processed',
-            "Refund of {$transaction->currency} {$transaction->amount} processed for booking #{$bookingRef}",
+            "Refund of {$transaction->currency} {$amount} processed for booking #{$bookingRef}",
             $transaction,
             [
                 'transaction_id' => $transaction->id,
                 'booking_id' => $transaction->booking_id,
+                'amount' => $amount,
                 'action_url' => route('transaction.index')
             ],
             NotificationIcon::REFUND_PROCESSED,
@@ -1162,9 +1264,10 @@ class NotificationService
     {
         $customer = User::find($transaction->customer_id);
         if ($customer) {
+            $amount = $transaction->amount?? 0 ;
             $message = $reason 
-                ? "Refund of {$transaction->currency} {$transaction->amount} failed: {$reason}"
-                : "Refund of {$transaction->currency} {$transaction->amount} failed";
+                ? "Refund of {$transaction->currency} {$amount} failed: {$reason}"
+                : "Refund of {$transaction->currency} {$amount} failed";
             
             $this->send(
                 $customer,
@@ -1175,7 +1278,7 @@ class NotificationService
                 $transaction,
                 [
                     'transaction_id' => $transaction->id,
-                    'amount' => $transaction->amount,
+                    'amount' => $amount,
                     'currency' => $transaction->currency,
                     'booking_id' => $transaction->booking_id,
                     'failure_reason' => $reason,
@@ -1183,6 +1286,7 @@ class NotificationService
                 ],
                 NotificationIcon::REFUND_FAILED,
                 'transactions'
+                
             );
         }
 

@@ -52,7 +52,7 @@ class ProviderServiceController extends BaseController
         $validator = Validator::make($request->all(), [
             // Services
             'services'                   => 'nullable|array',
-            'services.about'          => 'nullable|string|max:1000',
+            'services.about'          => 'nullable|string',
             'services.service_id'      => 'required|exists:services,id',
             'services.title'   => 'nullable|string|max:255',
             'services.description' => 'nullable|string',
@@ -120,7 +120,7 @@ class ProviderServiceController extends BaseController
     {
         $validator = Validator::make($request->all(), [
             'services'                 => 'nullable|array',
-            'services.about'           => 'nullable|string|max:1000',
+            'services.about'           => 'nullable|string',
             'services.service_id'      => 'nullable|exists:services,id',
             'services.title'           => 'nullable|string|max:255',
             'services.description'     => 'nullable|string',

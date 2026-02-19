@@ -4,6 +4,7 @@ namespace App\Services\Provider;
 use App\Models\ProviderProfile;
 use App\Models\ProviderService;
 use App\Models\ProviderCertificate;
+use App\Models\Booking;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\Shared\UserResource;
 class ProviderServicesService
@@ -116,6 +117,16 @@ class ProviderServicesService
             return [
                 'error'   => true,
                 'message' => 'Service not found or not owned by this user.'
+            ];
+        }
+
+        $hasInProgressBooking = Booking::where('provider_service_id', $service->id)
+            ->where('status', 'in_progress')
+            ->exists();
+        if ($hasInProgressBooking) {
+            return [
+                'error'   => true,
+                'message' => 'This service cannot be updated while a booking is in progress.'
             ];
         }
 

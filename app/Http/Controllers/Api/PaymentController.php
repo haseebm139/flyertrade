@@ -9,7 +9,7 @@ use App\Models\UserPaymentMethod;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Stripe\PaymentMethod;
-
+use Illuminate\Support\Facades\Log;  
 class PaymentController extends BaseController
 {
     public function __construct(private StripeService $stripe) {}
@@ -83,7 +83,9 @@ class PaymentController extends BaseController
      */
     public function makeDefault($id)
     {
-        $card = UserPaymentMethod::where('user_id', Auth::id())->find($id);
+        $card = UserPaymentMethod::where('user_id', Auth::id())
+            ->whereKey($id)
+            ->first();
 
         if (empty($card)) {
             return $this->sendError('Card not found.', 404);
@@ -98,7 +100,9 @@ class PaymentController extends BaseController
         }
 
         DB::transaction(function () use ($card) {
-            UserPaymentMethod::where('user_id', $card->user_id)->update(['is_default' => false]);
+            UserPaymentMethod::where('user_id', $card->user_id)
+                ->where('id', '!=', $card->id)
+                ->update(['is_default' => false]);
             $card->update(['is_default' => true]);
         });
 
@@ -127,6 +131,36 @@ class PaymentController extends BaseController
         } catch (\Throwable $e) {
             return $this->sendError('Stripe error: '.$e->getMessage(), 422);
         }
+    }
+    public function removeCard($id)
+    {
+        $user = Auth::user();
+
+        $card = UserPaymentMethod::where('user_id', $user->id)
+            ->whereKey($id)
+            ->first();
+
+        if (!$card) {
+            return $this->sendError('Card not found.', 404);
+        }
+
+        try {
+            // Detach from Stripe if customer exists
+            if ($user->stripe_customer_id) {
+                \Stripe\PaymentMethod::retrieve($card->stripe_payment_method_id)
+                    ->detach();
+            }
+        } catch (\Throwable $e) {
+            // Log the error but still allow local deletion
+            Log::warning('Stripe detach failed: ' . $e->getMessage(), [
+                'user_id' => $user->id,
+                'card_id' => $card->id,
+            ]);
+        }
+
+        $card->delete();
+
+        return $this->sendResponse([], 'Card removed successfully.');
     }
 }
 

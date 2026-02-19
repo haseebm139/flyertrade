@@ -275,5 +275,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(BookingReschedule::class, 'requested_by');
     }
+    public function getPublishedReviewsAvgRatingAttribute($value)
+    {
+        return $value
+            ? min(5, round((float) $value, 1))
+            : 0;
+    }
 
 }

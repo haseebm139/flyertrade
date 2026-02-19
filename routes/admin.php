@@ -45,6 +45,12 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
         })->name('booking.index');
     });
 
+    // Admin chat media upload
+    Route::middleware(['permission:Read Messages'])->group(function () {
+        Route::post('chat/upload-media', [\App\Http\Controllers\Api\MediaController::class, 'uploadMedia'])
+            ->name('admin.chat.upload-media');
+    });
+
     // Transactions
     Route::middleware(['permission:Read Transactions'])->group(function () {
         Route::get('transactions',function(){

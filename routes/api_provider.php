@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\Api\Provider\{ProfileController,ProviderServiceController,BookingController as ProviderBookingActionController,ChatController,PayoutController};
+use App\Http\Controllers\Api\Auth\AuthController as ApiAuthController;
 use App\Http\Controllers\Api\Customer\ProviderController;
 use App\Http\Controllers\Api\PaymentController;
 
@@ -20,7 +21,7 @@ Route::middleware('auth:sanctum')->controller(ProviderBookingActionController::c
 Route::prefix('provider')->group(function () {
 
 
-  Route::middleware('auth:sanctum')->group(function () {
+  Route::middleware('auth:sanctum')->group(function () { 
 
     Route::controller(ProfileController::class)->group(function () {
         Route::get('/profile/{id}', 'show');
@@ -58,6 +59,7 @@ Route::prefix('provider')->group(function () {
         Route::post('cards', [PaymentController::class,'addCard']);
         Route::get('cards', [PaymentController::class,'listCards']);
         Route::post('cards/{card}/default', [PaymentController::class,'makeDefault']);
+        Route::delete('cards/{card}', [PaymentController::class, 'removeCard']);
         // TEST ONLY: Create test payment_method
         Route::post('test/create-payment-method', [PaymentController::class,'createTestPaymentMethod']);
     });

@@ -3628,7 +3628,7 @@ img.chat-img {
 }
 
 .sidebars {
-    width: 16.7vw;
+    width: 20vw;
     border-right: 0.05vw solid #ddd;
     padding: 0.8vw;
     display: flex;
@@ -3894,15 +3894,23 @@ img.chat-img {
 
 .message-area {
     flex-grow: 1;
+    color: #8D8E8E;
     border: none;
     resize: none;
     outline: none;
-    font-size: 0.8vw;
-    color: #333;
+    font-size: 0.8vw; 
     padding: 0.5vw 0;
     font-family: inherit;
 }
-
+.message-area ::placeholder{
+    flex-grow: 1; 
+    border: none;
+    resize: none;
+    outline: none;
+    font-size:1vw; 
+    padding: 0.5vw 0;
+    font-family: inherit;
+}
 .compose-footer {
     display: flex;
     justify-content: center;
@@ -3936,6 +3944,33 @@ img.chat-img {
 
 .send-btn:hover {
     background: #006655;
+}
+
+.send-btn[disabled] {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.send-btn .btn-loading {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4vw;
+}
+
+.send-btn .btn-spinner {
+    width: 0.9vw;
+    height: 0.9vw;
+    border: 0.15vw solid rgba(255, 255, 255, 0.35);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: btn-spin 0.8s linear infinite;
+    display: inline-block;
+}
+
+@keyframes btn-spin {
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .attach {
@@ -4036,7 +4071,7 @@ img.chat-img {
 }
 
 .message-chat-theme {
-    width: 80vw;
+    width: 68vw;
     height: auto;
     background: #fff;
     border: 0.1vw solid #e5e5e5;
