@@ -75,7 +75,7 @@ class ProviderProfileService
             $coverPhotoPath = 'storage/' . $path;
         }
         
-        $profileData['about_me'] = isset($data['services']['about']) ? $data['services']['about'] : null;
+        // $profileData['about_me'] = isset($data['services']['about']) ? $data['services']['about'] : null;
         if (isset($data['office_address'])) {
             $data['address'] = $data['office_address'];
         }
@@ -192,6 +192,7 @@ class ProviderProfileService
                     'is_primary'          => $data['services']['is_primary'] ?? false,
                     'show_certificate'    => $data['services']['show_certificate'] ?? true,
                     'title'               => $data['services']['title'] ?? null,
+                    'about'               => $data['services']['about'] ?? null,
                     'description'         => $data['services']['description'] ?? null,
                     'staff_count'         => $data['services']['staff_count'] ?? null,
                     'rate_min'            => $data['services']['rate_min'] ?? null,
