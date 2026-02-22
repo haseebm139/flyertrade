@@ -18,10 +18,16 @@ class NotificationController extends BaseController
     {
         $user = auth()->user();
         $perPage = $request->get('per_page', 15);
-        
-        $notifications = Notification::where('user_id', $user->id)
-            ->orderBy('created_at', 'desc')
-            ->paginate($perPage);
+        $query = Notification::where('user_id', $user->id);
+        $unreadCount = (clone $query)
+        ->whereNull('read_at')
+        ->count();
+        $notifications = $query
+        ->orderBy('created_at', 'desc')
+        ->paginate($perPage);
+        // $notifications = Notification::where('user_id', $user->id)
+        //     ->orderBy('created_at', 'desc')
+        //     ->paginate($perPage);
         
         // Add icon_url to each notification
         $notifications->getCollection()->transform(function ($notification) {
@@ -29,7 +35,10 @@ class NotificationController extends BaseController
             return $notification;
         });
         
-        return $this->sendResponse($notifications, 'Notifications retrieved successfully.');
+        return $this->sendResponse([
+            'notifications' => $notifications,
+            'unread_count' => $unreadCount,
+        ], 'Notifications retrieved successfully.');
     }
 
     /**
