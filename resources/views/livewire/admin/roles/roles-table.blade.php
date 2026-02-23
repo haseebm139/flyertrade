@@ -1,3 +1,8 @@
+
+<style>
+
+
+</style>
 <div>
     <livewire:admin.components.toolbar label="roles" :button_label="auth()->user()->can('Create Roles') ? 'Role' : ''" search_label="Search role" :active-filters="$activeFilters" />
 
@@ -97,7 +102,7 @@
                                             <img src="{{ asset('assets/images/icons/delete-icon-active.svg') }}"
                                                 alt="Delete" class="eye-icon">
                                             <span
-                                                style="font-size: 0.9vw; color: #064f3c; cursor: pointer; font-weight: 400;">
+                                                style=" color: #064f3c; cursor: pointer; font-weight: 400;">
                                                 Delete </span>
                                         </button>
                                     </div>
@@ -226,6 +231,25 @@
             background-repeat: no-repeat;
             background-position: right 0.521vw center;
             background-size: 1.042vw;
+        }
+        .delete-btn{
+            font-size: 0.9vw;
+        }
+        @media(max-width:600px){
+            .avatar-small{
+                width: 5vw;
+                height: 5vw;
+            }
+            .more {
+                font-size: 2VW;
+            }
+            .theme-parent-class {
+                position: relative;
+                right: 10vw;
+            }
+             .delete-btn{
+            font-size: 2vw;
+        }
         }
     </style>
 </div>

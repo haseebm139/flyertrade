@@ -17,6 +17,26 @@
         color:#777777 !important;
             font-size: 0.9vw;
     }
+      .last-seen{
+       
+                border: 1px solid #004e4285;
+        }
+    @media(max-width:600px){
+        .theme-table th, .theme-table td, .status {
+                font-size: 2vw;
+        }
+        .last-seen{
+            width:40px;
+                border: 1px solid #004e4285;
+        }
+        .eye-icon{
+            width: 2vw !important;
+            height:2vw !important;
+        }
+        #addUserModal .custom-select-text {
+              font-size: 2vw;
+        }
+    }
 </style>
 <div class="container">
     <h1 class="page-title">Roles and Permissions</h1>

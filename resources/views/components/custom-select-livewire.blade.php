@@ -245,6 +245,9 @@ if ($initialValue !== null) {
         .custom-select-option-label {
             font-size: 2vw;
         }
+        .custom-select-dropdown {
+              max-height: 50vw;
+        }
         
     }
 </style>

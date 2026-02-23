@@ -15,6 +15,34 @@
 
 
     <title>{{ $title ?? 'Auth' }}</title>
+    <style>
+        @media(max-width:600px){
+            .form-control{
+                font-size:3vw;
+                    padding: 1vw 2.344vw 1vw 1vw;
+            }
+            .toggle-password {
+                position: absolute;
+                top: 50%;
+                right: 10px;
+                transform: translateY(-25%);
+                cursor: pointer;
+                color: #888;
+                font-size: 12px;
+            }
+            .forgot {
+                text-align: right;
+                font-size: 3vw;
+            }
+            .btn-submit {
+
+                font-size: 3vw;
+          padding: 0.929vw 2.344vw 0.729vw 0.729vw;
+          margin-top:10px;
+            }
+        }
+
+    </style>
     @livewireStyles
 </head>
 

@@ -1,3 +1,23 @@
+<style>
+       .showUserDeleteModal span{
+        font-size: 0.9vw;
+       }
+    @media(max-width:600px){
+        .showUserDeleteModal{
+            width:5vw;
+                display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+           .showUserDeleteModal span{
+        font-size: 2vw;
+       }
+       .delete_roles_wrapper{
+        width:100px;
+       }
+    }
+
+</style>
 <div>
     <livewire:admin.components.toolbar label="users" :button_label="auth()->user()->can('Create Roles') ? 'User' : ''" search_label="Search user" :active-filters="$activeFilters" />
 
@@ -92,7 +112,7 @@
                                 @endcan
                                 
                                 @can('Delete Roles')
-                                    <div style="position: relative;">
+                                    <div class="delete_roles_wrapper" style="position: relative;">
                                         <!-- ✅ Delete Modal -->
                                         <div id="deleteUserModal{{ $user->id }}" class="deleteModal"
                                             style="display: none; position: absolute; top: 2vw; right: 6vw; z-index: 1000;">
@@ -111,7 +131,7 @@
 
                                         <button type="button" class="delete-btn showUserDeleteModal" data-id="{{ $user->id }}" style="border: 0 !important; background: none; padding: 0;">
                                             <img src="{{ asset('assets/images/icons/delete-icon-active.svg') }}" alt="Delete" class="eye-icon">
-                                            <span style="font-size: 0.9vw; color: #064f3c; cursor: pointer; font-weight: 400;"> Delete </span>
+                                            <span style=" color: #064f3c; cursor: pointer; font-weight: 400;"> Delete </span>
                                         </button>
                                     </div>
                                 @endcan
@@ -218,7 +238,12 @@
             background-size: 20px;
         }
 
-         
+            @media(max-width:600px){
+            .date-input {
+      
+                background-size: 10px;
+            }
+        }
     </style>
 
      
