@@ -1,6 +1,75 @@
+<style>
+    .review_profile_img{
+        width: 2.65vw; height: 2.65vw; 
+    }
+    .review_main_title{
+        font-size: 0.8vw;
+    }
+    .text-muted-small{
+        font-size: 0.7vw;
+    }
+    .review_name{
+        font-size: 0.8vw;
+    }
+    .review_user_type{
+          font-size: 0.7vw;
+    }
+    .review_cretion_date{
+        font-size: 0.9vw;
+    }
+    .review_star{
+        width:1.2vw; height:1.2vw; 
+    }
+    .review___{
+         font-size: 1vw;
+    }
+    .view-btn{
+        font-size: 0.8vw;
+     
+    }
+        .view-btn img{
+   width: 1vw; height: 1vw;
+        }
+    @media(max-width:600px){
+        .review_profile_img{
+            width: 10vw; height: 10vw; 
+        }
+        .review_main_title{
+            font-size: 2.8vw;
+        }
+        .text-muted-small{
+            font-size: 1.8vw;
+        }
+        .arrow{
+            width:2vw;
+        }
+        .review_name{
+            font-size: 2.5vw;
+        }
+        .review_user_type{
+            font-size: 2vw;
+        }
+          .review_cretion_date{
+            font-size: 2vw;
+        }
+        .review_star{
+            width:2vw; height:2vw; 
+        }
+        .review___{
+            font-size: 2vw;
+        }
+        .view-btn{
+            font-size: 2vw;
+              
+        }
+                .view-btn img{
+width: 2vw; height: 2vw;
+                }
+    }
+</style>
 <div>
     <div class="row">
-        <div class="col-6">
+        <div class="col-12 col-sm-6 col-md-6 col-lg-6">
             <!-- Review Card -->
             <div class="card border-0 p-3">
                 <div class="d-flex align-items-center gap-2 mb-3">
@@ -18,16 +87,16 @@
                     style="margin-bottom: 2vw;">
                     <div class="d-flex align-items-center">
                         <img src="{{ asset($review->reviewer->avatar ?? 'assets/images/icons/person.svg') }}"
-                            alt="Reviewer" class="me-3 profile"
-                            style="width: 2.65vw; height: 2.65vw; border-radius: 50%;">
+                            alt="Reviewer" class="me-3 profile review_profile_img"
+                            style="border-radius: 50%;">
                         <div>
-                            <h6 class="mb-0" style="font-weight: 500; font-size: 0.8vw;">
+                            <h6 class="mb-0 review_main_title" style="font-weight: 500; ">
                                 <a href="{{ $review->reviewer->user_type === 'provider' ? route('user-management.service.providers.view', ['id' => $review->reviewer->id]) : route('user-management.service.users.view', ['id' => $review->reviewer->id]) }}"
                                     style="text-decoration: none; color: inherit;">
                                     {{ $review->reviewer->name ?? 'N/A' }}
                                 </a>
                             </h6>
-                            <small class="text-muted" style="font-size: 0.7vw;">Reviewer</small>
+                            <small class="text-muted text-muted-small" style="">Reviewer</small>
                         </div>
                     </div>
                     <a href="{{ $review->reviewer->user_type === 'provider' ? route('user-management.service.providers.view', ['id' => $review->reviewer->id]) : route('user-management.service.users.view', ['id' => $review->reviewer->id]) }}"
@@ -37,13 +106,13 @@
                 <div class="d-flex align-items-center justify-content-between p-3 mb-3">
                     <div class="d-flex align-items-center">
                         <div>
-                            <h6 class="mb-0" style="font-weight: 500; font-size: 0.8vw;">
+                            <h6 class="mb-0 review_name" style="font-weight: 500;">
                                 <a href="{{ $review->reviewedProvider->user_type === 'provider' ? route('user-management.service.providers.view', ['id' => $review->reviewedProvider->id]) : route('user-management.service.users.view', ['id' => $review->reviewedProvider->id]) }}"
                                     style="text-decoration: none; color: inherit;">
                                     {{ $review->reviewedProvider->name ?? 'N/A' }}
                                 </a>
                             </h6>
-                            <small class="text-muted" style="font-size: 0.7vw;">Reviewed
+                            <small class="text-muted review_user_type" style="">Reviewed
                                 {{ $review->reviewer->user_type === 'customer' ? 'Provider' : 'User' }}</small>
                         </div>
                     </div>
@@ -87,27 +156,27 @@
                         <div class="stars-rating d-flex">
                             @for ($i = 1; $i <= 5; $i++)
                                 @if ($i <= $review->rating)
-                                    <img src="{{ asset('assets/images/icons/star.svg') }}" alt="star"
-                                        style="width:1.2vw; height:1.2vw; margin-right:0.3vw;">
+                                    <img class="review_star" src="{{ asset('assets/images/icons/star.svg') }}" alt="star"
+                                        style="margin-right:0.3vw;">
                                 @else
-                                    <img src="{{ asset('assets/images/icons/empty_star.svg') }}" alt="empty star"
-                                        style="width:1.2vw; height:1.2vw; margin-right:0.3vw;">
+                                    <img class="review_star" src="{{ asset('assets/images/icons/empty_star.svg') }}" alt="empty star"
+                                        style=" margin-right:0.3vw;">
                                 @endif
                             @endfor
                         </div>
-                        <small class=""
-                            style="font-size: 0.9vw;color:#8E8E8E;">{{ $review->created_at->diffForHumans() }}</small>
+                        <small class="review_cretion_date"
+                            style="color:#8E8E8E;">{{ $review->created_at->diffForHumans() }}</small>
                     </div>
 
                     <!-- Review Text -->
                     @if (!$isEditing)
-                        <p class="mb-3" style="font-size: 1vw;">
+                        <p class="mb-3 review___" >
                             {{ $review->review }}
                         </p>
                     @else
                         <!-- Edit Area -->
-                        <textarea wire:model="reviewText"
-                            style="width:100%; font-size:1vw; padding: 10px; border: 1px solid #555555; border-radius: 5px;" rows="4"></textarea>
+                        <textarea class="review___" wire:model="reviewText"
+                            style="width:100%; padding: 10px; border: 1px solid #555555; border-radius: 5px;" rows="4"></textarea>
                     @endif
 
                     <!-- Buttons -->
@@ -117,9 +186,9 @@
                                 <!-- EDIT -->
                                 @can('Write Reviews')
                                     <a href="javascript:void(0);" wire:click="toggleEdit" class="view-btn"
-                                        style="color: grey; display: flex; align-items: center; gap: 5px; font-size: 0.8vw; text-decoration: none;">
+                                        style="color: grey; display: flex; align-items: center; gap: 5px; text-decoration: none;">
                                         <img src="{{ asset('assets/images/icons/edit-2.svg') }}"
-                                            style="width: 1vw; height: 1vw;">
+                                            style="">
                                         Edit
                                     </a>
                                 @endcan
@@ -127,9 +196,9 @@
                                 <!-- DELETE -->
                                 @can('Delete Reviews')
                                     <a href="javascript:void(0);" onclick="confirmDeleteReview()" class="view-btn"
-                                        style="color: grey; display: flex; align-items: center; gap: 5px; font-size: 0.8vw; text-decoration: none;">
+                                        style="color: grey; display: flex; align-items: center; gap: 5px;  text-decoration: none;">
                                         <img src="{{ asset('assets/images/icons/trash-theme.svg') }}"
-                                            style="width: 1vw; height: 1vw;">
+                                            style="">
                                         Delete
                                     </a>
                                 @endcan

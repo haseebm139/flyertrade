@@ -261,6 +261,12 @@
             background-position: right 10px center;
             background-size: 20px;
         }
+        @media(max-width:600px){
+            .date-input {
+      
+                background-size: 10px;
+            }
+        }
     </style>
     @if ($showFilterModal)
         <div class="modal filter-theme-modal" style="display: flex;">

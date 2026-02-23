@@ -1,3 +1,18 @@
+<style>
+    .action_btns___{
+        right: 0px !important;
+    }
+    @media(max-width:600px){
+        .status .arrow{
+            width:2vw;
+            height: 2vw;
+        }
+        .action_btns___{
+            right: 15px !important;
+        }
+    }
+
+</style>
 <div>
     <!-- Top Stat Cards -->
     <div class="combo-class">
@@ -120,7 +135,7 @@
                                 <button class="actions-btn" onclick="toggleActions(this)"> <img
                                         src="{{ asset('assets/images/icons/three_dots.svg') }}"
                                         class="dots-img "></button>
-                                <div class="actions-menu" style="display: none; right: 0px !important;">
+                                <div class="actions-menu action_btns___" style="display: none; ">
                                     {{-- <a wire:click="viewDispute({{ $dispute->id }})">View details</a> --}}
                                     @can('Write Disputes')
                                         @if ($dispute->status === 'resolved')

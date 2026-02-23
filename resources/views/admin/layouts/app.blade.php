@@ -498,7 +498,13 @@
 
                 width: max-content;
             }
-
+            .stars-rating img{
+                width:2vw;
+                height:2vw;
+            }
+           .status-btn {
+              font-size: 2vw;
+           }
         }
         
     </style>

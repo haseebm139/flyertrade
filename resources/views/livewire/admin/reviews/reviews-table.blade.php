@@ -136,7 +136,7 @@
                                             <img src="{{ asset('assets/images/icons/three_dots.svg') }}" class="dots-img"
                                                 alt="">
                                         </button>
-                                        <div class="actions-menu" style="position: absolute; right: 0; z-index: 100;">
+                                        <div class="actions-menu" style="position: absolute; right: 15; z-index: 100;">
                                             <a href="{{ route('reviews.show', ['id' => $review->id]) }}">
                                                 <img src="{{ asset('assets/images/icons/eye.svg') }}" alt=""> View
                                                 Details
@@ -279,6 +279,14 @@
 
         .status-dropdown .dropdown-menu li:hover {
             background-color: #f8f9fa;
+        }
+        @media(max-width:600px){
+             .status-dropdown .dropdown-menu {
+                min-width: 70px;
+            }
+            .dropdown-menu li {
+                font-size:1.9vw;
+            }
         }
     </style>
 

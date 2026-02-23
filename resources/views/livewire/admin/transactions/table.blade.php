@@ -186,7 +186,7 @@
                                     @can('Write Transactions')
                                     <a href="#" class="initiateBtn showDeleteModal___"
                                         data-id="{{ $transaction->id }}" data-user="{{ $associatedUser?->name }}">
-                                        <img style="height:0.7vw;width:0.7vw" src="{{ asset('assets/images/icons/init.svg') }}"
+                                        <img  src="{{ asset('assets/images/icons/init.svg') }}"
                                             alt=""> Initiate payout
                                     </a>
                                         @if ($transaction->type === 'payout' && in_array($transaction->status, ['pending', 'processing']))
