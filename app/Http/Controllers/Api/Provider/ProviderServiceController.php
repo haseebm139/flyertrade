@@ -220,7 +220,7 @@ class ProviderServiceController extends BaseController
             return $this->sendError($result['message']);
         }
 
-        $message = $result['message'] ?? 'Service deleted successfully.';
+        $message = $result['message'] ?? 'Selected Service(s) deleted successfully.';
         return $this->sendResponse([], $message);
     }
 }
