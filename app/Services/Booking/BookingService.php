@@ -682,7 +682,19 @@ class BookingService
 
     public function onGoingBookingsProvider($providerId)
     {
-        return Booking::with([
+        $slotOrder = BookingSlot::select(
+                'booking_id',
+                DB::raw('MIN(service_date) as first_slot_date'),
+                DB::raw('MIN(start_time) as first_slot_start_time')
+            )
+            ->groupBy('booking_id');
+
+        return Booking::query()
+            ->leftJoinSub($slotOrder, 'slot_order', function ($join) {
+                $join->on('slot_order.booking_id', '=', 'bookings.id');
+            })
+            ->select('bookings.*')
+            ->with([
                 'slots' => function ($q) {
                     $q->orderBy('service_date')->orderBy('start_time');
                 },
@@ -690,12 +702,10 @@ class BookingService
                 'customer',
                 'providerService.service'
             ])
-            ->withMin('slots as first_slot_date', 'service_date')
-            ->withMin('slots as first_slot_start_time', 'start_time')
             ->where('provider_id', $providerId)
             ->where('status', 'in_progress')
-            ->orderBy('first_slot_date')
-            ->orderBy('first_slot_start_time')
+            ->orderBy('slot_order.first_slot_date')
+            ->orderBy('slot_order.first_slot_start_time')
             ->paginate(10);
     }
 
@@ -837,7 +847,19 @@ class BookingService
     }
     public function onGoingBookingsCustomer($customerId)
     {
-        return Booking::with([
+        $slotOrder = BookingSlot::select(
+                'booking_id',
+                DB::raw('MIN(service_date) as first_slot_date'),
+                DB::raw('MIN(start_time) as first_slot_start_time')
+            )
+            ->groupBy('booking_id');
+
+        return Booking::query()
+            ->leftJoinSub($slotOrder, 'slot_order', function ($join) {
+                $join->on('slot_order.booking_id', '=', 'bookings.id');
+            })
+            ->select('bookings.*')
+            ->with([
                 'slots' => function ($q) {
                     $q->orderBy('service_date')->orderBy('start_time');
                 },
@@ -845,12 +867,10 @@ class BookingService
                 'customer',
                 'providerService.service'
             ])
-            ->withMin('slots as first_slot_date', 'service_date')
-            ->withMin('slots as first_slot_start_time', 'start_time')
             ->where('customer_id', $customerId)
             ->where('status', 'in_progress')
-            ->orderBy('first_slot_date')
-            ->orderBy('first_slot_start_time')
+            ->orderBy('slot_order.first_slot_date')
+            ->orderBy('slot_order.first_slot_start_time')
             ->paginate(10);
     }
 
