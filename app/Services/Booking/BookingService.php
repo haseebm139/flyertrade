@@ -682,7 +682,21 @@ class BookingService
 
     public function onGoingBookingsProvider($providerId)
     {
-        return Booking::with('slots', 'provider', 'customer','providerService.service')->where('provider_id', $providerId)->where('status', 'in_progress')->first();
+        return Booking::with([
+                'slots' => function ($q) {
+                    $q->orderBy('service_date')->orderBy('start_time');
+                },
+                'provider',
+                'customer',
+                'providerService.service'
+            ])
+            ->withMin('slots as first_slot_date', 'service_date')
+            ->withMin('slots as first_slot_start_time', 'start_time')
+            ->where('provider_id', $providerId)
+            ->where('status', 'in_progress')
+            ->orderBy('first_slot_date')
+            ->orderBy('first_slot_start_time')
+            ->get();
     }
 
     public function upcomingBookingsProvider($providerId)
@@ -823,7 +837,21 @@ class BookingService
     }
     public function onGoingBookingsCustomer($customerId)
     {
-        return Booking::with('slots', 'provider', 'customer','providerService.service')->where('customer_id', $customerId)->where('status', 'in_progress')->paginate(10);
+        return Booking::with([
+                'slots' => function ($q) {
+                    $q->orderBy('service_date')->orderBy('start_time');
+                },
+                'provider',
+                'customer',
+                'providerService.service'
+            ])
+            ->withMin('slots as first_slot_date', 'service_date')
+            ->withMin('slots as first_slot_start_time', 'start_time')
+            ->where('customer_id', $customerId)
+            ->where('status', 'in_progress')
+            ->orderBy('first_slot_date')
+            ->orderBy('first_slot_start_time')
+            ->paginate(10);
     }
 
     /**
