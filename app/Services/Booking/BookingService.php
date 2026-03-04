@@ -696,7 +696,7 @@ class BookingService
             ->where('status', 'in_progress')
             ->orderBy('first_slot_date')
             ->orderBy('first_slot_start_time')
-            ->get();
+            ->paginate(10);
     }
 
     public function upcomingBookingsProvider($providerId)
