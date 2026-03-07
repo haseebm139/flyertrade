@@ -425,6 +425,52 @@ class NotificationService
     }
 
     /**
+     * Notify provider/customer when booking is extended.
+     */
+    public function notifyBookingExtended($booking, int $extraMinutes, float $extraPrice, float $serviceCharges = 0): void
+    {
+        $provider = User::find($booking->provider_id);
+        if ($provider) {
+            $this->send(
+                $provider,
+                'booking_extended',
+                'Booking Extended',
+                "Booking #{$booking->booking_ref} has been extended by {$extraMinutes} minute(s).",
+                'provider',
+                $booking,
+                [
+                    'booking_id' => $booking->id,
+                    'booking_ref' => $booking->booking_ref,
+                    'extra_minutes' => $extraMinutes,
+                    'extra_price' => $extraPrice,
+                    'service_charges' => $serviceCharges,
+                    'action_url' => "/bookings/{$booking->id}"
+                ]
+            );
+        }
+
+        $customer = User::find($booking->customer_id);
+        if ($customer) {
+            $this->send(
+                $customer,
+                'booking_extended',
+                'Booking Extended',
+                "Your booking #{$booking->booking_ref} has been extended successfully.",
+                'customer',
+                $booking,
+                [
+                    'booking_id' => $booking->id,
+                    'booking_ref' => $booking->booking_ref,
+                    'extra_minutes' => $extraMinutes,
+                    'extra_price' => $extraPrice,
+                    'service_charges' => $serviceCharges,
+                    'action_url' => "/bookings/{$booking->id}"
+                ]
+            );
+        }
+    }
+
+    /**
      * Send booking cancelled notification
      */
     public function notifyBookingCancelled($booking, $cancelledBy = 'customer'): void
