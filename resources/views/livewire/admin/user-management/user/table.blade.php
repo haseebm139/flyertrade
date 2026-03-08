@@ -215,14 +215,17 @@
 
                 </div>
             </div>
-            <label style="color:#717171;font-weight:500">Status</label>
+            <div class="mt-3">
+  <label style="color:#717171;font-weight:500">Status</label>
                 <x-custom-select-livewire name="tempStatus" :options="[
                     ['value' => '', 'label' => 'Select status'],
                     ['value' => 'active', 'label' => 'Active'],
                     ['value' => 'inactive', 'label' => 'Inactive'],
                 ]" placeholder="Select status"
                     wireModel="tempStatus" :value="$tempStatus" class="form-input mt-2" />
-            <div class="form-actions">
+            </div>
+          
+            <div class="form-actions mt-3">
                     <button type="button" class="reset-btn filter_modal_reset"
                         wire:click="resetFilters">Reset</button>
                 <button type="button" class="submit-btn" wire:click="applyFilters">Apply Now</button>

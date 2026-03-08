@@ -2773,6 +2773,7 @@ button.btn-close {
 .profile-heading {
     border-bottom: 0.1vw solid #ddd;
     padding: 1.3vw;
+    font-size:1.4vw;
 }
 
 .profile-details {
@@ -4626,4 +4627,8 @@ textarea.form-input.error-input:focus {
     .cancel-btn, .submit-btn, .reset-btn {
         font-size:2vw;
     }
+    .profile-heading, .profile-details {
+
+    font-size:2vw;
+}
 }
