@@ -70,9 +70,9 @@
             background-color: rgba(0, 123, 255, 0.1);
         }
         @media(max-width:600px){
-               .status {
-    border-radius:2vw;
-   }
+            .status {
+                border-radius:2vw;
+            }
         }
     </style>
 
