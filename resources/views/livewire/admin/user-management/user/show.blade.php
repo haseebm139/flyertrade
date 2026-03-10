@@ -30,7 +30,7 @@
         .status {
             padding: 0.3vw 1vw;
             border-radius: 1.0416vw;
-            font-size: 0.9vw;
+            /* font-size: 0.9vw; */
             text-align: center;
             width: fit-content;
             font-weight: 500;
@@ -68,6 +68,11 @@
             color: #007bff;
             border-color: #007bff;
             background-color: rgba(0, 123, 255, 0.1);
+        }
+        @media(max-width:600px){
+               .status {
+    border-radius:2vw;
+   }
         }
     </style>
 
@@ -245,70 +250,72 @@
                 </div>
             </div>
             <br>
-
-            <table class="theme-table">
-                <thead>
-                    <tr>
-                        <th class="sortable" wire:click="sortBy('booking_ref')">Booking ID <img
-                                src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
-                        <th class="sortable" wire:click="sortBy('created_at')">Date created <img
-                                src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
-                        <th class="sortable">Provider <img src="{{ asset('assets/images/icons/sort.svg') }}"
-                                class="sort-icon"></th>
-                        <th class="sortable" wire:click="sortBy('booking_address')">Location <img
-                                src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
-                        <th class="sortable">Service Category <img src="{{ asset('assets/images/icons/sort.svg') }}"
-                                class="sort-icon"></th>
-                        <th class="sortable" wire:click="sortBy('total_price')">Amount Paid <img
-                                src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
-                        <th class="sortable" wire:click="sortBy('booking_working_minutes')">Duration <img
-                                src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
-                        <th class="sortable" wire:click="sortBy('status')">Status <img
-                                src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($bookings as $booking)
+            <div class="table-responsive">
+                <table class="theme-table">
+                    <thead>
                         <tr>
+                            <th class="sortable" wire:click="sortBy('booking_ref')">Booking ID <img
+                                    src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
+                            <th class="sortable" wire:click="sortBy('created_at')">Date created <img
+                                    src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
+                            <th class="sortable">Provider <img src="{{ asset('assets/images/icons/sort.svg') }}"
+                                    class="sort-icon"></th>
+                            <th class="sortable" wire:click="sortBy('booking_address')">Location <img
+                                    src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
+                            <th class="sortable">Service Category <img src="{{ asset('assets/images/icons/sort.svg') }}"
+                                    class="sort-icon"></th>
+                            <th class="sortable" wire:click="sortBy('total_price')">Amount Paid <img
+                                    src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
+                            <th class="sortable" wire:click="sortBy('booking_working_minutes')">Duration <img
+                                    src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
+                            <th class="sortable" wire:click="sortBy('status')">Status <img
+                                    src="{{ asset('assets/images/icons/sort.svg') }}" class="sort-icon"></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($bookings as $booking)
+                            <tr>
 
-                            <td>{{ $booking->booking_ref }}</td>
-                            <td><span class="date">{{ $booking->created_at->format('d M, Y') }}</span>
-                                <br>
-                                <small class="time">{{ $booking->created_at->format('h:ia') }}</small>
-                            </td>
-                            <td>
-                                <a href="{{ $booking->provider_id ? route('user-management.service.providers.view', $booking->provider_id) : '#' }}"
-                                    style="text-decoration: none; color: inherit; font-weight: 500;">
-                                    {{ $booking->provider->name ?? '-' }}
-                                </a>
-                            </td>
-                            <td>{{ $booking->booking_address ?? '-' }}</td>
-                            <td>
-                                <p class="user-name">{{ $booking->service->name ?? '-' }}</p>
-                            </td>
-                            <td>${{ number_format($booking->total_price, 2) }}</td>
-                            <td>{{ $booking->duration ?? '-' }}</td>
-                            <td>
-                                <div class="status {{ strtolower($booking->status) }}">
-                                    {{ str_replace('_', ' ', $booking->status) }}
-                                </div>
-                            </td>
-                            <td class="viw-parent">
-                                <button class="view-btn" wire:click="viewBooking({{ $booking->id }})">
-                                    <img src="{{ asset('assets/images/icons/eye_icon.svg') }}" alt="View"
-                                        class="eye-icon">
-                                    View
-                                </button>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="9" class="text-center">No bookings found.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                                <td>{{ $booking->booking_ref }}</td>
+                                <td><span class="date">{{ $booking->created_at->format('d M, Y') }}</span>
+                                    <br>
+                                    <small class="time">{{ $booking->created_at->format('h:ia') }}</small>
+                                </td>
+                                <td>
+                                    <a href="{{ $booking->provider_id ? route('user-management.service.providers.view', $booking->provider_id) : '#' }}"
+                                        style="text-decoration: none; color: inherit; font-weight: 500;">
+                                        {{ $booking->provider->name ?? '-' }}
+                                    </a>
+                                </td>
+                                <td>{{ $booking->booking_address ?? '-' }}</td>
+                                <td>
+                                    <p class="user-name">{{ $booking->service->name ?? '-' }}</p>
+                                </td>
+                                <td>${{ number_format($booking->total_price, 2) }}</td>
+                                <td>{{ $booking->duration ?? '-' }}</td>
+                                <td>
+                                    <div class="status {{ strtolower($booking->status) }}">
+                                        {{ str_replace('_', ' ', $booking->status) }}
+                                    </div>
+                                </td>
+                                <td class="viw-parent">
+                                    <button class="view-btn" wire:click="viewBooking({{ $booking->id }})">
+                                        <img src="{{ asset('assets/images/icons/eye_icon.svg') }}" alt="View"
+                                            class="eye-icon">
+                                        View
+                                    </button>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="9" class="text-center">No bookings found.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+         
 
             {{ $bookings->links('vendor.pagination.custom') }}
         </div>
