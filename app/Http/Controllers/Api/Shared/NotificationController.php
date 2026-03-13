@@ -236,7 +236,7 @@ class NotificationController extends BaseController
             $data
         );
 
-        return $this->sendResponse([], 'Message notification sent.');
+        return $this->sendResponse([], 'notification sent successfully.');
     }
 
     /**
