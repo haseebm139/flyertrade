@@ -50,11 +50,12 @@ class NotificationService
         ?string $category = null,
         ?bool $sendPush = true
     ): Notification {
+        $resolvedCategory = $category ?? NotificationIcon::getCategoryForType($type);
         $notification = Notification::create([
             'user_id' => $user->id,
             'type' => $type,
             'icon' => $icon ?? NotificationIcon::getIconForType($type),
-            'category' => $category ?? NotificationIcon::getCategoryForType($type),
+            'category' => $resolvedCategory,
             'title' => $title,
             'message' => $message,
             'recipient_type' => $recipientType,
@@ -62,34 +63,24 @@ class NotificationService
             'notifiable_id' => $notifiable ? $notifiable->id : null,
             'data' => $data,
         ]);
-       
-         if ($sendPush) {
-             
-             // Send FCM push notification if user has a token and preferences allow
-             $shouldSendPush = !empty($user->fcm_token);
-             
-             if ($shouldSendPush) { 
-                 if($user->is_booking_notification == true ){
-                     
-                         $this->sendPushNotification($user->fcm_token, $title, $message, array_merge($data, [
-                         'notification_id' => $notification->id,
-                         'type' => $type
-                     ]));
-                 }
-                //  if ($category === 'promotions') {
-                //     $shouldSendPush = $user->is_promo_option_notification === true;
-                //  } elseif ($category === 'bookings') {
-                //     $shouldSendPush = $user->is_booking_notification === true;
-                //  }else{
-                //     $shouldSendPush = $user->is_booking_notification === true;
-                //  }
-                //  if ($shouldSendPush) {
-                     
-                    
-                //  }
-             }
-                 
-         }   
+
+        if ($sendPush && !empty($user->fcm_token)) {
+            $allowByCategory = ($resolvedCategory === 'messages')
+                || (isset($user->is_booking_notification) && $user->is_booking_notification == true);
+            if ($allowByCategory) {
+                try {
+                    $this->sendPushNotification($user->fcm_token, $title, $message, array_merge($data, [
+                        'notification_id' => $notification->id,
+                        'type' => $type,
+                    ]));
+                } catch (\Throwable $e) {
+                    Log::warning('Push notification send failed: ' . $e->getMessage(), [
+                        'user_id' => $user->id,
+                        'notification_id' => $notification->id,
+                    ]);
+                }
+            }
+        }
 
         return $notification;
     }
