@@ -45,7 +45,9 @@ class ProviderRepository
                     },
                     'providerProfile.workingHours'])
             ->withCount([
-                'providerBookings as provider_bookings_count',
+                'providerBookings as provider_bookings_count' => function ($query) {
+                $query->where('status', 'completed');
+            },
                 'providerServices as provider_services_count',
                 'publishedReviews as published_reviews_count'
             ])
@@ -231,7 +233,9 @@ class ProviderRepository
             // ✅ COUNTS
             // =========================
             ->withCount([
-                'providerBookings as provider_bookings_count',
+                'providerBookings as provider_bookings_count' => function ($query) {
+                    $query->where('status', 'completed');
+                },
                 'providerServices as provider_services_count',
                 'publishedReviews as published_reviews_count'
             ])
@@ -521,7 +525,9 @@ class ProviderRepository
             'provider.providerProfile.workingHours',
             'provider' => function($q) {
                 $q->withCount([
-                    'providerBookings as provider_bookings_count',
+                    'providerBookings as provider_bookings_count' => function ($query) {
+                        $query->where('status', 'completed');
+                    },
                     'providerServices as provider_services_count',
                     'publishedReviews as published_reviews_count'
                 ])
