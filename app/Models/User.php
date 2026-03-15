@@ -220,7 +220,7 @@ class User extends Authenticatable
         }
         
         // Otherwise calculate on the fly
-        return $this->providerBookings()->count();
+        return $this->providerBookings()->where('status', 'completed')->count();
     }
 
     /**
