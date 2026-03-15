@@ -35,7 +35,7 @@ class CreateProviderProfileRequest extends FormRequest
             'office_address' => 'nullable|string|max:255',
             'latitude'       => 'nullable|numeric',
             'longitude'      => 'nullable|numeric',
-
+            'about_me'       => 'nullable|string',
             'is_booking_notification' => 'nullable|boolean',
             'is_promo_option_notification' => 'nullable|boolean',
 

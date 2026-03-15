@@ -50,7 +50,7 @@ class ProviderProfileService
         // ✅ Save profile
         $profileData = collect($data)->only([
             'country', 'city', 'state', 'zip',
-            'office_address', 'latitude', 'longitude'
+            'office_address', 'latitude', 'longitude','about_me',
         ])->toArray();
         
         $profileImg = null;
