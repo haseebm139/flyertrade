@@ -386,7 +386,9 @@ class ProviderRepository
             }
         ])
         ->withCount([
-            'providerBookings as provider_bookings_count',
+            'providerBookings as provider_bookings_count' => function ($query) {
+                $query->where('status', 'completed');
+            },
             'providerServices as provider_services_count',
             'publishedReviews as published_reviews_count'
         ])
