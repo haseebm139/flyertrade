@@ -156,6 +156,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Booking::class, 'provider_id');
     }
+     public function providerBookingsCompleted(): HasMany
+    {
+        return $this->hasMany(Booking::class, 'provider_id')->where('status', 'completed');
+    }
 
     /**
      * Get bookings where user is the customer
@@ -220,7 +224,7 @@ class User extends Authenticatable
         }
         
         // Otherwise calculate on the fly
-        return $this->providerBookings()->where('status', 'completed')->count();
+        return $this->providerBookingsCompleted()->count();
     }
 
     /**
