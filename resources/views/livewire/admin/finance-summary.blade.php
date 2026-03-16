@@ -23,7 +23,7 @@
             </div>
             <div class="stat-value">
                 ${{ number_format($financeSummary['total_revenue'] ?? 0, 2) }}
-                <span class="stat-up"><img src="{{ asset('assets/images/icons/value-high.svg') }}"
+                <span class="stat-up"><img src="{{ asset('assets/images/icons/value-high.png') }}"
                         class="img-log" alt=""></span>
             </div>
         </div>
@@ -34,7 +34,7 @@
             </div>
             <div class="stat-value">
                 ${{ number_format($financeSummary['total_payout'] ?? 0, 2) }}
-                <span class="stat-down"><img src="{{ asset('assets/images/icons/value-down.svg') }}"
+                <span class="stat-down"><img src="{{ asset('assets/images/icons/value-down.png') }}"
                         class="img-log" alt=""></span>
             </div>
         </div>
