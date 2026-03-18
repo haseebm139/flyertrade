@@ -56,7 +56,7 @@ class CustomerOnlyProfileService
 
          
         $encoded = (string) $image->encode(new JpegEncoder(quality: $quality));
-        dd($encoded);
+         
         if ($encoded === '') {
             return $storeRaw();
         }
