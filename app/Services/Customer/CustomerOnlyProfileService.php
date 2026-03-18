@@ -106,9 +106,9 @@ class CustomerOnlyProfileService
             $optimizedPath = $this->storeOptimizedJpeg(
                 $file,
                 'customer/profile',
-                256,
-                256,
-                80
+                150,
+                150,
+                60
             );
 
             if ($optimizedPath) {
@@ -121,8 +121,8 @@ class CustomerOnlyProfileService
             $optimizedPath = $this->storeOptimizedJpeg(
                 $file,
                 'customer/profile',
-                1024,
-                512,
+                400,
+                400,
                 80
             );
 
