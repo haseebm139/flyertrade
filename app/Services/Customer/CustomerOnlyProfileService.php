@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
-
+use Intervention\Image\Encoders\JpegEncoder;
 class CustomerOnlyProfileService
 {
     /**
@@ -55,6 +55,7 @@ class CustomerOnlyProfileService
         $image->scaleDown($maxWidth, $maxHeight);
 
         $encoded = (string) $image->encode('jpg', $quality);
+        $encoded = (string) $image->encode(new JpegEncoder(quality: $quality));
         dd($encoded);
         if ($encoded === '') {
             return $storeRaw();
