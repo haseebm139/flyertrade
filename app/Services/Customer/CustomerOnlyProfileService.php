@@ -40,13 +40,13 @@ class CustomerOnlyProfileService
  
         $driver = null;
         if (extension_loaded('gd')) {
-            dd('gd');
+            
             $driver = new Driver();
         } elseif (extension_loaded('imagick') && class_exists(\Intervention\Image\Drivers\Imagick\Driver::class)) {
-             dd('imagick');
+              
             $driver = new \Intervention\Image\Drivers\Imagick\Driver();
         } else {
-             dd('no driver');
+              
             return $storeRaw();
         }
         
