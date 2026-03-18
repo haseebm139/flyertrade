@@ -7,71 +7,11 @@ use App\Models\Review;
  
 use App\Models\Bookmark; 
 use App\Models\ProviderService;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\Gd\Driver;
 
 class CustomerOnlyProfileService
 {
-    /**
-     * Store an optimized (resized + compressed) JPEG image.
-     *
-     * @return string|null Storage URL path like `storage/<dir>/<file>.jpg`
-     */
-    private function storeOptimizedJpeg($file, string $directory, int $maxWidth, int $maxHeight, int $quality = 80): ?string
-    {
-        $disk = Storage::disk('public');
-        
-        
-        // Fallback: store raw file if neither GD nor Imagick is available.
-        $storeRaw = function () use ($disk, $file, $directory): ?string {
-            try {
-                $disk->makeDirectory($directory);
-                $rawPath = rtrim($directory, '/') . '/' . $file->hashName();
-                $disk->put($rawPath, file_get_contents($file->getRealPath()));
-                return 'storage/' . $rawPath;
-            } catch (\Throwable $e) {
-                \Log::error('Failed to store raw file fallback: ' . $e->getMessage());
-                return null;
-            }
-        };
- 
-        $driver = null;
-        if (extension_loaded('gd')) {
-            dd('gd');
-            $driver = new Driver();
-        } elseif (extension_loaded('imagick') && class_exists(\Intervention\Image\Drivers\Imagick\Driver::class)) {
-             dd('imagick');
-            $driver = new \Intervention\Image\Drivers\Imagick\Driver();
-        } else {
-             dd('no driver');
-            return $storeRaw();
-        }
-        
-        try {
-            $manager = new ImageManager($driver);
-            $image = $manager->read($file);
-            $image->scaleDown($maxWidth, $maxHeight);
-
-            $encoded = (string) $image->encode('jpg', $quality);
-            if ($encoded === '') {
-                return $storeRaw();
-            }
-
-            $disk->makeDirectory($directory);
-            $filename = Str::uuid()->toString() . '.jpg';
-            $path = rtrim($directory, '/') . '/' . $filename;
-            $disk->put($path, $encoded);
-
-            return 'storage/' . $path;
-        } catch (\Throwable $e) {
-            \Log::error('Failed to store optimized image: ' . $e->getMessage());
-            return $storeRaw();
-        }
-    }
-
     /**
      * Update customer profile (only basic fields)
      *
@@ -97,35 +37,38 @@ class CustomerOnlyProfileService
         //     $path = $data['avatar']->store('customer/profile', 'public');
         //     $updateData['avatar'] = 'storage/' . $path;
         // }
-        
-        if (isset($data['avatar']) && $data['avatar']) {
-            $file = $data['avatar'];
-              
-            $optimizedPath = $this->storeOptimizedJpeg(
-                $file,
-                'customer/profile',
-                256,
-                256,
-                80
-            );
 
-            if ($optimizedPath) {
-                $updateData['avatar'] = $optimizedPath;
+        if (isset($data['avatar']) && $data['avatar']) {
+            $file = $data['avatar'];  
+            $path = 'customer/profile/' . $file->hashName();  
+
+            // File content ko seedhe disk mein likhein
+            try {
+                Storage::disk('public')->put(
+                    $path, 
+                    file_get_contents($file->getRealPath())
+                );
+                $updateData['avatar'] = 'storage/' . $path;
+                \Log::info('File saved successfully using put method: ' . $path);
+            } catch (\Exception $e) {
+                \Log::error('File saving failed with PUT method: ' . $e->getMessage());
             }
         }
          
         if (isset($data['cover_photo']) && $data['cover_photo']) {
-            $file = $data['cover_photo'];
-            $optimizedPath = $this->storeOptimizedJpeg(
-                $file,
-                'customer/profile',
-                1024,
-                512,
-                80
-            );
+            $file = $data['cover_photo'];  
+            $path = 'customer/profile/' . $file->hashName();  
 
-            if ($optimizedPath) {
-                $updateData['cover_photo'] = $optimizedPath;
+             
+            try {
+                Storage::disk('public')->put(
+                    $path, 
+                    file_get_contents($file->getRealPath())
+                );
+                $updateData['cover_photo'] = 'storage/' . $path;
+                \Log::info('File saved successfully using put method: ' . $path);
+            } catch (\Exception $e) {
+                \Log::error('File saving failed with PUT method: ' . $e->getMessage());
             }
         }
         

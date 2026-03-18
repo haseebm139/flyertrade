@@ -18,7 +18,12 @@ Route::get('/test-email', function () {
         return "❌ Failed to send email. Error: " . $e->getMessage();
     }
 });
- 
+ Route::get('/debug/phpinfo', function () {
+    ob_start();
+    phpinfo();
+    $out = ob_get_clean();
+    return response($out, 200)->header('Content-Type', 'text/html; charset=UTF-8');
+});
 Route::get('/testing', function () {
     dd('Hello world');
 });
