@@ -61,13 +61,13 @@ class CustomerOnlyProfileService
             return $storeRaw();
         }
 
-        $disk->makeDirectory($directory);
-        $filename = Str::uuid()->toString() . '.jpg';
-        $path = rtrim($directory, '/') . '/' . $filename;
-        $disk->put($path, $encoded);
-        dd($path);
-        return 'storage/' . $path;
         try {
+            $disk->makeDirectory($directory);
+            $filename = Str::uuid()->toString() . '.jpg';
+            $path = rtrim($directory, '/') . '/' . $filename;
+            $disk->put($path, $encoded);
+             
+            return 'storage/' . $path;
         } catch (\Throwable $e) {
             \Log::error('Failed to store optimized image: ' . $e->getMessage());
             return $storeRaw();
