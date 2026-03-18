@@ -55,6 +55,7 @@ class CustomerOnlyProfileService
         $image->scaleDown($maxWidth, $maxHeight);
 
         $encoded = (string) $image->encode('jpg', $quality);
+        dd($encoded);
         if ($encoded === '') {
             return $storeRaw();
         }
