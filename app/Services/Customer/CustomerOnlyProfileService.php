@@ -50,22 +50,22 @@ class CustomerOnlyProfileService
             return $storeRaw();
         }
         
+        $manager = new ImageManager($driver);
+        $image = $manager->read($file);
+        $image->scaleDown($maxWidth, $maxHeight);
+
+        $encoded = (string) $image->encode('jpg', $quality);
+        if ($encoded === '') {
+            return $storeRaw();
+        }
+
+        $disk->makeDirectory($directory);
+        $filename = Str::uuid()->toString() . '.jpg';
+        $path = rtrim($directory, '/') . '/' . $filename;
+        $disk->put($path, $encoded);
+        dd($path);
+        return 'storage/' . $path;
         try {
-            $manager = new ImageManager($driver);
-            $image = $manager->read($file);
-            $image->scaleDown($maxWidth, $maxHeight);
-
-            $encoded = (string) $image->encode('jpg', $quality);
-            if ($encoded === '') {
-                return $storeRaw();
-            }
-
-            $disk->makeDirectory($directory);
-            $filename = Str::uuid()->toString() . '.jpg';
-            $path = rtrim($directory, '/') . '/' . $filename;
-            $disk->put($path, $encoded);
-
-            return 'storage/' . $path;
         } catch (\Throwable $e) {
             \Log::error('Failed to store optimized image: ' . $e->getMessage());
             return $storeRaw();
