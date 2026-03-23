@@ -142,6 +142,12 @@ class BookingController extends BaseController
         return $this->sendResponse($completed, 'Completed bookings.'); 
     }
 
+    public function cancelled(): JsonResponse
+    {
+        $completed = $this->bookings->cancelledBookingsProvider(auth()->user()->id);
+        return $this->sendResponse($completed, 'Completed bookings.'); 
+    }
+
     public function totalAmount(): JsonResponse
     {
         $amount = $this->bookings->totalAmountProvider(auth()->user()->id);

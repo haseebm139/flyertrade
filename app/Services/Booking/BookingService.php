@@ -874,6 +874,14 @@ class BookingService
             ->paginate(10);
     }
 
+    public function cancelledBookingsProvider($providerId)
+    { 
+        return Booking::with('slots', 'provider', 'customer','providerService.service')
+            ->where('provider_id', $providerId)
+            ->whereIn('status', ['cancelled', 'rejected'])
+            ->paginate(10);
+     
+    }
     /**
      * Check if review has been given for a booking
      * 
