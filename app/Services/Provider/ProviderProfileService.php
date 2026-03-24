@@ -6,13 +6,18 @@ use App\Models\ProviderProfile;
 use App\Models\ProviderService;
 use App\Models\ProviderCertificate;
 use App\Models\User;
+use App\Services\Notification\NotificationService;
+use App\Services\Shared\ProfileImageOptimizer;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\Shared\UserResource;
-use App\Services\Notification\NotificationService;
 use DB;
+
 class ProviderProfileService
 {
-    public function __construct(private NotificationService $notificationService) {}
+    public function __construct(
+        private NotificationService $notificationService,
+        private ProfileImageOptimizer $imageOptimizer
+    ) {}
     public function createOrUpdateProfile(array $data, $user)
     {
         $user = $user->load('providerProfile');
@@ -54,25 +59,38 @@ class ProviderProfileService
         ])->toArray();
         
         $profileImg = null;
-        if (isset($data['avatar'])) {
-            $path = $data['avatar']->store('provider/profile', 'public');
-            $profileImg = 'storage/' . $path;
+        if (isset($data['avatar']) && $data['avatar']) {
+            foreach (array_unique(array_filter([
+                $user->avatar,
+                $user->providerProfile?->profile_photo,
+            ])) as $oldPath) {
+                $this->imageOptimizer->deletePublicStoragePath($oldPath);
+            }
 
-            $profileData['profile_photo'] = $profileImg;
+            $profileImg = $this->imageOptimizer->storeOptimizedJpeg(
+                $data['avatar'],
+                'provider/profile',
+                150,
+                150,
+                60
+            );
+
+            if ($profileImg) {
+                $profileData['profile_photo'] = $profileImg;
+            }
         }
 
         $coverPhotoPath = null;
-        if (isset($data['cover_photo'])) {
-            // Delete old cover photo if exists
-            if ($user->cover_photo) {
-                $oldPath = str_replace('storage/', '', $user->cover_photo);
-                if (Storage::disk('public')->exists($oldPath)) {
-                    Storage::disk('public')->delete($oldPath);
-                }
-            }
+        if (isset($data['cover_photo']) && $data['cover_photo']) {
+            $this->imageOptimizer->deletePublicStoragePath($user->cover_photo);
 
-            $path = $data['cover_photo']->store('provider/profile', 'public');
-            $coverPhotoPath = 'storage/' . $path;
+            $coverPhotoPath = $this->imageOptimizer->storeOptimizedJpeg(
+                $data['cover_photo'],
+                'provider/profile',
+                400,
+                400,
+                80
+            );
         }
         
         // $profileData['about_me'] = isset($data['services']['about']) ? $data['services']['about'] : null;

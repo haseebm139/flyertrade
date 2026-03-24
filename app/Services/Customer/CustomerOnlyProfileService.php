@@ -3,75 +3,13 @@
 namespace App\Services\Customer;
 
 use App\Models\User;
-use App\Models\Review;
- 
-use App\Models\Bookmark; 
-use App\Models\ProviderService;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
-use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\Gd\Driver;
-use Intervention\Image\Encoders\JpegEncoder;
+use App\Services\Shared\ProfileImageOptimizer;
+
 class CustomerOnlyProfileService
 {
-    /**
-     * Store an optimized (resized + compressed) JPEG image.
-     *
-     * @return string|null Storage URL path like `storage/<dir>/<file>.jpg`
-     */
-    private function storeOptimizedJpeg($file, string $directory, int $maxWidth, int $maxHeight, int $quality = 80): ?string
-    {
-        $disk = Storage::disk('public');
-        
-        
-        // Fallback: store raw file if neither GD nor Imagick is available.
-        $storeRaw = function () use ($disk, $file, $directory): ?string {
-            try {
-                $disk->makeDirectory($directory);
-                $rawPath = rtrim($directory, '/') . '/' . $file->hashName();
-                $disk->put($rawPath, file_get_contents($file->getRealPath()));
-                return 'storage/' . $rawPath;
-            } catch (\Throwable $e) {
-                \Log::error('Failed to store raw file fallback: ' . $e->getMessage());
-                return null;
-            }
-        };
- 
-        $driver = null;
-        if (extension_loaded('gd')) {
-            
-            $driver = new Driver();
-        } elseif (extension_loaded('imagick') && class_exists(\Intervention\Image\Drivers\Imagick\Driver::class)) {
-              
-            $driver = new \Intervention\Image\Drivers\Imagick\Driver();
-        } else {
-              
-            return $storeRaw();
-        }
-        
-        $manager = new ImageManager($driver);
-        $image = $manager->read($file);
-        $image->scaleDown($maxWidth, $maxHeight);
-
-         
-        $encoded = (string) $image->encode(new JpegEncoder(quality: $quality));
-         
-        if ($encoded === '') {
-            return $storeRaw();
-        }
-
-        try {
-            $disk->makeDirectory($directory);
-            $filename = Str::uuid()->toString() . '.jpg';
-            $path = rtrim($directory, '/') . '/' . $filename;
-            $disk->put($path, $encoded);
-             
-            return 'storage/' . $path;
-        } catch (\Throwable $e) {
-            \Log::error('Failed to store optimized image: ' . $e->getMessage());
-            return $storeRaw();
-        }
+    public function __construct(
+        private ProfileImageOptimizer $images
+    ) {
     }
 
     /**
@@ -101,9 +39,9 @@ class CustomerOnlyProfileService
         // }
         
         if (isset($data['avatar']) && $data['avatar']) {
+            $this->images->deletePublicStoragePath($user->avatar);
             $file = $data['avatar'];
-              
-            $optimizedPath = $this->storeOptimizedJpeg(
+            $optimizedPath = $this->images->storeOptimizedJpeg(
                 $file,
                 'customer/profile',
                 150,
@@ -117,8 +55,9 @@ class CustomerOnlyProfileService
         }
          
         if (isset($data['cover_photo']) && $data['cover_photo']) {
+            $this->images->deletePublicStoragePath($user->cover_photo);
             $file = $data['cover_photo'];
-            $optimizedPath = $this->storeOptimizedJpeg(
+            $optimizedPath = $this->images->storeOptimizedJpeg(
                 $file,
                 'customer/profile',
                 400,
