@@ -478,7 +478,7 @@
             div.notification_popup {
                 top: 4.5vw !important;
 
-                width: 45vw !important;
+                width: 55vw !important;
             }
 
             .notification-text {
@@ -498,12 +498,18 @@
 
                 width: max-content;
             }
-            .stars-rating img{
+            .stars-rating img,.icons-btn {
                 width:2vw;
                 height:2vw;
             }
            .status-btn {
               font-size: 2vw;
+           }
+           .filter-theme-modal span, .filter-modal .reset-btn, .breadcrumb, .edit-btn, .delete-btn, .user-name-user {
+            font-size: 2vw;
+           }
+           .status-option, .status-btn.active, .user-role{
+            font-size:1.5vw;
            }
         }
         

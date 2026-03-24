@@ -2773,6 +2773,7 @@ button.btn-close {
 .profile-heading {
     border-bottom: 0.1vw solid #ddd;
     padding: 1.3vw;
+    font-size:1.4vw;
 }
 
 .profile-details {
@@ -4612,7 +4613,7 @@ textarea.form-input.error-input:focus {
     }
     .combo-class {
 
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
     }
     .form-input {
         font-size:2vw;
@@ -4626,4 +4627,16 @@ textarea.form-input.error-input:focus {
     .cancel-btn, .submit-btn, .reset-btn {
         font-size:2vw;
     }
+    .profile-heading, .profile-details {
+
+    font-size:2vw;
+    }
+    .status-menu {
+
+        top: 5vw;
+    }
+    .eye-icon {
+    width: 3vw !important;
+    height: 3vw !important;
+}
 }

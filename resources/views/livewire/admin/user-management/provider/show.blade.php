@@ -370,7 +370,7 @@
     <!-- Tab Contents -->
     @if ($activeTab === 'details')
     <div id="details" class="tab-content active" style="border: 0.1vw solid #ddd;border-radius: 2vw;">
-        <h3 style="font-weight:500;font-size:1.4vw;color:#1b1b1b;" class="profile-heading">Profile details</h3>
+        <h3 style="font-weight:500;color:#1b1b1b;" class="profile-heading">Profile details</h3>
         <div class="profile-details">
             <p><span>Name</span> {{ ucwords($user->name) }}</p>
             <p><span>Email address</span> {{ $user->email }}</p>

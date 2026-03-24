@@ -68,7 +68,7 @@
 
     <!-- Profile Details Section -->
     <div id="details" style="border: 0.1vw solid #ddd; border-radius: 2vw; margin-bottom: 2vw;">
-        <h3 style="font-size:1.4vw;" class="profile-heading">Profile Details</h3>
+        <h3  class="profile-heading">Profile Details</h3>
         <div class="profile-details">
             <p><span>Name</span> {{ $user->name ?? '-' }}</p>
             <p><span>Email Address</span> {{ $user->email ?? '-' }}</p>

@@ -152,7 +152,7 @@
         }
 
         #notifPopup_____ .popup-title {
-            font-size: 2vw;
+            font-size: 3vw;
         }
 
         .notification-view {
@@ -164,7 +164,7 @@
         }
 
         #providerModal .provider-modal-content {
-            width: 60vw;
+            width: 80vw;
         }
 
         .provider-modal-body {
@@ -172,12 +172,34 @@
         }
 
         .provider-modal-header h6 {
-            font-size: 1.5vw;
+            font-size:2vw;
         }
 
         #back_to_notify_modal {
             margin-right: 0.521vw;
         }
+
+        .provider-modal-header {
+            padding: 1.5vw;
+        
+            height: 14px;
+        }
+        .provider-item span {
+
+            font-size: 1.875vw;
+        }
+        .provider-item img {
+            width: 4vw;
+            height: 4vw;
+        }   
+        .provider-view-profile {
+            font-size: 1.8125vw;
+        }
+        .provider-modal-close {
+    position: absolute;
+    top: 1.5vw;font-size: 1.1vw;
+
+}
     }
 </style>
 <div class="top-row">
