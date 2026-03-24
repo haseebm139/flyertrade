@@ -31,15 +31,19 @@ class Table extends Component
     public $activeFilters = [];
 
     protected $listeners = [
-        'searchUpdated-disputes' => 'updatingSearch',
         'openFilterModal-disputes' => 'openFilterModal',
         'removeFilter-disputes' => 'removeFilter',
         'exportCsvRequested-disputes' => 'exportCsv',
     ];
 
-    public function updatingSearch($value)
+    public function updatedSearch(): void
     {
-        $this->search = $value;
+        $this->resetPage();
+        $this->activeFilters = $this->getActiveFilters();
+    }
+
+    public function updatedStatus(): void
+    {
         $this->resetPage();
         $this->activeFilters = $this->getActiveFilters();
     }
@@ -52,6 +56,7 @@ class Table extends Component
             $this->sortField = $field;
             $this->sortDirection = 'asc';
         }
+        $this->resetPage();
     }
 
     public function openFilterModal()
@@ -144,6 +149,9 @@ class Table extends Component
         $dispute = Dispute::findOrFail($disputeId);
         $dispute->update(['status' => strtolower($status)]);
         $this->dispatch('showSweetAlert', 'success', 'Status updated successfully.', 'Success');
+        if ($this->selectedDispute && (int) $this->selectedDispute->id === (int) $disputeId) {
+            $this->selectedDispute->refresh();
+        }
     }
 
     public function viewDispute($disputeId)

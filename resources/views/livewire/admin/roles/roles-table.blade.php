@@ -1,10 +1,10 @@
-
+<div>
 <style>
 
 
 </style>
-<div>
-    <livewire:admin.components.toolbar label="roles" :button_label="auth()->user()->can('Create Roles') ? 'Role' : ''" search_label="Search role" :active-filters="$activeFilters" />
+    <livewire:admin.components.toolbar wire:model.live.debounce.500ms="search" label="roles" :button_label="auth()->user()->can('Create Roles') ? 'Role' : ''" search_label="Search role" :active-filters="$activeFilters"
+        :dispatch-parent="\App\Livewire\Admin\Roles\RolesTable::class" />
 
     <div class="table-responsive">
         <!-- Table -->

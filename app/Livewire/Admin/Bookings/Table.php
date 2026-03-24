@@ -42,7 +42,6 @@ class Table extends Component
         'categoryUpdated' => '$refresh',
         'exportCsvRequested-all-bookings' => 'exportCsv',
         'openFilterModal-all-bookings'    => 'openFilterModal',
-        'searchUpdated-all-bookings'      => 'updatingSearch',
         'removeFilter-all-bookings'       => 'removeFilter',
         'filterByStatus'                  => 'filterByStatus',
     ];
@@ -63,9 +62,8 @@ class Table extends Component
         $this->showFilterModal = false;
     }
 
-    public function updatingSearch($value)
+    public function updatedSearch(): void
     {
-        $this->search = $value;
         $this->resetPage();
     }
 

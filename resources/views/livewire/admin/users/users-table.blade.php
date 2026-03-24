@@ -1,3 +1,4 @@
+<div>
 <style>
        .showUserDeleteModal span{
         font-size: 0.9vw;
@@ -18,8 +19,8 @@
     }
 
 </style>
-<div>
-    <livewire:admin.components.toolbar label="users" :button_label="auth()->user()->can('Create Roles') ? 'User' : ''" search_label="Search user" :active-filters="$activeFilters" />
+    <livewire:admin.components.toolbar wire:model.live.debounce.500ms="search" label="users" :button_label="auth()->user()->can('Create Roles') ? 'User' : ''" search_label="Search user" :active-filters="$activeFilters"
+        :dispatch-parent="\App\Livewire\Admin\Users\UsersTable::class" />
 
     <div class="table-responsive">
         <table class="theme-table roles">

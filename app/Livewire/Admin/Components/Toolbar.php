@@ -4,11 +4,12 @@ namespace App\Livewire\Admin\Components;
 
 use Livewire\Component;
 
+use Livewire\Attributes\Modelable;
 use Livewire\Attributes\Reactive;
 
 class Toolbar extends Component
 {
-
+    #[Modelable]
     public $search = '';
     public string $label = 'Item'; // default label
     public string $button_label = ''; // default label
@@ -17,10 +18,20 @@ class Toolbar extends Component
     
     #[Reactive]
     public array $activeFilters = []; // Active filters to display in toolbar
-    
+
+    /** When set, server events target this parent Livewire component (nested toolbar → table). */
+    public ?string $dispatchParent = null;
+
     public function mount($activeFilters = [])
     {
         $this->activeFilters = $activeFilters;
+    }
+
+    private function routeDispatchToParent($event): void
+    {
+        if ($this->dispatchParent) {
+            $event->to($this->dispatchParent);
+        }
     }
     
     private function getNamespace()
@@ -30,31 +41,24 @@ class Toolbar extends Component
 
     public function addItem()
     {
-        $this->dispatch('addItemRequested-' . $this->getNamespace());
+        $this->routeDispatchToParent($this->dispatch('addItemRequested-' . $this->getNamespace()));
     }
 
     public function exportCsv()
     {
-        $this->dispatch('exportCsvRequested-' . $this->getNamespace());
+        $this->routeDispatchToParent($this->dispatch('exportCsvRequested-' . $this->getNamespace()));
     }
 
     public function openFilterModal()
     {
-        $this->dispatch('openFilterModal-' . $this->getNamespace());
+        $this->routeDispatchToParent($this->dispatch('openFilterModal-' . $this->getNamespace()));
     }
 
     public function removeFilter($key)
     {
-        $this->dispatch('removeFilter-' . $this->getNamespace(), key: $key);
+        $this->routeDispatchToParent($this->dispatch('removeFilter-' . $this->getNamespace(), key: $key));
     }
 
-    public function updatedSearch()
-    {
-        $this->dispatch('searchUpdated-' . $this->getNamespace(), $this->search);
-    }
-
-
-     
     public function getListeners()
     {
         return [

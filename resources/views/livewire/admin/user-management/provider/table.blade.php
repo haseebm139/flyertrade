@@ -1,6 +1,7 @@
 <div>
 
-    <livewire:admin.components.toolbar label="service providers" :button_label="auth()->user()->can('Create Providers') ? 'Users' : ''" search_label="user" :active-filters="$activeFilters" />
+    <livewire:admin.components.toolbar wire:model.live.debounce.500ms="search" label="service providers" :button_label="auth()->user()->can('Create Providers') ? 'Users' : ''" search_label="user" :active-filters="$activeFilters"
+        :dispatch-parent="\App\Livewire\Admin\UserManagement\Provider\Table::class" />
         <div class="table-responsive">
             <table class="theme-table">
                     <thead>

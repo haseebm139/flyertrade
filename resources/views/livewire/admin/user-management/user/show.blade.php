@@ -108,7 +108,7 @@
             @endif
 
 
-            <button class="edit-btn" wire:click="$dispatch('addItemRequested', { id: {{ $user->id }} })">
+            <button type="button" class="edit-btn" wire:click="openEditUserForm">
                 Edit User
                 &nbsp;
                 <span class="download-icon"><img src="{{ asset('assets/images/icons/edit.svg') }}" alt=""

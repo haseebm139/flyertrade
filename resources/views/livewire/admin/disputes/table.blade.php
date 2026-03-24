@@ -1,3 +1,4 @@
+<div>
 <style>
     .action_btns___{
         right: 0px !important;
@@ -13,7 +14,6 @@
     }
 
 </style>
-<div>
     <!-- Top Stat Cards -->
     <div class="combo-class">
         <div class="dashboard-card" wire:click="$set('status', '')" style="cursor: pointer">
@@ -50,8 +50,9 @@
         <h1 class="page-title">All dispute</h1>
     </div>
 
-    <livewire:admin.components.toolbar label="disputes" button_label="" search_label="user or booking ref"
-        :active-filters="$activeFilters" :show-add-button="false" />
+    <livewire:admin.components.toolbar wire:model.live.debounce.500ms="search" label="disputes" button_label="" search_label="user or booking ref"
+        :active-filters="$activeFilters" :show-add-button="false"
+        :dispatch-parent="\App\Livewire\Admin\Disputes\Table::class" />
 
     <div class="table-responsive">
         <table class="theme-table">
@@ -81,7 +82,7 @@
             </thead>
             <tbody>
                 @forelse($disputes as $dispute)
-                    <tr wire:key="dispute-{{ $dispute->id }}">
+                    <tr wire:key="dispute-{{ $dispute->id }}-{{ $dispute->status }}">
                         <td><input type="checkbox" value="{{ $dispute->id }}" wire:model.live="selected"></td>
                         <td wire:click="viewDispute({{ $dispute->id }})" style="cursor: pointer">
 
@@ -108,7 +109,7 @@
                         <td>
                             <div class="status-dropdown status-dropdown-resolve">
                                 @can('Write Disputes')
-                                    <span class="status active {{ $dispute->status }}" onclick="toggleDropdown(this)">
+                                    <span class="status active {{ $dispute->status }}" onclick="toggleDropdown(event, this)">
                                         {{ ucfirst(str_replace('_', ' ', $dispute->status)) }}
                                         <svg class="arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -118,9 +119,9 @@
                                     </span>
                                     <ul class="dropdown-menu" style="display: none;">
                                         @if ($dispute->status == 'resolved')
-                                            <li style="font-weight: 400;" wire:click="setStatus({{ $dispute->id }}, 'unresolved')">Unresolved</li>
+                                            <li style="font-weight: 400;" wire:click.stop="setStatus({{ $dispute->id }}, 'unresolved')">Unresolved</li>
                                         @else
-                                            <li style="font-weight: 400;" wire:click="setStatus({{ $dispute->id }}, 'resolved')">Resolved</li>
+                                            <li style="font-weight: 400;" wire:click.stop="setStatus({{ $dispute->id }}, 'resolved')">Resolved</li>
                                         @endif
                                     </ul>
                                 @else
@@ -132,17 +133,17 @@
                         </td>
                         <td>
                             <div class="actions-dropdown">
-                                <button class="actions-btn" onclick="toggleActions(this)"> <img
+                                <button type="button" class="actions-btn" onclick="toggleActions(event, this)"> <img
                                         src="{{ asset('assets/images/icons/three_dots.svg') }}"
                                         class="dots-img "></button>
                                 <div class="actions-menu action_btns___" style="display: none; ">
                                     {{-- <a wire:click="viewDispute({{ $dispute->id }})">View details</a> --}}
                                     @can('Write Disputes')
                                         @if ($dispute->status === 'resolved')
-                                            <a style="cursor: pointer" wire:click="setStatus({{ $dispute->id }}, 'unresolved')">Mark as
+                                            <a href="#" style="cursor: pointer" wire:click.prevent.stop="setStatus({{ $dispute->id }}, 'unresolved')">Mark as
                                                 unresolved</a>
                                         @else
-                                            <a style="cursor: pointer" wire:click="setStatus({{ $dispute->id }}, 'resolved')">Resolve Dispute</a>
+                                            <a href="#" style="cursor: pointer" wire:click.prevent.stop="setStatus({{ $dispute->id }}, 'resolved')">Resolve Dispute</a>
                                         @endif
                                     @endcan
 
@@ -336,22 +337,24 @@
     </style>
 
     <script>
-        function toggleDropdown(el) {
+        function toggleDropdown(e, el) {
+            if (e && e.stopPropagation) e.stopPropagation();
             const menu = el.nextElementSibling;
+            if (!menu) return;
             const isOpen = menu.style.display === 'block';
             document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none');
             document.querySelectorAll('.actions-menu').forEach(m => m.style.display = 'none');
             menu.style.display = isOpen ? 'none' : 'block';
-            event.stopPropagation();
         }
 
-        function toggleActions(el) {
+        function toggleActions(e, el) {
+            if (e && e.stopPropagation) e.stopPropagation();
             const menu = el.nextElementSibling;
+            if (!menu) return;
             const isOpen = menu.style.display === 'block';
             document.querySelectorAll('.actions-menu').forEach(m => m.style.display = 'none');
             document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none');
             menu.style.display = isOpen ? 'none' : 'block';
-            event.stopPropagation();
         }
 
         document.addEventListener('click', function(e) {

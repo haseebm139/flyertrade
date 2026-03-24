@@ -41,7 +41,6 @@ class RolesTable extends Component
         'roleUpdated' => 'refreshRole',
         'roleDeleted' => 'refreshAfterDelete',
         'openFilterModal-roles' => 'openFilterModal',
-        'searchUpdated-roles' => 'updatingSearch',
         'removeFilter-roles' => 'removeFilter',
         'exportCsvRequested-roles' => 'exportCsv',
         'addItemRequested-roles' => 'addRole',
@@ -57,9 +56,9 @@ class RolesTable extends Component
     }
 
     # -------------------- SEARCH + FILTER --------------------
-    public function updatingSearch($value) {  
-        $this->search = $value;
-        $this->resetPage(); 
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
     }
 
     public function openFilterModal()
@@ -295,7 +294,7 @@ class RolesTable extends Component
             $this->dispatch('showSweetAlert', 'error', 'Unauthorized access.', 'Error');
             return;
         }
-        return redirect()->route('roles-and-permissions.roles.show', ['id' => $roleId]);
+        $this->redirect(route('roles-and-permissions.roles.show', ['id' => $roleId]));
     }
 
     public function editRole($roleId)
@@ -304,7 +303,7 @@ class RolesTable extends Component
             $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
             return;
         }
-        $this->dispatch('openRoleModal', $roleId, 'edit');
+        $this->dispatch('openRoleModal', roleId: $roleId, mode: 'edit');
     }
 
     public function addRole()
@@ -313,7 +312,7 @@ class RolesTable extends Component
             $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
             return;
         }
-        $this->dispatch('openRoleModal', null, 'create');
+        $this->dispatch('openRoleModal', roleId: null, mode: 'create');
     }
 
     public function updatedSelectAll($value)

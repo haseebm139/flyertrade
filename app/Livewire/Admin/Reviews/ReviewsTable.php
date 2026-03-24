@@ -39,14 +39,12 @@ class ReviewsTable extends Component
 
     protected $listeners = [
         'filtersUpdated' => 'updateFilters',
-        'searchUpdated-reviews' => 'updatingSearch',
         'removeFilter-reviews' => 'removeFilter',
         'exportCsvRequested-reviews' => 'exportCsv',
     ];
 
-    public function updatingSearch($value)
+    public function updatedSearch(): void
     {
-        $this->search = $value;
         $this->resetPage();
     }
 

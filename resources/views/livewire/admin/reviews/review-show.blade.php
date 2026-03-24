@@ -1,3 +1,4 @@
+<div>
 <style>
     .review_profile_img{
         width: 2.65vw; height: 2.65vw; 
@@ -67,7 +68,6 @@ width: 2vw; height: 2vw;
                 }
     }
 </style>
-<div>
     <div class="row">
         <div class="col-12 col-sm-6 col-md-6 col-lg-6">
             <!-- Review Card -->
@@ -127,7 +127,7 @@ width: 2vw; height: 2vw;
                                         : 'pending');
                         @endphp
                         @can('Write Reviews')
-                            <span class="status-btn {{ $statusClass }}" onclick="toggleShowStatusDropdown()">
+                            <span class="status-btn {{ $statusClass }}" onclick="toggleShowStatusDropdown(event)">
                                 {{ ucfirst($review->status) }}
                                 <svg class="arrow" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -137,9 +137,9 @@ width: 2vw; height: 2vw;
                             </span>
                             <ul class="dropdown-menu show-status-menu"
                                 style="display: none; position: absolute; right: 0; z-index: 100;">
-                                <li wire:click="setStatus('pending')">Pending</li>
-                                <li wire:click="setStatus('published')">Publish</li>
-                                <li wire:click="setStatus('unpublished')">Unpublish</li>
+                                <li wire:click.stop="setStatus('pending')">Pending</li>
+                                <li wire:click.stop="setStatus('published')">Publish</li>
+                                <li wire:click.stop="setStatus('unpublished')">Unpublish</li>
                             </ul>
                         @else
                             <span class="status-btn {{ $statusClass }}">
@@ -185,29 +185,29 @@ width: 2vw; height: 2vw;
                             @if (!$isEditing)
                                 <!-- EDIT -->
                                 @can('Write Reviews')
-                                    <a href="javascript:void(0);" wire:click="toggleEdit" class="view-btn"
+                                    <button type="button" wire:click="toggleEdit" class="view-btn border-0 bg-transparent p-0"
                                         style="color: grey; display: flex; align-items: center; gap: 5px; text-decoration: none;">
                                         <img src="{{ asset('assets/images/icons/edit-2.svg') }}"
                                             style="">
                                         Edit
-                                    </a>
+                                    </button>
                                 @endcan
 
                                 <!-- DELETE -->
                                 @can('Delete Reviews')
-                                    <a href="javascript:void(0);" onclick="confirmDeleteReview()" class="view-btn"
+                                    <button type="button" onclick="confirmDeleteReview()" class="view-btn border-0 bg-transparent p-0"
                                         style="color: grey; display: flex; align-items: center; gap: 5px;  text-decoration: none;">
                                         <img src="{{ asset('assets/images/icons/trash-theme.svg') }}"
                                             style="">
                                         Delete
-                                    </a>
+                                    </button>
                                 @endcan
                             @else
-                                <button wire:click="saveReview" class="btn btn-primary btn-sm"
+                                <button type="button" wire:click="saveReview" class="btn btn-primary btn-sm"
                                     style="background-color: #004e42; border: none; padding: 0.4vw 1vw; font-size: 0.8vw;">
                                     Save changes
                                 </button>
-                                <button wire:click="toggleEdit" class="btn btn-secondary btn-sm"
+                                <button type="button" wire:click="toggleEdit" class="btn btn-secondary btn-sm"
                                     style="padding: 0.4vw 1vw; font-size: 0.8vw;">
                                     Cancel
                                 </button>
@@ -231,8 +231,8 @@ width: 2vw; height: 2vw;
                 </div>
                 <p class="delete-text">Are you sure you want to delete this review?</p>
                 <div class="delete-actions d-flex justify-content-start gap-2">
-                    <button class="btn btn-danger" wire:click="delete">Delete</button>
-                    <button class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+                    <button type="button" class="btn btn-danger" wire:click="delete">Delete</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
                 </div>
             </div>
         </div>
@@ -288,8 +288,10 @@ width: 2vw; height: 2vw;
     </style>
 
     <script>
-        function toggleShowStatusDropdown() {
+        function toggleShowStatusDropdown(e) {
+            if (e && e.stopPropagation) e.stopPropagation();
             const menu = document.querySelector('.show-status-menu');
+            if (!menu) return;
             menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
         }
 

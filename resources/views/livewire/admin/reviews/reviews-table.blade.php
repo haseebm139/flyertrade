@@ -2,7 +2,8 @@
     <div class="container" bis_skin_checked="1">
         <h1 class="page-title">All Reviews</h1>
     </div>
-    <livewire:admin.components.toolbar label="reviews" button_label="" search_label="" :active-filters="$activeFilters" :show-add-button="false"/>
+    <livewire:admin.components.toolbar wire:model.live.debounce.500ms="search" label="reviews" button_label="" search_label="" :active-filters="$activeFilters" :show-add-button="false"
+        :dispatch-parent="\App\Livewire\Admin\Reviews\ReviewsTable::class" />
 
     <div class="tabs-section">
         <div class="tab {{ $activeTab === 'users' ? 'active' : '' }} roles-tab" wire:click="switchTab('users')">

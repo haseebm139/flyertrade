@@ -32,15 +32,14 @@ class Table extends Component
         'categoryUpdated' => '$refresh',  
         'exportCsvRequested-service-users' => 'exportCsv',
         'openFilterModal-service-users'    => 'openFilterModal',
-        'searchUpdated-service-users' => 'updatingSearch',
         'removeFilter-service-users' => 'removeFilter',
         'addItemRequested-service-users'   => 'openAddModal',
     ];
 
     # -------------------- SEARCH + FILTER --------------------
-    public function updatingSearch($value) {  
-        $this->search = $value;
-        $this->resetPage(); 
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
     }
     // Remove these - filters should only apply on Apply button click
     // public function updatingStatus() { $this->resetPage(); }

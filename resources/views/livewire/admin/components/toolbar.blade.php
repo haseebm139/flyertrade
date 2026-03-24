@@ -14,7 +14,7 @@
         </div>
         <div class="toolbar-right">
             <input type="text" class="search-user" placeholder="Search {{ strtolower($search_label) }}"
-                wire:model.live.debounce.500ms="search">
+                wire:model.live="search">
             <button class="filter-btn" id="openFilterModal" wire:click="openFilterModal"> <span class="download-icon">
                     Filter
                     <img class="btn-icons" src="{{ asset('assets/images/icons/button-icon.svg') }} "

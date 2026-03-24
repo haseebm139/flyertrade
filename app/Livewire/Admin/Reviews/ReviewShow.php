@@ -40,35 +40,37 @@ class ReviewShow extends Component
     public function saveReview()
     {
         if (!auth()->user()->can('Write Reviews')) {
-            $this->dispatch('showSweetAlert', type: 'error', message: 'Unauthorized action');
+            $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
             return;
         }
         $this->review->update([
-            'review' => $this->reviewText
+            'review' => $this->reviewText,
         ]);
+        $this->review->refresh();
         $this->isEditing = false;
-        $this->dispatch('showSweetAlert', type: 'success', message: 'Review updated successfully');
+        $this->dispatch('showSweetAlert', 'success', 'Review updated successfully.', 'Success');
     }
 
     public function setStatus($status)
     {
         if (!auth()->user()->can('Write Reviews')) {
-            $this->dispatch('showSweetAlert', type: 'error', message: 'Unauthorized action');
+            $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
             return;
         }
         $this->review->update(['status' => strtolower($status)]);
-        $this->dispatch('showSweetAlert', type: 'success', message: 'Status updated to ' . $status);
+        $this->review->refresh();
+        $this->dispatch('showSweetAlert', 'success', 'Status updated to ' . ucfirst(strtolower($status)) . '.', 'Success');
     }
 
     public function delete()
     {
         if (!auth()->user()->can('Delete Reviews')) {
-            $this->dispatch('showSweetAlert', type: 'error', message: 'Unauthorized action');
+            $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
             return;
         }
         $this->review->delete();
-        $this->dispatch('showSweetAlert', type: 'success', message: 'Review deleted successfully');
-        return redirect()->route('reviews.index');
+        $this->dispatch('showSweetAlert', 'success', 'Review deleted successfully.', 'Success');
+        $this->redirect(route('reviews.index'));
     }
 
     public function render()

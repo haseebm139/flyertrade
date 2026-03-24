@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Users;
 
 use Livewire\Component;
+use Livewire\Attributes\On;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
@@ -41,10 +42,6 @@ class UserForm extends Component
         'user_type.required' => 'Please select a user type.',
         'phone.regex' => 'The phone number format is invalid.',
         'phone.min' => 'The phone number must be at least 10 characters.',
-    ];
-
-    protected $listeners = [
-        'openUserModal' => 'openUserModal'
     ];
 
     public function mount($userId = null, $isEdit = false)
@@ -137,6 +134,7 @@ class UserForm extends Component
         $this->isEdit = false;
     }
 
+    #[On('openUserModal')]
     public function openUserModal($userId = null, $mode = 'create')
     {
         $this->resetValidation();

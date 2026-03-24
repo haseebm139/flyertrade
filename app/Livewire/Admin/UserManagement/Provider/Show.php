@@ -90,6 +90,12 @@ class Show extends Component
         $this->resetPage();
     }
 
+    public function openEditProviderForm(): void
+    {
+        $this->dispatch('open-provider-form', id: $this->userId)
+            ->to(Form::class);
+    }
+
     public function resetPassword()
     {
         try {

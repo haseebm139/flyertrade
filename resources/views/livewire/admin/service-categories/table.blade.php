@@ -1,5 +1,6 @@
 <div>
-    <livewire:admin.components.toolbar label="Service categories" :button_label="auth()->user()->can('Create Service Categories') ? 'Service category' : ''" search_label="Search category" :active-filters="$activeFilters" />
+    <livewire:admin.components.toolbar wire:model.live.debounce.500ms="search" label="Service categories" :button_label="auth()->user()->can('Create Service Categories') ? 'Service category' : ''" search_label="Search category" :active-filters="$activeFilters"
+        :dispatch-parent="\App\Livewire\Admin\ServiceCategories\Table::class" />
     <div class="table-responsive">
     <table class="theme-table">
             <thead>

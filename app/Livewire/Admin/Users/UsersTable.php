@@ -45,7 +45,6 @@ class UsersTable extends Component
         'userUpdated' => 'refreshUser',
         'userDeleted' => 'refreshAfterDelete',
         'openFilterModal-users' => 'openFilterModal',
-        'searchUpdated-users' => 'updatingSearch',
         'removeFilter-users' => 'removeFilter',
         'exportCsvRequested-users' => 'exportCsv',
         'addItemRequested-users' => 'addUser',
@@ -61,9 +60,9 @@ class UsersTable extends Component
     }
 
     # -------------------- SEARCH + FILTER --------------------
-    public function updatingSearch($value) {  
-        $this->search = $value;
-        $this->resetPage(); 
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
     }
 
     public function openFilterModal()
@@ -328,7 +327,7 @@ class UsersTable extends Component
             $this->dispatch('showSweetAlert', 'error', 'Unauthorized access.', 'Error');
             return;
         }
-        return redirect()->route('roles-and-permissions.users.show', ['id' => $userId]);
+        $this->redirect(route('roles-and-permissions.users.show', ['id' => $userId]));
     }
 
     public function editUser($userId)
@@ -337,7 +336,7 @@ class UsersTable extends Component
             $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
             return;
         }
-        $this->dispatch('openUserModal', $userId, 'edit');
+        $this->dispatch('openUserModal', userId: $userId, mode: 'edit');
     }
 
     public function addUser()
@@ -346,7 +345,7 @@ class UsersTable extends Component
             $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
             return;
         }
-        $this->dispatch('openUserModal', null, 'create');
+        $this->dispatch('openUserModal', userId: null, mode: 'create');
     }
 
     public function updatedSelectAll($value)

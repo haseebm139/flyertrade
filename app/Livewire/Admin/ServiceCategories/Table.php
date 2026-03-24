@@ -32,16 +32,15 @@ class Table extends Component
         'categoryUpdated' => '$refresh',  
         'exportCsvRequested-service-categories' => 'exportCsv',
         'openFilterModal-service-categories'    => 'openFilterModal',
-        'searchUpdated-service-categories' => 'updatingSearch',
         'removeFilter-service-categories' => 'removeFilter',
         'addItemRequested-service-categories'   => 'addItemRequested',
     ];
 
      
     # -------------------- SEARCH + FILTER --------------------
-    public function updatingSearch($value) {  
-        $this->search = $value;
-        $this->resetPage(); 
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
     }
     // Remove individual updating handlers to only apply on "Apply Now"
     // public function updatingStatus() { $this->resetPage(); }

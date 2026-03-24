@@ -1,7 +1,8 @@
 <div>
 
-    <livewire:admin.components.toolbar label="All Bookings" search_label="Booking ID, Customer, Provider"
-        :show-add-button="false" :activeFilters="$activeFilters" />
+    <livewire:admin.components.toolbar wire:model.live.debounce.500ms="search" label="All Bookings" search_label="Booking ID, Customer, Provider"
+        :show-add-button="false" :activeFilters="$activeFilters"
+        :dispatch-parent="\App\Livewire\Admin\Bookings\Table::class" />
     <style>
         .theme-table td,
         .date,

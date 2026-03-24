@@ -68,6 +68,12 @@ class Show extends Component
         $this->activeTab = $tab;
     }
 
+    public function openEditUserForm(): void
+    {
+        $this->dispatch('open-customer-form', id: $this->userId)
+            ->to(Form::class);
+    }
+
     public function resetPassword()
     {
         try {
