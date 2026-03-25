@@ -1,4 +1,3 @@
-
 <div class="settings-manager-livewire">
     <div class="row">
         <div class="col-md-2">
@@ -173,7 +172,7 @@
                             </label>
                         </div>
                     </div>
-                    <br /> 
+                    <br />
                     <div class="setting-wrapper">
                         <h2 style="font-size: 1.042vw;">Booking reminders</h2>
                         <br />
@@ -190,7 +189,8 @@
                         </div>
                         @foreach (\App\Livewire\Admin\Settings\SettingsManager::reminderIntervals() as $interval)
                             <div class="permission-items" wire:key="user-time-{{ $interval['key'] }}">
-                                <input type="checkbox" wire:model.live="user_reminder_times" value="{{ $interval['key'] }}" />
+                                <input type="checkbox" wire:model.live="user_reminder_times"
+                                    value="{{ $interval['key'] }}" />
                                 <span>{{ $interval['label'] }}</span>
                             </div>
                         @endforeach
@@ -204,22 +204,25 @@
                                     style="display: flex; align-items: center; justify-content: space-between; {{ $idx < 2 ? 'border-bottom: 1px solid #eee;' : '' }} padding: 0.6vw 0;"
                                     wire:key="user-msg-{{ $interval['key'] }}">
                                     <div style="flex: 1;">
-                                        <span style="font-size: 0.9vw; font-weight: 300; color: #a7a5a5;">{{ $interval['label'] }}&nbsp;</span>
+                                        <span
+                                            style="font-size: 0.9vw; font-weight: 300; color: #a7a5a5;">{{ $interval['label'] }}&nbsp;</span>
                                         @if ($editingMessageKey === $msgKey)
                                             <input type="text" class="charge-input"
                                                 wire:model="editingMessageValue" />
                                         @else
-                                            <p style="margin: 0; font-size: 0.95vw; color: #333;">
-                                                {{ ($user_reminder_messages[$interval['key']] ?? '') ?: $this->defaultUserReminderText($interval['key']) }}
+                                            <p style="margin: 0; font-size: 0.95vw; color: #393939; font-weight: 400; font-family: Clash Display;">
+                                                {{ $user_reminder_messages[$interval['key']] ?? '' ?: $this->defaultUserReminderText($interval['key']) }}
                                             </p>
                                         @endif
                                     </div>
                                     <div class="message-actions">
                                         @if ($editingMessageKey === $msgKey)
-                                            <button type="button" class="view-btn" style="font-weight: 600;" wire:click="saveMessage">
+                                            <button type="button" class="view-btn" style="font-weight: 600;"
+                                                wire:click="saveMessage">
                                                 Save
                                             </button>
-                                            <button type="button" class="view-btn cancel-btn-sm" wire:click="cancelMessage">
+                                            <button type="button" class="view-btn cancel-btn-sm"
+                                                wire:click="cancelMessage">
                                                 Cancel
                                             </button>
                                         @else
@@ -249,7 +252,8 @@
                         </div>
                         @foreach (\App\Livewire\Admin\Settings\SettingsManager::reminderIntervals() as $interval)
                             <div class="permission-items" wire:key="provider-time-{{ $interval['key'] }}">
-                                <input type="checkbox" wire:model.live="provider_reminder_times" value="{{ $interval['key'] }}" />
+                                <input type="checkbox" wire:model.live="provider_reminder_times"
+                                    value="{{ $interval['key'] }}" />
                                 <span>{{ $interval['label'] }}</span>
                             </div>
                         @endforeach
@@ -263,22 +267,25 @@
                                     style="display: flex; align-items: center; justify-content: space-between; {{ $idx < 2 ? 'border-bottom: 1px solid #eee;' : '' }} padding: 0.6vw 0;"
                                     wire:key="provider-msg-{{ $interval['key'] }}">
                                     <div style="flex: 1;">
-                                        <span style="font-size: 0.9vw; font-weight: 300; color: #a7a5a5;">{{ $interval['label'] }}&nbsp;</span>
+                                        <span
+                                            style="font-size: 0.9vw; font-weight: 300; color: #a7a5a5;">{{ $interval['label'] }}&nbsp;</span>
                                         @if ($editingMessageKey === $msgKey)
                                             <input type="text" class="charge-input"
                                                 wire:model="editingMessageValue" />
                                         @else
-                                            <p style="margin: 0; font-size: 0.95vw; color: #333;">
-                                                {{ ($provider_reminder_messages[$interval['key']] ?? '') ?: $this->defaultProviderReminderText($interval['key']) }}
+                                            <p style="margin: 0; font-size: 0.95vw; color: #393939; font-weight: 400; font-family: Clash Display;">
+                                                {{ $provider_reminder_messages[$interval['key']] ?? '' ?: $this->defaultProviderReminderText($interval['key']) }}
                                             </p>
                                         @endif
                                     </div>
                                     <div class="message-actions">
                                         @if ($editingMessageKey === $msgKey)
-                                            <button type="button" class="view-btn" style="font-weight: 600;" wire:click="saveMessage">
+                                            <button type="button" class="view-btn" style="font-weight: 600;"
+                                                wire:click="saveMessage">
                                                 Save
                                             </button>
-                                            <button type="button" class="view-btn cancel-btn-sm" wire:click="cancelMessage">
+                                            <button type="button" class="view-btn cancel-btn-sm"
+                                                wire:click="cancelMessage">
                                                 Cancel
                                             </button>
                                         @else
@@ -326,18 +333,19 @@
                                     <div class="onboarding-actions">
                                         @if ($onboardingEditingKey === 'intro')
                                             <button class="view-btn" wire:click="saveOnboarding">Save</button>
-                                            <button class="view-btn cancel-btn-sm" wire:click="cancelOnboarding">Cancel</button>
+                                            <button class="view-btn cancel-btn-sm"
+                                                wire:click="cancelOnboarding">Cancel</button>
                                         @else
                                             <button class="view-btn" wire:click="editOnboarding('intro')">
-                                                <img class="icons-btn" src="{{ asset('assets/images/icons/edit.svg') }}" alt="">  <span class="edit-text">Edit</span> 
+                                                <img class="icons-btn"
+                                                    src="{{ asset('assets/images/icons/edit.svg') }}" alt="">
+                                                <span class="edit-text">Edit</span>
                                             </button>
-                                             
                                         @endif
                                     </div>
                                 </div>
                                 @if ($onboardingEditingKey === 'intro')
-                                    <textarea class="onboarding-textarea" rows="4"
-                                        wire:model="onboardingEditingValue"></textarea>
+                                    <textarea class="onboarding-textarea" rows="4" wire:model="onboardingEditingValue"></textarea>
                                 @else
                                     <p class="onboarding-text">
                                         {{ $onboarding_intro ?: 'Add introduction text here.' }}
@@ -351,17 +359,19 @@
                                     <div class="onboarding-actions">
                                         @if ($onboardingEditingKey === 'info_collect')
                                             <button class="view-btn" wire:click="saveOnboarding">Save</button>
-                                            <button class="view-btn cancel-btn-sm" wire:click="cancelOnboarding">Cancel</button>
+                                            <button class="view-btn cancel-btn-sm"
+                                                wire:click="cancelOnboarding">Cancel</button>
                                         @else
                                             <button class="view-btn" wire:click="editOnboarding('info_collect')">
-                                                <img class="icons-btn" src="{{ asset('assets/images/icons/edit.svg') }}" alt="">  <span class="edit-text">Edit</span> 
+                                                <img class="icons-btn"
+                                                    src="{{ asset('assets/images/icons/edit.svg') }}" alt="">
+                                                <span class="edit-text">Edit</span>
                                             </button>
                                         @endif
                                     </div>
                                 </div>
                                 @if ($onboardingEditingKey === 'info_collect')
-                                    <textarea class="onboarding-textarea" rows="4"
-                                        wire:model="onboardingEditingValue"></textarea>
+                                    <textarea class="onboarding-textarea" rows="4" wire:model="onboardingEditingValue"></textarea>
                                 @else
                                     <p class="onboarding-text">
                                         {{ $onboarding_info_collect ?: 'Add information we collect here.' }}
@@ -375,17 +385,19 @@
                                     <div class="onboarding-actions">
                                         @if ($onboardingEditingKey === 'use_info')
                                             <button class="view-btn" wire:click="saveOnboarding">Save</button>
-                                            <button class="view-btn cancel-btn-sm" wire:click="cancelOnboarding">Cancel</button>
+                                            <button class="view-btn cancel-btn-sm"
+                                                wire:click="cancelOnboarding">Cancel</button>
                                         @else
                                             <button class="view-btn" wire:click="editOnboarding('use_info')">
-                                                <img class="icons-btn" src="{{ asset('assets/images/icons/edit.svg') }}" alt="">  <span class="edit-text">Edit</span> 
+                                                <img class="icons-btn"
+                                                    src="{{ asset('assets/images/icons/edit.svg') }}" alt="">
+                                                <span class="edit-text">Edit</span>
                                             </button>
                                         @endif
                                     </div>
                                 </div>
                                 @if ($onboardingEditingKey === 'use_info')
-                                    <textarea class="onboarding-textarea" rows="4"
-                                        wire:model="onboardingEditingValue"></textarea>
+                                    <textarea class="onboarding-textarea" rows="4" wire:model="onboardingEditingValue"></textarea>
                                 @else
                                     <p class="onboarding-text">
                                         {{ $onboarding_use_info ?: 'Add usage of information here.' }}
@@ -399,17 +411,19 @@
                                     <div class="onboarding-actions">
                                         @if ($onboardingEditingKey === 'disclosure')
                                             <button class="view-btn" wire:click="saveOnboarding">Save</button>
-                                            <button class="view-btn cancel-btn-sm" wire:click="cancelOnboarding">Cancel</button>
+                                            <button class="view-btn cancel-btn-sm"
+                                                wire:click="cancelOnboarding">Cancel</button>
                                         @else
                                             <button class="view-btn" wire:click="editOnboarding('disclosure')">
-                                                <img class="icons-btn" src="{{ asset('assets/images/icons/edit.svg') }}" alt=""> <span class="edit-text">Edit</span> 
+                                                <img class="icons-btn"
+                                                    src="{{ asset('assets/images/icons/edit.svg') }}" alt="">
+                                                <span class="edit-text">Edit</span>
                                             </button>
                                         @endif
                                     </div>
                                 </div>
                                 @if ($onboardingEditingKey === 'disclosure')
-                                    <textarea class="onboarding-textarea" rows="4"
-                                        wire:model="onboardingEditingValue"></textarea>
+                                    <textarea class="onboarding-textarea" rows="4" wire:model="onboardingEditingValue"></textarea>
                                 @else
                                     <p class="onboarding-text">
                                         {{ $onboarding_disclosure ?: 'Add disclosure information here.' }}
@@ -422,14 +436,38 @@
                         <h2 class="settings-section-title">Terms & Conditions</h2>
                         @php
                             $termsItems = [
-                                ['key' => 'terms_agreement', 'label' => 'Agreement to Terms', 'value' => $onboarding_terms_agreement],
+                                [
+                                    'key' => 'terms_agreement',
+                                    'label' => 'Agreement to Terms',
+                                    'value' => $onboarding_terms_agreement,
+                                ],
                                 ['key' => 'terms_use', 'label' => 'Use of Service', 'value' => $onboarding_terms_use],
-                                ['key' => 'terms_ip', 'label' => 'Intellectual Property', 'value' => $onboarding_terms_ip],
-                                ['key' => 'terms_termination', 'label' => 'Termination', 'value' => $onboarding_terms_termination],
-                                ['key' => 'terms_liability', 'label' => 'Limitation of Liability', 'value' => $onboarding_terms_liability],
+                                [
+                                    'key' => 'terms_ip',
+                                    'label' => 'Intellectual Property',
+                                    'value' => $onboarding_terms_ip,
+                                ],
+                                [
+                                    'key' => 'terms_termination',
+                                    'label' => 'Termination',
+                                    'value' => $onboarding_terms_termination,
+                                ],
+                                [
+                                    'key' => 'terms_liability',
+                                    'label' => 'Limitation of Liability',
+                                    'value' => $onboarding_terms_liability,
+                                ],
                                 ['key' => 'terms_law', 'label' => 'Governing Law', 'value' => $onboarding_terms_law],
-                                ['key' => 'terms_changes', 'label' => 'Changes to Terms', 'value' => $onboarding_terms_changes],
-                                ['key' => 'terms_contact', 'label' => 'Contact Us', 'value' => $onboarding_terms_contact],
+                                [
+                                    'key' => 'terms_changes',
+                                    'label' => 'Changes to Terms',
+                                    'value' => $onboarding_terms_changes,
+                                ],
+                                [
+                                    'key' => 'terms_contact',
+                                    'label' => 'Contact Us',
+                                    'value' => $onboarding_terms_contact,
+                                ],
                             ];
                         @endphp
                         <div class="onboarding-card">
@@ -440,17 +478,20 @@
                                         <div class="onboarding-actions">
                                             @if ($onboardingEditingKey === $item['key'])
                                                 <button class="view-btn" wire:click="saveOnboarding">Save</button>
-                                                <button class="view-btn cancel-btn-sm" wire:click="cancelOnboarding">Cancel</button>
+                                                <button class="view-btn cancel-btn-sm"
+                                                    wire:click="cancelOnboarding">Cancel</button>
                                             @else
-                                                <button class="view-btn" wire:click="editOnboarding('{{ $item['key'] }}')">
-                                                    <img class="icons-btn" src="{{ asset('assets/images/icons/edit.svg') }}" alt="">  <span class="edit-text">Edit</span>
+                                                <button class="view-btn"
+                                                    wire:click="editOnboarding('{{ $item['key'] }}')">
+                                                    <img class="icons-btn"
+                                                        src="{{ asset('assets/images/icons/edit.svg') }}"
+                                                        alt=""> <span class="edit-text">Edit</span>
                                                 </button>
                                             @endif
                                         </div>
                                     </div>
                                     @if ($onboardingEditingKey === $item['key'])
-                                        <textarea class="onboarding-textarea" rows="4"
-                                            wire:model="onboardingEditingValue"></textarea>
+                                        <textarea class="onboarding-textarea" rows="4" wire:model="onboardingEditingValue"></textarea>
                                     @else
                                         <p class="onboarding-text">
                                             {{ $item['value'] ?: 'Add details here.' }}
@@ -473,7 +514,6 @@
     </div>
 
     <style>
-         
         .country-dropdown {
             position: relative;
         }
@@ -701,54 +741,65 @@
             color: #9ca3af;
             font-size: 12px;
         }
+
         .message-actions {
             display: inline-flex;
             align-items: center;
             gap: 8px;
             white-space: nowrap;
         }
+
         .message-row .message-actions {
-         
+
             align-self: end;
         }
+
         .settings-section-title {
             font-size: 1.042vw;
             margin-bottom: 0.8vw;
         }
+
         .onboarding-card {
             border: 1px solid #e5e7eb;
             border-radius: 10px;
             background: #fff;
             padding: 12px;
         }
+
         .onboarding-row {
             padding: 12px 0;
             border-bottom: 1px solid #f1f1f1;
         }
+
         .onboarding-row:last-child {
             border-bottom: 0;
         }
+
         .onboarding-row-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 8px;
         }
+
         .onboarding-row-header h4 {
             font-size: 0.95vw;
             margin: 0;
         }
+
         .onboarding-actions {
             display: inline-flex;
             align-items: center;
             gap: 8px;
         }
+
         .onboarding-text {
             margin: 0;
             font-size: 0.9vw;
             color: #555;
             line-height: 1.5;
         }
+
         .onboarding-textarea {
             width: 100%;
             border: 1px solid #e5e7eb;
@@ -757,12 +808,14 @@
             font-size: 0.9vw;
             color: #333;
         }
+
         .edit-text {
-            
+
             font-weight: 500;
             font-size: 0.8vw;
-             
+
         }
+
         .cancel-btn-sm {
             background: #f3f4f6;
             color: #374151;
