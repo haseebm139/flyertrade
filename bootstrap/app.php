@@ -11,16 +11,16 @@ use Illuminate\Mail\MailServiceProvider;
 return Application::configure(basePath: dirname(__DIR__))
     ->withSchedule(function (Schedule $schedule): void {
         $schedule->call(function () {
-            try {
-                ScheduleRunLog::query()->create([
-                    'ran_at' => now(),
-                    'source' => 'schedule:run',
-                ]);
-            } catch (\Throwable $e) {
-                Log::warning('schedule_run_logs insert failed', [
-                    'message' => $e->getMessage(),
-                ]);
-            }
+            // try {
+            //     ScheduleRunLog::query()->create([
+            //         'ran_at' => now(),
+            //         'source' => 'schedule:run',
+            //     ]);
+            // } catch (\Throwable $e) {
+            //     Log::warning('schedule_run_logs insert failed', [
+            //         'message' => $e->getMessage(),
+            //     ]);
+            // }
         })->everyMinute()->name('log-schedule-run');
 
         // $schedule->command('bookings:auto-reject')->everyFiveMinutes();
