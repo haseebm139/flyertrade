@@ -1,5 +1,5 @@
 
-<div>
+<div class="settings-manager-livewire">
     <div class="row">
         <div class="col-md-2">
             <div class="tabs-vertical-wrapper">
@@ -154,283 +154,142 @@
                         <div class="permission-item">
                             <span>Push Notifications</span>
                             <label class="toggle-switch">
-                                <input type="checkbox" wire:model.live="push_notifications" />
+                                <input type="checkbox" wire:model.live.boolean="push_notifications" />
                                 <span class="slider"></span>
                             </label>
                         </div>
                         <div class="permission-item">
                             <span>Email Notifications</span>
                             <label class="toggle-switch">
-                                <input type="checkbox" wire:model.live="email_notifications" />
+                                <input type="checkbox" wire:model.live.boolean="email_notifications" />
                                 <span class="slider"></span>
                             </label>
                         </div>
                         <div class="permission-item">
                             <span>SMS Notifications</span>
                             <label class="toggle-switch">
-                                <input type="checkbox" wire:model.live="sms_notifications" />
+                                <input type="checkbox" wire:model.live.boolean="sms_notifications" />
                                 <span class="slider"></span>
                             </label>
                         </div>
                     </div>
                     <br /> 
                     <div class="setting-wrapper">
-                        <h2 style="font-size: 1.042vw;">Specific notification reminders</h2>
+                        <h2 style="font-size: 1.042vw;">Booking reminders</h2>
                         <br />
-                        <h4 style="font-size: 1vw;">User Service</h4>
+                        <h4 style="font-size: 1vw;">Customers</h4>
                         <div class="permission-item">
                             <span>Upcoming service reminder</span>
                             <label class="toggle-switch">
-                                <input type="checkbox" wire:model.live="user_reminder_enabled" />
+                                <input type="checkbox" wire:model.live.boolean="user_reminder_enabled" />
                                 <span class="slider"></span>
                             </label>
                         </div>
                         <div class="permission-item">
                             <span>Reminder timing</span>
-                            <!-- <label class="toggle-switch">
-                            <input type="checkbox" />
-                            <span class="slider"></span>
-                        </label> -->
                         </div>
-                        <div class="permission-items">
-                            <input type="checkbox" wire:model="user_reminder_times" value="15m" />
-                            <span>15 minutes before</span>
-                        </div>
-                        <div class="permission-items">
-                            <input type="checkbox" wire:model="user_reminder_times" value="30m" />
-                            <span>30 minutes before</span>
-                        </div>
-                        <div class="permission-items">
-                            <input type="checkbox" wire:model="user_reminder_times" value="45m" />
-                            <span>45 minutes before</span>
-                        </div>
+                        @foreach (\App\Livewire\Admin\Settings\SettingsManager::reminderIntervals() as $interval)
+                            <div class="permission-items" wire:key="user-time-{{ $interval['key'] }}">
+                                <input type="checkbox" wire:model.live="user_reminder_times" value="{{ $interval['key'] }}" />
+                                <span>{{ $interval['label'] }}</span>
+                            </div>
+                        @endforeach
                         <br />
-                        <h4 style="font-size: 1vw;">Reminder Content</h4>
+                        <h4 style="font-size: 1vw;">Reminder content</h4>
                         <div
                             style="border: 1px solid #ccc; border-radius: 0.4vw; padding: 0.8vw; background-color: #fff; width: 100%; font-family: sans-serif;">
-                            <!-- Row 1 -->
-                            <div class="message-row"
-                                style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #eee; padding: 0.6vw 0;">
-                                <div style="flex: 1;">
-                                    <span style="font-size: 0.9vw; font-weight: 300; color: #a7a5a5;">15 minutes
-                                        before&nbsp;</span>
-                                    @if ($editingMessageKey === 'user_15')
-                                        <input type="text" class="charge-input"
-                                            wire:model="editingMessageValue" />
-                                    @else
-                                        <p style="margin: 0; font-size: 0.95vw; color: #333;">
-                                            {{ $user_reminder_message_15 ?: 'Your booked service will begin in 15 minutes. Be available at your chosen location.' }}
-                                        </p>
-                                    @endif
+                            @foreach (\App\Livewire\Admin\Settings\SettingsManager::reminderIntervals() as $idx => $interval)
+                                @php $msgKey = 'user:' . $interval['key']; @endphp
+                                <div class="message-row"
+                                    style="display: flex; align-items: center; justify-content: space-between; {{ $idx < 2 ? 'border-bottom: 1px solid #eee;' : '' }} padding: 0.6vw 0;"
+                                    wire:key="user-msg-{{ $interval['key'] }}">
+                                    <div style="flex: 1;">
+                                        <span style="font-size: 0.9vw; font-weight: 300; color: #a7a5a5;">{{ $interval['label'] }}&nbsp;</span>
+                                        @if ($editingMessageKey === $msgKey)
+                                            <input type="text" class="charge-input"
+                                                wire:model="editingMessageValue" />
+                                        @else
+                                            <p style="margin: 0; font-size: 0.95vw; color: #333;">
+                                                {{ ($user_reminder_messages[$interval['key']] ?? '') ?: $this->defaultUserReminderText($interval['key']) }}
+                                            </p>
+                                        @endif
+                                    </div>
+                                    <div class="message-actions">
+                                        @if ($editingMessageKey === $msgKey)
+                                            <button type="button" class="view-btn" style="font-weight: 600;" wire:click="saveMessage">
+                                                Save
+                                            </button>
+                                            <button type="button" class="view-btn cancel-btn-sm" wire:click="cancelMessage">
+                                                Cancel
+                                            </button>
+                                        @else
+                                            <button type="button" class="view-btn" style="font-weight: 600;"
+                                                wire:click="editMessage('user:{{ $interval['key'] }}')">
+                                                Edit
+                                            </button>
+                                        @endif
+                                    </div>
                                 </div>
-                                <div class="message-actions">
-                                    @if ($editingMessageKey === 'user_15')
-                                        <button class="view-btn" style="font-weight: 600;" wire:click="saveMessage">
-                                            Save
-                                        </button>
-                                        <button class="view-btn cancel-btn-sm" wire:click="cancelMessage">
-                                            Cancel
-                                        </button>
-                                    @else
-                                        <button class="view-btn" style="font-weight: 600;"
-                                            wire:click="editMessage('user_15')">
-                                            Edit
-                                        </button>
-                                    @endif
-                                </div>
-                            </div>
-                            <!-- Row 2 -->
-                            <div class="message-row"
-                                style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #eee; padding: 0.6vw 0;">
-                                <div style="flex: 1;">
-                                    <span style="font-size: 0.9vw; font-weight: 300; color: #a7a5a5;">1 hour
-                                        before&nbsp;</span>
-                                    @if ($editingMessageKey === 'user_60')
-                                        <input type="text" class="charge-input"
-                                            wire:model="editingMessageValue" />
-                                    @else
-                                        <p style="margin: 0; font-size: 0.95vw; color: #333;">
-                                            {{ $user_reminder_message_60 ?: 'Reminder: your artist will arrive in approximately 1 hour.' }}
-                                        </p>
-                                    @endif
-                                </div>
-                                <div class="message-actions">
-                                    @if ($editingMessageKey === 'user_60')
-                                        <button class="view-btn" style="font-weight: 600;" wire:click="saveMessage">
-                                            Save
-                                        </button>
-                                        <button class="view-btn cancel-btn-sm" wire:click="cancelMessage">
-                                            Cancel
-                                        </button>
-                                    @else
-                                        <button class="view-btn" style="font-weight: 600;"
-                                            wire:click="editMessage('user_60')">
-                                            Edit
-                                        </button>
-                                    @endif
-                                </div>
-                            </div>
-                            <!-- Row 3 -->
-                            <div class="message-row"
-                                style="display: flex; align-items: center; justify-content: space-between; padding: 0.6vw 0;">
-                                <div style="flex: 1;">
-                                    <span style="font-size: 0.9vw; font-weight: 300; color: #a7a5a5;">1 day
-                                        before&nbsp;</span>
-                                    @if ($editingMessageKey === 'user_1d')
-                                        <input type="text" class="charge-input"
-                                            wire:model="editingMessageValue" />
-                                    @else
-                                        <p style="margin: 0; font-size: 0.95vw; color: #333;">
-                                            {{ $user_reminder_message_1d ?: 'Don’t forget your appointment tomorrow. Prepare your setup and be on time.' }}
-                                        </p>
-                                    @endif
-                                </div>
-                                <div class="message-actions">
-                                    @if ($editingMessageKey === 'user_1d')
-                                        <button class="view-btn" style="font-weight: 600;" wire:click="saveMessage">
-                                            Save
-                                        </button>
-                                        <button class="view-btn cancel-btn-sm" wire:click="cancelMessage">
-                                            Cancel
-                                        </button>
-                                    @else
-                                        <button class="view-btn" style="font-weight: 600;"
-                                            wire:click="editMessage('user_1d')">
-                                            Edit
-                                        </button>
-                                    @endif
-                                </div>
-                            </div>
+                            @endforeach
                         </div>
                     </div>
                     <br />
                     <div class="setting-wrapper">
-                        <h2 style="font-size: 1.042vw;">Specific notification reminders</h2>
+                        <h2 style="font-size: 1.042vw;">Service provider reminders</h2>
                         <br />
-                        <h4 style="font-size: 1vw;">Service Providers</h4>
                         <div class="permission-item">
                             <span>Upcoming service reminder</span>
                             <label class="toggle-switch">
-                                <input type="checkbox" wire:model.live="provider_reminder_enabled" />
+                                <input type="checkbox" wire:model.live.boolean="provider_reminder_enabled" />
                                 <span class="slider"></span>
                             </label>
                         </div>
                         <div class="permission-item">
                             <span>Reminder timing</span>
-                            <!-- <label class="toggle-switch">
-                            <input type="checkbox" />
-                            <span class="slider"></span>
-                        </label> -->
                         </div>
-                        <div class="permission-items">
-                            <input type="checkbox" wire:model="provider_reminder_times" value="15m" />
-                            <span>15 minutes before</span>
-                        </div>
-                        <div class="permission-items">
-                            <input type="checkbox" wire:model="provider_reminder_times" value="30m" />
-                            <span>30 minutes before</span>
-                        </div>
-                        <div class="permission-items">
-                            <input type="checkbox" wire:model="provider_reminder_times" value="45m" />
-                            <span>45 minutes before</span>
-                        </div>
+                        @foreach (\App\Livewire\Admin\Settings\SettingsManager::reminderIntervals() as $interval)
+                            <div class="permission-items" wire:key="provider-time-{{ $interval['key'] }}">
+                                <input type="checkbox" wire:model.live="provider_reminder_times" value="{{ $interval['key'] }}" />
+                                <span>{{ $interval['label'] }}</span>
+                            </div>
+                        @endforeach
                         <br />
-                        <h4 style="font-size: 1vw;">Reminder Content</h4>
+                        <h4 style="font-size: 1vw;">Reminder content</h4>
                         <div
                             style="border: 1px solid #ccc; border-radius: 0.4vw; padding: 0.8vw; background-color: #fff; width: 100%; font-family: sans-serif;">
-                            <!-- Row 1 -->
-                            <div class="message-row"
-                                style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #eee; padding: 0.6vw 0;">
-                                <div style="flex: 1;">
-                                    <span style="font-size: 0.9vw; font-weight: 300; color: #a7a5a5;">15 minutes
-                                        before&nbsp;</span>
-                                    @if ($editingMessageKey === 'provider_15')
-                                        <input type="text" class="charge-input"
-                                            wire:model="editingMessageValue" />
-                                    @else
-                                        <p style="margin: 0; font-size: 0.95vw; color: #333;">
-                                            {{ $provider_reminder_message_15 ?: 'Your booked service will begin in 15 minutes. Be available at your chosen location.' }}
-                                        </p>
-                                    @endif
+                            @foreach (\App\Livewire\Admin\Settings\SettingsManager::reminderIntervals() as $idx => $interval)
+                                @php $msgKey = 'provider:' . $interval['key']; @endphp
+                                <div class="message-row"
+                                    style="display: flex; align-items: center; justify-content: space-between; {{ $idx < 2 ? 'border-bottom: 1px solid #eee;' : '' }} padding: 0.6vw 0;"
+                                    wire:key="provider-msg-{{ $interval['key'] }}">
+                                    <div style="flex: 1;">
+                                        <span style="font-size: 0.9vw; font-weight: 300; color: #a7a5a5;">{{ $interval['label'] }}&nbsp;</span>
+                                        @if ($editingMessageKey === $msgKey)
+                                            <input type="text" class="charge-input"
+                                                wire:model="editingMessageValue" />
+                                        @else
+                                            <p style="margin: 0; font-size: 0.95vw; color: #333;">
+                                                {{ ($provider_reminder_messages[$interval['key']] ?? '') ?: $this->defaultProviderReminderText($interval['key']) }}
+                                            </p>
+                                        @endif
+                                    </div>
+                                    <div class="message-actions">
+                                        @if ($editingMessageKey === $msgKey)
+                                            <button type="button" class="view-btn" style="font-weight: 600;" wire:click="saveMessage">
+                                                Save
+                                            </button>
+                                            <button type="button" class="view-btn cancel-btn-sm" wire:click="cancelMessage">
+                                                Cancel
+                                            </button>
+                                        @else
+                                            <button type="button" class="view-btn" style="font-weight: 600;"
+                                                wire:click="editMessage('provider:{{ $interval['key'] }}')">
+                                                Edit
+                                            </button>
+                                        @endif
+                                    </div>
                                 </div>
-                                <div class="message-actions">
-                                    @if ($editingMessageKey === 'provider_15')
-                                        <button class="view-btn" style="font-weight: 600;" wire:click="saveMessage">
-                                            Save
-                                        </button>
-                                        <button class="view-btn cancel-btn-sm" wire:click="cancelMessage">
-                                            Cancel
-                                        </button>
-                                    @else
-                                        <button class="view-btn" style="font-weight: 600;"
-                                            wire:click="editMessage('provider_15')">
-                                            Edit
-                                        </button>
-                                    @endif
-                                </div>
-                            </div>
-                            <!-- Row 2 -->
-                            <div class="message-row"
-                                style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #eee; padding: 0.6vw 0;">
-                                <div style="flex: 1;">
-                                    <span style="font-size: 0.9vw; font-weight: 300; color: #a7a5a5;">1 hour
-                                        before&nbsp;</span>
-                                    @if ($editingMessageKey === 'provider_60')
-                                        <input type="text" class="charge-input"
-                                            wire:model="editingMessageValue" />
-                                    @else
-                                        <p style="margin: 0; font-size: 0.95vw; color: #333;">
-                                            {{ $provider_reminder_message_60 ?: 'Reminder: your artist will arrive in approximately 1 hour.' }}
-                                        </p>
-                                    @endif
-                                </div>
-                                <div class="message-actions">
-                                    @if ($editingMessageKey === 'provider_60')
-                                        <button class="view-btn" style="font-weight: 600;" wire:click="saveMessage">
-                                            Save
-                                        </button>
-                                        <button class="view-btn cancel-btn-sm" wire:click="cancelMessage">
-                                            Cancel
-                                        </button>
-                                    @else
-                                        <button class="view-btn" style="font-weight: 600;"
-                                            wire:click="editMessage('provider_60')">
-                                            Edit
-                                        </button>
-                                    @endif
-                                </div>
-                            </div>
-                            <!-- Row 3 -->
-                            <div class="message-row"
-                                style="display: flex; align-items: center; justify-content: space-between; padding: 0.6vw 0;">
-                                <div style="flex: 1;">
-                                    <span style="font-size: 0.9vw; font-weight: 300; color: #a7a5a5;">1 day
-                                        before&nbsp;</span>
-                                    @if ($editingMessageKey === 'provider_1d')
-                                        <input type="text" class="charge-input"
-                                            wire:model="editingMessageValue" />
-                                    @else
-                                        <p style="margin: 0; font-size: 0.95vw; color: #333;">
-                                            {{ $provider_reminder_message_1d ?: 'Don’t forget your appointment tomorrow. Prepare your setup and be on time.' }}
-                                        </p>
-                                    @endif
-                                </div>
-                                <div class="message-actions">
-                                    @if ($editingMessageKey === 'provider_1d')
-                                        <button class="view-btn" style="font-weight: 600;" wire:click="saveMessage">
-                                            Save
-                                        </button>
-                                        <button class="view-btn cancel-btn-sm" wire:click="cancelMessage">
-                                            Cancel
-                                        </button>
-                                    @else
-                                        <button class="view-btn" style="font-weight: 600;"
-                                            wire:click="editMessage('provider_1d')">
-                                            Edit
-                                        </button>
-                                    @endif
-                                </div>
-                            </div>
+                            @endforeach
                         </div>
                     </div>
                     <br />

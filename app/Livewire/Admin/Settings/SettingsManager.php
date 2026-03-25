@@ -37,12 +37,10 @@ class SettingsManager extends Component
     public $provider_reminder_enabled = false;
     public $user_reminder_times = [];
     public $provider_reminder_times = [];
-    public $user_reminder_message_15 = '';
-    public $user_reminder_message_60 = '';
-    public $user_reminder_message_1d = '';
-    public $provider_reminder_message_15 = '';
-    public $provider_reminder_message_60 = '';
-    public $provider_reminder_message_1d = '';
+    /** @var array<string, string> */
+    public $user_reminder_messages = [];
+    /** @var array<string, string> */
+    public $provider_reminder_messages = [];
     public $editingMessageKey = null;
     public $editingMessageValue = '';
     public $onboarding_intro = '';
@@ -75,20 +73,16 @@ class SettingsManager extends Component
         $this->currency = Setting::get('currency', 'USD');
         $this->commission_fee = Setting::get('service_charge_percentage', Setting::get('commission_fee', 0));
 
-        $this->push_notifications = (bool) Setting::get('push_notifications', true);
-        $this->email_notifications = (bool) Setting::get('email_notifications', true);
-        $this->sms_notifications = (bool) Setting::get('sms_notifications', false);
+        $this->push_notifications = $this->readBoolSetting('push_notifications', true);
+        $this->email_notifications = $this->readBoolSetting('email_notifications', true);
+        $this->sms_notifications = $this->readBoolSetting('sms_notifications', false);
 
-        $this->user_reminder_enabled = (bool) Setting::get('user_reminder_enabled', false);
-        $this->provider_reminder_enabled = (bool) Setting::get('provider_reminder_enabled', false);
-        $this->user_reminder_times = json_decode(Setting::get('user_reminder_times', '[]'), true) ?: [];
-        $this->provider_reminder_times = json_decode(Setting::get('provider_reminder_times', '[]'), true) ?: [];
-        $this->user_reminder_message_15 = Setting::get('user_reminder_message_15', '');
-        $this->user_reminder_message_60 = Setting::get('user_reminder_message_60', '');
-        $this->user_reminder_message_1d = Setting::get('user_reminder_message_1d', '');
-        $this->provider_reminder_message_15 = Setting::get('provider_reminder_message_15', '');
-        $this->provider_reminder_message_60 = Setting::get('provider_reminder_message_60', '');
-        $this->provider_reminder_message_1d = Setting::get('provider_reminder_message_1d', '');
+        $this->user_reminder_enabled = $this->readBoolSetting('user_reminder_enabled', false);
+        $this->provider_reminder_enabled = $this->readBoolSetting('provider_reminder_enabled', false);
+        $this->user_reminder_times = $this->normalizeReminderTimes(json_decode(Setting::get('user_reminder_times', '[]'), true));
+        $this->provider_reminder_times = $this->normalizeReminderTimes(json_decode(Setting::get('provider_reminder_times', '[]'), true));
+        $this->user_reminder_messages = $this->loadReminderMessagesMap('user');
+        $this->provider_reminder_messages = $this->loadReminderMessagesMap('provider');
         $this->onboarding_intro = Setting::get('onboarding_intro', '');
         $this->onboarding_info_collect = Setting::get('onboarding_info_collect', '');
         $this->onboarding_use_info = Setting::get('onboarding_use_info', '');
@@ -122,6 +116,16 @@ class SettingsManager extends Component
     {
         $this->currencyAuto = false;
     }
+
+    public function updatedUserReminderEnabled($value): void
+    {
+        $this->writeBoolSetting('user_reminder_enabled', $value, 'notification');
+    }
+
+    public function updatedProviderReminderEnabled($value): void
+    {
+        $this->writeBoolSetting('provider_reminder_enabled', $value, 'notification');
+    }
     
     public function switchTab($tab)
     {
@@ -144,35 +148,34 @@ class SettingsManager extends Component
 
     public function saveNotifications()
     {
-        Setting::set('push_notifications', $this->push_notifications, 'notification');
-        Setting::set('email_notifications', $this->email_notifications, 'notification');
-        Setting::set('sms_notifications', $this->sms_notifications, 'notification');
-        Setting::set('user_reminder_enabled', $this->user_reminder_enabled, 'notification');
-        Setting::set('provider_reminder_enabled', $this->provider_reminder_enabled, 'notification');
+        $this->writeBoolSetting('push_notifications', $this->push_notifications, 'notification');
+        $this->writeBoolSetting('email_notifications', $this->email_notifications, 'notification');
+        $this->writeBoolSetting('sms_notifications', $this->sms_notifications, 'notification');
+        $this->writeBoolSetting('user_reminder_enabled', $this->user_reminder_enabled, 'notification');
+        $this->writeBoolSetting('provider_reminder_enabled', $this->provider_reminder_enabled, 'notification');
+        $this->user_reminder_times = $this->normalizeReminderTimes($this->user_reminder_times);
+        $this->provider_reminder_times = $this->normalizeReminderTimes($this->provider_reminder_times);
+
         Setting::set('user_reminder_times', json_encode(array_values($this->user_reminder_times)), 'notification');
         Setting::set('provider_reminder_times', json_encode(array_values($this->provider_reminder_times)), 'notification');
-        Setting::set('user_reminder_message_15', $this->user_reminder_message_15, 'notification');
-        Setting::set('user_reminder_message_60', $this->user_reminder_message_60, 'notification');
-        Setting::set('user_reminder_message_1d', $this->user_reminder_message_1d, 'notification');
-        Setting::set('provider_reminder_message_15', $this->provider_reminder_message_15, 'notification');
-        Setting::set('provider_reminder_message_60', $this->provider_reminder_message_60, 'notification');
-        Setting::set('provider_reminder_message_1d', $this->provider_reminder_message_1d, 'notification');
+        Setting::set('user_reminder_messages', json_encode($this->sanitizeReminderMessagesMap($this->user_reminder_messages)), 'notification');
+        Setting::set('provider_reminder_messages', json_encode($this->sanitizeReminderMessagesMap($this->provider_reminder_messages)), 'notification');
         
         $this->dispatch('showSweetAlert', 'success', 'Notification settings updated successfully!', 'Success');
     }
 
     public function editMessage(string $key)
     {
+        $this->editingMessageValue = '';
+
+        if (! preg_match('/^(user|provider):(15m|30m|45m)$/', $key, $m)) {
+            return;
+        }
+
         $this->editingMessageKey = $key;
-        $this->editingMessageValue = match ($key) {
-            'user_15' => $this->user_reminder_message_15,
-            'user_60' => $this->user_reminder_message_60,
-            'user_1d' => $this->user_reminder_message_1d,
-            'provider_15' => $this->provider_reminder_message_15,
-            'provider_60' => $this->provider_reminder_message_60,
-            'provider_1d' => $this->provider_reminder_message_1d,
-            default => '',
-        };
+        $map = $m[1] === 'provider' ? $this->provider_reminder_messages : $this->user_reminder_messages;
+        $interval = $m[2];
+        $this->editingMessageValue = $map[$interval] ?? '';
     }
 
     public function saveMessage()
@@ -180,39 +183,138 @@ class SettingsManager extends Component
         $key = $this->editingMessageKey;
         $value = trim((string) $this->editingMessageValue);
 
-        if (!$key) {
+        if (! $key || ! preg_match('/^(user|provider):(15m|30m|45m)$/', $key, $m)) {
             return;
         }
 
-        switch ($key) {
-            case 'user_15':
-                $this->user_reminder_message_15 = $value;
-                Setting::set('user_reminder_message_15', $value, 'notification');
-                break;
-            case 'user_60':
-                $this->user_reminder_message_60 = $value;
-                Setting::set('user_reminder_message_60', $value, 'notification');
-                break;
-            case 'user_1d':
-                $this->user_reminder_message_1d = $value;
-                Setting::set('user_reminder_message_1d', $value, 'notification');
-                break;
-            case 'provider_15':
-                $this->provider_reminder_message_15 = $value;
-                Setting::set('provider_reminder_message_15', $value, 'notification');
-                break;
-            case 'provider_60':
-                $this->provider_reminder_message_60 = $value;
-                Setting::set('provider_reminder_message_60', $value, 'notification');
-                break;
-            case 'provider_1d':
-                $this->provider_reminder_message_1d = $value;
-                Setting::set('provider_reminder_message_1d', $value, 'notification');
-                break;
+        $interval = $m[2];
+        if ($m[1] === 'provider') {
+            $this->provider_reminder_messages[$interval] = $value;
+            Setting::set('provider_reminder_messages', json_encode($this->sanitizeReminderMessagesMap($this->provider_reminder_messages)), 'notification');
+        } else {
+            $this->user_reminder_messages[$interval] = $value;
+            Setting::set('user_reminder_messages', json_encode($this->sanitizeReminderMessagesMap($this->user_reminder_messages)), 'notification');
         }
 
         $this->editingMessageKey = null;
         $this->editingMessageValue = '';
+    }
+
+    /**
+     * @return list<array{key: string, label: string}>
+     */
+    public static function reminderIntervals(): array
+    {
+        return [
+            ['key' => '15m', 'label' => '15 minutes before'],
+            ['key' => '30m', 'label' => '30 minutes before'],
+            ['key' => '45m', 'label' => '45 minutes before'],
+        ];
+    }
+
+    public function defaultUserReminderText(string $intervalKey): string
+    {
+        $m = match ($intervalKey) {
+            '30m' => '30',
+            '45m' => '45',
+            default => '15',
+        };
+
+        return "Your booked service will begin in {$m} minutes. Be available at your chosen location.";
+    }
+
+    public function defaultProviderReminderText(string $intervalKey): string
+    {
+        $m = match ($intervalKey) {
+            '30m' => '30',
+            '45m' => '45',
+            default => '15',
+        };
+
+        return "You have an upcoming booking starting in {$m} minutes. Be available at the service location.";
+    }
+
+    /**
+     * @param  mixed  $raw
+     * @return list<string>
+     */
+    private function normalizeReminderTimes($raw): array
+    {
+        if (! is_array($raw)) {
+            return [];
+        }
+
+        $allowed = ['15m', '30m', '45m'];
+
+        return array_values(array_unique(array_intersect($allowed, array_map('strval', array_values($raw)))));
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function loadReminderMessagesMap(string $audience): array
+    {
+        $prefix = $audience === 'provider' ? 'provider' : 'user';
+        $decoded = json_decode(Setting::get("{$prefix}_reminder_messages", '{}'), true);
+        if (! is_array($decoded)) {
+            $decoded = [];
+        }
+
+        $hasNew = false;
+        foreach (['15m', '30m', '45m'] as $k) {
+            if (array_key_exists($k, $decoded)) {
+                $hasNew = true;
+                break;
+            }
+        }
+
+        if (! $hasNew) {
+            $legacy15 = (string) Setting::get("{$prefix}_reminder_message_15", '');
+            $legacy60 = (string) Setting::get("{$prefix}_reminder_message_60", '');
+            $legacy1d = (string) Setting::get("{$prefix}_reminder_message_1d", '');
+            if ($legacy15 !== '' || $legacy60 !== '' || $legacy1d !== '') {
+                $decoded['15m'] = $legacy15;
+                $decoded['30m'] = $legacy60;
+                $decoded['45m'] = $legacy1d;
+            }
+        }
+
+        $out = [];
+        foreach (['15m', '30m', '45m'] as $k) {
+            $out[$k] = isset($decoded[$k]) ? trim((string) $decoded[$k]) : '';
+        }
+
+        return $out;
+    }
+
+    /**
+     * @param  array<string, mixed>  $map
+     * @return array<string, string>
+     */
+    private function sanitizeReminderMessagesMap(array $map): array
+    {
+        $out = [];
+        foreach (['15m', '30m', '45m'] as $k) {
+            $out[$k] = isset($map[$k]) ? trim((string) $map[$k]) : '';
+        }
+
+        return $out;
+    }
+
+    private function readBoolSetting(string $key, bool $default): bool
+    {
+        $raw = Setting::get($key, null);
+        if ($raw === null || $raw === '') {
+            return $default;
+        }
+
+        return filter_var($raw, FILTER_VALIDATE_BOOLEAN);
+    }
+
+    private function writeBoolSetting(string $key, $value, string $group): void
+    {
+        $on = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+        Setting::set($key, $on ? '1' : '0', $group);
     }
 
     public function cancelMessage()

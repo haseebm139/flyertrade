@@ -30,6 +30,25 @@
           height: 2.865vw;
     }
 
+    /* Livewire toggles: full-size invisible input so change events always fire */
+    .settings-manager-livewire .toggle-switch {
+        position: relative;
+    }
+    .settings-manager-livewire .toggle-switch input {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 50px;
+        height: 24px;
+        opacity: 0;
+        margin: 0;
+        cursor: pointer;
+        z-index: 2;
+    }
+    .settings-manager-livewire .toggle-switch .slider {
+        z-index: 1;
+    }
+
 </style>
 
 <livewire:admin.settings.settings-manager />

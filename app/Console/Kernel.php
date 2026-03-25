@@ -12,7 +12,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('bookings:auto-reject')->everyFiveMinutes();
+        // Laravel 11+ uses bootstrap/app.php ->withSchedule() instead of this method.
     }
 
     /**

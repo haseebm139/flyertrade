@@ -2,9 +2,12 @@
 
 namespace App\Services\Notification;
 
+use App\Models\Booking;
 use App\Models\Notification;
+use App\Models\Setting;
 use App\Models\User;
 use App\Helpers\NotificationIcon;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Services\FirebaseService; 
@@ -910,19 +913,38 @@ class NotificationService
     }
 
     /**
-     * Notify customer about upcoming booking reminder
+     * Notify customer about upcoming booking reminder (uses admin settings when configured).
      */
-    public function notifyBookingReminder($booking, string $timeUntil = null): void
+    public function notifyBookingReminder(Booking $booking, string $intervalKey, ?Carbon $slotStart = null): void
     {
+        if (! in_array($intervalKey, ['15m', '30m', '45m'], true)) {
+            return;
+        }
+
         $customer = User::find($booking->customer_id);
-        if (!$customer) {
+        if (! $customer) {
+            return;
+        }
+
+        $slotStart = $slotStart ?? $this->firstSlotStart($booking);
+        if (! $slotStart) {
+            return;
+        }
+
+        $slotIso = $slotStart->toIso8601String();
+
+        if ($this->bookingReminderAlreadySent($customer->id, $booking->id, 'booking_reminder', $intervalKey, $slotIso)) {
             return;
         }
 
         $providerName = $booking->provider->name ?? 'your service provider';
-        $message = $timeUntil 
-            ? "Your booking with {$providerName} is coming up in {$timeUntil}."
-            : "Your booking with {$providerName} is coming up soon.";
+        $minutes = $this->intervalKeyToMinutes($intervalKey);
+        $custom = $this->reminderMessageFor('user', $intervalKey);
+        $message = $custom !== ''
+            ? $custom
+            : "Your booking with {$providerName} starts in {$minutes} minutes.";
+
+        $sendPush = (bool) Setting::get('push_notifications', true);
 
         $this->send(
             $customer,
@@ -936,14 +958,119 @@ class NotificationService
                 'booking_ref' => $booking->booking_ref,
                 'provider_id' => $booking->provider_id,
                 'provider_name' => $providerName,
-                'time_until' => $timeUntil,
-                'action_url' => "/bookings/{$booking->id}"
+                'reminder_offset' => $intervalKey,
+                'slot_start' => $slotIso,
+                'action_url' => "/bookings/{$booking->id}",
             ],
             NotificationIcon::BOOKING_REMINDER,
             'bookings',
-            true
-            
+            $sendPush
         );
+    }
+
+    /**
+     * Notify provider about upcoming booking reminder (uses admin settings when configured).
+     */
+    public function notifyProviderBookingReminder(Booking $booking, string $intervalKey, ?Carbon $slotStart = null): void
+    {
+        if (! in_array($intervalKey, ['15m', '30m', '45m'], true)) {
+            return;
+        }
+
+        $provider = User::find($booking->provider_id);
+        if (! $provider) {
+            return;
+        }
+
+        $slotStart = $slotStart ?? $this->firstSlotStart($booking);
+        if (! $slotStart) {
+            return;
+        }
+
+        $slotIso = $slotStart->toIso8601String();
+
+        if ($this->bookingReminderAlreadySent($provider->id, $booking->id, 'provider_booking_reminder', $intervalKey, $slotIso)) {
+            return;
+        }
+
+        $customerName = $booking->customer->name ?? 'your customer';
+        $minutes = $this->intervalKeyToMinutes($intervalKey);
+        $custom = $this->reminderMessageFor('provider', $intervalKey);
+        $message = $custom !== ''
+            ? $custom
+            : "You have a booking with {$customerName} starting in {$minutes} minutes.";
+
+        $sendPush = (bool) Setting::get('push_notifications', true);
+
+        $this->send(
+            $provider,
+            'provider_booking_reminder',
+            'Reminder',
+            $message,
+            'provider',
+            $booking,
+            [
+                'booking_id' => $booking->id,
+                'booking_ref' => $booking->booking_ref,
+                'customer_id' => $booking->customer_id,
+                'customer_name' => $customerName,
+                'reminder_offset' => $intervalKey,
+                'slot_start' => $slotIso,
+                'action_url' => "/bookings/{$booking->id}",
+            ],
+            NotificationIcon::BOOKING_REMINDER,
+            'bookings',
+            $sendPush
+        );
+    }
+
+    private function firstSlotStart(Booking $booking): ?Carbon
+    {
+        $first = $booking->slots()
+            ->orderBy('service_date')
+            ->orderBy('start_time')
+            ->first();
+
+        if (! $first) {
+            return null;
+        }
+
+        return Carbon::parse($first->service_date . ' ' . $first->start_time);
+    }
+
+    private function intervalKeyToMinutes(string $intervalKey): int
+    {
+        return match ($intervalKey) {
+            '15m' => 15,
+            '30m' => 30,
+            '45m' => 45,
+            default => 15,
+        };
+    }
+
+    private function reminderMessageFor(string $audience, string $intervalKey): string
+    {
+        $prefix = $audience === 'provider' ? 'provider' : 'user';
+        $map = json_decode(Setting::get("{$prefix}_reminder_messages", '{}'), true);
+
+        return is_array($map) && isset($map[$intervalKey]) ? trim((string) $map[$intervalKey]) : '';
+    }
+
+    private function bookingReminderAlreadySent(
+        int $userId,
+        int $bookingId,
+        string $type,
+        string $intervalKey,
+        string $slotStartIso
+    ): bool {
+        return Notification::query()
+            ->where('user_id', $userId)
+            ->where('type', $type)
+            ->where('notifiable_type', Booking::class)
+            ->where('notifiable_id', $bookingId)
+            ->where('data->reminder_offset', $intervalKey)
+            ->where('data->slot_start', $slotStartIso)
+            ->exists();
     }
 
     /**
