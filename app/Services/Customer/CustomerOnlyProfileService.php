@@ -4,6 +4,7 @@ namespace App\Services\Customer;
 
 use App\Models\User;
 use App\Services\Shared\ProfileImageOptimizer;
+use Illuminate\Http\UploadedFile;
 
 class CustomerOnlyProfileService
 {
@@ -38,7 +39,7 @@ class CustomerOnlyProfileService
         //     $updateData['avatar'] = 'storage/' . $path;
         // }
         
-        if (isset($data['avatar']) && $data['avatar']) {
+        if (! empty($data['avatar']) && $data['avatar'] instanceof UploadedFile && $data['avatar']->isValid()) {
             $this->images->deletePublicStoragePath($user->avatar);
             $file = $data['avatar'];
             $optimizedPath = $this->images->storeOptimizedJpeg(
@@ -54,7 +55,7 @@ class CustomerOnlyProfileService
             }
         }
          
-        if (isset($data['cover_photo']) && $data['cover_photo']) {
+        if (! empty($data['cover_photo']) && $data['cover_photo'] instanceof UploadedFile && $data['cover_photo']->isValid()) {
             $this->images->deletePublicStoragePath($user->cover_photo);
             $file = $data['cover_photo'];
             $optimizedPath = $this->images->storeOptimizedJpeg(

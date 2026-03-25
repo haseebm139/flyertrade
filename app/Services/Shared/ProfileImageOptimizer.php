@@ -12,14 +12,37 @@ use Intervention\Image\ImageManager;
 class ProfileImageOptimizer
 {
     /**
+     * Built-in / static paths that must never be deleted from disk.
+     */
+    public function isDefaultOrStaticAssetPath(?string $urlPath): bool
+    {
+        if ($urlPath === null || $urlPath === '') {
+            return true;
+        }
+        $lower = strtolower($urlPath);
+        if (str_contains($lower, 'default.png') || str_contains($lower, 'default.jpg') || str_contains($lower, 'default.jpeg')) {
+            return true;
+        }
+        if (str_starts_with($lower, 'assets/') || str_contains($lower, '/assets/images/')) {
+            return true;
+        }
+        if (str_starts_with($urlPath, 'http://') || str_starts_with($urlPath, 'https://')) {
+            return true;
+        }
+        // Only uploaded files live under storage/ — never delete anything else
+        if (! str_starts_with($urlPath, 'storage/')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Remove a file from the public disk given a URL-style path like `storage/foo/bar.jpg`.
      */
     public function deletePublicStoragePath(?string $urlPath): void
     {
-        if (!$urlPath || str_starts_with($urlPath, 'http://') || str_starts_with($urlPath, 'https://')) {
-            return;
-        }
-        if (str_starts_with($urlPath, 'assets/')) {
+        if ($this->isDefaultOrStaticAssetPath($urlPath)) {
             return;
         }
         $relative = str_replace('storage/', '', $urlPath);
@@ -42,7 +65,10 @@ class ProfileImageOptimizer
             try {
                 $disk->makeDirectory($directory);
                 $rawPath = rtrim($directory, '/') . '/' . $file->hashName();
-                $disk->put($rawPath, file_get_contents($file->getRealPath()));
+                $bytes = $file->getRealPath() && is_readable($file->getRealPath())
+                    ? file_get_contents($file->getRealPath())
+                    : $file->get();
+                $disk->put($rawPath, $bytes);
 
                 return 'storage/' . $rawPath;
             } catch (\Throwable $e) {
@@ -62,7 +88,13 @@ class ProfileImageOptimizer
         }
 
         $manager = new ImageManager($driver);
-        $image = $manager->read($file);
+        try {
+            $image = $manager->read($file);
+        } catch (\Throwable $e) {
+            \Log::warning('Profile image read failed, using raw store: ' . $e->getMessage());
+
+            return $storeRaw();
+        }
         $image->scaleDown($maxWidth, $maxHeight);
 
         $encoded = (string) $image->encode(new JpegEncoder(quality: $quality));

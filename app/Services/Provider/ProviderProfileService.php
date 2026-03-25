@@ -8,6 +8,7 @@ use App\Models\ProviderCertificate;
 use App\Models\User;
 use App\Services\Notification\NotificationService;
 use App\Services\Shared\ProfileImageOptimizer;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\Shared\UserResource;
 use DB;
@@ -59,7 +60,7 @@ class ProviderProfileService
         ])->toArray();
         
         $profileImg = null;
-        if (isset($data['avatar']) && $data['avatar']) {
+        if (! empty($data['avatar']) && $data['avatar'] instanceof UploadedFile && $data['avatar']->isValid()) {
             foreach (array_unique(array_filter([
                 $user->avatar,
                 $user->providerProfile?->profile_photo,
@@ -81,7 +82,7 @@ class ProviderProfileService
         }
 
         $coverPhotoPath = null;
-        if (isset($data['cover_photo']) && $data['cover_photo']) {
+        if (! empty($data['cover_photo']) && $data['cover_photo'] instanceof UploadedFile && $data['cover_photo']->isValid()) {
             $this->imageOptimizer->deletePublicStoragePath($user->cover_photo);
 
             $coverPhotoPath = $this->imageOptimizer->storeOptimizedJpeg(
@@ -117,9 +118,10 @@ class ProviderProfileService
             $updateData['fcm_token'] = $data['fcm_token'];
         }
 
-        if (!empty($updateData)) {
+        if (! empty($updateData)) {
             $user->update($updateData);
-             
+            $user->refresh();
+            $user->load('providerProfile');
         }
 
         $idPhotoPath = null;
