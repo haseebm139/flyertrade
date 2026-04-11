@@ -10,6 +10,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\EmailLog;
 use App\Models\User;
+use App\Services\Notification\NotificationService;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Kreait\Firebase\Factory;
@@ -197,6 +198,18 @@ class Board extends Component
                 : (($sentMediaType ?? 'media') . ' attachment');
             $this->updateConversationPreview($this->activeConversationId, $lastMessageText, $createdAtTs);
             $this->dispatch('scroll-chat-bottom');
+
+            $meta = $this->activeConversationMeta;
+            if (empty($meta['userId'])) {
+                $meta = array_merge($meta, $this->resolveConversationMeta((string) $this->activeConversationId));
+            }
+            $recipientUser = $this->resolveUserForSupportChat((string) $this->activeConversationId, $meta);
+            $this->notifySupportChatRecipient(
+                $recipientUser,
+                (string) $this->activeConversationId,
+                $messageText,
+                $hasAttachment
+            );
         } catch (\Throwable $e) {
             Log::error('Send reply failed: ' . $e->getMessage());
         }
@@ -1155,6 +1168,16 @@ class Board extends Component
             }
 
             $this->updateConversationPreview($conversationId, $messageText, $createdAtTs);
+
+            if ($this->composeType === 'message') {
+                $recipientUser = $this->resolveUserForSupportChat($conversationId, $meta);
+                $this->notifySupportChatRecipient(
+                    $recipientUser,
+                    $conversationId,
+                    $messageText,
+                    $hasAttachment
+                );
+            }
         }
 
         $this->composeMessageText = '';
@@ -1310,6 +1333,87 @@ class Board extends Component
             'userImage' => 'assets/images/icons/five.svg',
             'userId' => null,
         ];
+    }
+
+    private function resolveUserForSupportChat(string $conversationId, array $meta): ?User
+    {
+        $candidates = [];
+        $uid = $meta['userId'] ?? null;
+        $email = $meta['userEmail'] ?? null;
+        if ($uid !== null && (string) $uid !== '') {
+            $candidates[] = (string) $uid;
+        }
+        if ($email !== null && (string) $email !== '' && (string) $email !== (string) $uid) {
+            $candidates[] = (string) $email;
+        }
+        if ($conversationId !== '') {
+            $candidates[] = $conversationId;
+        }
+
+        foreach (array_unique($candidates) as $value) {
+            if ($value === '') {
+                continue;
+            }
+            if (str_contains($value, '@')) {
+                $user = User::where('email', $value)->first();
+                if ($user) {
+                    return $user;
+                }
+                continue;
+            }
+            if (ctype_digit($value)) {
+                $user = User::find((int) $value);
+                if ($user) {
+                    return $user;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private function recipientTypeForNotification(User $user): string
+    {
+        $t = (string) ($user->user_type ?? '');
+        return in_array($t, ['provider', 'multi'], true) ? 'provider' : 'customer';
+    }
+
+    private function notifySupportChatRecipient(
+        ?User $recipient,
+        string $conversationId,
+        string $messageText,
+        bool $hasAttachment
+    ): void {
+        if (!$recipient) {
+            return;
+        }
+
+        $body = $messageText !== ''
+            ? Str::limit($messageText, 200)
+            : ($hasAttachment
+                ? 'You have a new attachment from support.'
+                : 'You have a new message from support.');
+
+        try {
+            app(NotificationService::class)->send(
+                $recipient,
+                'message_received',
+                'Message from Support',
+                $body,
+                $this->recipientTypeForNotification($recipient),
+                null,
+                [
+                    'conversation_id' => $conversationId,
+                    'source' => 'admin_support_chat',
+                    'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
+                ]
+            );
+        } catch (\Throwable $e) {
+            Log::warning('Admin support chat notification failed: ' . $e->getMessage(), [
+                'user_id' => $recipient->id,
+                'conversation_id' => $conversationId,
+            ]);
+        }
     }
 
     public function getComposeUsersProperty()

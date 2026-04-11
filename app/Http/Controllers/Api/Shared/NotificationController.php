@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Services\Notification\NotificationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class NotificationController extends BaseController
 {
@@ -276,7 +277,7 @@ class NotificationController extends BaseController
         }
         $data = $request->input('data', []);
 
-        $notification = $notificationService->sendOnlyPushNotification(
+        $notification = $notificationService->send(
             $targetUser,
             'new_message',
             $title,
@@ -286,7 +287,85 @@ class NotificationController extends BaseController
             $data
         );
 
-        return $this->sendResponse([], 'Message notification sent.');
+        return $this->sendResponse($notification, 'Message notification sent.');
+    }
+
+    /**
+     * Customer / provider: after sending a support chat message (e.g. Firestore), call this so all admins
+     * get an in-app notification row + push (same pipeline as other admin alerts).
+     */
+    public function supportChatUserMessage(Request $request, NotificationService $notificationService): JsonResponse
+    {
+        $user = $request->user();
+        $userType = (string) ($user->user_type ?? '');
+        $roleId = (string) ($user->role_id ?? '');
+
+        $isAdmin = $userType === 'admin' || $roleId === 'admin';
+        if ($isAdmin) {
+            return $this->sendError('Forbidden.', 403);
+        }
+
+        $allowed = in_array($userType, ['customer', 'provider', 'multi'], true);
+        if (!$allowed) {
+            return $this->sendError('Only customers and providers can use this endpoint.', 403);
+        }
+
+        $validator = \Validator::make($request->all(), [
+            'conversation_id' => 'required|string|max:512',
+            'message' => 'nullable|string|max:2000',
+            'has_attachment' => 'nullable|boolean',
+            'attachment_type' => 'nullable|string|max:64',
+            'data' => 'nullable|array',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), 422);
+        }
+
+        $hasAttachment = filter_var($request->input('has_attachment', false), FILTER_VALIDATE_BOOLEAN);
+        $messagePreview = trim((string) $request->input('message', ''));
+        $attachmentType = trim((string) $request->input('attachment_type', ''));
+
+        if ($messagePreview !== '') {
+            $snippet = Str::limit($messagePreview, 200);
+        } elseif ($hasAttachment && $attachmentType !== '') {
+            $snippet = 'Sent a ' . $attachmentType . ' attachment.';
+        } elseif ($hasAttachment) {
+            $snippet = 'Sent an attachment.';
+        } else {
+            $snippet = 'New message.';
+        }
+
+        $senderLabel = $user->name ?? 'User';
+        $title = 'New support message';
+        $fullMessage = $senderLabel . ': ' . $snippet;
+
+        $extra = $request->input('data', []);
+        $data = array_merge(is_array($extra) ? $extra : [], [
+            'conversation_id' => (string) $request->input('conversation_id'),
+            'sender_id' => (string) $user->id,
+            'sender_name' => $senderLabel,
+            'has_attachment' => $hasAttachment ? '1' : '0',
+            'source' => 'user_support_chat',
+            'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
+        ]);
+
+        if ($attachmentType !== '') {
+            $data['attachment_type'] = $attachmentType;
+        }
+
+        $count = $notificationService->sendToAdmins(
+            'message_received',
+            $title,
+            $fullMessage,
+            null,
+            $data
+        );
+
+        return $this->sendResponse(
+            ['admin_notifications_sent' => $count],
+            $count > 0 ? 'Admins notified.' : 'No admin users found to notify.'
+        );
     }
 
     /**

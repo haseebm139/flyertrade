@@ -96,6 +96,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/push-notification', 'pushNotification');
         Route::post('/custom', 'custom');
         Route::post('/message/received', 'messageReceived');
+        Route::post('/support-chat/user-message', 'supportChatUserMessage')
+            ->middleware('throttle:120,1');
         Route::get('/unread-count', 'unreadCount');
         Route::post('/{id}/read', 'markAsRead');
         Route::post('/mark-all-read', 'markAllAsRead');
