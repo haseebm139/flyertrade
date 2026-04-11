@@ -68,7 +68,9 @@ class NotificationService
         ]);
 
         if ($sendPush && !empty($user->fcm_token)) {
-            $allowByCategory = ($resolvedCategory === 'messages')
+            $inAppMessageTypes = in_array($type, ['message_received', 'new_message'], true);
+            $allowByCategory = $inAppMessageTypes
+                || ($resolvedCategory === 'messages')
                 || (isset($user->is_booking_notification) && $user->is_booking_notification == true);
             if ($allowByCategory) {
                 try {

@@ -1351,6 +1351,7 @@ class Board extends Component
         }
 
         foreach (array_unique($candidates) as $value) {
+            $value = trim((string) $value);
             if ($value === '') {
                 continue;
             }
@@ -1362,6 +1363,13 @@ class Board extends Component
                 continue;
             }
             if (ctype_digit($value)) {
+                $user = User::find((int) $value);
+                if ($user) {
+                    return $user;
+                }
+                continue;
+            }
+            if (filter_var($value, FILTER_VALIDATE_INT) !== false && (int) $value > 0) {
                 $user = User::find((int) $value);
                 if ($user) {
                     return $user;
@@ -1385,6 +1393,14 @@ class Board extends Component
         bool $hasAttachment
     ): void {
         if (!$recipient) {
+            Log::info('Admin support chat: no Laravel user resolved for push/notification.', [
+                'conversation_id' => $conversationId,
+            ]);
+            return;
+        }
+
+        $recipient = User::query()->find($recipient->id);
+        if (!$recipient) {
             return;
         }
 
@@ -1406,7 +1422,10 @@ class Board extends Component
                     'conversation_id' => $conversationId,
                     'source' => 'admin_support_chat',
                     'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
-                ]
+                ],
+                null,
+                'messages',
+                (bool) \App\Models\Setting::get('push_notifications', true)
             );
         } catch (\Throwable $e) {
             Log::warning('Admin support chat notification failed: ' . $e->getMessage(), [
