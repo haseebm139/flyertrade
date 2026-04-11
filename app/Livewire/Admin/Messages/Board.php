@@ -1410,13 +1410,17 @@ class Board extends Component
                 ? 'You have a new attachment from support.'
                 : 'You have a new message from support.');
 
+        $pushEnabled = (bool) \App\Models\Setting::get('push_notifications', true);
+        $hasFcmToken = $recipient->fcm_token !== null && trim((string) $recipient->fcm_token) !== '';
+        $recipientType = $this->recipientTypeForNotification($recipient);
+
         try {
-            app(NotificationService::class)->send(
+            $notification = app(NotificationService::class)->send(
                 $recipient,
                 'message_received',
                 'Message from Support',
                 $body,
-                $this->recipientTypeForNotification($recipient),
+                $recipientType,
                 null,
                 [
                     'conversation_id' => $conversationId,
@@ -1425,8 +1429,17 @@ class Board extends Component
                 ],
                 null,
                 'messages',
-                (bool) \App\Models\Setting::get('push_notifications', true)
+                $pushEnabled
             );
+
+            Log::info('Admin support chat: in-app notification saved; FCM attempted if setting + token allow.', [
+                'notification_id' => $notification->id,
+                'user_id' => $recipient->id,
+                'recipient_type' => $recipientType,
+                'conversation_id' => $conversationId,
+                'push_notifications_setting' => $pushEnabled,
+                'user_has_fcm_token' => $hasFcmToken,
+            ]);
         } catch (\Throwable $e) {
             Log::warning('Admin support chat notification failed: ' . $e->getMessage(), [
                 'user_id' => $recipient->id,
