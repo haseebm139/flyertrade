@@ -1597,9 +1597,15 @@ class NotificationService
      */
     public function notifyDisputeResolved($dispute, $booking = null): void
     {
-        $customer = User::find($dispute->customer_id ?? $booking->customer_id ?? null);
-        $provider = User::find($dispute->provider_id ?? $booking->provider_id ?? null);
-        $bookingRef = $booking ? $booking->booking_ref : ($dispute->booking_ref ?? 'N/A');
+        if (!$booking && $dispute->booking_id) {
+            $booking = Booking::find($dispute->booking_id);
+        }
+
+        $customerId = $dispute->customer_id ?? $booking?->customer_id;
+        $providerId = $dispute->provider_id ?? $booking?->provider_id;
+        $customer = $customerId ? User::find($customerId) : null;
+        $provider = $providerId ? User::find($providerId) : null;
+        $bookingRef = $booking?->booking_ref ?? ($dispute->booking_ref ?? 'N/A');
 
         if ($customer) {
             $this->send(

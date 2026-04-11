@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Disputes;
 
 use App\Models\Dispute;
+use App\Services\Notification\NotificationService;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
@@ -146,8 +147,16 @@ class Table extends Component
             $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
             return;
         }
-        $dispute = Dispute::findOrFail($disputeId);
-        $dispute->update(['status' => strtolower($status)]);
+        $dispute = Dispute::with('booking')->findOrFail($disputeId);
+        $newStatus = strtolower($status);
+        $previousStatus = strtolower((string) $dispute->status);
+
+        $dispute->update(['status' => $newStatus]);
+
+        if ($newStatus === 'resolved' && $previousStatus !== 'resolved') {
+            app(NotificationService::class)->notifyDisputeResolved($dispute->fresh(['booking']), $dispute->booking);
+        }
+
         $this->dispatch('showSweetAlert', 'success', 'Status updated successfully.', 'Success');
         if ($this->selectedDispute && (int) $this->selectedDispute->id === (int) $disputeId) {
             $this->selectedDispute->refresh();
