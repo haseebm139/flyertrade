@@ -310,6 +310,22 @@ class NotificationController extends BaseController
             return $this->sendError('Only customers and providers can use this endpoint.', 403);
         }
 
+        $dataBag = $request->input('data', []);
+        if (is_array($dataBag)) {
+            if (! $request->filled('conversation_id') && isset($dataBag['conversation_id']) && (string) $dataBag['conversation_id'] !== '') {
+                $request->merge(['conversation_id' => (string) $dataBag['conversation_id']]);
+            }
+            if (! $request->has('message') && array_key_exists('message', $dataBag)) {
+                $request->merge(['message' => $dataBag['message']]);
+            }
+            if (! $request->has('has_attachment') && array_key_exists('has_attachment', $dataBag)) {
+                $request->merge(['has_attachment' => $dataBag['has_attachment']]);
+            }
+            if (! $request->filled('attachment_type') && ! empty($dataBag['attachment_type'])) {
+                $request->merge(['attachment_type' => (string) $dataBag['attachment_type']]);
+            }
+        }
+
         $validator = \Validator::make($request->all(), [
             'conversation_id' => 'required|string|max:512',
             'message' => 'nullable|string|max:2000',
