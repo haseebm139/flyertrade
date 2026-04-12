@@ -32,7 +32,18 @@ class SendBookingRemindersCommand extends Command
         $userTimes = $this->normalizeTimes(Setting::get('user_reminder_times', '[]'));
         $providerTimes = $this->normalizeTimes(Setting::get('provider_reminder_times', '[]'));
 
-        if ($userEnabled && $userTimes === [] && $providerEnabled && $providerTimes === []) {
+        // Provider toggle on but no intervals saved (common QA/admin mistake) — mirror customer times, else all allowed slots.
+        $effectiveProviderTimes = $providerTimes;
+        if ($providerEnabled && $effectiveProviderTimes === [] && $userEnabled && $userTimes !== []) {
+            $effectiveProviderTimes = $userTimes;
+        }
+        if ($providerEnabled && $effectiveProviderTimes === []) {
+            $effectiveProviderTimes = ['15m', '30m', '45m'];
+        }
+
+        $willSendUser = $userEnabled && $userTimes !== [];
+        $willSendProvider = $providerEnabled && $effectiveProviderTimes !== [];
+        if (! $willSendUser && ! $willSendProvider) {
             return self::SUCCESS;
         }
 
@@ -48,7 +59,7 @@ class SendBookingRemindersCommand extends Command
                 $userEnabled,
                 $providerEnabled,
                 $userTimes,
-                $providerTimes
+                $effectiveProviderTimes
             ) {
                 foreach ($bookings as $booking) {
                     $firstSlot = $booking->slots
@@ -76,7 +87,7 @@ class SendBookingRemindersCommand extends Command
                             $notifications->notifyBookingReminder($booking, $key, $slotStart);
                         }
 
-                        if ($providerEnabled && in_array($key, $providerTimes, true)) {
+                        if ($providerEnabled && in_array($key, $effectiveProviderTimes, true)) {
                             $notifications->notifyProviderBookingReminder($booking, $key, $slotStart);
                         }
                     }

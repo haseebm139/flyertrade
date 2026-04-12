@@ -1620,6 +1620,7 @@ class NotificationService
                 [
                     'dispute_id' => $dispute->id,
                     'booking_id' => $dispute->booking_id ?? null,
+                    'booking_ref' => $bookingRef,
                     'action_url' => "/disputes/{$dispute->id}"
                 ],
                 NotificationIcon::ADMIN_ACTION,
@@ -1638,6 +1639,7 @@ class NotificationService
                 [
                     'dispute_id' => $dispute->id,
                     'booking_id' => $dispute->booking_id ?? null,
+                    'booking_ref' => $bookingRef,
                     'action_url' => "/disputes/{$dispute->id}"
                 ],
                 NotificationIcon::ADMIN_ACTION,
@@ -1654,6 +1656,7 @@ class NotificationService
             [
                 'dispute_id' => $dispute->id,
                 'booking_id' => $dispute->booking_id ?? null,
+                'booking_ref' => $bookingRef,
                 'action_url' => route('dispute.index')
             ],
             NotificationIcon::ADMIN_ACTION,
