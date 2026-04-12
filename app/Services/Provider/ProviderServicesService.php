@@ -272,8 +272,8 @@ class ProviderServicesService
         }
 
         $message = $deletedCount === 1 
-            ? 'Service deleted successfully.' 
-            : 'Services deleted successfully.';
+            ? 'Selected Service deleted successfully' 
+            : 'Selected Service(s) deleted successfully.';
 
         return [
             'error' => false,
