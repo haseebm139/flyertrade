@@ -9,7 +9,7 @@
         padding: 0.6vw;
         border-radius: 0.5vw;
         border: 0.1vw solid #ddd;
-        font-size: 1vw;
+        font-size: 0.729vw;
         width: 100%;
         background-color: #fff;
     }

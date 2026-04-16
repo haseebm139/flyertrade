@@ -205,6 +205,13 @@
             width: 10.208vw;
         }
 
+    .actions-menu a{
+        font-size: 0.9vw;
+    }
+     .actions-menu{
+        min-width: 10vw;
+    }
+
         @media(max-width:600px) {
             .sidebar {
                 display: block;
@@ -494,7 +501,7 @@
             .actions-menu a {
         
                 padding: 1.521vw;
-                font-size: 2vw;
+                font-size: 1.5vw;
 
                 width: max-content;
             }
@@ -509,6 +516,9 @@
             font-size: 2vw;
            }
            .status-option, .status-btn.active, .user-role{
+            font-size:1.5vw;
+           }
+           .dropdown-menu li{
             font-size:1.5vw;
            }
         }
