@@ -1,8 +1,8 @@
 <div>
 <style>
-    .action_btns___{
+    /* .action_btns___{
         right: 0px !important;
-    }
+    } */
     @media(max-width:600px){
         .status .arrow{
             width:2vw;

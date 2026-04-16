@@ -269,7 +269,7 @@
 
         .status-dropdown .dropdown-menu {
             width: 100%;
-            min-width: 120px;
+            min-width: 140px;
         }
 
         .status-dropdown .dropdown-menu li {
