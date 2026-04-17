@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests\Api\Booking\StoreBookingRequest;
 use App\Models\Booking;
+use App\Models\Dispute;
 use App\Services\Booking\BookingService;
 use Illuminate\Http\JsonResponse;
 use Validator;
@@ -118,7 +119,10 @@ class BookingController extends BaseController
             $booking->setAttribute('is_provider_late', $lateCheck['is_late']);
             $booking->setAttribute('late_status', $lateCheck);
         }
-        
+
+        $latestDispute = Dispute::where('booking_id', $booking->id)->orderByDesc('id')->first();
+        $booking->setAttribute('incident_report', Dispute::incidentReportUi($latestDispute));
+
         return $this->sendResponse($booking, 'Booking retrieved successfully.'); 
     }
 

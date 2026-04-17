@@ -69,7 +69,20 @@ class NotificationService
 
         if ($sendPush && !empty($user->fcm_token)) {
             $inAppMessageTypes = in_array($type, ['message_received', 'new_message'], true);
+            // Booking reminders must reach providers/customers even when is_booking_notification is off
+            // (that flag is meant for marketing-style booking promos, not time-critical reminders).
+            $alwaysPushTypes = [
+                'message_received',
+                'new_message',
+                'booking_reminder',
+                'provider_booking_reminder',
+                'dispute_resolved',
+                'dispute_created',
+                'new_dispute',
+                'dispute',
+            ];
             $allowByCategory = $inAppMessageTypes
+                || in_array($type, $alwaysPushTypes, true)
                 || ($resolvedCategory === 'messages')
                 || (isset($user->is_booking_notification) && $user->is_booking_notification == true);
             if ($allowByCategory) {

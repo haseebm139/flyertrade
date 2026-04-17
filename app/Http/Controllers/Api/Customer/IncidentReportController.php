@@ -41,15 +41,11 @@ class IncidentReportController extends Controller
                 //     ], 422);
                 // }
 
-                // 3. Security Check: Prevent duplicate reports for the same booking
-                $existingDispute = Dispute::where('booking_id', $bookingId)
-                    ->where('user_id', $userId)
-                    ->first();
-
-                if ($existingDispute) {
+                // 3. One dispute per booking (customer or provider) — UI shows Reported / Dispute Resolved
+                if (Dispute::where('booking_id', $bookingId)->exists()) {
                     return response()->json([
                         'status' => 'error',
-                        'message' => 'You have already reported an incident for this booking.'
+                        'message' => 'A dispute has already been reported for this booking.',
                     ], 422);
                 }
 

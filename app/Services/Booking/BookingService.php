@@ -20,6 +20,7 @@ use App\Services\Notification\NotificationService;
 use Illuminate\Support\Facades\DB; 
 
 use App\Models\Setting;
+use App\Models\Dispute;
 
 class BookingService
 {
@@ -683,7 +684,10 @@ class BookingService
     }
     public function pendingBookingsProvider($providerId)
     {
-        return Booking::with('slots', 'provider', 'customer','providerService.service')->where('provider_id', $providerId)->where('status', 'awaiting_provider')->paginate(10);
+        $bookings = Booking::with('slots', 'provider', 'customer', 'providerService.service')->where('provider_id', $providerId)->where('status', 'awaiting_provider')->paginate(10);
+        $this->appendIncidentReportUiToBookings($bookings);
+
+        return $bookings;
     }
 
     public function onGoingBookingsProvider($providerId)
@@ -695,7 +699,7 @@ class BookingService
             )
             ->groupBy('booking_id');
 
-        return Booking::query()
+        $bookings = Booking::query()
             ->leftJoinSub($slotOrder, 'slot_order', function ($join) {
                 $join->on('slot_order.booking_id', '=', 'bookings.id');
             })
@@ -713,16 +717,25 @@ class BookingService
             ->orderBy('slot_order.first_slot_date')
             ->orderBy('slot_order.first_slot_start_time')
             ->paginate(10);
+        $this->appendIncidentReportUiToBookings($bookings);
+
+        return $bookings;
     }
 
     public function upcomingBookingsProvider($providerId)
     {
-        return Booking::with('slots', 'provider', 'customer','providerService.service','latestPendingReschedule')->where('provider_id', $providerId)->where('status', 'confirmed')->paginate(10);
+        $bookings = Booking::with('slots', 'provider', 'customer', 'providerService.service', 'latestPendingReschedule')->where('provider_id', $providerId)->where('status', 'confirmed')->paginate(10);
+        $this->appendIncidentReportUiToBookings($bookings);
+
+        return $bookings;
     }
 
     public function completedBookingsProvider($providerId)
     {
-        return Booking::with('slots', 'provider', 'customer','providerService.service')->where('provider_id', $providerId)->where('status', 'completed')->paginate(10);
+        $bookings = Booking::with('slots', 'provider', 'customer', 'providerService.service')->where('provider_id', $providerId)->where('status', 'completed')->paginate(10);
+        $this->appendIncidentReportUiToBookings($bookings);
+
+        return $bookings;
     }
 
     public function totalAmountProvider($providerId)
@@ -733,7 +746,10 @@ class BookingService
 
     public function pendingBookingsCustomer($customerId)
     {
-        return Booking::with('slots', 'provider', 'customer','providerService.service')->where('customer_id', $customerId)->where('status', 'awaiting_provider')->paginate(10);
+        $bookings = Booking::with('slots', 'provider', 'customer', 'providerService.service')->where('customer_id', $customerId)->where('status', 'awaiting_provider')->paginate(10);
+        $this->appendIncidentReportUiToBookings($bookings);
+
+        return $bookings;
     }
     public function upcomingBookingsCustomer($customerId)
     {
@@ -748,7 +764,9 @@ class BookingService
             $booking->setAttribute('is_provider_late', $lateCheck['is_late']);
             $booking->setAttribute('can_take_late_action', $lateCheck['can_take_action'] ?? false);
         }
-        
+
+        $this->appendIncidentReportUiToBookings($bookings);
+
         return $bookings;
     }
 
@@ -758,16 +776,22 @@ class BookingService
             ->where('customer_id', $customerId)
             ->where('status', 'completed')
             ->paginate(10);
-        
-        return $this->addReviewStatus($bookings);
+
+        $bookings = $this->addReviewStatus($bookings);
+        $this->appendIncidentReportUiToBookings($bookings);
+
+        return $bookings;
     }
 
     public function cancelledBookingsCustomer($customerId)
     {
-        return Booking::with('slots', 'provider', 'customer','providerService.service')
+        $bookings = Booking::with('slots', 'provider', 'customer', 'providerService.service')
             ->where('customer_id', $customerId)
             ->whereIn('status', ['cancelled', 'rejected'])
             ->paginate(10);
+        $this->appendIncidentReportUiToBookings($bookings);
+
+        return $bookings;
     }
 
     public function processPayment(int $id, ?int $userPaymentMethodId = null): array
@@ -861,7 +885,7 @@ class BookingService
             )
             ->groupBy('booking_id');
 
-        return Booking::query()
+        $bookings = Booking::query()
             ->leftJoinSub($slotOrder, 'slot_order', function ($join) {
                 $join->on('slot_order.booking_id', '=', 'bookings.id');
             })
@@ -879,15 +903,20 @@ class BookingService
             ->orderBy('slot_order.first_slot_date')
             ->orderBy('slot_order.first_slot_start_time')
             ->paginate(10);
+        $this->appendIncidentReportUiToBookings($bookings);
+
+        return $bookings;
     }
 
     public function cancelledBookingsProvider($providerId)
-    { 
-        return Booking::with('slots', 'provider', 'customer','providerService.service')
+    {
+        $bookings = Booking::with('slots', 'provider', 'customer', 'providerService.service')
             ->where('provider_id', $providerId)
             ->whereIn('status', ['cancelled', 'rejected'])
             ->paginate(10);
-     
+        $this->appendIncidentReportUiToBookings($bookings);
+
+        return $bookings;
     }
     /**
      * Check if review has been given for a booking
@@ -1089,6 +1118,27 @@ class BookingService
                     'error' => true,
                     'message' => 'Invalid action type.'
                 ];
+        }
+    }
+
+    /**
+     * @param  \Illuminate\Contracts\Pagination\Paginator|\Illuminate\Support\Enumerable  $bookings
+     */
+    private function appendIncidentReportUiToBookings($bookings): void
+    {
+        if ($bookings->isEmpty()) {
+            return;
+        }
+
+        $ids = [];
+        foreach ($bookings as $booking) {
+            $ids[] = $booking->id;
+        }
+
+        $map = Dispute::latestPerBookingForIds($ids);
+        foreach ($bookings as $booking) {
+            $dispute = $map->get($booking->id);
+            $booking->setAttribute('incident_report', Dispute::incidentReportUi($dispute));
         }
     }
 }
