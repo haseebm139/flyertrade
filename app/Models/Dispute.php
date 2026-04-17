@@ -46,8 +46,8 @@ class Dispute extends Model
     }
 
     /**
-     * Payload for mobile/web: whether the user can still open a new dispute for this booking.
-     * The app should choose button labels locally from the can_report flag.
+     * Payload for mobile/web: whether the user can still open a new dispute for this booking,
+     * and whether admin has marked the existing dispute resolved.
      */
     public static function incidentReportUi(?self $dispute): array
     {
@@ -55,12 +55,16 @@ class Dispute extends Model
             return [
                 'can_report' => true,
                 'dispute_id' => null,
+                'dispute_resolved' => false,
             ];
         }
+
+        $resolved = strtolower((string) $dispute->status) === 'resolved';
 
         return [
             'can_report' => false,
             'dispute_id' => $dispute->id,
+            'dispute_resolved' => $resolved,
         ];
     }
 }
