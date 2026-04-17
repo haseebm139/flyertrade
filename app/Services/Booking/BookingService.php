@@ -786,7 +786,8 @@ class BookingService
             return ['error' => true, 'message' => 'Invalid booking amount.'];
         }
 
-        $currency = strtolower(Setting::get('currency', 'USD'));
+        // $currency = strtolower(Setting::get('currency', 'USD'));
+        $currency = 'usd';
 
         try {
             $customerId = $this->stripe->ensureCustomer($user);
