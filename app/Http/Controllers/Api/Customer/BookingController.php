@@ -148,20 +148,27 @@ class BookingController extends BaseController
         // Return a success response
         return $this->sendResponse($data, 'Booking cancelled successfully.');
     }
-    public function requestReschedule(Request $request, $id)
+    public function requestReschedule(Request $request, $id): JsonResponse
     {
-        $booking = Booking::with('slots', 'provider', 'customer','providerService.service','latestPendingReschedule')->find($id);
+        $validator = Validator::make($request->all(), $this->newSlotsRulesForReschedule(false));
+
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), 422);
+        }
+
+        $booking = Booking::with('slots', 'provider', 'customer', 'providerService.service', 'latestPendingReschedule')->find($id);
         if (!$booking) {
             return $this->sendError('Booking not found', 404);
         }
-          
-        $data = $this->bookingsService->requestReschedule($booking, $request->new_slots);
+
+        $newSlots = $validator->validated()['new_slots'];
+        $data = $this->bookingsService->requestReschedule($booking, $newSlots);
         if ($data['error'] === true) {
             return $this->sendError($data['message']);
         }
-         
+
         return $this->sendResponse([
-            'booking'    => $data['booking'],
+            'booking' => $data['booking'],
             'reschedule' => $data['reschedule'],
         ], 'Reschedule request sent.');
     }
@@ -251,6 +258,23 @@ class BookingController extends BaseController
     }
 
     /**
+     * Rules for `new_slots` when proposing a reschedule.
+     *
+     * @param  bool  $whenRescheduleAction  true: required only when action is reschedule (late-action); false: always required (reschedule request).
+     */
+    private function newSlotsRulesForReschedule(bool $whenRescheduleAction): array
+    {
+        $r = $whenRescheduleAction ? 'required_if:action,reschedule' : 'required';
+
+        return [
+            'new_slots' => "{$r}|array|min:1",
+            'new_slots.*.service_date' => "{$r}|date_format:Y-m-d|after_or_equal:today",
+            'new_slots.*.start_time' => "{$r}|date_format:H:i",
+            'new_slots.*.end_time' => "{$r}|date_format:H:i|after:new_slots.*.start_time",
+        ];
+    }
+
+    /**
      * Handle late action for a booking
      * 
      * @param Request $request
@@ -259,13 +283,9 @@ class BookingController extends BaseController
      */
     public function handleLateAction(Request $request, $id): JsonResponse
     {
-        $validator = Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), array_merge([
             'action' => 'required|in:wait,reschedule,escalate',
-            // 'new_slots' => 'required_if:action,reschedule|array',
-            // 'new_slots.*.service_date' => 'required_if:action,reschedule|date_format:Y-m-d|after_or_equal:today',
-            // 'new_slots.*.start_time' => 'required_if:action,reschedule|date_format:H:i',
-            // 'new_slots.*.end_time' => 'required_if:action,reschedule|date_format:H:i|after:new_slots.*.start_time',
-        ]);
+        ], $this->newSlotsRulesForReschedule(true)));
 
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), 422);
@@ -282,8 +302,9 @@ class BookingController extends BaseController
             return $this->sendError('Unauthorized access to this booking.', 403);
         }
 
-        $action = $request->input('action');
-        $newSlots = $request->input('new_slots');
+        $validated = $validator->validated();
+        $action = $validated['action'];
+        $newSlots = $validated['new_slots'] ?? null;
 
         $result = $this->bookingsService->handleLateAction($booking, $action, $newSlots);
 

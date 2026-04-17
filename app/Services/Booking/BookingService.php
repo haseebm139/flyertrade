@@ -390,9 +390,15 @@ class BookingService
         return $booking;
     }
 
-    public function requestReschedule(Booking $booking, array $newSlots): array
+    public function requestReschedule(Booking $booking, ?array $newSlots): array
     {
-         
+        if ($newSlots === null || $newSlots === []) {
+            return [
+                'error' => true,
+                'message' => 'New slots are required for rescheduling.',
+            ];
+        }
+
         if ($booking->status !== 'confirmed') {
              
             return [
@@ -1045,33 +1051,23 @@ class BookingService
                 ];
 
             case 'reschedule':
-                // Customer wants to reschedule - use existing reschedule logic
-                // if (!$newSlots || empty($newSlots)) {
-                //     return [
-                //         'error' => true,
-                //         'message' => 'New slots are required for rescheduling.'
-                //     ];
-                // }
-
-                // Use existing requestReschedule method
                 $rescheduleResult = $this->requestReschedule($booking, $newSlots);
-                
-                // if ($rescheduleResult['error']) {
-                //     return $rescheduleResult;
-                // }
 
-                // Mark late action
+                if ($rescheduleResult['error']) {
+                    return $rescheduleResult;
+                }
+
                 $booking->update([
                     'late_action_taken' => true,
                     'late_action_type' => 'reschedule',
-                    'late_action_at' => now()
+                    'late_action_at' => now(),
                 ]);
 
                 return [
                     'error' => false,
                     'message' => 'Reschedule request sent due to provider being late.',
                     'booking' => $booking->fresh(['slots', 'provider', 'customer', 'providerService.service']),
-                    // 'reschedule' => $rescheduleResult['reschedule']
+                    'reschedule' => $rescheduleResult['reschedule'],
                 ];
 
             case 'escalate':
