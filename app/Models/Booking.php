@@ -77,4 +77,12 @@ class Booking extends Model
             ->where('status', 'pending')
             ->latest();
     }
+
+    /**
+     * Latest dispute for this booking (one row per booking in practice).
+     */
+    public function dispute(): HasOne
+    {
+        return $this->hasOne(Dispute::class)->latestOfMany();
+    }
 }

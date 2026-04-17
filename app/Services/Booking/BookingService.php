@@ -684,7 +684,7 @@ class BookingService
     }
     public function pendingBookingsProvider($providerId)
     {
-        $bookings = Booking::with('slots', 'provider', 'customer', 'providerService.service')->where('provider_id', $providerId)->where('status', 'awaiting_provider')->paginate(10);
+        $bookings = Booking::with('slots', 'provider', 'customer', 'providerService.service', 'dispute')->where('provider_id', $providerId)->where('status', 'awaiting_provider')->paginate(10);
         $this->appendIncidentReportUiToBookings($bookings);
 
         return $bookings;
@@ -710,7 +710,8 @@ class BookingService
                 },
                 'provider',
                 'customer',
-                'providerService.service'
+                'providerService.service',
+                'dispute',
             ])
             ->where('provider_id', $providerId)
             ->where('status', 'in_progress')
@@ -724,7 +725,7 @@ class BookingService
 
     public function upcomingBookingsProvider($providerId)
     {
-        $bookings = Booking::with('slots', 'provider', 'customer', 'providerService.service', 'latestPendingReschedule')->where('provider_id', $providerId)->where('status', 'confirmed')->paginate(10);
+        $bookings = Booking::with('slots', 'provider', 'customer', 'providerService.service', 'latestPendingReschedule', 'dispute')->where('provider_id', $providerId)->where('status', 'confirmed')->paginate(10);
         $this->appendIncidentReportUiToBookings($bookings);
 
         return $bookings;
@@ -732,7 +733,7 @@ class BookingService
 
     public function completedBookingsProvider($providerId)
     {
-        $bookings = Booking::with('slots', 'provider', 'customer', 'providerService.service')->where('provider_id', $providerId)->where('status', 'completed')->paginate(10);
+        $bookings = Booking::with('slots', 'provider', 'customer', 'providerService.service', 'dispute')->where('provider_id', $providerId)->where('status', 'completed')->paginate(10);
         $this->appendIncidentReportUiToBookings($bookings);
 
         return $bookings;
@@ -746,14 +747,14 @@ class BookingService
 
     public function pendingBookingsCustomer($customerId)
     {
-        $bookings = Booking::with('slots', 'provider', 'customer', 'providerService.service')->where('customer_id', $customerId)->where('status', 'awaiting_provider')->paginate(10);
+        $bookings = Booking::with('slots', 'provider', 'customer', 'providerService.service', 'dispute')->where('customer_id', $customerId)->where('status', 'awaiting_provider')->paginate(10);
         $this->appendIncidentReportUiToBookings($bookings);
 
         return $bookings;
     }
     public function upcomingBookingsCustomer($customerId)
     {
-        $bookings = Booking::with('slots', 'provider', 'customer','providerService.service','latestPendingReschedule')
+        $bookings = Booking::with('slots', 'provider', 'customer', 'providerService.service', 'latestPendingReschedule', 'dispute')
             ->where('customer_id', $customerId)
             ->whereIn('status', ['awaiting_provider','confirmed','in_progress'])
             ->paginate(10);
@@ -772,7 +773,7 @@ class BookingService
 
     public function completedBookingsCustomer($customerId)
     {
-        $bookings = Booking::with('slots', 'provider', 'customer','providerService.service', 'review')
+        $bookings = Booking::with('slots', 'provider', 'customer', 'providerService.service', 'review', 'dispute')
             ->where('customer_id', $customerId)
             ->where('status', 'completed')
             ->paginate(10);
@@ -785,7 +786,7 @@ class BookingService
 
     public function cancelledBookingsCustomer($customerId)
     {
-        $bookings = Booking::with('slots', 'provider', 'customer', 'providerService.service')
+        $bookings = Booking::with('slots', 'provider', 'customer', 'providerService.service', 'dispute')
             ->where('customer_id', $customerId)
             ->whereIn('status', ['cancelled', 'rejected'])
             ->paginate(10);
@@ -896,7 +897,8 @@ class BookingService
                 },
                 'provider',
                 'customer',
-                'providerService.service'
+                'providerService.service',
+                'dispute',
             ])
             ->where('customer_id', $customerId)
             ->where('status', 'in_progress')
@@ -910,7 +912,7 @@ class BookingService
 
     public function cancelledBookingsProvider($providerId)
     {
-        $bookings = Booking::with('slots', 'provider', 'customer', 'providerService.service')
+        $bookings = Booking::with('slots', 'provider', 'customer', 'providerService.service', 'dispute')
             ->where('provider_id', $providerId)
             ->whereIn('status', ['cancelled', 'rejected'])
             ->paginate(10);
@@ -1126,19 +1128,12 @@ class BookingService
      */
     private function appendIncidentReportUiToBookings($bookings): void
     {
-        if ($bookings->isEmpty()) {
-            return;
-        }
-
-        $ids = [];
         foreach ($bookings as $booking) {
-            $ids[] = $booking->id;
-        }
-
-        $map = Dispute::latestPerBookingForIds($ids);
-        foreach ($bookings as $booking) {
-            $dispute = $map->get($booking->id);
-            $booking->setAttribute('incident_report', Dispute::incidentReportUi($dispute));
+            if (! $booking->relationLoaded('dispute')) {
+                $booking->loadMissing('dispute');
+            }
+            $booking->setAttribute('incident_report', Dispute::incidentReportUi($booking->dispute));
+            $booking->makeHidden('dispute');
         }
     }
 }

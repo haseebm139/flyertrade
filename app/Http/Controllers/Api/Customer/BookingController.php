@@ -105,13 +105,13 @@ class BookingController extends BaseController
     // Show booking
     public function show($id): JsonResponse
     {
-        $booking = Booking::with(['slots', 'customer', 'provider', 'providerService.service','latestPendingReschedule'])->find($id);
+        $booking = Booking::with(['slots', 'customer', 'provider', 'providerService.service', 'latestPendingReschedule', 'dispute'])->find($id);
 
         if (!$booking) {
             return $this->sendError('Booking not found', 404);
         }
         
-        $booking = $booking->load('slots','customer','provider','providerService.service');
+        $booking = $booking->load('slots', 'customer', 'provider', 'providerService.service');
         
         // Add late status for upcoming bookings
         if ($booking->status === 'confirmed') {
@@ -120,8 +120,8 @@ class BookingController extends BaseController
             $booking->setAttribute('late_status', $lateCheck);
         }
 
-        $latestDispute = Dispute::where('booking_id', $booking->id)->orderByDesc('id')->first();
-        $booking->setAttribute('incident_report', Dispute::incidentReportUi($latestDispute));
+        $booking->setAttribute('incident_report', Dispute::incidentReportUi($booking->dispute));
+        $booking->makeHidden('dispute');
 
         return $this->sendResponse($booking, 'Booking retrieved successfully.'); 
     }
