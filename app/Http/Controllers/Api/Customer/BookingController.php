@@ -283,9 +283,9 @@ class BookingController extends BaseController
      */
     public function handleLateAction(Request $request, $id): JsonResponse
     {
-        $validator = Validator::make($request->all(), array_merge([
+        $validator = Validator::make($request->all(), [
             'action' => 'required|in:wait,reschedule,escalate',
-        ], $this->newSlotsRulesForReschedule(true)));
+        ]);
 
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), 422);
@@ -302,11 +302,9 @@ class BookingController extends BaseController
             return $this->sendError('Unauthorized access to this booking.', 403);
         }
 
-        $validated = $validator->validated();
-        $action = $validated['action'];
-        $newSlots = $validated['new_slots'] ?? null;
+        $action = $validator->validated()['action'];
 
-        $result = $this->bookingsService->handleLateAction($booking, $action, $newSlots);
+        $result = $this->bookingsService->handleLateAction($booking, $action);
 
         if ($result['error'] === true) {
             return $this->sendError($result['message'], 400);

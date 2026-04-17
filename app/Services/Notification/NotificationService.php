@@ -1185,6 +1185,34 @@ class NotificationService
     }
 
     /**
+     * Customer chose reschedule after provider was late (no proposed slots / no reschedule record).
+     */
+    public function notifyProviderLateRescheduleRequest($booking): void
+    {
+        $provider = User::find($booking->provider_id);
+        if (! $provider) {
+            return;
+        }
+
+        $this->send(
+            $provider,
+            'late_reschedule_requested',
+            'Customer wants to reschedule',
+            "The customer would like to reschedule booking #{$booking->booking_ref} after a late arrival. Please arrange a new time with them.",
+            'provider',
+            $booking,
+            [
+                'booking_id' => $booking->id,
+                'booking_ref' => $booking->booking_ref,
+                'action_url' => "/bookings/{$booking->id}",
+            ],
+            NotificationIcon::RESCHEDULE_REQUEST,
+            'bookings',
+            true
+        );
+    }
+
+    /**
      * Notify when reschedule is requested
      */
     public function notifyRescheduleRequested($booking, $reschedule, $requestedBy = 'customer'): void

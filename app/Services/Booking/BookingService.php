@@ -994,10 +994,9 @@ class BookingService
      * 
      * @param Booking $booking
      * @param string $action 'wait', 'reschedule', or 'escalate'
-     * @param array|null $newSlots Required if action is 'reschedule'
      * @return array
      */
-    public function handleLateAction(Booking $booking, string $action, ?array $newSlots = null): array
+    public function handleLateAction(Booking $booking, string $action): array
     {
         // Validate booking status
         if ($booking->status !== 'confirmed') {
@@ -1051,23 +1050,20 @@ class BookingService
                 ];
 
             case 'reschedule':
-                $rescheduleResult = $this->requestReschedule($booking, $newSlots);
-
-                if ($rescheduleResult['error']) {
-                    return $rescheduleResult;
-                }
-
+                // Customer wants a new time because provider was late — no new slots / no BookingReschedule row.
                 $booking->update([
                     'late_action_taken' => true,
                     'late_action_type' => 'reschedule',
                     'late_action_at' => now(),
                 ]);
 
+                $booking = $booking->fresh(['slots', 'provider', 'customer', 'providerService.service']);
+                $this->notificationService->notifyProviderLateRescheduleRequest($booking);
+
                 return [
                     'error' => false,
-                    'message' => 'Reschedule request sent due to provider being late.',
-                    'booking' => $booking->fresh(['slots', 'provider', 'customer', 'providerService.service']),
-                    'reschedule' => $rescheduleResult['reschedule'],
+                    'message' => 'The provider has been notified that you would like to reschedule.',
+                    'booking' => $booking,
                 ];
 
             case 'escalate':
