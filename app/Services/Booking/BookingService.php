@@ -255,7 +255,8 @@ class BookingService
             // 3. Calculate service charges (admin commission)
             $percentage = (float) Setting::get('service_charge_percentage', 25);
             $serviceCharges = ($data['total_price'] * $percentage) / 100;
-            $netAmount = max(0, $data['total_price'] - $serviceCharges);
+            $netAmount = max(0, $data['total_price']);
+            $totalAmountJob = $data['total_price'] + $serviceCharges;
 
             // 4. Create the booking with 'confirmed' status
             $booking = Booking::create([
@@ -268,7 +269,7 @@ class BookingService
                 'booking_description' => $data['booking_description'] ?? null,
                 'booking_type' => 'custom',
                 'booking_working_minutes' => $totalMinutes,
-                'total_price' => $data['total_price'],
+                'total_price' => $totalAmountJob,
                 'service_charges' => $serviceCharges,
                 'net_amount' => $netAmount,
                 'status' => 'confirmed', // Automatically accepted
