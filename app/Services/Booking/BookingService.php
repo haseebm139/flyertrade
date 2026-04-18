@@ -161,8 +161,9 @@ class BookingService
             // Calculate service charges dynamically based on admin settings
             $percentage = (float) \App\Models\Setting::get('service_charge_percentage', 25); 
             $serviceCharges = ($data['total_price'] * $percentage) / 100;
-            $netAmount = max(0, $data['total_price'] - $serviceCharges);
-              
+            $netAmount = max(0, $data['total_price']);
+            $totalAmountJob = $data['total_price'] + $serviceCharges;              
+             
             $booking = Booking::create([
                 'booking_ref' => $this->makeRef(),
                 'customer_id' => auth()->user()->id,
@@ -175,7 +176,7 @@ class BookingService
                 'booking_type' => $data['booking_type'] ?? 'hourly',
                 'hourly_rate' => $hourlyRateUsed,
                 'booking_working_minutes' => $totalMinutes,
-                'total_price' => $data['total_price'] ,
+                'total_price' => $totalAmountJob ,
                 'service_charges' => $serviceCharges,
                 'net_amount' => $netAmount, 
                 // 'stripe_payment_intent_id' => $intent->id,
