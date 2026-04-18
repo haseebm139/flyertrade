@@ -1126,13 +1126,18 @@ class BookingService
     /**
      * @param  \Illuminate\Contracts\Pagination\Paginator|\Illuminate\Support\Enumerable  $bookings
      */
-    private function appendIncidentReportUiToBookings($bookings): void
+    private function appendIncidentReportUiToBookings($bookings, ?int $viewerUserId = null): void
     {
+        $viewerUserId ??= auth()->id();
+
+        $ids = collect($bookings->items())->pluck('id')->filter()->unique()->values()->all();
+        $disputesByBooking = $ids === []
+            ? collect()
+            : Dispute::query()->whereIn('booking_id', $ids)->get()->groupBy('booking_id');
+
         foreach ($bookings as $booking) {
-            if (! $booking->relationLoaded('dispute')) {
-                $booking->loadMissing('dispute');
-            }
-            $booking->setAttribute('incident_report', Dispute::incidentReportUi($booking->dispute));
+            $rows = $disputesByBooking->get($booking->id, collect());
+            $booking->setAttribute('incident_report', Dispute::incidentReportUi($booking, $viewerUserId, $rows));
             $booking->makeHidden('dispute');
         }
     }

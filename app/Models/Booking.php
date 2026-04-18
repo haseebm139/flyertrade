@@ -79,7 +79,7 @@ class Booking extends Model
     }
 
     /**
-     * Latest dispute for this booking (one row per booking in practice).
+     * Latest dispute row for this booking (API uses per-user queries; multiple rows allowed).
      */
     public function dispute(): HasOne
     {

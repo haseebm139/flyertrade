@@ -41,11 +41,11 @@ class IncidentReportController extends Controller
                 //     ], 422);
                 // }
 
-                // 3. One dispute per booking (customer or provider) — UI shows Reported / Dispute Resolved
-                if (Dispute::where('booking_id', $bookingId)->exists()) {
+                // 3. One dispute per user per booking (customer and provider may each file once).
+                if (Dispute::where('booking_id', $bookingId)->where('user_id', $userId)->exists()) {
                     return response()->json([
                         'status' => 'error',
-                        'message' => 'A dispute has already been reported for this booking.',
+                        'message' => 'You have already reported an incident for this booking.',
                     ], 422);
                 }
 

@@ -120,7 +120,7 @@ class BookingController extends BaseController
             $booking->setAttribute('late_status', $lateCheck);
         }
 
-        $booking->setAttribute('incident_report', Dispute::incidentReportUi($booking->dispute));
+        $booking->setAttribute('incident_report', Dispute::incidentReportUi($booking, auth()->id()));
         $booking->makeHidden('dispute');
 
         return $this->sendResponse($booking, 'Booking retrieved successfully.'); 
