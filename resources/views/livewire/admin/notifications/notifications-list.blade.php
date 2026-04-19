@@ -57,7 +57,7 @@
     <div class="tab-content active" style="border: 0.1vw solid #ddd;border-radius: 0.521vw;">
         @foreach($groupedNotifications as $group)
         <h3 style="font-weight:500;font-size:0.833vw;color:#1b1b1b;border:none;padding-bottom:0px;margin-top: {{ $loop->first ? '0' : '1.5vw' }};" class="profile-heading">{{ $group['group'] }}</h3>
-        <div class="profile-details">
+        <div class="profile-details JM_notifications_wrapper">
             @forelse($group['notifications'] as $notification)
                 <div class="notification_item_wrapper">
                     @if($notification['action_url'])

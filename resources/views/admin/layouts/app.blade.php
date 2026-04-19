@@ -522,7 +522,12 @@
             font-size:1.5vw;
            }
         }
-        
+        @media (min-height: 1081px) {
+            nav {
+                max-height: 80vh;
+                overflow-y: scroll;
+            }
+        }
     </style>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 

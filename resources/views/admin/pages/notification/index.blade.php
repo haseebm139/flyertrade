@@ -13,7 +13,7 @@
         max-width: 36.719vw;
     }
 
-    .notification_item_wrapper {
+    .JM_notifications_wrapper .notification_item_wrapper {
         padding-left: 0px;
         padding-right: 0px;
     }
