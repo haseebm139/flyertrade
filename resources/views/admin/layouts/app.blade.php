@@ -522,7 +522,7 @@
             font-size:1.5vw;
            }
         }
-        @media (min-height: 1081px) {
+        @media (min-height: 600px) {
             nav {
                 max-height: 80vh;
                 overflow-y: scroll;
