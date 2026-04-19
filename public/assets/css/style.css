@@ -3210,7 +3210,7 @@ body.cm-lock {
 }
 
 .charge-label {
-    font-size: 1vw;
+    font-size: 0.938vw;
     color: #333;
     margin-bottom: 0.5vw;
 }
@@ -3505,7 +3505,7 @@ body.cm-lock {
 
 .setting-wrapper {
     border: 0.1vw solid #cfc1c1;
-    padding: 0.6vw 1vw;
+    padding: 0.99vw 1.25vw;
     border-radius: 0.8vw;
 }
 

@@ -1,3 +1,10 @@
+<style>
+    .JM___heading_title{
+        font-size:1.042vw;
+        font-weight: 600;
+        line-height:2vw;
+    }
+</style>
 <div class="settings-manager-livewire">
     <div class="row">
         <div class="col-md-2">
@@ -39,6 +46,7 @@
                     @endphp
                     <div class="setting-wrapper">
                         <div class="charge-col">
+                            <h3 class="JM___heading_title">Country and currency change</h3>
                             <label class="charge-label">Select Country</label>
                             @php
                                 $selectedCountry = $countries->firstWhere('id', $country_id);
@@ -79,13 +87,8 @@
                                     @endforeach
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <br />
-                    <br />
-                    <div class="setting-wrapper">
-                        <div class="charge-col">
-                            <label class="charge-label">Select currency</label>
+                            <br>
+                             <label class="charge-label">Select currency</label>
                             <div class="currency-dropdown">
                                 <button type="button" class="currency-select" onclick="toggleCurrencyDropdown(this)">
                                     <span class="currency-selected">
@@ -125,11 +128,13 @@
                             </div>
                         </div>
                     </div>
+                 
                     <br />
                     <br />
                     <div class="setting-wrapper">
                         <div class="charge-col">
-                            <label class="charge-label">Commission Fee (%)</label>
+                            <h3 class="JM___heading_title">Commission Fee</h3>
+                            <label class="charge-label">Commission Fee</label>
                             <input type="number" wire:model="commission_fee" class="charge-input" step="1"
                                 min="0" max="100" placeholder="Enter commission fee" />
                             @error('commission_fee')
