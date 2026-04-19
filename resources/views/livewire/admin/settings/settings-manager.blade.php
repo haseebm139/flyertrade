@@ -525,7 +525,7 @@
             border-radius: 8px;
             border: 1px solid #e5e7eb;
             background: #fff;
-            font-size: 14px;
+            font-size: 0.729vw;
             justify-content: space-between;
             box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
             transition: border-color 0.15s ease, box-shadow 0.15s ease;
