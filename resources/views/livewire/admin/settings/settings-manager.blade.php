@@ -521,8 +521,8 @@
             display: flex;
             align-items: center;
             width: 100%;
-            padding: 8px 12px;
-            border-radius: 8px;
+            padding: 0.417vw 0.625vw;
+            border-radius: 0.417vw;
             border: 1px solid #e5e7eb;
             background: #fff;
             font-size: 0.729vw;
@@ -544,7 +544,7 @@
         .country-selected {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 0.417vw;
             color: #111827;
         }
 
@@ -562,8 +562,8 @@
             right: 0;
             background: #fff;
             border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            max-height: 260px;
+            border-radius: 0.417vw;
+            max-height: 13.542vw;
             overflow-y: auto;
             display: none;
             z-index: 10;
@@ -571,7 +571,7 @@
         }
 
         .country-search {
-            padding: 8px 12px;
+            padding: 0.417vw 0.625vw;
             border-bottom: 1px solid #e5e7eb;
             background: #fff;
             position: sticky;
@@ -581,10 +581,10 @@
 
         .country-search-input {
             width: 100%;
-            padding: 6px 10px;
+            padding: 0.313vw 0.521vw;
             border: 1px solid #e5e7eb;
-            border-radius: 6px;
-            font-size: 13px;
+            border-radius: 0.313vw;
+            font-size: 0.677vw;
             transition: border-color 0.15s ease, box-shadow 0.15s ease;
         }
 
@@ -602,12 +602,12 @@
             width: 100%;
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 8px 12px;
+            gap: 0.417vw;
+            padding: 0.417vw 0.625vw;
             background: #fff;
             border: 0;
             text-align: left;
-            font-size: 14px;
+            font-size: 0.729vw;
             transition: background 0.15s ease;
         }
 
@@ -621,7 +621,7 @@
 
         .country-caret {
             color: #9ca3af;
-            font-size: 12px;
+            font-size: 0.625vw;
         }
 
         .currency-dropdown {
@@ -632,8 +632,8 @@
             display: flex;
             align-items: center;
             width: 100%;
-            padding: 8px 12px;
-            border-radius: 8px;
+            padding: 0.417vw 0.625vw;
+            border-radius: 0.417vw;
             border: 1px solid #e5e7eb;
             background: #fff;
             font-size: 0.729vw;
@@ -655,7 +655,7 @@
         .currency-selected {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 0.417vw;
             color: #111827;
         }
 
@@ -679,8 +679,8 @@
             right: 0;
             background: #fff;
             border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            max-height: 260px;
+            border-radius: 0.417vw;
+            max-height: 13.542vw;
             overflow-y: auto;
             display: none;
             z-index: 10;
@@ -692,7 +692,7 @@
         }
 
         .currency-search {
-            padding: 8px 12px;
+            padding: 0.417vw 0.625vw;
             border-bottom: 1px solid #e5e7eb;
             background: #fff;
             position: sticky;
@@ -702,10 +702,10 @@
 
         .currency-search-input {
             width: 100%;
-            padding: 6px 10px;
+            padding: 0.313vw 0.521vw;
             border: 1px solid #e5e7eb;
-            border-radius: 6px;
-            font-size: 13px;
+            border-radius: 0.313vw;
+            font-size: 0.677vw;
             transition: border-color 0.15s ease, box-shadow 0.15s ease;
         }
 
@@ -719,12 +719,12 @@
             width: 100%;
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 8px 12px;
+            gap: 0.417vw;
+            padding: 0.417vw 0.625vw;
             background: #fff;
             border: 0;
             text-align: left;
-            font-size: 14px;
+            font-size: 0.729vw;
             transition: background 0.15s ease;
         }
 
@@ -738,13 +738,13 @@
 
         .currency-caret {
             color: #9ca3af;
-            font-size: 12px;
+            font-size: 0.625vw;
         }
 
         .message-actions {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 0.417vw;
             white-space: nowrap;
         }
 
@@ -760,13 +760,13 @@
 
         .onboarding-card {
             border: 1px solid #e5e7eb;
-            border-radius: 10px;
+            border-radius: 0.521vw;
             background: #fff;
-            padding: 12px;
+            padding: 0.625vw;
         }
 
         .onboarding-row {
-            padding: 12px 0;
+            padding: 0.625vw 0;
             border-bottom: 1px solid #f1f1f1;
         }
 
@@ -778,7 +778,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 8px;
+            margin-bottom: 0.417vw;
         }
 
         .onboarding-row-header h4 {
@@ -802,8 +802,8 @@
         .onboarding-textarea {
             width: 100%;
             border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 10px;
+            border-radius: 0.417vw;
+            padding: 0.521vw;
             font-size: 0.9vw;
             color: #333;
         }
