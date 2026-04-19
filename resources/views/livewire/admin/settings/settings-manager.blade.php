@@ -1,10 +1,4 @@
-<style>
-    .JM___heading_title{
-        font-size:1.042vw;
-        font-weight: 600;
-        line-height:2vw;
-    }
-</style>
+
 <div class="settings-manager-livewire">
     <div class="row">
         <div class="col-md-2">

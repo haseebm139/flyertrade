@@ -3,7 +3,13 @@
 @section('title', 'Settings')
 @section('header', 'Settings')
 @section('content')
-
+<style>
+    .JM___heading_title{
+        font-size:1.042vw;
+        font-weight: 600;
+        line-height:2vw;
+    }
+</style>
 <style>
     .charge-input {
         padding: 0.6vw;
