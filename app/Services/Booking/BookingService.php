@@ -28,7 +28,8 @@ class BookingService
  
     public function __construct(
         private StripeService $stripe,
-        private NotificationService $notificationService
+        private NotificationService $notificationService,
+        private BookingReminderDispatchService $bookingReminderDispatches
     ) {}
 
     public function checkAvailability(array $slot, int $providerId): string
@@ -293,6 +294,8 @@ class BookingService
 
             $booking = $booking->load('slots', 'customer', 'provider', 'providerService.service');
 
+            $this->bookingReminderDispatches->syncForBooking($booking);
+
             return ['error' => false, 'booking' => $booking];
         });
     }
@@ -307,6 +310,8 @@ class BookingService
         }
         $booking->update(['status' => 'confirmed', 'confirmed_at' => now()]);
         $booking = $booking->fresh('slots', 'provider', 'customer','providerService.service', 'review');
+
+        $this->bookingReminderDispatches->syncForBooking($booking);
         
         // Send notification
         $this->notificationService->notifyBookingConfirmed($booking);
@@ -331,6 +336,7 @@ class BookingService
             $this->stripe->refundByPaymentIntent($booking->stripe_payment_intent_id);
         }
 
+        $this->bookingReminderDispatches->removeAllForBooking($booking->id);
         $booking->update(['status' => 'rejected','rejected_at' => now()]);
         $booking = $booking->fresh('slots', 'provider', 'customer','providerService.service');
         
@@ -348,6 +354,7 @@ class BookingService
             ]; 
         } 
         
+        $this->bookingReminderDispatches->removeAllForBooking($booking->id);
         $booking->update(['status' => 'in_progress', 'started_at' => now()]);
         $booking = $booking->fresh('slots', 'provider', 'customer','providerService.service');
         
@@ -365,6 +372,7 @@ class BookingService
         //     ]; 
         // } 
         $cancelledBy = Auth::id() === $booking->customer_id ? 'customer' : 'provider';
+        $this->bookingReminderDispatches->removeAllForBooking($booking->id);
         $booking->update(['status' => 'cancelled', 'cancelled_at' => now(), 'cancelled_reason' => $cancelReason]);
         $booking = $booking->load('slots', 'provider', 'customer','providerService.service');
         
@@ -381,6 +389,7 @@ class BookingService
                 'message' => 'Only in progress bookings can be completed.'
             ]; 
         }
+        $this->bookingReminderDispatches->removeAllForBooking($booking->id);
         $booking->update(['status' => 'completed', 'completed_at' => now()]);
         $booking = $booking->fresh('slots', 'provider', 'customer','providerService.service', 'review');
         
@@ -510,6 +519,9 @@ class BookingService
             
             // Send notification
             $this->notificationService->notifyRescheduleAccepted($booking, $reschedule);
+
+            $booking = $booking->fresh(['slots', 'provider', 'customer', 'providerService.service']);
+            $this->bookingReminderDispatches->resyncAfterSlotChange($booking);
 
         } elseif ($response === 'reject') {
             

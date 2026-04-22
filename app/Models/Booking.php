@@ -85,4 +85,9 @@ class Booking extends Model
     {
         return $this->hasOne(Dispute::class)->latestOfMany();
     }
+
+    public function reminderDispatches(): HasMany
+    {
+        return $this->hasMany(BookingReminderDispatch::class);
+    }
 }
