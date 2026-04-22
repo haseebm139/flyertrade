@@ -920,6 +920,7 @@ class Board extends Component
     public function getEmailLogsProperty()
     {
         return $this->buildEmailLogsQuery($this->emailSearch)
+            ->orderByDesc('created_at')
             ->orderByDesc('id')
             ->limit($this->emailLogPage * 20)
             ->get();
@@ -964,6 +965,7 @@ class Board extends Component
         }
 
         $emails = $this->buildEmailLogsQuery($search)
+            ->orderByDesc('created_at')
             ->orderByDesc('id')
             ->limit(50)
             ->get();
@@ -1894,9 +1896,9 @@ class Board extends Component
             $filtered[] = $row;
         }
 
-        foreach ($filtered as $index => $row) {
-            unset($filtered[$index]['lastMessageAt']);
-        }
+        usort($filtered, static function (array $left, array $right): int {
+            return (int) ($right['lastMessageAt'] ?? 0) <=> (int) ($left['lastMessageAt'] ?? 0);
+        });
 
         return $filtered;
     }
