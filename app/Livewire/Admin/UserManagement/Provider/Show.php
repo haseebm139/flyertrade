@@ -280,6 +280,8 @@ class Show extends Component
             return;
         }
 
+        $profile->refresh();
+
         $idStatus = $profile->id_photo_status ?? 'pending';
         $passportStatus = $profile->passport_status ?? 'pending';
         $workPermitStatus = $profile->work_permit_status ?? 'pending';
@@ -288,14 +290,13 @@ class Show extends Component
         if ($hasRejected) {
             $this->user->is_verified = 'declined';
             $this->user->save();
+
             return;
         }
 
-        $workPermitApproved = $workPermitStatus === 'approved';
-        $idApproved = $idStatus === 'approved';
-        $passportApproved = $passportStatus === 'approved';
+        $anyApproved = in_array('approved', [$idStatus, $passportStatus, $workPermitStatus], true);
 
-        if ($workPermitApproved && ($idApproved || $passportApproved)) {
+        if ($anyApproved) {
             $this->user->is_verified = 'verified';
         } else {
             $this->user->is_verified = 'pending';
