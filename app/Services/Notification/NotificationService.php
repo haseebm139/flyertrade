@@ -769,7 +769,7 @@ class NotificationService
     public function notifyNewDispute($dispute, $booking = null): void
     {
         $bookingRef = $booking ? $booking->booking_ref : ($dispute->booking_ref ?? 'N/A');
-        $reason = $dispute->reason ?? 'Unknown reason';
+        $reason = $dispute->reason ?? $dispute->message ?? 'Unknown reason';
         
         $this->sendToAdmins(
             'dispute_created',

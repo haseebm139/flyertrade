@@ -4,14 +4,17 @@ namespace App\Http\Controllers\Api\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Customer\StoreIncidentRequest;
-use App\Models\Dispute;
 use App\Models\Booking;
+use App\Models\Dispute;
+use App\Services\Notification\NotificationService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class IncidentReportController extends Controller
 {
+    public function __construct(private NotificationService $notificationService) {}
+
     public function store(StoreIncidentRequest $request, $bookingId)
     {
         try {
@@ -59,6 +62,17 @@ class IncidentReportController extends Controller
                 }
 
                 $dispute = Dispute::create($data);
+
+                $notify = $this->notificationService;
+                DB::afterCommit(function () use ($dispute, $booking, $notify): void {
+                    try {
+                        $notify->notifyNewDispute($dispute, $booking);
+                    } catch (\Throwable $e) {
+                        Log::warning('Failed to notify admins of new dispute: ' . $e->getMessage(), [
+                            'dispute_id' => $dispute->id,
+                        ]);
+                    }
+                });
 
                 return response()->json([
                     'status' => 'success',

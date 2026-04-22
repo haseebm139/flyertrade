@@ -6,7 +6,6 @@ use App\Http\Controllers\Api\BaseController;
 use App\Models\Notification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class NotificationController extends BaseController
@@ -28,9 +27,14 @@ class NotificationController extends BaseController
             return $this->sendError('Unauthorized. Admin access required.', 403);
         }
 
-        $query = Notification::where('recipient_type', 'admin')
-            ->orWhere('recipient_type', 'all')
-            ->orderBy('created_at', 'desc');
+        $query = Notification::query()
+            ->where('user_id', $user->id)
+            ->where(function ($q) {
+                $q->where('recipient_type', 'admin')
+                    ->orWhere('recipient_type', 'all');
+            })
+            ->orderByDesc('created_at')
+            ->orderByDesc('id');
 
         // Filter by category
         $category = $request->get('category', 'all');
@@ -39,8 +43,10 @@ class NotificationController extends BaseController
             $query->where('category', $category);
         }
 
-        // Get all notifications (we'll group them by date)
-        $notifications = $query->get();
+        // Newest first (explicit sort so grouping never reverses order)
+        $notifications = $query->get()->sortByDesc(function ($n) {
+            return Carbon::parse($n->created_at)->timestamp;
+        })->values();
 
         // Group notifications by date
         $grouped = $this->groupNotificationsByDate($notifications);
@@ -65,8 +71,6 @@ class NotificationController extends BaseController
     private function groupNotificationsByDate($notifications)
     {
         $grouped = [];
-        $today = Carbon::today();
-        $yesterday = Carbon::yesterday();
 
         foreach ($notifications as $notification) {
             $createdAt = Carbon::parse($notification->created_at);
@@ -103,15 +107,25 @@ class NotificationController extends BaseController
             ];
         }
 
-        // Convert to array format with keys as group names
+        // Convert to array format; newest group first, newest item first within each group
         $result = [];
         foreach ($grouped as $groupName => $items) {
+            usort($items, function (array $a, array $b): int {
+                return Carbon::parse($b['created_at'])->timestamp <=> Carbon::parse($a['created_at'])->timestamp;
+            });
             $result[] = [
                 'group' => $groupName,
                 'notifications' => $items,
                 'count' => count($items),
             ];
         }
+
+        usort($result, function (array $a, array $b): int {
+            $newestA = collect($a['notifications'])->max(fn (array $n) => Carbon::parse($n['created_at'])->timestamp);
+            $newestB = collect($b['notifications'])->max(fn (array $n) => Carbon::parse($n['created_at'])->timestamp);
+
+            return (int) $newestB <=> (int) $newestA;
+        });
 
         return $result;
     }
@@ -139,7 +153,9 @@ class NotificationController extends BaseController
             return $this->sendError('Unauthorized. Admin access required.', 403);
         }
 
-        $count = Notification::where(function($query) {
+        $count = Notification::query()
+            ->where('user_id', $user->id)
+            ->where(function ($query) {
                 $query->where('recipient_type', 'admin')
                     ->orWhere('recipient_type', 'all');
             })
@@ -160,12 +176,14 @@ class NotificationController extends BaseController
             return $this->sendError('Unauthorized. Admin access required.', 403);
         }
 
-        $notification = Notification::where(function($query) {
+        $notification = Notification::query()
+            ->where('user_id', $user->id)
+            ->where(function ($query) {
                 $query->where('recipient_type', 'admin')
                     ->orWhere('recipient_type', 'all');
             })
             ->findOrFail($id);
-        
+
         $notification->markAsRead();
         
         return $this->sendResponse($notification, 'Notification marked as read.');
@@ -182,7 +200,9 @@ class NotificationController extends BaseController
             return $this->sendError('Unauthorized. Admin access required.', 403);
         }
 
-        $updated = Notification::where(function($query) {
+        $updated = Notification::query()
+            ->where('user_id', $user->id)
+            ->where(function ($query) {
                 $query->where('recipient_type', 'admin')
                     ->orWhere('recipient_type', 'all');
             })
@@ -203,12 +223,14 @@ class NotificationController extends BaseController
             return $this->sendError('Unauthorized. Admin access required.', 403);
         }
 
-        $notification = Notification::where(function($query) {
+        $notification = Notification::query()
+            ->where('user_id', $user->id)
+            ->where(function ($query) {
                 $query->where('recipient_type', 'admin')
                     ->orWhere('recipient_type', 'all');
             })
             ->findOrFail($id);
-        
+
         $notification->delete();
         
         return $this->sendResponse([], 'Notification deleted successfully.');

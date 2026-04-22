@@ -21,12 +21,17 @@ class HeaderNotifications extends Component
 
     public function loadNotifications(): void
     {
-        // Get latest 20 notifications grouped by type
-        $notifications = Notification::where(function($query) {
+        $userId = auth()->id();
+
+        // Latest notifications first; group header order = most recent activity in that type
+        $notifications = Notification::query()
+            ->where('user_id', $userId)
+            ->where(function ($query) {
                 $query->where('recipient_type', 'admin')
                     ->orWhere('recipient_type', 'all');
             })
-            ->orderBy('created_at', 'desc')
+            ->orderByDesc('created_at')
+            ->orderByDesc('id')
             ->take(20)
             ->get();
 
@@ -84,11 +89,27 @@ class HeaderNotifications extends Component
             }
         }
 
-        // Convert to array and sort by count (descending)
-        $this->groupedNotifications = collect($grouped)->sortByDesc('count')->values()->toArray();
+        foreach (array_keys($grouped) as $key) {
+            usort($grouped[$key]['notifications'], function ($a, $b): int {
+                return Carbon::parse($b->created_at)->timestamp <=> Carbon::parse($a->created_at)->timestamp;
+            });
+        }
+
+        $this->groupedNotifications = collect($grouped)
+            ->sortByDesc(function (array $group): int {
+                $latest = collect($group['notifications'])->max(
+                    fn ($n): int => Carbon::parse($n->created_at)->timestamp
+                );
+
+                return (int) $latest;
+            })
+            ->values()
+            ->toArray();
 
         // Calculate total unread count
-        $this->unreadCount = Notification::where(function($query) {
+        $this->unreadCount = Notification::query()
+            ->where('user_id', $userId)
+            ->where(function ($query) {
                 $query->where('recipient_type', 'admin')
                     ->orWhere('recipient_type', 'all');
             })
@@ -109,22 +130,37 @@ class HeaderNotifications extends Component
                 // Collect all provider IDs for batch loading
                 $providerIds = [];
                 foreach ($group['notifications'] as $notification) {
-                    $data = $notification->data ?? [];
-                    if ($notification->type === 'provider_registered' && isset($data['provider_id'])) {
+                    $data = is_array($notification) ? ($notification['data'] ?? []) : ($notification->data ?? []);
+                    $type = is_array($notification) ? ($notification['type'] ?? '') : ($notification->type ?? '');
+                    if ($type === 'provider_registered' && isset($data['provider_id'])) {
                         $providerIds[] = $data['provider_id'];
                     }
                 }
-                
+
                 // Batch load all providers at once
                 $providers = [];
-                if (!empty($providerIds)) {
+                if (! empty($providerIds)) {
                     $providers = User::whereIn('id', array_unique($providerIds))
                         ->pluck('avatar', 'id')
                         ->toArray();
                 }
-                
-                // Prepare notifications for display
-                $this->selectedGroupNotifications = collect($group['notifications'])->map(function($notification) use ($providers) {
+
+                $ids = collect($group['notifications'])
+                    ->map(fn ($n) => is_array($n) ? ($n['id'] ?? null) : $n->id)
+                    ->filter()
+                    ->unique()
+                    ->values();
+
+                $rows = $ids->isEmpty()
+                    ? collect()
+                    : Notification::query()
+                        ->where('user_id', auth()->id())
+                        ->whereIn('id', $ids)
+                        ->orderByDesc('created_at')
+                        ->orderByDesc('id')
+                        ->get();
+
+                $this->selectedGroupNotifications = $rows->map(function ($notification) use ($providers) {
                     $actionUrl = $this->generateActionUrl($notification);
                     $actionUrl = $this->fixActionUrl($actionUrl);
                     
@@ -147,7 +183,7 @@ class HeaderNotifications extends Component
                         'data' => $data,
                         'has_profile' => $hasProfile,
                     ];
-                })->toArray();
+                })->values()->toArray();
                 
                 // Dispatch event to notify that group is loaded
                 // Convert selectedGroup to array if it's not already
@@ -191,7 +227,9 @@ class HeaderNotifications extends Component
 
     public function markAsRead($id): void
     {
-        $notification = Notification::where(function($query) {
+        $notification = Notification::query()
+            ->where('user_id', auth()->id())
+            ->where(function ($query) {
                 $query->where('recipient_type', 'admin')
                     ->orWhere('recipient_type', 'all');
             })
