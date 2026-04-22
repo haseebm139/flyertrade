@@ -756,11 +756,35 @@ class BookingService
     }
     public function upcomingBookingsCustomer($customerId)
     {
-        $bookings = Booking::with('slots', 'provider', 'customer', 'providerService.service', 'latestPendingReschedule', 'dispute')
+        $slotOrder = BookingSlot::query()
+            ->select(
+                'booking_id',
+                DB::raw('MIN(TIMESTAMP(service_date, start_time)) as first_slot_start_at')
+            )
+            ->groupBy('booking_id');
+
+        $bookings = Booking::query()
+            ->joinSub($slotOrder, 'slot_order', function ($join) {
+                $join->on('slot_order.booking_id', '=', 'bookings.id');
+            })
+            ->select('bookings.*')
+            ->with([
+                'slots' => function ($q) {
+                    $q->orderBy('service_date')->orderBy('start_time');
+                },
+                'provider',
+                'customer',
+                'providerService.service',
+                'latestPendingReschedule',
+                'dispute',
+            ])
             ->where('customer_id', $customerId)
-            ->whereIn('status', ['awaiting_provider','confirmed','in_progress'])
+            ->whereIn('status', ['awaiting_provider', 'confirmed', 'in_progress'])
+            ->whereNotNull('paid_at')
+            ->where('slot_order.first_slot_start_at', '>', now())
+            ->orderBy('slot_order.first_slot_start_at')
             ->paginate(10);
-        
+
         // Add late status for each booking
         foreach ($bookings as $booking) {
             $lateCheck = $this->isProviderLate($booking);
