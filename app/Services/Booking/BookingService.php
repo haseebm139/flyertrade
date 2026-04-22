@@ -780,7 +780,6 @@ class BookingService
             ])
             ->where('customer_id', $customerId)
             ->whereIn('status', ['awaiting_provider', 'confirmed', 'in_progress'])
-            ->whereNotNull('paid_at')
             ->where('slot_order.first_slot_start_at', '>', now())
             ->orderBy('slot_order.first_slot_start_at')
             ->paginate(10);
