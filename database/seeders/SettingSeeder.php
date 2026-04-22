@@ -48,6 +48,9 @@ class SettingSeeder extends Seeder
         Setting::set('service_charge_percentage', $commission, 'financial');
         Setting::set('commission_fee', $commission, 'financial');
 
+        // bookings: minutes after first slot start before customer sees provider as late (0 = no grace)
+        Setting::set('provider_late_grace_minutes', '0', 'general');
+
         // notification — booleans stored as '1' / '0' (same as writeBoolSetting)
         Setting::set('push_notifications', '1', 'notification');
         Setting::set('email_notifications', '1', 'notification');

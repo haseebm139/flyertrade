@@ -117,7 +117,8 @@ class BookingController extends BaseController
         if ($booking->status === 'confirmed') {
             $lateCheck = $this->bookingsService->isProviderLate($booking);
             $booking->setAttribute('is_provider_late', $lateCheck['is_late']);
-            $booking->setAttribute('late_status', $lateCheck);
+            $booking->setAttribute('can_take_late_action', $lateCheck['can_take_action'] ?? false);
+             
         }
 
         $booking->setAttribute('incident_report', Dispute::incidentReportUi($booking, auth()->id()));

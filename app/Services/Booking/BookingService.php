@@ -964,19 +964,22 @@ class BookingService
     }
 
     /**
-     * Check if provider is late for an upcoming booking
-     * 
-     * @param Booking $booking
-     * @param int $lateMinutesThreshold Minutes after start time to consider late (default: 15)
+     * Check if provider is late for an upcoming booking.
+     *
+     * Grace minutes: setting `provider_late_grace_minutes` (default 0). 0 = late right at slot start.
+     * If set to e.g. 15, provider is not late until 15 minutes after the first slot start.
+     *
      * @return array
      */
-    public function isProviderLate(Booking $booking, int $lateMinutesThreshold = 15): array
+    public function isProviderLate(Booking $booking): array
     {
+        $graceMinutes = max(0, (int) Setting::get('provider_late_grace_minutes', 0));
+        
         // Only check for confirmed/upcoming bookings
         if (!in_array($booking->status, ['confirmed'])) {
             return [
                 'is_late' => false,
-                'message' => 'Booking is not in upcoming status.'
+                'message' => 'Booking is not in upcoming status.',
             ];
         }
 
@@ -989,36 +992,34 @@ class BookingService
         if (!$firstSlot) {
             return [
                 'is_late' => false,
-                'message' => 'No slots found for this booking.'
+                'message' => 'No slots found for this booking.',
             ];
         }
 
-        // Combine date and time to create datetime
         $slotDateTime = Carbon::parse($firstSlot->service_date . ' ' . $firstSlot->start_time);
         $now = Carbon::now();
 
-        // Check if slot time has passed
         if ($now->lt($slotDateTime)) {
             return [
                 'is_late' => false,
                 'message' => 'Booking time has not arrived yet.',
                 'slot_datetime' => $slotDateTime->toDateTimeString(),
-                'minutes_until_slot' => $now->diffInMinutes($slotDateTime, false)
+                'minutes_until_slot' => $now->diffInMinutes($slotDateTime, false),
+                'late_threshold_minutes' => $graceMinutes,
             ];
         }
 
-        // Check if provider is late (past start time + threshold)
-        $lateThreshold = $slotDateTime->copy()->addMinutes($lateMinutesThreshold);
+        $lateThreshold = $slotDateTime->copy()->addMinutes($graceMinutes);
         $isLate = $now->gte($lateThreshold);
-        $minutesLate = $isLate ? $now->diffInMinutes($slotDateTime, false) : 0;
+        $minutesLate = $isLate ? (int) $slotDateTime->diffInMinutes($now) : 0;
 
         return [
             'is_late' => $isLate,
             'message' => $isLate ? 'Provider is running late.' : 'Provider is on time.',
             'slot_datetime' => $slotDateTime->toDateTimeString(),
             'minutes_late' => $minutesLate,
-            'late_threshold_minutes' => $lateMinutesThreshold,
-            'can_take_action' => $isLate && !$booking->late_action_taken
+            'late_threshold_minutes' => $graceMinutes,
+            'can_take_action' => $isLate && !$booking->late_action_taken,
         ];
     }
 
