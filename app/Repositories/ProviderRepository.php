@@ -221,6 +221,7 @@ class ProviderRepository
     {
         $query = User::query()
             ->where('is_verified', 'verified')
+            ->where('status', 'active')
             ->providers()
             ->with([
                 'providerProfile',
