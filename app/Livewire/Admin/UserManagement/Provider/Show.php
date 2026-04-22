@@ -3,8 +3,9 @@
 namespace App\Livewire\Admin\UserManagement\Provider;
 
 use Livewire\Component;
-use App\Models\User;
 use App\Models\Booking;
+use App\Models\Setting;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -327,6 +328,7 @@ class Show extends Component
             'user' => $this->user,
             'bookings' => $bookings,
             'providerServices' => $providerServices,
+            'serviceChargePercentage' => (float) Setting::get('service_charge_percentage', 25),
         ]);
     }
 }

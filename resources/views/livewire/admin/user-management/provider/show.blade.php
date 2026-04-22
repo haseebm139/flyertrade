@@ -466,7 +466,14 @@
                         <td>{{ $booking->service->name ?? '-' }}</td>
                         <td>{{ Str::limit($booking->booking_address ?? '-', 30) }}</td>
                         <td>${{ number_format($booking->total_price, 2) }}</td>
-                        <td>{{ $booking->duration ?? '-' }}</td>
+                        <td>
+                            @if(($booking->booking_working_minutes ?? 0) > 0)
+                                {{ $booking->formatted_duration }}
+                                 
+                            @else
+                                <span class="text-muted">—</span>
+                            @endif
+                        </td>
 
                         <td class="viw-parents">
                             <button class="view-btn" wire:click="viewBooking({{ $booking->id }})">
@@ -478,7 +485,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="9" class="text-center">No bookings found.</td>
+                        <td colspan="8" class="text-center">No bookings found.</td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -657,12 +664,16 @@
         <div class="charges-row" style="padding:0vw 1.3vw 1.3vw">
             <div class="charge-col">
                 <label class="charge-label">Service fee</label>
-                <input type="text" class="charge-input" placeholder="$10" readonly>
+                <input type="text" class="charge-input"
+                    value="{{ rtrim(rtrim(number_format($serviceChargePercentage ?? 0, 2, '.', ''), '0'), '.') }}%"
+                    readonly>
             </div>
 
             <div class="charge-col">
                 <label class="charge-label">Commission</label>
-                <input type="text" class="charge-input" placeholder="5%" readonly>
+                <input type="text" class="charge-input"
+                    value="{{ rtrim(rtrim(number_format($serviceChargePercentage ?? 0, 2, '.', ''), '0'), '.') }}%"
+                    readonly>
             </div>
         </div>
     </div>
