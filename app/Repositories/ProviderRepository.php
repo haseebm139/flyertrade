@@ -220,6 +220,7 @@ class ProviderRepository
     public function getProviders(array $filters = [], $userId = null)
     {
         $query = User::query()
+            ->where('is_verified', 'verified')
             ->providers()
             ->with([
                 'providerProfile',
