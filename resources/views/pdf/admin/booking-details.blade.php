@@ -10,14 +10,14 @@
     <title>{{ $subject }} — {{ $booking->booking_ref }}</title>
 </head>
 
-<body style="margin:0; padding:0; background:#f2f2f2; font-family: Arial, Helvetica, sans-serif;">
+<body style="margin:0; padding:0; background:#f4f7f8; font-family: Arial, Helvetica, sans-serif;">
 
     <table width="100%" cellpadding="0" cellspacing="0" style="padding:28px 0;">
         <tr>
             <td align="center">
 
                 <!-- Same container as resources/views/emails/custom_template.blade.php -->
-                <table width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff; max-width:100%;">
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color:#f4f7f8; max-width:100%;">
 
                     <!-- Header (matches email) -->
                     <tr>
