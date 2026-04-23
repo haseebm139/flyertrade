@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use App\Mail\PasswordResetByAdminMail;
 use Livewire\WithPagination;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class Show extends Component
 {
@@ -153,29 +154,17 @@ class Show extends Component
             return;
         }
 
-        $fileName = "booking-{$booking->booking_ref}.csv";
-        $headers = [
-            "Content-Type" => "text/csv",
-            "Content-Disposition" => "attachment; filename=$fileName",
-        ];
+        $fileName = "booking-{$booking->booking_ref}.pdf";
+        $durationLabel = $booking->duration ?? '-';
+        $statusLabel = ucfirst($booking->status);
 
-        $callback = function () use ($booking) {
-            $handle = fopen('php://output', 'w');
-            fputcsv($handle, ['Field', 'Details']);
-            fputcsv($handle, ['Booking ID', $booking->booking_ref]);
-            fputcsv($handle, ['Date', $booking->created_at->format('d M, Y')]);
-            fputcsv($handle, ['Time', $booking->created_at->format('h:i A')]);
-            fputcsv($handle, ['Duration', $booking->duration ?? '-']);
-            fputcsv($handle, ['Location', $booking->booking_address ?? '-']);
-            fputcsv($handle, ['Service Type', $booking->service->name ?? '-']);
-            fputcsv($handle, ['Service Cost', '$' . number_format($booking->total_price, 2)]);
-            fputcsv($handle, ['Status', ucfirst($booking->status)]);
-            fputcsv($handle, ['Service Provider', $booking->provider->name ?? '-']);
-            fputcsv($handle, ['Service User', $booking->customer->name ?? '-']);
-            fclose($handle);
-        };
-
-        return response()->stream($callback, 200, $headers);
+        return response()->streamDownload(function () use ($booking, $durationLabel, $statusLabel) {
+            echo Pdf::loadView('pdf.admin.booking-details', [
+                'booking' => $booking,
+                'durationLabel' => $durationLabel,
+                'statusLabel' => $statusLabel,
+            ])->output();
+        }, $fileName, ['Content-Type' => 'application/pdf']);
     }
 
     public function render()

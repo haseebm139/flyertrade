@@ -5,7 +5,8 @@ namespace App\Livewire\Admin\Bookings;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Booking;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 class Table extends Component
 {
 
@@ -370,28 +371,16 @@ class Table extends Component
             return;
         }
 
-        $fileName = "booking-{$booking->booking_ref}.csv";
-        $headers = [
-            "Content-Type" => "text/csv",
-            "Content-Disposition" => "attachment; filename=$fileName",
-        ];
+        $fileName = "booking-{$booking->booking_ref}.pdf";
+        $durationLabel = $booking->working_hours . ' Hours';
+        $statusLabel = ucfirst(str_replace('_', ' ', $booking->status));
 
-        $callback = function () use ($booking) {
-            $handle = fopen('php://output', 'w');
-            fputcsv($handle, ['Field', 'Details']);
-            fputcsv($handle, ['Booking ID', $booking->booking_ref]);
-            fputcsv($handle, ['Date', $booking->created_at->format('d M, Y')]);
-            fputcsv($handle, ['Time', $booking->created_at->format('h:i A')]);
-            fputcsv($handle, ['Duration', $booking->working_hours . ' Hours']);
-            fputcsv($handle, ['Location', $booking->booking_address ?? '-']);
-            fputcsv($handle, ['Service Type', $booking->service->name ?? '-']);
-            fputcsv($handle, ['Service Cost', '$' . number_format($booking->total_price, 2)]);
-            fputcsv($handle, ['Status', ucfirst(str_replace('_', ' ', $booking->status))]);
-            fputcsv($handle, ['Service Provider', $booking->provider->name ?? '-']);
-            fputcsv($handle, ['Service User', $booking->customer->name ?? '-']);
-            fclose($handle);
-        };
-
-        return response()->stream($callback, 200, $headers);
+        return response()->streamDownload(function () use ($booking, $durationLabel, $statusLabel) {
+            echo Pdf::loadView('pdf.admin.booking-details', [
+                'booking' => $booking,
+                'durationLabel' => $durationLabel,
+                'statusLabel' => $statusLabel,
+            ])->output();
+        }, $fileName, ['Content-Type' => 'application/pdf']);
     }
 }
