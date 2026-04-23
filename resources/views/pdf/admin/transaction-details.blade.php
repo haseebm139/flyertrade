@@ -1,13 +1,13 @@
 @php
     $brandName = ($n = trim((string) config('app.name'))) !== '' && $n !== 'Laravel' ? $n : 'Flyertrade';
-    $subject = 'Booking summary';
+    $subject = 'Transaction details';
 @endphp
 <!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="UTF-8">
-    <title>{{ $subject }} — {{ $booking->booking_ref }}</title>
+    <title>{{ $subject }} — {{ $transaction->transaction_ref ?? $transaction->id }}</title>
 </head>
 
 <body style="margin:0; padding:0; background:#f2f2f2; font-family: Arial, Helvetica, sans-serif;">
@@ -16,10 +16,8 @@
         <tr>
             <td align="center">
 
-                <!-- Same container as resources/views/emails/custom_template.blade.php -->
-                <table width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff; max-width:100%;">
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color:#f4f7f8; max-width:100%;">
 
-                    <!-- Header (matches email) -->
                     <tr>
                         <td style="background-color:#0b4f43; padding:20px;">
                             <table width="100%" cellpadding="0" cellspacing="0">
@@ -27,7 +25,7 @@
                                     <td width="40" style="width:40px; vertical-align:middle;">
                                         <svg width="30" height="37" viewBox="0 0 30 37" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
-                                            <g clip-path="url(#clip0_1065_19349)">
+                                            <g clip-path="url(#clip0_transaction_pdf)">
                                                 <path
                                                     d="M13.564 16.8645C13.5622 19.561 13.5622 22.2569 13.564 24.9528C13.564 32.5416 8.46223 34.8729 4.30127 36.8571L0.735246 31.0537C3.85551 29.4171 5.73778 27.5816 5.73778 25.1015C5.73778 24.5137 5.74266 24.2625 5.73778 21.258C5.73778 20.9238 5.73778 20.647 5.73778 20.4598C4.12345 19.1756 2.50973 17.8913 0.8954 16.6071C0.596405 14.6985 0.298019 12.7898 -0.000976562 10.8812C1.91235 10.8799 3.82507 10.8781 5.73839 10.8769C5.53013 10.3842 5.27863 9.65608 5.1605 8.74444C5.1605 8.74444 5.09351 8.21758 5.09351 7.68828C5.09412 2.82761 8.7594 0 13.9111 0C17.5271 0 19.4587 1.33911 21.0438 3.12458L17.2792 7.09251C16.9328 6.59675 16.1399 5.8528 15.1491 5.8528C14.5176 5.8528 13.9306 6.04976 13.4648 6.42113C12.6128 7.10044 12.5026 8.13709 12.4253 8.82859C12.3309 9.66889 12.4691 10.3817 12.6183 10.8769H13.5719C13.5683 12.8727 13.5659 14.868 13.5646 16.8645H13.564Z"
                                                     fill="white" />
@@ -36,7 +34,7 @@
                                                     fill="white" />
                                             </g>
                                             <defs>
-                                                <clipPath id="clip0_1065_19349">
+                                                <clipPath id="clip0_transaction_pdf">
                                                     <rect width="30" height="36.8571" fill="white" />
                                                 </clipPath>
                                             </defs>
@@ -50,7 +48,6 @@
                         </td>
                     </tr>
 
-                    <!-- Body (same cell styles as email) -->
                     <tr>
                         <td style="padding:30px; color:#717171; font-weight:400; font-size:14px;">
 
@@ -59,15 +56,15 @@
                             </h2>
 
                             <p style="margin:0 0 15px 0;">
-                                Booking reference <strong style="color:#393939;">{{ $booking->booking_ref }}</strong>
+                                Transaction ID <strong style="color:#393939;">{{ $transaction->transaction_ref ?? $transaction->id }}</strong>
                                 · Status <strong style="color:#393939;">{{ $statusLabel }}</strong>
                             </p>
 
                             <div style="margin:0 0 15px 0; color:#717171;">
                                 <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:15px; font-size:14px;">
                                     <tr>
-                                        <td style="padding:0 0 8px 0; color:#717171; width:42%;">Booked</td>
-                                        <td style="padding:0 0 8px 0; color:#393939;">{{ $booking->created_at->format('d M Y, h:i A') }}</td>
+                                        <td style="padding:0 0 8px 0; color:#717171; width:42%;">Date &amp; time</td>
+                                        <td style="padding:0 0 8px 0; color:#393939;">{{ $detailDate?->format('d M Y, h:i A') ?? '—' }}</td>
                                     </tr>
                                     <tr>
                                         <td style="padding:0 0 8px 0; color:#717171;">Generated</td>
@@ -75,40 +72,23 @@
                                     </tr>
                                 </table>
 
-                                <p style="margin:0 0 10px 0; font-size:16px; font-weight:600; color:#393939;">Service details</p>
-
+                                <p style="margin:0 0 10px 0; font-size:16px; font-weight:600; color:#393939;">Transaction info</p>
                                 <table width="100%" cellpadding="8" cellspacing="0" style="border:1px solid #e3e8ea; background:#ffffff; font-size:14px;">
                                     <tr>
-                                        <td style="border-bottom:1px solid #eef1f3; color:#717171; width:38%;">Date</td>
-                                        <td style="border-bottom:1px solid #eef1f3; color:#393939;">{{ $booking->created_at->format('d M, Y') }}</td>
+                                        <td style="border-bottom:1px solid #eef1f3; color:#717171; width:38%;">Transaction type</td>
+                                        <td style="border-bottom:1px solid #eef1f3; color:#393939;">{{ $typeLabel }}</td>
                                     </tr>
                                     <tr>
-                                        <td style="border-bottom:1px solid #eef1f3; color:#717171;">Time</td>
-                                        <td style="border-bottom:1px solid #eef1f3; color:#393939;">{{ $booking->created_at->format('h:i A') }}</td>
+                                        <td style="border-bottom:1px solid #eef1f3; color:#717171;">Payment method</td>
+                                        <td style="border-bottom:1px solid #eef1f3; color:#393939;">{{ $paymentLabel }}</td>
                                     </tr>
                                     <tr>
-                                        <td style="border-bottom:1px solid #eef1f3; color:#717171;">Duration</td>
-                                        <td style="border-bottom:1px solid #eef1f3; color:#393939;">{{ $durationLabel }}</td>
+                                        <td style="border-bottom:1px solid #eef1f3; color:#717171;">Amount</td>
+                                        <td style="border-bottom:1px solid #eef1f3; color:#0b4f43; font-weight:600;">{{ $amountLabel }}</td>
                                     </tr>
                                     <tr>
-                                        <td style="border-bottom:1px solid #eef1f3; color:#717171; vertical-align:top;">Location</td>
-                                        <td style="border-bottom:1px solid #eef1f3; color:#393939; vertical-align:top;">{{ $booking->booking_address ?? '—' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border-bottom:1px solid #eef1f3; color:#717171;">Service type</td>
-                                        <td style="border-bottom:1px solid #eef1f3; color:#393939;">{{ $booking->service->name ?? '—' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border-bottom:1px solid #eef1f3; color:#717171;">Service cost</td>
-                                        <td style="border-bottom:1px solid #eef1f3; color:#0b4f43; font-weight:600;">${{ number_format($booking->total_price, 2) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border-bottom:1px solid #eef1f3; color:#717171;">Service provider</td>
-                                        <td style="border-bottom:1px solid #eef1f3; color:#393939;">{{ $booking->provider->name ?? '—' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="color:#717171;">Service user</td>
-                                        <td style="color:#393939;">{{ $booking->customer->name ?? '—' }}</td>
+                                        <td style="color:#717171;">Associated user</td>
+                                        <td style="color:#393939;">{{ $associatedUserName }}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -117,7 +97,7 @@
                                 {{ $brandName }}
                                 · {{ rtrim((string) config('app.url'), '/') ?: 'https://flyertrade.com' }}
                                 <br>
-                                This document was generated from the Flyertrade admin panel for internal records. Not a tax invoice unless separately issued.
+                                This document was generated from the Flyertrade admin panel for internal records.
                             </p>
 
                         </td>

@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Disputes;
 
 use App\Models\Dispute;
+use App\Support\DompdfDocument;
 use App\Services\Notification\NotificationService;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -188,6 +189,11 @@ class Table extends Component
 
     public function downloadDisputeDetails()
     {
+        if (!auth()->user()?->can('Read Disputes')) {
+            $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
+            return;
+        }
+
         if (!$this->selectedDispute) {
             $this->dispatch('showSweetAlert', 'error', 'Dispute not found.', 'Error');
             return;
@@ -205,32 +211,17 @@ class Table extends Component
             return;
         }
 
-        $fileName = 'dispute-' . ($dispute->booking->booking_ref ?? $dispute->id) . '.csv';
-        $headers = [
-            "Content-Type" => "text/csv",
-            "Content-Disposition" => "attachment; filename=$fileName",
-        ];
+        $fileName = 'dispute-' . ($dispute->booking->booking_ref ?? $dispute->id) . '.pdf';
+        $attachmentUrl = $dispute->attachment
+            ? rtrim(config('app.url'), '/') . '/' . ltrim($dispute->attachment, '/')
+            : '—';
 
-        $callback = function () use ($dispute) {
-            $handle = fopen('php://output', 'w');
-            fputcsv($handle, ['Field', 'Details']);
-            fputcsv($handle, ['Dispute ID', $dispute->id]);
-            fputcsv($handle, ['Status', ucfirst($dispute->status)]);
-            fputcsv($handle, ['Created At', optional($dispute->created_at)->format('d M, Y h:i A')]);
-            fputcsv($handle, ['User', $dispute->user->name ?? 'N/A']);
-            fputcsv($handle, ['User Email', $dispute->user->email ?? 'N/A']);
-            fputcsv($handle, ['Booking ID', $dispute->booking->booking_ref ?? 'N/A']);
-            fputcsv($handle, ['Service Type', $dispute->booking->service->name ?? 'N/A']);
-            fputcsv($handle, ['Service Cost', '$' . number_format($dispute->booking->total_price ?? 0, 2)]);
-            fputcsv($handle, ['Service Provider', $dispute->booking->provider->name ?? 'N/A']);
-            fputcsv($handle, ['Service User', $dispute->booking->customer->name ?? 'N/A']);
-            fputcsv($handle, ['Dispute Issue', $dispute->message ?? '']);
-            $attachmentUrl = $dispute->attachment ? rtrim(config('app.url'), '/') . '/' . ltrim($dispute->attachment, '/') : '';
-            fputcsv($handle, ['Attachment', $attachmentUrl]);
-            fclose($handle);
-        };
-
-        return response()->stream($callback, 200, $headers);
+        return response()->streamDownload(function () use ($dispute, $attachmentUrl) {
+            echo DompdfDocument::renderView('pdf.admin.dispute-details', [
+                'dispute' => $dispute,
+                'attachmentUrl' => $attachmentUrl,
+            ]);
+        }, $fileName, ['Content-Type' => 'application/pdf']);
     }
 
     public function getDataQuery()

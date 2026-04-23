@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Transactions;
 
 use App\Models\Transaction;
+use App\Support\DompdfDocument;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -322,42 +323,49 @@ class Table extends Component
         $this->selectedTransaction = null;
     }
 
-    public function downloadTransactionDetails($id): StreamedResponse
+    public function downloadTransactionDetails($id)
     {
         if (!auth()->user()?->can('Read Transactions')) {
             $this->dispatch('showSweetAlert', 'error', 'Unauthorized action.', 'Error');
-            return response()->stream(fn () => null, 403);
+            return;
         }
 
         $transaction = Transaction::with(['customer', 'provider'])->find($id);
         if (!$transaction) {
             $this->dispatch('showSweetAlert', 'error', 'Transaction not found.', 'Error');
-            return response()->stream(fn () => null, 404);
+            return;
         }
 
-        $fileName = "transaction-{$transaction->transaction_ref}.csv";
-        $headers = [
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => "attachment; filename={$fileName}",
-        ];
+        $detailDate = $transaction->processed_at ?? $transaction->created_at;
+        $associatedUser = $this->resolveAssociatedUser($transaction);
+        $typeLabel = $this->getTransactionTypeLabel($transaction);
+        $paymentLabel = $this->getPaymentMethodLabel($transaction);
+        $amountLabel = $this->formatAmount($transaction->amount, $transaction->currency);
+        $statusLabel = $this->getStatusLabel($transaction);
+        $associatedUserName = $associatedUser?->name ?? '—';
 
-        $callback = function () use ($transaction) {
-            $handle = fopen('php://output', 'w');
-            fputcsv($handle, ['Field', 'Details']);
-            fputcsv($handle, ['Transaction ID', $transaction->transaction_ref ?? $transaction->id]);
-            $date = $transaction->processed_at ?? $transaction->created_at;
-            fputcsv($handle, ['Date', $date?->format('d M, Y')]);
-            fputcsv($handle, ['Time', $date?->format('h:i A')]);
-            fputcsv($handle, ['Transaction Type', $this->getTransactionTypeLabel($transaction)]);
-            fputcsv($handle, ['Payment Method', $this->getPaymentMethodLabel($transaction)]);
-            fputcsv($handle, ['Amount', $this->formatAmount($transaction->amount, $transaction->currency)]);
-            fputcsv($handle, ['Status', $this->getStatusLabel($transaction)]);
-            $associatedUser = $this->resolveAssociatedUser($transaction);
-            fputcsv($handle, ['Associated User', $associatedUser?->name ?? '-']);
-            fclose($handle);
-        };
+        $ref = $transaction->transaction_ref ?? (string) $transaction->id;
+        $fileName = "transaction-{$ref}.pdf";
 
-        return response()->stream($callback, 200, $headers);
+        return response()->streamDownload(function () use (
+            $transaction,
+            $detailDate,
+            $typeLabel,
+            $paymentLabel,
+            $amountLabel,
+            $statusLabel,
+            $associatedUserName
+        ) {
+            echo DompdfDocument::renderView('pdf.admin.transaction-details', [
+                'transaction' => $transaction,
+                'detailDate' => $detailDate,
+                'typeLabel' => $typeLabel,
+                'paymentLabel' => $paymentLabel,
+                'amountLabel' => $amountLabel,
+                'statusLabel' => $statusLabel,
+                'associatedUserName' => $associatedUserName,
+            ]);
+        }, $fileName, ['Content-Type' => 'application/pdf']);
     }
 
     public function formatAmount($amount, $currency): string
