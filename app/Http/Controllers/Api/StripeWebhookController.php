@@ -6,13 +6,17 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Booking;
 use App\Models\Transaction;
+use App\Services\Booking\BookingService;
 use App\Services\Notification\NotificationService;
 use Stripe\Webhook;
 use Illuminate\Support\Facades\DB;
 
 class StripeWebhookController extends Controller
 {
-    public function __construct(private NotificationService $notificationService) {}
+    public function __construct(
+        private NotificationService $notificationService,
+        private BookingService $bookingService,
+    ) {}
 
     public function handle(Request $request)
     {
@@ -30,13 +34,13 @@ class StripeWebhookController extends Controller
             case 'payment_intent.succeeded':
                 $pi = $event->data->object;
                 DB::transaction(function () use ($pi) {
-                    // Update booking
+                    // Update booking (mirror API payment: confirm + reminders when applicable)
                     $booking = Booking::where('stripe_payment_intent_id', $pi->id)
                         ->whereNull('paid_at')
                         ->first();
-                    
+
                     if ($booking) {
-                        $booking->update(['paid_at' => now()]);
+                        $this->bookingService->syncBookingPaidFromStripeWebhook($booking);
                     }
                     
                     // Update transaction

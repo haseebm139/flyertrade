@@ -82,6 +82,7 @@ class NotificationIcon
             'review_received', 'review_pending' => self::REVIEW_RECEIVED,
             'high_cancellation_alert' => self::HIGH_CANCELLATION_ALERT,
             'provider_late_escalation' => self::ESCALATION,
+            'provider_not_started_dispute_prompt' => self::DISPUTE,
             'dispute_created', 'new_dispute', 'dispute' => self::DISPUTE,
             'provider_registered', 'new_provider_registered' => self::PROVIDER_REGISTERED,
             'message_received' => self::MESSAGE_RECEIVED,
@@ -113,7 +114,7 @@ class NotificationIcon
     {
         return match($type) {
             'document_verification', 'document_pending', 'document_approved', 'verification_approved', 'document_rejected', 'verification_rejected', 'dispute_resolved', 'dispute_closed' => 'admin_actions',
-            'booking_created', 'booking_confirmed', 'booking_cancelled', 'booking_completed', 'job_completed', 'service_completed', 'booking_reminder', 'provider_booking_reminder', 'reminder', 'booking_rejected', 'booking_started', 'booking_in_progress', 'reschedule_requested', 'booking_reschedule_request', 'reschedule_accepted', 'booking_reschedule_accepted', 'reschedule_rejected', 'booking_reschedule_rejected' => 'bookings',
+            'booking_created', 'booking_confirmed', 'booking_cancelled', 'booking_completed', 'job_completed', 'service_completed', 'booking_reminder', 'provider_booking_reminder', 'reminder', 'booking_rejected', 'booking_started', 'booking_in_progress', 'reschedule_requested', 'booking_reschedule_request', 'reschedule_accepted', 'booking_reschedule_accepted', 'reschedule_rejected', 'booking_reschedule_rejected', 'provider_not_started_dispute_prompt' => 'bookings',
             'payment_success', 'payment_successful', 'payment_failed', 'transaction_created', 'transaction_completed', 'refund_processed', 'refund_success', 'refund_failed' => 'transactions',
             'review_received', 'review_pending', 'review_published', 'review_unpublished' => 'reviews',
             'high_cancellation_alert', 'provider_late_escalation', 'admin_action', 'dispute_created', 'new_dispute', 'dispute' => 'admin_actions',

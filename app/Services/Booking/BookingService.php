@@ -28,7 +28,8 @@ class BookingService
  
     public function __construct(
         private StripeService $stripe,
-        private NotificationService $notificationService
+        private NotificationService $notificationService,
+        private BookingReminderJobScheduler $bookingReminderJobScheduler,
     ) {}
 
     public function checkAvailability(array $slot, int $providerId): string
@@ -511,6 +512,9 @@ class BookingService
             // Send notification
             $this->notificationService->notifyRescheduleAccepted($booking, $reschedule);
 
+            $booking = $booking->fresh(['slots', 'provider', 'customer', 'providerService.service']);
+            $this->bookingReminderJobScheduler->scheduleForBooking($booking);
+
         } elseif ($response === 'reject') {
             
             $reschedule->update(['status' => 'rejected']);
@@ -555,6 +559,66 @@ class BookingService
                 } catch (\Throwable) {}
             }
         });
+
+        return $count;
+    }
+
+    /**
+     * Cancel unpaid bookings whose first scheduled slot start is already in the past.
+     * Refunds any Stripe payment intent on file (same as reject).
+     */
+    public function autoCancelUnpaidPastBookings(): int
+    {
+        $count = 0;
+
+        Booking::query()
+            ->whereNull('paid_at')
+            ->whereIn('status', ['awaiting_provider', 'confirmed'])
+            ->with('slots')
+            ->chunkById(100, function ($bookings) use (&$count): void {
+                foreach ($bookings as $booking) {
+                    $first = $booking->slots
+                        ->sortBy(fn ($s) => $s->service_date.' '.$s->start_time)
+                        ->first();
+
+                    if (! $first) {
+                        continue;
+                    }
+
+                    $slotStart = Carbon::parse($first->service_date.' '.$first->start_time);
+                    if ($slotStart->gte(Carbon::now())) {
+                        continue;
+                    }
+
+                    try {
+                        DB::transaction(function () use ($booking): void {
+                            if ($booking->stripe_payment_intent_id) {
+                                try {
+                                    $this->stripe->refundByPaymentIntent($booking->stripe_payment_intent_id);
+                                } catch (\Throwable $e) {
+                                    Log::warning('Refund failed while auto-cancelling unpaid past booking: '.$e->getMessage(), [
+                                        'booking_id' => $booking->id,
+                                    ]);
+                                }
+                            }
+
+                            $booking->update([
+                                'status' => 'cancelled',
+                                'cancelled_at' => now(),
+                                'cancelled_reason' => 'Automatically cancelled: no payment before scheduled service time.',
+                            ]);
+                        });
+
+                        $booking = $booking->fresh(['slots', 'provider', 'customer', 'providerService.service']);
+                        if ($booking) {
+                            $this->notificationService->notifyBookingAutoCancelledUnpaidPast($booking);
+                        }
+                        $count++;
+                    } catch (\Throwable $e) {
+                        Log::warning('autoCancelUnpaidPastBookings failed for booking '.$booking->id.': '.$e->getMessage());
+                    }
+                }
+            });
 
         return $count;
     }
@@ -828,8 +892,12 @@ class BookingService
         }
 
         $user = Auth::user();
-        if (!$user || $booking->customer_id !== $user->id) {
+        if (! $user || $booking->customer_id !== $user->id) {
             return ['error' => true, 'message' => 'Unauthorized access to this booking.'];
+        }
+
+        if ($booking->paid_at) {
+            return ['error' => true, 'message' => 'This booking is already paid.'];
         }
 
         $paymentMethod = $this->resolveCustomerPaymentMethod($user->id, $userPaymentMethodId);
@@ -893,15 +961,63 @@ class BookingService
             'notes' => 'Charged via saved card.',
         ]);
 
-        $booking->update([
+        $paymentConfirmsBooking = $booking->status === 'awaiting_provider';
+
+        $bookingUpdates = [
             'paid_at' => now(),
             'stripe_payment_intent_id' => $intent->id,
-        ]);
+        ];
+        if ($paymentConfirmsBooking) {
+            $bookingUpdates['status'] = 'confirmed';
+            $bookingUpdates['confirmed_at'] = now();
+        }
+
+        $booking->update($bookingUpdates);
+
+        $booking = $booking->fresh(['slots', 'provider', 'customer', 'providerService.service']);
+        if ($booking && $booking->status === 'confirmed') {
+            $this->bookingReminderJobScheduler->scheduleForBooking($booking);
+        }
 
         $this->notificationService->notifyPaymentSuccess($transaction);
 
+        if ($paymentConfirmsBooking && $booking) {
+            $this->notificationService->notifyBookingConfirmed($booking);
+        }
+
         return ['error' => false, 'message' => 'Payment processed successfully.', 'transaction' => $transaction];
     }
+
+    /**
+     * Stripe `payment_intent.succeeded` webhook: same booking side-effects as {@see processPayment()}
+     * (paid_at, optional awaiting→confirmed, reminder jobs, confirm notification). Does not create a transaction.
+     */
+    public function syncBookingPaidFromStripeWebhook(Booking $booking): void
+    {
+        if ($booking->paid_at) {
+            return;
+        }
+
+        $paymentConfirmsBooking = $booking->status === 'awaiting_provider';
+
+        $bookingUpdates = ['paid_at' => now()];
+        if ($paymentConfirmsBooking) {
+            $bookingUpdates['status'] = 'confirmed';
+            $bookingUpdates['confirmed_at'] = now();
+        }
+
+        $booking->update($bookingUpdates);
+
+        $booking = $booking->fresh(['slots', 'provider', 'customer', 'providerService.service']);
+        if ($booking && $booking->status === 'confirmed') {
+            $this->bookingReminderJobScheduler->scheduleForBooking($booking);
+        }
+
+        if ($paymentConfirmsBooking && $booking) {
+            $this->notificationService->notifyBookingConfirmed($booking);
+        }
+    }
+
     public function onGoingBookingsCustomer($customerId)
     {
         $slotOrder = BookingSlot::select(

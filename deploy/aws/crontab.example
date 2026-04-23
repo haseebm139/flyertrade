@@ -1,0 +1,2 @@
+# Laravel scheduler (run as deploy user, NOT root). Edit path to your app root.
+* * * * * cd /var/www/flyertrade && php artisan schedule:run >> /dev/null 2>&1

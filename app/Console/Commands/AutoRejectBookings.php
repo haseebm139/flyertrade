@@ -23,10 +23,11 @@ class AutoRejectBookings extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(BookingService $bookingService): int
     {
-        $count = $service->autoRejectExpired();
+        $count = $bookingService->autoRejectExpired();
         $this->info("Auto-rejected {$count} bookings.");
+
         return self::SUCCESS;
     }
 }

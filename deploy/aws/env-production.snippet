@@ -1,0 +1,24 @@
+# Copy these into server .env (adjust values). Do not commit real secrets.
+
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://your-domain.com
+
+DB_CONNECTION=mysql
+DB_HOST=your-rds-endpoint.region.rds.amazonaws.com
+DB_PORT=3306
+DB_DATABASE=flytrade_db1
+DB_USERNAME=
+DB_PASSWORD=
+
+QUEUE_CONNECTION=database
+
+# Scheduler mutex / cache: use redis or database if multiple EC2 instances run cron
+CACHE_STORE=database
+
+SESSION_DRIVER=database
+
+# Stripe live keys
+STRIPE_KEY=
+STRIPE_SECRET=
+STRIPE_WEBHOOK_SECRET=

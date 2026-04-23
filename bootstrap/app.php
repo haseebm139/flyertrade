@@ -24,7 +24,12 @@ return Application::configure(basePath: dirname(__DIR__))
         })->everyMinute()->name('log-schedule-run');
 
         // $schedule->command('bookings:auto-reject')->everyFiveMinutes();
-        $schedule->command('bookings:send-reminders')->everyMinute();
+        // Reconciles missed reminders if queue workers were down (primary path: delayed jobs).
+        $schedule->command('bookings:send-reminders')
+            ->hourly()
+            ->withoutOverlapping(10);
+        $schedule->command('bookings:notify-customer-provider-not-started')->everyFiveMinutes();
+        $schedule->command('bookings:cancel-unpaid-past')->hourly();
     })
     ->withRouting(
         web: __DIR__.'/../routes/web.php',

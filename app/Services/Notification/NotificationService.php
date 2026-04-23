@@ -76,6 +76,7 @@ class NotificationService
                 'new_message',
                 'booking_reminder',
                 'provider_booking_reminder',
+                'provider_not_started_dispute_prompt',
                 'dispute_resolved',
                 'dispute_created',
                 'new_dispute',
@@ -953,11 +954,11 @@ class NotificationService
         }
 
         $providerName = $booking->provider->name ?? 'your service provider';
-        $minutes = $this->intervalKeyToMinutes($intervalKey);
+        $minutesUntil = max(1, (int) ceil(max(0, $slotStart->getTimestamp() - Carbon::now()->getTimestamp()) / 60));
         $custom = $this->reminderMessageFor('user', $intervalKey);
         $message = $custom !== ''
             ? $custom
-            : "Your booking with {$providerName} starts in {$minutes} minutes.";
+            : "Your booking with {$providerName} starts in {$minutesUntil} minutes.";
 
         $sendPush = (bool) Setting::get('push_notifications', true);
 
@@ -975,6 +976,7 @@ class NotificationService
                 'provider_name' => $providerName,
                 'reminder_offset' => $intervalKey,
                 'slot_start' => $slotIso,
+                'minutes_until' => $minutesUntil,
                 'action_url' => "/bookings/{$booking->id}",
             ],
             NotificationIcon::BOOKING_REMINDER,
@@ -1009,11 +1011,11 @@ class NotificationService
         }
 
         $customerName = $booking->customer->name ?? 'your customer';
-        $minutes = $this->intervalKeyToMinutes($intervalKey);
+        $minutesUntil = max(1, (int) ceil(max(0, $slotStart->getTimestamp() - Carbon::now()->getTimestamp()) / 60));
         $custom = $this->reminderMessageFor('provider', $intervalKey);
         $message = $custom !== ''
             ? $custom
-            : "You have a booking with {$customerName} starting in {$minutes} minutes.";
+            : "You have a booking with {$customerName} starting in {$minutesUntil} minutes.";
 
         $sendPush = (bool) Setting::get('push_notifications', true);
 
@@ -1031,6 +1033,7 @@ class NotificationService
                 'customer_name' => $customerName,
                 'reminder_offset' => $intervalKey,
                 'slot_start' => $slotIso,
+                'minutes_until' => $minutesUntil,
                 'action_url' => "/bookings/{$booking->id}",
             ],
             NotificationIcon::BOOKING_REMINDER,
@@ -1051,16 +1054,6 @@ class NotificationService
         }
 
         return Carbon::parse($first->service_date . ' ' . $first->start_time);
-    }
-
-    private function intervalKeyToMinutes(string $intervalKey): int
-    {
-        return match ($intervalKey) {
-            '15m' => 15,
-            '30m' => 30,
-            '45m' => 45,
-            default => 15,
-        };
     }
 
     private function reminderMessageFor(string $audience, string $intervalKey): string
@@ -1085,6 +1078,55 @@ class NotificationService
             ->where('notifiable_id', $bookingId)
             ->where('data->reminder_offset', $intervalKey)
             ->where('data->slot_start', $slotStartIso)
+            ->exists();
+    }
+
+    /**
+     * One-time in-app + push prompt for the customer when payment is captured but the provider
+     * has not started the job after the scheduled slot (see BookingService::isProviderLate).
+     */
+    public function notifyCustomerProviderNotStartedDisputePrompt(Booking $booking): void
+    {
+        if ($this->customerProviderNotStartedPromptAlreadySent((int) $booking->customer_id, $booking->id)) {
+            return;
+        }
+
+        $customer = User::find($booking->customer_id);
+        if (! $customer) {
+            return;
+        }
+
+        $providerName = $booking->provider->name ?? 'your provider';
+        $ref = $booking->booking_ref;
+        $sendPush = (bool) Setting::get('push_notifications', true);
+
+        $this->send(
+            $customer,
+            'provider_not_started_dispute_prompt',
+            'Provider has not started your booking',
+            "Booking #{$ref} was due to begin, but {$providerName} has not started the job. Open your booking to report a dispute or take action.",
+            'customer',
+            $booking,
+            [
+                'booking_id' => $booking->id,
+                'booking_ref' => $booking->booking_ref,
+                'provider_id' => $booking->provider_id,
+                'action_url' => "/bookings/{$booking->id}",
+                'report_incident_path' => "customer/bookings/{$booking->id}/report-incident",
+            ],
+            NotificationIcon::DISPUTE,
+            'bookings',
+            $sendPush
+        );
+    }
+
+    private function customerProviderNotStartedPromptAlreadySent(int $customerId, int $bookingId): bool
+    {
+        return Notification::query()
+            ->where('user_id', $customerId)
+            ->where('type', 'provider_not_started_dispute_prompt')
+            ->where('notifiable_type', Booking::class)
+            ->where('notifiable_id', $bookingId)
             ->exists();
     }
 
@@ -1411,6 +1453,71 @@ class NotificationService
                 'booking_id' => $booking->id,
                 'booking_ref' => $booking->booking_ref,
                 'action_url' => route('booking.index')
+            ],
+            NotificationIcon::BOOKING_CANCELLED,
+            'bookings'
+        );
+    }
+
+    /**
+     * Customer did not pay before the scheduled slot; booking was auto-cancelled by the system.
+     */
+    public function notifyBookingAutoCancelledUnpaidPast(Booking $booking): void
+    {
+        $ref = $booking->booking_ref;
+
+        $customer = User::find($booking->customer_id);
+        if ($customer) {
+            $this->send(
+                $customer,
+                'booking_cancelled',
+                'Booking cancelled',
+                "Your booking #{$ref} was automatically cancelled because payment was not completed before the scheduled service time.",
+                'customer',
+                $booking,
+                [
+                    'booking_id' => $booking->id,
+                    'booking_ref' => $booking->booking_ref,
+                    'cancellation_reason' => 'unpaid_past_slot',
+                    'action_url' => "/bookings/{$booking->id}",
+                ],
+                NotificationIcon::BOOKING_CANCELLED,
+                'bookings',
+                true
+            );
+        }
+
+        $provider = User::find($booking->provider_id);
+        if ($provider) {
+            $this->send(
+                $provider,
+                'booking_cancelled',
+                'Booking cancelled',
+                "Booking #{$ref} was automatically cancelled (payment not received before the scheduled time).",
+                'provider',
+                $booking,
+                [
+                    'booking_id' => $booking->id,
+                    'booking_ref' => $booking->booking_ref,
+                    'cancellation_reason' => 'unpaid_past_slot',
+                    'action_url' => "/bookings/{$booking->id}",
+                ],
+                NotificationIcon::BOOKING_CANCELLED,
+                'bookings',
+                true
+            );
+        }
+
+        $this->sendToAdmins(
+            'booking_cancelled',
+            'Booking auto-cancelled',
+            "Booking #{$ref} was auto-cancelled (unpaid, scheduled slot passed).",
+            $booking,
+            [
+                'booking_id' => $booking->id,
+                'booking_ref' => $booking->booking_ref,
+                'action_url' => route('booking.index'),
+                'cancellation_reason' => 'unpaid_past_slot',
             ],
             NotificationIcon::BOOKING_CANCELLED,
             'bookings'
