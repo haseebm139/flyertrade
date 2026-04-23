@@ -16,7 +16,7 @@
         <tr>
             <td align="center">
 
-                <table width="600" cellpadding="0" cellspacing="0" style="background-color:#f4f7f8; max-width:100%;">
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff; max-width:100%;">
 
                     <tr>
                         <td style="background-color:#0b4f43; padding:20px;">
