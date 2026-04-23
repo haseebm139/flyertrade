@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use App\Mail\PasswordResetByAdminMail;
 use Livewire\WithPagination;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Support\BookingDetailsPdf;
 
 class Show extends Component
 {
@@ -159,11 +159,7 @@ class Show extends Component
         $statusLabel = ucfirst($booking->status);
 
         return response()->streamDownload(function () use ($booking, $durationLabel, $statusLabel) {
-            echo Pdf::loadView('pdf.admin.booking-details', [
-                'booking' => $booking,
-                'durationLabel' => $durationLabel,
-                'statusLabel' => $statusLabel,
-            ])->output();
+            echo BookingDetailsPdf::render($booking, $durationLabel, $statusLabel);
         }, $fileName, ['Content-Type' => 'application/pdf']);
     }
 

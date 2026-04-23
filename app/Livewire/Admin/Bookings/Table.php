@@ -5,7 +5,7 @@ namespace App\Livewire\Admin\Bookings;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Booking;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Support\BookingDetailsPdf;
 
 class Table extends Component
 {
@@ -376,11 +376,7 @@ class Table extends Component
         $statusLabel = ucfirst(str_replace('_', ' ', $booking->status));
 
         return response()->streamDownload(function () use ($booking, $durationLabel, $statusLabel) {
-            echo Pdf::loadView('pdf.admin.booking-details', [
-                'booking' => $booking,
-                'durationLabel' => $durationLabel,
-                'statusLabel' => $statusLabel,
-            ])->output();
+            echo BookingDetailsPdf::render($booking, $durationLabel, $statusLabel);
         }, $fileName, ['Content-Type' => 'application/pdf']);
     }
 }
