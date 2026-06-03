@@ -5,7 +5,6 @@ use App\Http\Controllers\Admin\DashboardController;
 Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
-
     // User Management
     Route::middleware(['permission:Read Users'])->group(function () {
         Route::get('user-management/service-users', function () {
