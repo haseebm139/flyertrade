@@ -36,7 +36,7 @@ jobs:
             sudo chmod -R 775 storage bootstrap/cache
 
             echo "📦 Installing dependencies..."
-            composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
+            composer install 
 
             echo "⚡ Running migrations..."
             php artisan migrate --force
