@@ -25,7 +25,7 @@ class Login extends Component
             session()->regenerate();
              
             $user = Auth::user();
-            if ($user && $user->hasAnyRole(['customer', 'provider','guest','multi'])) {
+            if ($user && $user->hasAnyRole(['customer', 'provider', 'guest', 'multi'])) {
                 Auth::logout();
                 session()->invalidate();
                 session()->regenerateToken();
@@ -33,7 +33,7 @@ class Login extends Component
                 return;
             }
 
-            $this->dispatch('swal-success',message: 'Login successfully!', redirect: route('dashboard'));  
+            return $this->redirectRoute('dashboard', navigate: false);
         } else {
              
             $this->dispatch('swal-error', message: 'Invalid email or password.');

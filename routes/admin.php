@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Admin\DashboardController;
 
-Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
+Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
     // User Management

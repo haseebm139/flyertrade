@@ -4,7 +4,8 @@
 <script>
     document.addEventListener('livewire:init', () => {
         // 🔹 Success
-        Livewire.on('swal-success', (data) => {
+        Livewire.on('swal-success', (payload) => {
+            const data = Array.isArray(payload) ? (payload[0] ?? {}) : (payload ?? {});
             Swal.fire({
                 icon: 'success',
                 title: data.title ?? 'Success',
@@ -12,7 +13,9 @@
                 timer: data.timer ?? (data.showConfirmButton ? undefined : 1500),
                 showConfirmButton: data.showConfirmButton ?? false,
             }).then(() => {
-                if (data.redirect) window.location.href = data.redirect;
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                }
             });
         });
 

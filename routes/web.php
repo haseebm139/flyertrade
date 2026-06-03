@@ -8,6 +8,7 @@ use App\Http\Controllers\NotificationController;
 use App\Mail\TestEmail;
 use Illuminate\Support\Facades\Mail;
 
+
 // Route::get('/test-email', function () {
 //     try {
 //         // dd( $serviceAccountPath = storage_path('firebase/firebase_credentials.json'));
