@@ -8,29 +8,29 @@ use App\Http\Controllers\NotificationController;
 use App\Mail\TestEmail;
 use Illuminate\Support\Facades\Mail;
 
-Route::get('/test-email', function () {
-    try {
-        // dd( $serviceAccountPath = storage_path('firebase/firebase_credentials.json'));
-        $data = ['message' => 'Hello, this is a test email from Flyertrade!'];
-        Mail::to('flyertradead@gmail.com')->send(new TestEmail($data));
-        return "✅ Email sent successfully to flyertradead@gmail.com!";
-    } catch (\Exception $e) {
-        return "❌ Failed to send email. Error: " . $e->getMessage();
-    }
-});
+// Route::get('/test-email', function () {
+//     try {
+//         // dd( $serviceAccountPath = storage_path('firebase/firebase_credentials.json'));
+//         $data = ['message' => 'Hello, this is a test email from Flyertrade!'];
+//         Mail::to('flyertradead@gmail.com')->send(new TestEmail($data));
+//         return "✅ Email sent successfully to flyertradead@gmail.com!";
+//     } catch (\Exception $e) {
+//         return "❌ Failed to send email. Error: " . $e->getMessage();
+//     }
+// });
  Route::get('/debug/phpinfo', function () {
     ob_start();
     phpinfo();
     $out = ob_get_clean();
     return response($out, 200)->header('Content-Type', 'text/html; charset=UTF-8');
 });
-Route::get('/testing', function () {
-    dd('Hello world');
-});
+// Route::get('/testing', function () {
+//     dd('Hello world');
+// });
 Route::get('/', function () {
     return auth()->check()
-        ? redirect('/dashboard')
-        : redirect('/login');
+        ? redirect()->route('dashboard')
+        : redirect()->route('login');
 });
 
 Route::get('/notifications', [NotificationController::class, 'index']);
