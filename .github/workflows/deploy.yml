@@ -26,22 +26,28 @@ jobs:
           script: |
             cd /var/www/flyertrade
 
-            git fetch origin main
+            echo "🚀 Pulling latest code..."
+            git fetch origin
             git reset --hard origin/main
+            git clean -fdx
 
+            echo "🔧 Fixing permissions..."
+            sudo chown -R www-data:www-data .
+            sudo chmod -R 775 storage bootstrap/cache
+
+            echo "📦 Installing dependencies..."
             composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
 
+            echo "⚡ Running migrations..."
             php artisan migrate --force
 
+            echo "🧹 Clearing & caching..."
             php artisan optimize:clear
             php artisan config:cache
             php artisan route:cache
             php artisan view:cache
 
-            sudo chown -R www-data:www-data storage bootstrap/cache
-            sudo chmod -R 775 storage bootstrap/cache
-
-
+            echo "🔁 Restarting services..."
             sudo systemctl reload php8.2-fpm
             sudo systemctl reload nginx
             
