@@ -28,7 +28,7 @@ Route::get('/testing', function () {
     dd('Hello world');
 });
 Route::get('/', function () {
-    return route('login');
+    return redirect()->route('login');
 });
 
 Route::get('/notifications', [NotificationController::class, 'index']);
