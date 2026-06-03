@@ -28,7 +28,9 @@ Route::get('/testing', function () {
     dd('Hello world');
 });
 Route::get('/', function () {
-    return redirect()->route('login');
+    return auth()->check()
+        ? redirect('/dashboard')
+        : redirect('/login');
 });
 
 Route::get('/notifications', [NotificationController::class, 'index']);
