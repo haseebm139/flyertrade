@@ -9,7 +9,7 @@ use App\Models\User;
 use App\Services\Notification\NotificationService;
 use App\Services\Shared\ProfileImageOptimizer;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
+use App\Support\MediaStorage;
 use App\Http\Resources\Shared\UserResource;
 use DB;
 
@@ -129,28 +129,20 @@ class ProviderProfileService
         if (isset($data['id_photo'])) {
             // Delete old cover photo if exists
             if ($user->providerProfile && $user->providerProfile->id_photo) {
-                $oldPath = str_replace('storage/', '', $user->providerProfile->id_photo);
-                if (Storage::disk('public')->exists($oldPath)) {
-                    Storage::disk('public')->delete($oldPath);
-                }
+                MediaStorage::delete($user->providerProfile->id_photo);
             }
 
-            $path = $data['id_photo']->store('provider/profile', 'public');
-            $idPhotoPath = 'storage/' . $path;
+            $idPhotoPath = MediaStorage::store($data['id_photo'], 'provider/profile');
         }
         $passportPath = null;
         
         if (isset($data['passport'])) {
             // Delete old passport if exists
             if ($user->providerProfile && $user->providerProfile->passport) {
-                $oldPath = str_replace('storage/', '', $user->providerProfile->passport);
-                if (Storage::disk('public')->exists($oldPath)) {
-                    Storage::disk('public')->delete($oldPath);
-                }
+                MediaStorage::delete($user->providerProfile->passport);
             }
 
-            $path = $data['passport']->store('provider/profile', 'public');
-            $passportPath = 'storage/' . $path;
+            $passportPath = MediaStorage::store($data['passport'], 'provider/profile');
         }
 
         $workPermitPath = null;
@@ -158,14 +150,10 @@ class ProviderProfileService
         if (isset($data['work_permit'])) {
             // Delete old work permit if exists
             if ($user->providerProfile && $user->providerProfile->work_permit) {
-                $oldPath = str_replace('storage/', '', $user->providerProfile->work_permit);
-                if (Storage::disk('public')->exists($oldPath)) {
-                    Storage::disk('public')->delete($oldPath);
-                }
+                MediaStorage::delete($user->providerProfile->work_permit);
             }
 
-            $path = $data['work_permit']->store('provider/profile', 'public');
-            $workPermitPath = 'storage/' . $path;
+            $workPermitPath = MediaStorage::store($data['work_permit'], 'provider/profile');
         }
         if ($idPhotoPath !== null) {
             $profileData['id_photo'] = $idPhotoPath;
@@ -222,14 +210,11 @@ class ProviderProfileService
                 // Photos
                 if (!empty($data['services']['photos'])) {
                     foreach ($data['services']['photos'] as $photo) {
-                        $path = $photo->store('provider/services/photos', 'public');
-    
                         $service->media()->create([
                             'provider_service_id' => $service->id,
                             'provider_profile_id' => $profile->id,
                             'user_id'    => $user->id,
-                            'file_path'  => 'storage/' . $path,
-                            // 'file_path'  => Storage::disk('s3')->url($path),
+                            'file_path'  => MediaStorage::store($photo, 'provider/services/photos'),
                             'type'       => 'photo',
                         ]);
                     }
@@ -239,13 +224,11 @@ class ProviderProfileService
                 if (!empty($data['services']['videos'])) {
     
                     foreach ($data['services']['videos'] as $video) {
-                        $path = $video->store('provider/services/videos', 'public');
                         $service->media()->create([
                             'provider_service_id' => $service->id,
                             'provider_profile_id' => $profile->id,
                             'user_id'    => $user->id,
-                            'file_path'  => 'storage/' . $path,
-                            // 'file_path'  => Storage::disk('s3')->url($path),
+                            'file_path'  => MediaStorage::store($video, 'provider/services/videos'),
                             'type'       => 'video',
                         ]);
                     }
@@ -253,13 +236,11 @@ class ProviderProfileService
                 if (!empty($data['services']['certificates'])) {
                     foreach ($data['services']['certificates'] as $certData) {
     
-                        $path = $certData->store('provider/certificates', 'public');
                         ProviderCertificate::create([
                             'provider_service_id' => $service->id,
                             'user_id'             => $user->id,
                             'provider_profile_id' => $profile->id,
-                            'file_path'           => 'storage/' . $path?? null,
-                            // 'file_path'           => Storage::disk('s3')->url($path),
+                            'file_path'           => MediaStorage::store($certData, 'provider/certificates'),
                             'status'              => 'pending',
                         ]);
     

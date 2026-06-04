@@ -1,5 +1,15 @@
 <?php
-use Illuminate\Support\Facades\Mail; 
+
+use App\Support\MediaStorage;
+use Illuminate\Support\Facades\Mail;
+
+if (! function_exists('media_url')) {
+    /** Public URL for a DB-stored path (local storage/... or S3 URL). */
+    function media_url(?string $path): ?string
+    {
+        return MediaStorage::url($path);
+    }
+}
  
 if (!function_exists('sendVerificationMail')) {
     function sendVerificationMail($otp, $email)

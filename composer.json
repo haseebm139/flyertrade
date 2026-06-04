@@ -13,6 +13,7 @@
         "dompdf/dompdf": "^3.1",
         "google/cloud-firestore": "^1.55",
         "guzzlehttp/guzzle": "^7.9",
+        "league/flysystem-aws-s3-v3": "^3.25",
         "illuminate/mail": "*",
         "illuminate/support": "*",
         "illuminate/view": "*",

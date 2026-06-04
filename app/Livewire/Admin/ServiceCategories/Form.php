@@ -54,8 +54,7 @@ class Form extends Component
         try {
             $iconPath = $this->existingIcon;
             if ($this->icon) {
-                $iconPath = $this->icon->storePublicly('service-categories', 'public');
-                $iconPath = 'storage/' . ltrim($iconPath, '/');
+                $iconPath = \App\Support\MediaStorage::store($this->icon, 'service-categories');
             }
 
             Service::updateOrCreate(

@@ -2,6 +2,7 @@
 
 namespace App\Services\Shared;
 
+use App\Support\MediaStorage;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -26,10 +27,10 @@ class ProfileImageOptimizer
         if (str_starts_with($lower, 'assets/') || str_contains($lower, '/assets/images/')) {
             return true;
         }
-        if (str_starts_with($urlPath, 'http://') || str_starts_with($urlPath, 'https://')) {
-            return true;
+        if (str_starts_with($lower, 'http://') || str_starts_with($lower, 'https://')) {
+            return ! (str_contains($lower, 'amazonaws.com') || str_contains($lower, '.s3.'));
         }
-        // Only uploaded files live under storage/ — never delete anything else
+
         if (! str_starts_with($urlPath, 'storage/')) {
             return true;
         }
@@ -45,11 +46,7 @@ class ProfileImageOptimizer
         if ($this->isDefaultOrStaticAssetPath($urlPath)) {
             return;
         }
-        $relative = str_replace('storage/', '', $urlPath);
-        $relative = ltrim($relative, '/');
-        if ($relative !== '' && Storage::disk('public')->exists($relative)) {
-            Storage::disk('public')->delete($relative);
-        }
+        MediaStorage::delete($urlPath);
     }
 
     /**
@@ -59,7 +56,7 @@ class ProfileImageOptimizer
      */
     public function storeOptimizedJpeg(UploadedFile $file, string $directory, int $maxWidth, int $maxHeight, int $quality = 80): ?string
     {
-        $disk = Storage::disk('public');
+        $disk = MediaStorage::disk();
 
         $storeRaw = function () use ($disk, $file, $directory): ?string {
             try {
@@ -70,7 +67,7 @@ class ProfileImageOptimizer
                     : $file->get();
                 $disk->put($rawPath, $bytes);
 
-                return 'storage/' . $rawPath;
+                return MediaStorage::pathForDatabase($rawPath);
             } catch (\Throwable $e) {
                 \Log::error('Failed to store raw file fallback: ' . $e->getMessage());
 
@@ -109,7 +106,7 @@ class ProfileImageOptimizer
             $path = rtrim($directory, '/') . '/' . $filename;
             $disk->put($path, $encoded);
 
-            return 'storage/' . $path;
+            return MediaStorage::pathForDatabase($path);
         } catch (\Throwable $e) {
             \Log::error('Failed to store optimized image: ' . $e->getMessage());
 

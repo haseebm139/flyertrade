@@ -4,7 +4,7 @@ namespace App\Services\Customer;
 
 use App\Models\User;
 use App\Models\ProviderProfile;
-use Illuminate\Support\Facades\Storage;
+use App\Support\MediaStorage;
 
 class CustomerProfileService
 {
@@ -24,10 +24,7 @@ class CustomerProfileService
         if (isset($data['avatar']) && $data['avatar']) {
             // Delete old avatar if exists and not default
             if ($user->avatar && $user->avatar !== 'assets/images/avatar/default.png') {
-                $oldPath = str_replace('storage/', '', $user->avatar);
-                if (Storage::disk('public')->exists($oldPath)) {
-                    Storage::disk('public')->delete($oldPath);
-                }
+                MediaStorage::delete($user->avatar);
             }
 
             // Store in appropriate directory based on user type
@@ -35,8 +32,7 @@ class CustomerProfileService
                 ? 'provider/profile' 
                 : 'customer/profile';
             
-            $path = $data['avatar']->store($directory, 'public');
-            $avatarPath = 'storage/' . $path;
+            $avatarPath = MediaStorage::store($data['avatar'], $directory);
             $updateData['avatar'] = $avatarPath;
         }
        
@@ -44,10 +40,7 @@ class CustomerProfileService
         if (isset($data['cover_photo']) && $data['cover_photo']) {
             // Delete old cover photo if exists
             if ($user->cover_photo) {
-                $oldPath = str_replace('storage/', '', $user->cover_photo);
-                if (Storage::disk('public')->exists($oldPath)) {
-                    Storage::disk('public')->delete($oldPath);
-                }
+                MediaStorage::delete($user->cover_photo);
             }
 
             // Store in appropriate directory based on user type
@@ -55,8 +48,7 @@ class CustomerProfileService
                 ? 'provider/profile' 
                 : 'customer/profile';
             
-            $path = $data['cover_photo']->store($directory, 'public');
-            $coverPhotoPath = 'storage/' . $path;
+            $coverPhotoPath = MediaStorage::store($data['cover_photo'], $directory);
             $updateData['cover_photo'] = $coverPhotoPath;
         }
 

@@ -227,12 +227,12 @@ class Board extends Component
         $directory = $folder . '/' . (auth()->id() ?? 'anonymous');
         $filename = Str::uuid() . '.' . $this->replyMediaFile->getClientOriginalExtension();
 
-        $path = $this->replyMediaFile->storeAs($directory, $filename, 'public');
-        if (!Storage::disk('public')->exists($path)) {
+        $stored = \App\Support\MediaStorage::storeUploaded($this->replyMediaFile, $directory, $filename);
+        if (! \App\Support\MediaStorage::exists($stored['database'])) {
             throw new \RuntimeException('Failed to store file. Please check storage permissions.');
         }
-        
-        $this->replyMediaUrl = Storage::disk('public')->url($path);
+
+        $this->replyMediaUrl = $stored['url'];
         $this->replyMediaType = $isImage ? 'image' : 'video';
     }
 
@@ -1271,12 +1271,12 @@ class Board extends Component
         $directory = $folder . '/' . (auth()->id() ?? 'anonymous');
         $filename = Str::uuid() . '.' . $this->composeMediaFile->getClientOriginalExtension();
 
-        $path = $this->composeMediaFile->storeAs($directory, $filename, 'public');
-        if (!Storage::disk('public')->exists($path)) {
+        $stored = \App\Support\MediaStorage::storeUploaded($this->composeMediaFile, $directory, $filename);
+        if (! \App\Support\MediaStorage::exists($stored['database'])) {
             throw new \RuntimeException('Failed to store file. Please check storage permissions.');
         }
 
-        $this->composeMediaUrl = Storage::disk('public')->url($path);
+        $this->composeMediaUrl = $stored['url'];
         $this->composeMediaType = $isImage ? 'image' : 'video';
     }
 

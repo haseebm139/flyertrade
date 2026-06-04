@@ -57,8 +57,10 @@ class IncidentReportController extends Controller
                 $data['booking_id'] = $bookingId;
                 $data['status'] = 'unresolved';
                 if ($request->hasFile('attachment')) {
-                    $path = $request->file('attachment')->store('customer/incidents', 'public');
-                    $data['attachment'] = 'storage/' . $path;
+                    $data['attachment'] = \App\Support\MediaStorage::store(
+                        $request->file('attachment'),
+                        'customer/incidents'
+                    );
                 }
 
                 $dispute = Dispute::create($data);
